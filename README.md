@@ -1,1 +1,1 @@
-# xVA-Synth
+# xVA Synth
