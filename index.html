@@ -280,7 +280,7 @@
     /*Chrome*/
     #chrome {
         display: flex;
-        height: 20px;
+        height: 25px;
         width: 100vw;
         background-color: #383838;
     }
@@ -302,14 +302,17 @@
     #chromeActions > div:hover {
         color: rgb(200,200,200);
     }
+    #chromeQuit:hover {
+        color: red !important;
+    }
 </style>
 <body>
     <div id="chrome">
         <div id="dragBar" style="-webkit-app-region: drag"></div>
         <div id="chromeActions">
-            <div id="chromeMin">_</div>
-            <div id="chromeMax">&#9632;</div>
-            <div id="chromeQuit">X</div>
+            <div id="chromeMin">&#x1F5D5;</div>
+            <div id="chromeMax">&#128470;</div>
+            <div id="chromeQuit">&#x2716;</div>
         </div>
     </div>
     <div id="appcontent">
