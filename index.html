@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <title>xVA Synth</title>
 </head>
+<style id="cssHack">
+    ::selection {
+        background: red;
+    }
+</style>
 <style>
     button, .voiceType {
         background-color: #92ab20;
@@ -491,6 +496,10 @@ const changeGame = () => {
         Array.from(document.querySelectorAll(".spinner")).forEach(e => e.style.borderLeftColor = `#${meta[1]}`)
         // console.log(right, "background", right.style.background)
     }
+
+    cssHack.innerHTML = `::selection {
+        background: #${meta[1]};
+    }`
 
     // Populate models
     voiceTypeContainer.innerHTML = ""
