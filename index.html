@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>xVA Synth</title>
+</head>
+<style>
+    button, .voiceType {
+        background-color: #92ab20;
+        border: none;
+        color: white;
+        padding: 5px;
+        text-shadow: 0 0 2px black;
+        font-size: 13pt;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 1px 5px 1px rgba(0,0,0,0.3)
+    }
+    button:hover, .voiceType:hover {
+        filter: brightness(110%);
+    }
+    body {
+        margin: 0;
+        overflow: hidden;
+    }
+    #appcontent {
+        /*background-color: #2d2d2d;*/
+        background-color: #383838;
+        height: 100vh;
+        display: flex;
+        overflow: hidden;
+        font-family: Helvetica;
+    }
+    #left, #right {
+        height: 100%;
+        flex-grow: 1;
+        width: 50vw;
+    }
+    #left {
+        width: 350px;
+    }
+    #right {
+        width: calc(100vw - 300px);
+        /*background: linear-gradient(0deg, grey 0, rgba(0,0,0,0)), url(assets/fallout.jpg), grey;*/
+        background: linear-gradient(0deg, grey 0, rgba(0,0,0,0)), grey;
+        background-repeat: no-repeat !important;
+        background-position-x: 100% !important;
+        background-size: cover !important;
+        transition: background 0.2s;
+    }
+    .top {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 10px;
+        height: 5vh;
+        font-size: 18pt;
+    }
+    #topLeft {
+        align-items: baseline;
+        padding-bottom: 5px;
+        padding-top: 15px;
+    }
+    #game-label {
+        font-weight: bold;
+        font-family: Arial;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        text-shadow: 0 1px rgba(255,255,255,0.5);
+        font-size: 2rem;
+        color: #555;
+    }
+    select {
+        font-size: 18pt;
+        color: white;
+        background: rgba(0,0,0,0);
+        border: none;
+        /*-webkit-appearance: none;*/
+    }
+    option {
+        color: black;
+        background-color: rgba(0,0,0,0);
+    }
+    .content {
+        height: 95vh;
+    }
+    #voiceTypeContainer {
+        margin: 10px;
+        height: calc(95vh - 40px);
+        /*background-color: white;*/
+        padding-top: 1px;
+        overflow-y: auto;
+        /*background: linear-gradient(0deg, #444 0, rgba(0,0,0,0)), gray;*/
+        background: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.05) 35px, rgba(255,255,255,.05) 70px), linear-gradient(0deg, #444 0, rgba(0,0,0,0)), gray;
+    }
+    .voiceType {
+        text-align: center;
+        background-color: darkgrey;
+        margin: 5px;
+        padding-top: 1px;
+    }
+    #topRight {
+        display: block;
+    }
+    #title {
+        display: flex;
+        justify-content: center;
+        font-weight: bold;
+        font-family: Arial;
+        /*text-shadow: 0 1px 15px rgba(255,255,255,1);*/
+        text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
+        color: black;
+    }
+   /* #settingsContainer {
+        font-size: 24pt;
+        margin-right: -10%;
+        text-shadow: 0 0 white;
+        font-weight: bolder;
+        cursor: pointer;
+        background: rgba(255,255,255,0.8);
+        border-radius: 100px;
+        height: 30px;
+        width: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        padding-top: 10px;
+        box-shadow: 0px 0px 5px 1px black inset;
+    }*/
+    #topRight > svg {
+        height: 30px;
+        width: 30px;
+        /*margin-right: -10%;*/
+        margin-top: -30px;
+        float: right;
+        cursor: pointer;
+    }
+    textarea {
+        height: 50px;
+        width: calc(95vw - 300px);
+        margin-left: 2.5vw;
+        margin-right: 2.5vw;
+        margin-top: 9px;
+        text-align: center;
+    }
+    #buttonContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 5vh;
+        margin: 10px;
+    }
+    #buttonContainer > button {
+        margin-left: 5px;
+    }
+    #samplePlay {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 30px;
+        width: 30px;
+        font-size: 25pt;
+        font-weight: bold;
+        font-family: Arial;
+        text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
+        margin-left: 15px;
+        margin-right: 10px;
+        cursor: pointer;
+        user-select: none;
+    }
+    #voiceSamples {
+        width: calc(95vw - 300px);
+        height: calc(90vh - 120px);
+        /*height: 75vh;*/
+        background: rgba(255,255,255,0.1);
+        margin-left: 2.5vw;
+        margin-right: 2.5vw;
+        /*font-size: 14pt;*/
+        overflow-y: auto;
+    }
+    .sample {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 5px;
+        background: white;
+        padding: 2px;
+        padding-left: 15px;
+        border-radius: 3px;
+    }
+    .sample > div:first-child {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        width: calc(100% - 275px);
+    }
+    .sample > div {
+        display: flex;
+        overflow: hidden;
+        /*white-space: nowrap;*/
+        text-overflow: ellipsis;
+    }
+    .sample > div > div {
+        display: flex;
+        align-items: center;
+        font-size: 18pt;
+        cursor: pointer;
+    }
+    .sample {
+        cursor: pointer;
+    }
+    audio {
+        width: 200px;
+    }
+    @keyframes spinner-spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    .spinner {
+        display: inline-block;
+        border: 7px solid rgba(0, 0, 0, 0.4);
+        border-left-color: #7983ff;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        padding: 5px;
+        animation: spinner-spin 1.2s linear infinite;
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.9);
+    }
+
+    #modalContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        height: 100vh;
+        width: 100vw;
+        transition: opacity 300ms;
+        background: rgba(0,0,0,0.5);
+    }
+    .modal {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 30vh;
+        width: 30vw;
+        padding: 10px;
+        min-height: 100px;
+        max-height: 100vh;
+        min-width: 200px;
+        max-width: 100vw;
+        text-align: center;
+        background-color: #333;
+        color: white;
+        box-shadow: 0 1px 2px 2px rgba(255,255,255,0.1);
+    }
+    .modal > span {
+        margin-bottom: 25px;
+    }
+    .modal > div {
+        margin: 10px;
+    }
+    /*Chrome*/
+    #chrome {
+        display: flex;
+        height: 20px;
+        width: 100vw;
+        background-color: #383838;
+    }
+    #dragBar {
+        flex-grow: 1;
+        -webkit-app-region: drag;
+    }
+    #chromeActions, #chromeActions > div {
+        display: flex;
+    }
+    #chromeActions > div {
+        justify-content: center;
+        align-items: center;
+        color: white;
+        padding: 5px;
+        cursor: pointer;
+        user-select: none;
+    }
+    #chromeActions > div:hover {
+        color: rgb(200,200,200);
+    }
+</style>
+<body>
+    <div id="chrome">
+        <div id="dragBar" style="-webkit-app-region: drag"></div>
+        <div id="chromeActions">
+            <div id="chromeMin">_</div>
+            <div id="chromeMax">&#9632;</div>
+            <div id="chromeQuit">X</div>
+        </div>
+    </div>
+    <div id="appcontent">
+        <div id="left">
+            <div class="top" id="topLeft">
+                <span id="game-label">Game</span>
+                <select id="gameDropdown"></select>
+            </div>
+            <div class="content">
+                <div id="voiceTypeContainer"></div>
+            </div>
+        </div>
+        <div id="right">
+            <div id="topRight" class="top">
+                <span></span>
+                <div id="title">Select Voice Type</div>
+                <svg id="cogButton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                    <path fill="black" stroke="white" stroke-width="3" d="M47.16,21.221l-5.91-0.966c-0.346-1.186-0.819-2.326-1.411-3.405l3.45-4.917c0.279-0.397,0.231-0.938-0.112-1.282 l-3.889-3.887c-0.347-0.346-0.893-0.391-1.291-0.104l-4.843,3.481c-1.089-0.602-2.239-1.08-3.432-1.427l-1.031-5.886 C28.607,2.35,28.192,2,27.706,2h-5.5c-0.49,0-0.908,0.355-0.987,0.839l-0.956,5.854c-1.2,0.345-2.352,0.818-3.437,1.412l-4.83-3.45 c-0.399-0.285-0.942-0.239-1.289,0.106L6.82,10.648c-0.343,0.343-0.391,0.883-0.112,1.28l3.399,4.863 c-0.605,1.095-1.087,2.254-1.438,3.46l-5.831,0.971c-0.482,0.08-0.836,0.498-0.836,0.986v5.5c0,0.485,0.348,0.9,0.825,0.985 l5.831,1.034c0.349,1.203,0.831,2.362,1.438,3.46l-3.441,4.813c-0.284,0.397-0.239,0.942,0.106,1.289l3.888,3.891 c0.343,0.343,0.884,0.391,1.281,0.112l4.87-3.411c1.093,0.601,2.248,1.078,3.445,1.424l0.976,5.861C21.3,47.647,21.717,48,22.206,48 h5.5c0.485,0,0.9-0.348,0.984-0.825l1.045-5.89c1.199-0.353,2.348-0.833,3.43-1.435l4.905,3.441 c0.398,0.281,0.938,0.232,1.282-0.111l3.888-3.891c0.346-0.347,0.391-0.894,0.104-1.292l-3.498-4.857 c0.593-1.08,1.064-2.222,1.407-3.408l5.918-1.039c0.479-0.084,0.827-0.5,0.827-0.985v-5.5C47.999,21.718,47.644,21.3,47.16,21.221z M25,32c-3.866,0-7-3.134-7-7c0-3.866,3.134-7,7-7s7,3.134,7,7C32,28.866,28.866,32,25,32z"></path>
+                </svg>
+            </div>
+            <div class="content">
+                <textarea id="dialogueInput" placeholder="Type your text here..."></textarea>
+                <div id="buttonContainer">
+                    <button style="display:none;" id="keepSampleButton">Keep sample</button>
+                    <div style="display:none;" id="spinner" class="spinner"></div>
+                    <span style="display:none;" id="samplePlay">&#9654;</span>
+                    <button id="generateVoiceButton">Generate Voice</button>
+                </div>
+                <div id="voiceSamples"></div>
+            </div>
+        </div>
+        <div id="modalContainer" style="display:none">
+        <div id="deleteFileModal" class="modal" style="display:none">
+            <span>Are you sure you'd like to delete this file?</span>
+            <div>
+                <button class="modalYesButton">Yes</button>
+                <button class="modalNoButton">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+"use strict"
+const fs = require("fs")
+const {shell, remote} = require("electron")
+
+// createElem
+"use strict";function _toConsumableArray(e){if(Array.isArray(e)){for(var t=0,r=Array(e.length);t<e.length;t++)r[t]=e[t];return r}return Array.from(e)}var _typeof="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e};window.createElem=function(){for(var e=arguments.length,t=Array(e),r=0;r<e;r++)t[r]=arguments[r];var n=1;if(Number.isInteger(t[0])){if(!(t[0]>0))throw new Error("Element count must be larger than 0. Actual value: "+t[0]);n=t[0],t.shift()}else if(Number(t[0])===t[0]&&t[0]%1!=0)throw new Error("Floats are not supported for element count.");var o=t[0]?t[0]:"div";if(t.shift(),"string"!=typeof o)throw new Error("Tag name must be a string");var a=document.createElement(o.replace(/(#.*)|(\..*)/g,"")),s=o.match(/#(?:(?![#\.]).)*/),c=o.match(/\.(?:(?![#\.]).)*/g);if(s&&(a.id=s[0].substr(1,s[0].length)),c&&(a.className=c.map(function(e){return e.substr(1,e.length)}).join(" ")),t.length)if("string"==typeof t[0])a.innerHTML=t[0],t.shift();else if(!(Object(t[0])!==t[0]||t[0]instanceof HTMLElement||Array.isArray(t[0]))){for(var i in t[0])!function(){switch(i){case"class":a.className=t[0].class;break;case"style":var e=t[0].style;if(null!=e&&void 0!=e&&e.constructor===Object)a.style.cssText=Object.keys(e).map(function(t){return t.replace(/[A-Z]/g,function(e){return"-"+e.toLowerCase()})+":"+("number"==typeof e[t]?e[t]+"px":e[t])}).join(";");else{if("string"!=typeof e)throw new Error("Style value must be either object or string.");a.style.cssText=e}break;case"events":Object.keys(t[0].events).forEach(function(e){var r=t[0].events[e];Array.isArray(r)?r.forEach(function(t){return a.addEventListener(e,t)}):"function"==typeof r&&a.addEventListener(e,r)});break;default:a.setAttribute(i,t[0][i])}}();t.shift()}var u=function e(t){switch(!0){case t instanceof HTMLElement:a.appendChild(t);break;case Array.isArray(t):t.forEach(e);break;case!!t&&t.constructor===Object:throw new Error("Multiple attributes objects not supported");default:null!=t&&console.warn("Unsupported parameter. Type: "+(void 0===t?"undefined":_typeof(t))+" Value:",t)}};return t.forEach(u),n>1?[].concat(_toConsumableArray(new Array(n))).map(function(e){return a.cloneNode()}):a};
+
+window.games = {}
+window.models = {}
+
+// Chreom
+chromeMin.addEventListener("click", () => remote.getCurrentWindow().minimize())
+chromeMax.addEventListener("click", () => {
+    const window = remote.getCurrentWindow()
+    window.isMaximized() ? window.maximize() : window.unmaximize()
+})
+chromeQuit.addEventListener("click", () => remote.getCurrentWindow().close())
+
+// Set up folders
+try {fs.mkdirSync("models")} catch (e) {/*Do nothing*/}
+try {fs.mkdirSync("output")} catch (e) {/*Do nothing*/}
+try {fs.mkdirSync("assets")} catch (e) {/*Do nothing*/}
+
+let willExecute = true
+
+const loadAllModels = () => {
+    return new Promise(resolve => {
+        fs.readdir("./models", (err, gameDirs) => {
+            gameDirs.filter(name => !name.includes(".")).forEach(game => {
+                const files = fs.readdirSync(`./models/${game}`)
+
+                if (!files.length) {
+                    return
+                }
+
+                files.forEach(fileName => {
+
+                    if (!models.hasOwnProperty(`${game}/${fileName}`)) {
+
+                        models[`${game}/${fileName}`] = null
+
+                        if (!games.hasOwnProperty(game)) {
+                            const gameAsset = fs.readdirSync("assets").find(f => f.startsWith(game))
+                            const option = document.createElement("option")
+                            option.value = gameAsset//.split("-")[0]
+                            option.innerHTML = gameAsset.split("-").reverse()[0].split(".")[0]
+                            gameDropdown.appendChild(option)
+                            games[game] = {
+                                models: [],
+                                gameAsset
+                            }
+                        }
+
+                        games[game].models.push(`${game}/${fileName}`)
+                    }
+                })
+                resolve()
+            })
+        })
+
+        setTimeout(() => willExecute=false, 1000)
+    })
+}
+
+const toggleModal = (modal, onOff) => {
+
+    onOff = onOff==undefined ? modalContainer.style.opacity=="1" : onOff
+    modal = modal || Array.from(document.querySelectorAll(".modal")).find(e => e.style.display!="none")
+    console.log(modal)
+
+    if (onOff) {
+        modalContainer.style.opacity = 0
+        setTimeout(() => {
+            modal.style.display = "none"
+            modalContainer.style.display = "none"
+            modalContainer.style.zIndex = 0
+        })
+    } else {
+        modal.style.display = "flex"
+        modalContainer.style.display = "flex"
+        modalContainer.style.opacity = 1
+        modalContainer.style.zIndex = 4
+    }
+
+    if (onOff) {
+        document.querySelectorAll(".modal").forEach(m => m.style.display = "none")
+    }
+}
+modalContainer.addEventListener("click", event => event.target==modalContainer && toggleModal())
+Array.from(document.querySelectorAll(".modalNoButton")).forEach(e => e.addEventListener("click", () => toggleModal()))
+
+cogButton.addEventListener("click", () => {
+    toggleModal(deleteFileModal, false)
+    // showModal(deleteFileModal,
+    //     () => {
+    //         console.log("deleting...")
+    //     },
+    //     () => {
+    //         console.log("cancelled")
+    //     }
+    // )
+})
+
+window.toggleSpinnerButtons = () => {
+    const spinnerVisible = window.getComputedStyle(spinner).display == "block"
+    spinner.style.display = spinnerVisible ? "none" : "block"
+    keepSampleButton.style.display = spinnerVisible ? "block" : "none"
+    generateVoiceButton.style.display = spinnerVisible ? "block" : "none"
+    samplePlay.style.display = spinnerVisible ? "flex" : "none"
+}
+
+generateVoiceButton.addEventListener("click", () => {
+    // TODO ...
+    toggleSpinnerButtons()
+})
+
+samplePlay.addEventListener("click", () => {
+    // TODO
+    console.log(samplePlay.innerHTML)
+    samplePlay.innerHTML = samplePlay.innerHTML=="▶" ? "&#9632;" : "&#9654;"
+})
+
+// Change game
+const changeGame = () => {
+
+    const meta = gameDropdown.value.split("-")
+
+    if (meta) {
+        const background = `linear-gradient(0deg, grey 0, rgba(0,0,0,0)), url("assets/${meta.join("-")}"), grey`
+        right.style.background = background
+        Array.from(document.querySelectorAll("button")).forEach(e => e.style.background = `#${meta[1]}`)
+        Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.background = `#${meta[1]}`)
+        Array.from(document.querySelectorAll(".spinner")).forEach(e => e.style.borderLeftColor = `#${meta[1]}`)
+        // console.log(right, "background", right.style.background)
+    }
+
+    // Populate models
+    voiceTypeContainer.innerHTML = ""
+    voiceSamples.innerHTML = ""
+    title.innerHTML = "Select Voice Type"
+
+    games[meta[0]].models.forEach(model => {
+        const button = createElem("div.voiceType", model.split("-")[1].split(".")[0])
+        button.style.background = `#${meta[1]}`
+        button.dataset.modelId = model.split("/")[1].split("-")[0]
+
+        button.addEventListener("click", () => {
+            loadSingleModel(model)
+
+            title.innerHTML = button.innerHTML
+
+            // Voice samples
+            voiceSamples.innerHTML = ""
+            fs.readdir(`output/${meta[0]}/${button.dataset.modelId}`, (err, files) => {
+
+                if (err) return
+
+                files.filter(f => f.endsWith(".wav")).forEach(file => {
+
+                    const sample = createElem("div.sample", createElem("div", file.split(".wav")[0]))
+                    const audioControls = createElem("div")
+                    const audio = createElem("audio", {controls: true}, createElem("source", {
+                        src: `output/${meta[0]}/${button.dataset.modelId}/${file}`,
+                        type: "audio/wav"
+                    }))
+                    const openFileLocationButton = createElem("div", "&#10064;")
+                    openFileLocationButton.addEventListener("click", () => {
+                        const path = `${__dirname}/output/${meta[0]}/${button.dataset.modelId}/${file}`
+                        shell.showItemInFolder(path)
+                    })
+                    const deleteFileButton = createElem("div", "&#10060;")
+                    deleteFileButton.addEventListener("click", () => {
+                        toggleModal(deleteFileModal, false)
+                    })
+                    audioControls.appendChild(audio)
+                    audioControls.appendChild(openFileLocationButton)
+                    audioControls.appendChild(deleteFileButton)
+                    sample.appendChild(audioControls)
+                    voiceSamples.appendChild(sample)
+                })
+            })
+        })
+        voiceTypeContainer.appendChild(button)
+    })
+}
+gameDropdown.addEventListener("change", changeGame)
+
+const changeVoiceType = () => {
+
+}
+
+const loadSingleModel = path => {
+    console.log(`Loading model ${path}`)
+}
+
+// Watch for new models being added, and load them into the app
+fs.watch("./models", {recursive: true, persistent: true}, (eventType, filename) => {
+    if (!willExecute) {
+        willExecute = true
+        loadAllModels()
+    }
+})
+loadAllModels().then(changeGame)
+
+</script>
+<script>"serviceWorker" in navigator&&navigator.serviceWorker.register("./sw.js").then(function(reg){reg.active&&console.log("SW active")}).catch(function(e){console.log("SW Error:",e)})</script>
+</html>
