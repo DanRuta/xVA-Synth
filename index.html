@@ -6,7 +6,7 @@
 </head>
 <style id="cssHack">
     ::selection {
-        background: red;
+        background: gray;
     }
 </style>
 <style>
@@ -19,6 +19,7 @@
         font-size: 13pt;
         font-weight: bold;
         cursor: pointer;
+        user-select: none;
         box-shadow: 0 1px 5px 1px rgba(0,0,0,0.3)
     }
     button:hover, .voiceType:hover {
@@ -143,7 +144,7 @@
     }
     textarea {
         height: 50px;
-        width: calc(95vw - 300px);
+        width: calc(95vw - 306px);
         margin-left: 2.5vw;
         margin-right: 2.5vw;
         margin-top: 9px;
@@ -176,12 +177,10 @@
     }
     #voiceSamples {
         width: calc(95vw - 300px);
-        height: calc(90vh - 120px);
-        /*height: 75vh;*/
+        height: calc(90vh - 145px);
         background: rgba(255,255,255,0.1);
         margin-left: 2.5vw;
         margin-right: 2.5vw;
-        /*font-size: 14pt;*/
         overflow-y: auto;
     }
     .sample {
@@ -203,16 +202,12 @@
     .sample > div {
         display: flex;
         overflow: hidden;
-        /*white-space: nowrap;*/
         text-overflow: ellipsis;
     }
     .sample > div > div {
         display: flex;
         align-items: center;
         font-size: 18pt;
-        cursor: pointer;
-    }
-    .sample {
         cursor: pointer;
     }
     audio {
@@ -371,7 +366,7 @@ const {shell, remote} = require("electron")
 window.games = {}
 window.models = {}
 
-// Chreom
+// Chrome
 chromeMin.addEventListener("click", () => remote.getCurrentWindow().minimize())
 chromeMax.addEventListener("click", () => {
     const window = remote.getCurrentWindow()
@@ -384,7 +379,7 @@ try {fs.mkdirSync("models")} catch (e) {/*Do nothing*/}
 try {fs.mkdirSync("output")} catch (e) {/*Do nothing*/}
 try {fs.mkdirSync("assets")} catch (e) {/*Do nothing*/}
 
-let willExecute = true
+let willExecute = false
 
 const loadAllModels = () => {
     return new Promise(resolve => {
@@ -454,14 +449,6 @@ Array.from(document.querySelectorAll(".modalNoButton")).forEach(e => e.addEventL
 
 cogButton.addEventListener("click", () => {
     toggleModal(deleteFileModal, false)
-    // showModal(deleteFileModal,
-    //     () => {
-    //         console.log("deleting...")
-    //     },
-    //     () => {
-    //         console.log("cancelled")
-    //     }
-    // )
 })
 
 window.toggleSpinnerButtons = () => {
@@ -553,7 +540,7 @@ const changeGame = () => {
 gameDropdown.addEventListener("change", changeGame)
 
 const changeVoiceType = () => {
-
+    // TODO...
 }
 
 const loadSingleModel = path => {
