@@ -287,6 +287,11 @@
     #dragBar {
         flex-grow: 1;
         -webkit-app-region: drag;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Helvetica;
+        color: rgb(200,200,200);
     }
     #chromeActions, #chromeActions > div {
         display: flex;
@@ -308,7 +313,7 @@
 </style>
 <body>
     <div id="chrome">
-        <div id="dragBar" style="-webkit-app-region: drag"></div>
+        <div id="dragBar">xVA Synth</div>
         <div id="chromeActions">
             <div id="chromeMin">&#x1F5D5;</div>
             <div id="chromeMax">&#128470;</div>
