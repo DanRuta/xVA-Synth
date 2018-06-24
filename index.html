@@ -30,7 +30,6 @@
         overflow: hidden;
     }
     #appcontent {
-        /*background-color: #2d2d2d;*/
         background-color: #383838;
         height: 100vh;
         display: flex;
@@ -47,7 +46,6 @@
     }
     #right {
         width: calc(100vw - 300px);
-        /*background: linear-gradient(0deg, grey 0, rgba(0,0,0,0)), url(assets/fallout.jpg), grey;*/
         background: linear-gradient(0deg, grey 0, rgba(0,0,0,0)), grey;
         background-repeat: no-repeat !important;
         background-position-x: 100% !important;
@@ -65,7 +63,7 @@
     #topLeft {
         align-items: baseline;
         padding-bottom: 5px;
-        padding-top: 15px;
+        margin-top: -10px;
     }
     #game-label {
         font-weight: bold;
@@ -82,7 +80,6 @@
         color: white;
         background: rgba(0,0,0,0);
         border: none;
-        /*-webkit-appearance: none;*/
     }
     option {
         color: black;
@@ -93,11 +90,9 @@
     }
     #voiceTypeContainer {
         margin: 10px;
-        height: calc(95vh - 40px);
-        /*background-color: white;*/
+        height: calc(95vh - 50px);
         padding-top: 1px;
         overflow-y: auto;
-        /*background: linear-gradient(0deg, #444 0, rgba(0,0,0,0)), gray;*/
         background: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.05) 35px, rgba(255,255,255,.05) 70px), linear-gradient(0deg, #444 0, rgba(0,0,0,0)), gray;
     }
     .voiceType {
@@ -114,7 +109,6 @@
         justify-content: center;
         font-weight: bold;
         font-family: Arial;
-        /*text-shadow: 0 1px 15px rgba(255,255,255,1);*/
         text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
         color: black;
     }
@@ -137,7 +131,6 @@
     #topRight > svg {
         height: 30px;
         width: 30px;
-        /*margin-right: -10%;*/
         margin-top: -30px;
         float: right;
         cursor: pointer;
