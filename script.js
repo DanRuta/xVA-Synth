@@ -120,6 +120,8 @@ const changeGame = () => {
         background: #${meta[1]};
     }`
 
+    try {fs.mkdirSync(`output/${meta[0]}`)} catch (e) {/*Do nothing*/}
+
     // Populate models
     voiceTypeContainer.innerHTML = ""
     voiceSamples.innerHTML = ""
