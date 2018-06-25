@@ -5,7 +5,14 @@ let mainWindow
 
 const createWindow = () => {
 
-    mainWindow = new BrowserWindow({width: 800, height: 600, "minHeight": 510, "minWidth": 960, frame: false})
+    mainWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+        minHeight: 510,
+        minWidth: 960,
+        frame: false,
+        icon: `${__dirname}/assets/x-icon.png`
+    })
 
     // mainWindow.setMenu(null)
     mainWindow.loadFile("index.html")
