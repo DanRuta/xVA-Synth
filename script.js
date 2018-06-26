@@ -32,7 +32,7 @@ const loadAllModels = () => {
                         if (!games.hasOwnProperty(game)) {
                             const gameAsset = fs.readdirSync("assets").find(f => f.startsWith(game))
                             const option = document.createElement("option")
-                            option.value = gameAsset//.split("-")[0]
+                            option.value = gameAsset
                             option.innerHTML = gameAsset.split("-").reverse()[0].split(".")[0]
                             gameDropdown.appendChild(option)
                             games[game] = {
@@ -113,7 +113,6 @@ const changeGame = () => {
         Array.from(document.querySelectorAll("button")).forEach(e => e.style.background = `#${meta[1]}`)
         Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.background = `#${meta[1]}`)
         Array.from(document.querySelectorAll(".spinner")).forEach(e => e.style.borderLeftColor = `#${meta[1]}`)
-        // console.log(right, "background", right.style.background)
     }
 
     cssHack.innerHTML = `::selection {
@@ -121,6 +120,7 @@ const changeGame = () => {
     }`
 
     try {fs.mkdirSync(`output/${meta[0]}`)} catch (e) {/*Do nothing*/}
+    localStorage.setItem("lastGame", gameDropdown.value)
 
     // Populate models
     voiceTypeContainer.innerHTML = ""
@@ -188,4 +188,13 @@ fs.watch("./models", {recursive: true, persistent: true}, (eventType, filename) 
         loadAllModels()
     }
 })
-loadAllModels().then(changeGame)
+
+loadAllModels().then(() => {
+    // Load the last selected game
+    const lastGame = localStorage.getItem("lastGame")
+
+    if (lastGame) {
+        gameDropdown.value = lastGame
+    }
+    changeGame()
+})
