@@ -124,6 +124,7 @@
      cursor: pointer;
  }
  textarea {
+     opacity: 0.9;
      height: 50px;
      width: calc(95vw - 306px);
      margin-left: 2.5vw;
