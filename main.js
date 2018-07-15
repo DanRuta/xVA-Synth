@@ -1,8 +1,10 @@
+const PRODUCTION = process.mainModule.filename.includes("resources")
+const path = PRODUCTION ? "resources/app" : "."
+
 const fs = require("fs")
 const {shell, app, BrowserWindow} = require("electron")
 const spawn = require("child_process").spawn
-const pythonProcess = spawn("python", ["server.py"], {stdio: "ignore"})
-// const pythonProcess = spawn("node", ["python/testSpawn.js"], {stdio: "ignore"})
+const pythonProcess = spawn("python", [`${path}/server.py`], {stdio: "ignore"})
 
 let mainWindow
 
@@ -17,11 +19,9 @@ const createWindow = () => {
         icon: `${__dirname}/assets/x-icon.png`
     })
 
-    // mainWindow.setMenu(null)
     mainWindow.loadFile("index.html")
     mainWindow.shell = shell
 
-    // Emitted when the window is closed.
     mainWindow.on("closed", () => mainWindow = null)
 }
 

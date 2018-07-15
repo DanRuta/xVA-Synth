@@ -1,5 +1,8 @@
 "use strict"
 
+const PRODUCTION = process.mainModule.filename.includes("resources")
+const path = PRODUCTION ? "./resources/app" : "."
+
 const fs = require("fs")
 const {shell} = require("electron")
 const fetch = require("node-fetch")
@@ -9,17 +12,17 @@ window.games = {}
 window.models = {}
 
 // Set up folders
-try {fs.mkdirSync("models")} catch (e) {/*Do nothing*/}
-try {fs.mkdirSync("output")} catch (e) {/*Do nothing*/}
-try {fs.mkdirSync("assets")} catch (e) {/*Do nothing*/}
+try {fs.mkdirSync(`${path}/models`)} catch (e) {/*Do nothing*/}
+try {fs.mkdirSync(`${path}/output`)} catch (e) {/*Do nothing*/}
+try {fs.mkdirSync(`${path}/assets`)} catch (e) {/*Do nothing*/}
 
 let willExecute = false
 
 const loadAllModels = () => {
     return new Promise(resolve => {
-        fs.readdir("./models", (err, gameDirs) => {
+        fs.readdir(`${path}/models`, (err, gameDirs) => {
             gameDirs.filter(name => !name.includes(".")).forEach(game => {
-                const files = fs.readdirSync(`./models/${game}`).filter(f => f.endsWith(".json"))
+                const files = fs.readdirSync(`${path}/models/${game}`).filter(f => f.endsWith(".json"))
 
                 if (!files.length) {
                     return
@@ -32,7 +35,7 @@ const loadAllModels = () => {
                         models[`${game}/${fileName}`] = null
 
                         if (!games.hasOwnProperty(game)) {
-                            const gameAsset = fs.readdirSync("assets").find(f => f.startsWith(game))
+                            const gameAsset = fs.readdirSync(`${path}/assets`).find(f => f.startsWith(game))
                             const option = document.createElement("option")
                             option.value = gameAsset
                             option.innerHTML = gameAsset.split("-").reverse()[0].split(".")[0]
@@ -88,14 +91,14 @@ generateVoiceButton.addEventListener("click", () => {
         try {fs.unlinkSync(samplePlay.dataset.tempFileLocation)} catch (e) {/*Do nothing*/}
 
         // For some reason, the samplePlay audio element does not update the source when the file name is the same
-        const tempFileLocation = `output/temp-${Math.random().toString().split(".")[1]}.wav`
+        const tempFileLocation = `./output/temp-${Math.random().toString().split(".")[1]}.wav`
 
         fetch("http://localhost:8008/synthesize", {
             method: "Post",
-            body: JSON.stringify({sequence: sequence, outfile: tempFileLocation})
+            body: JSON.stringify({sequence: sequence, outfile: `${path}/${tempFileLocation.slice(1, tempFileLocation.length)}`})
         }).then(r=>r.text()).then(() => {
             toggleSpinnerButtons()
-            keepSampleButton.dataset.newFileLocation = `output/${game}/${voiceType}/${outputFileName}.wav`
+            keepSampleButton.dataset.newFileLocation = `./output/${game}/${voiceType}/${outputFileName}.wav`
             samplePlay.dataset.tempFileLocation = tempFileLocation
             samplePlay.innerHTML = ""
             const audio = createElem("audio", {controls: true, style: {width:"100px"}},
@@ -108,7 +111,14 @@ generateVoiceButton.addEventListener("click", () => {
 
 keepSampleButton.addEventListener("click", () => {
     if (keepSampleButton.dataset.newFileLocation) {
-        fs.rename(samplePlay.dataset.tempFileLocation, keepSampleButton.dataset.newFileLocation, err => {
+
+        let fromLocation = samplePlay.dataset.tempFileLocation
+        let toLocation = keepSampleButton.dataset.newFileLocation
+
+        fromLocation = fromLocation.slice(1, fromLocation.length)
+        toLocation = toLocation.slice(1, toLocation.length)
+
+        fs.rename(`${__dirname}/${fromLocation}`, `${__dirname}/${toLocation}`, err => {
             voiceSamples.appendChild(makeSample(keepSampleButton.dataset.newFileLocation))
         })
     }
@@ -133,7 +143,7 @@ const changeGame = () => {
         background: #${meta[1]};
     }`
 
-    try {fs.mkdirSync(`output/${meta[0]}`)} catch (e) {/*Do nothing*/}
+    try {fs.mkdirSync(`${path}/output/${meta[0]}`)} catch (e) {/*Do nothing*/}
     localStorage.setItem("lastGame", gameDropdown.value)
 
     // Populate models
@@ -143,7 +153,7 @@ const changeGame = () => {
 
     games[meta[0]].models.forEach(model => {
 
-        const modelMeta = JSON.parse(fs.readFileSync(`models/${model}`))
+        const modelMeta = JSON.parse(fs.readFileSync(`${path}/models/${model}`))
 
         const button = createElem("div.voiceType", modelMeta.name)
         button.style.background = `#${meta[1]}`
@@ -151,7 +161,7 @@ const changeGame = () => {
 
         button.addEventListener("click", () => {
 
-            try {fs.mkdirSync(`output/${meta[0]}/${modelMeta.id}`)} catch (e) {/*Do nothing*/}
+            try {fs.mkdirSync(`${path}/output/${meta[0]}/${modelMeta.id}`)} catch (e) {/*Do nothing*/}
 
             generateVoiceButton.dataset.modelQuery = null
 
@@ -159,7 +169,7 @@ const changeGame = () => {
                 generateVoiceButton.innerHTML = "Load model"
                 generateVoiceButton.dataset.modelQuery = JSON.stringify({
                     outputs: parseInt(modelMeta.outputs),
-                    model: `models/${meta[0]}/${modelMeta.id}`,
+                    model: `${path}/models/${meta[0]}/${modelMeta.id}`,
                     cmudict: modelMeta.cmudict
                 })
                 generateVoiceButton.dataset.modelIDToLoad = modelMeta.id
@@ -173,12 +183,12 @@ const changeGame = () => {
 
             // Voice samples
             voiceSamples.innerHTML = ""
-            fs.readdir(`output/${meta[0]}/${button.dataset.modelId}`, (err, files) => {
+            fs.readdir(`${path}/output/${meta[0]}/${button.dataset.modelId}`, (err, files) => {
 
                 if (err) return
 
                 files.filter(f => f.endsWith(".wav")).forEach(file => {
-                    voiceSamples.appendChild(makeSample(`output/${meta[0]}/${button.dataset.modelId}/${file}`))
+                    voiceSamples.appendChild(makeSample(`./output/${meta[0]}/${button.dataset.modelId}/${file}`))
                 })
             })
         })
@@ -215,7 +225,7 @@ const makeSample = src => {
 }
 
 // Watch for new models being added, and load them into the app
-fs.watch("./models", {recursive: true, persistent: true}, (eventType, filename) => {
+fs.watch(`${path}/models`, {recursive: true, persistent: true}, (eventType, filename) => {
     if (!willExecute) {
         willExecute = true
         loadAllModels()
