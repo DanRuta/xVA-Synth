@@ -1,5 +1,8 @@
 const fs = require("fs")
 const {shell, app, BrowserWindow} = require("electron")
+const spawn = require("child_process").spawn
+const pythonProcess = spawn("python", ["server.py"], {stdio: "ignore"})
+// const pythonProcess = spawn("node", ["python/testSpawn.js"], {stdio: "ignore"})
 
 let mainWindow
 

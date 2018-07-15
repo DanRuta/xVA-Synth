@@ -10,5 +10,8 @@
   "author": "DanRuta",
   "devDependencies": {
     "electron": "^2.0.0"
+  },
+  "dependencies": {
+    "node-fetch": "^2.1.2"
   }
 }

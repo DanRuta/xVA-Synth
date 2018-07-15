@@ -8,7 +8,8 @@
      font-weight: bold;
      cursor: pointer;
      user-select: none;
-     box-shadow: 0 1px 5px 1px rgba(0,0,0,0.3)
+     box-shadow: 0 1px 5px 1px rgba(0,0,0,0.3);
+     transition: background-color 500ms;
  }
  button:hover, .voiceType:hover {
      filter: brightness(110%);
@@ -39,6 +40,7 @@
      background-position-x: 100% !important;
      background-size: cover !important;
      transition: background 0.2s;
+     transition: background-image 0.2s ease-in-out;
  }
  .top {
      display: flex;

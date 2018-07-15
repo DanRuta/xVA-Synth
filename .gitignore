@@ -2,3 +2,7 @@ node_modules
 *.wav
 *.ckpt
 Plan.todo
+python/
+__pycache__/
+.cache/
+*.pyc
