@@ -89,9 +89,18 @@ generateVoiceButton.addEventListener("click", () => {
 
         fetch("http://localhost:8008/synthesize", {
             method: "Post",
-            body: JSON.stringify({sequence: sequence, outfile: `output/${game}/${voiceType}/${outputFileName}.wav`})
+            body: JSON.stringify({sequence: sequence, outfile: "output/temp.wav"})
         }).then(r=>r.text()).then(() => {
             toggleSpinnerButtons()
+            keepSampleButton.dataset.newFileLocation = `output/${game}/${voiceType}/${outputFileName}.wav`
+        })
+    }
+})
+
+keepSampleButton.addEventListener("click", () => {
+    if (keepSampleButton.dataset.newFileLocation) {
+        fs.rename("output/temp.wav", keepSampleButton.dataset.newFileLocation, err => {
+            voiceSamples.appendChild(makeSample(keepSampleButton.dataset.newFileLocation))
         })
     }
 })
@@ -166,32 +175,7 @@ const changeGame = () => {
                 if (err) return
 
                 files.filter(f => f.endsWith(".wav")).forEach(file => {
-
-                    const sample = createElem("div.sample", createElem("div", file.split(".wav")[0]))
-                    const audioControls = createElem("div")
-                    const audio = createElem("audio", {controls: true}, createElem("source", {
-                        src: `output/${meta[0]}/${button.dataset.modelId}/${file}`,
-                        type: "audio/wav"
-                    }))
-                    const openFileLocationButton = createElem("div", "&#10064;")
-                    openFileLocationButton.addEventListener("click", () => {
-                        const path = `${__dirname}/output/${meta[0]}/${button.dataset.modelId}/${file}`
-                        shell.showItemInFolder(path)
-                    })
-                    const deleteFileButton = createElem("div", "&#10060;")
-                    deleteFileButton.addEventListener("click", () => {
-                        confirmModal("Are you sure you'd like to delete this file?").then(confirmation => {
-                            if (confirmation) {
-                                fs.unlinkSync(`output/${meta[0]}/${button.dataset.modelId}/${file}`)
-                                sample.remove()
-                            }
-                        })
-                    })
-                    audioControls.appendChild(audio)
-                    audioControls.appendChild(openFileLocationButton)
-                    audioControls.appendChild(deleteFileButton)
-                    sample.appendChild(audioControls)
-                    voiceSamples.appendChild(sample)
+                    voiceSamples.appendChild(makeSample(`output/${meta[0]}/${button.dataset.modelId}/${file}`))
                 })
             })
         })
@@ -200,6 +184,32 @@ const changeGame = () => {
 }
 gameDropdown.addEventListener("change", changeGame)
 
+
+const makeSample = src => {
+    const sample = createElem("div.sample", createElem("div", src.split("/").reverse()[0].split(".wav")[0]))
+    const audioControls = createElem("div")
+    const audio = createElem("audio", {controls: true}, createElem("source", {
+        src: src,
+        type: "audio/wav"
+    }))
+    const openFileLocationButton = createElem("div", "&#10064;")
+    openFileLocationButton.addEventListener("click", () => shell.showItemInFolder(`${__dirname}/${src}`))
+
+    const deleteFileButton = createElem("div", "&#10060;")
+    deleteFileButton.addEventListener("click", () => {
+        confirmModal("Are you sure you'd like to delete this file?").then(confirmation => {
+            if (confirmation) {
+                fs.unlinkSync(src)
+                sample.remove()
+            }
+        })
+    })
+    audioControls.appendChild(audio)
+    audioControls.appendChild(openFileLocationButton)
+    audioControls.appendChild(deleteFileButton)
+    sample.appendChild(audioControls)
+    return sample
+}
 
 // Watch for new models being added, and load them into the app
 fs.watch("./models", {recursive: true, persistent: true}, (eventType, filename) => {
