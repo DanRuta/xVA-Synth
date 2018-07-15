@@ -98,7 +98,7 @@ generateVoiceButton.addEventListener("click", () => {
             keepSampleButton.dataset.newFileLocation = `output/${game}/${voiceType}/${outputFileName}.wav`
             samplePlay.dataset.tempFileLocation = tempFileLocation
             samplePlay.innerHTML = ""
-            const audio = createElem("audio", {controls: true, style: {width:"70px"}},
+            const audio = createElem("audio", {controls: true, style: {width:"100px"}},
                     createElem("source", {src: samplePlay.dataset.tempFileLocation, type: "audio/wav"}))
             samplePlay.appendChild(audio)
             audio.load()

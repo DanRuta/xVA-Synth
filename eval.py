@@ -7,7 +7,7 @@ from tensorflow.contrib.rnn import GRUCell, MultiRNNCell, OutputProjectionWrappe
 from tensorflow.contrib.seq2seq import BasicDecoder, BahdanauAttention, AttentionWrapper
 
 import numpy as np
-from pythonmodels import helpers, modules, rnn_wrappers
+from python import helpers, modules, rnn_wrappers
 from scipy import signal
 
 class Tacotron():
