@@ -1,4 +1,5 @@
 
+import os
 import eval
 import logging
 import json
@@ -12,7 +13,7 @@ model = 0
 
 logger = logging.getLogger('serverLog')
 logger.setLevel(logging.DEBUG)
-fh = logging.FileHandler('server.log')
+fh = logging.FileHandler('{}\server.log'.format(os.path.dirname(os.path.realpath(__file__))))
 fh.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
 ch.setLevel(logging.ERROR)
