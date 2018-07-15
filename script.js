@@ -3,9 +3,12 @@
 const fs = require("fs")
 const {shell} = require("electron")
 const fetch = require("node-fetch")
+const {text_to_sequence, english_cleaners} = require("./text.js")
 
 window.games = {}
 window.models = {}
+window.text_to_sequence = text_to_sequence
+window.english_cleaners = english_cleaners
 
 // Set up folders
 try {fs.mkdirSync("models")} catch (e) {/*Do nothing*/}
@@ -98,7 +101,7 @@ generateVoiceButton.addEventListener("click", () => {
     const game = gameDropdown.value.split("-")[0]
     const voiceType = title.dataset.modelId
 
-    const sequence = dialogueInput.value
+    const sequence = text_to_sequence(dialogueInput.value).join(",")
     const outputFileName = dialogueInput.value.slice(0, 30)
 
     fetch("http://localhost:8008/synthesize", {
@@ -160,7 +163,11 @@ const changeGame = () => {
 
             fetch("http://localhost:8008/loadModel", {
                 method: "Post",
-                body: JSON.stringify({outputs: 20, model: "516000", cmudict: false})
+                body: JSON.stringify({
+                    outputs: parseInt(modelMeta.outputs),
+                    model: `models/${meta[0]}/${modelMeta.id}`,
+                    cmudict: modelMeta.cmudict
+                })
             }).then(r=>r.text()).then(res => {
                 console.log("Done loading model")
 
