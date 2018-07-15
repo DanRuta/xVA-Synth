@@ -3,11 +3,7 @@
 const fs = require("fs")
 const {shell} = require("electron")
 const fetch = require("node-fetch")
-// const spawn = require("child_process").spawn
-// const pythonProcess = spawn("python", ["./python/server.py"], {stdio: "inherit"})
-// const pythonProcess = spawn("python", ["test.py"], {stdio: "ignore"})
 
-console.log(__dirname)
 window.games = {}
 window.models = {}
 
@@ -97,12 +93,17 @@ window.toggleSpinnerButtons = () => {
 }
 
 generateVoiceButton.addEventListener("click", () => {
-    // TODO ...
     toggleSpinnerButtons()
+
+    const game = gameDropdown.value.split("-")[0]
+    const voiceType = title.dataset.modelId
+
+    const sequence = dialogueInput.value
+    const outputFileName = dialogueInput.value.slice(0, 30)
 
     fetch("http://localhost:8008/synthesize", {
         method: "Post",
-        body: JSON.stringify({sequence: dialogueInput.value})
+        body: JSON.stringify({sequence: sequence, outfile: `output/${game}/${voiceType}/${outputFileName}.wav`})
     }).then(r=>r.text()).then(() => {
         toggleSpinnerButtons()
     })
@@ -143,20 +144,20 @@ const changeGame = () => {
 
         const modelMeta = JSON.parse(fs.readFileSync(`models/${model}`))
 
-        // const button = createElem("div.voiceType", model.split("-")[1].split(".")[0])
         const button = createElem("div.voiceType", modelMeta.name)
         button.style.background = `#${meta[1]}`
-        // button.dataset.modelId = model.split("/")[1].split("-")[0]
         button.dataset.modelId = modelMeta.id
 
         button.addEventListener("click", () => {
 
-            // loadSingleModel(model)
             title.innerHTML = button.innerHTML
+            title.dataset.modelId = modelMeta.id
             keepSampleButton.style.display = "none"
             samplePlay.style.display = "none"
 
             console.log("Loading model....")
+            try {fs.mkdirSync(`output/${meta[0]}/${modelMeta.id}`)} catch (e) {/*Do nothing*/}
+
             fetch("http://localhost:8008/loadModel", {
                 method: "Post",
                 body: JSON.stringify({outputs: 20, model: "516000", cmudict: false})
@@ -200,13 +201,6 @@ const changeGame = () => {
 }
 gameDropdown.addEventListener("change", changeGame)
 
-const changeVoiceType = () => {
-    // TODO...
-}
-
-const loadSingleModel = path => {
-    console.log(`Loading model ${path}`)
-}
 
 // Watch for new models being added, and load them into the app
 fs.watch("./models", {recursive: true, persistent: true}, (eventType, filename) => {

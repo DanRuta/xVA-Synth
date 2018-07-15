@@ -228,7 +228,7 @@ def loadModel(model, outputs, cmudict):
   synth.load(model)
   return synth
 
-def syntesize(model, sequence):
+def syntesize(model, sequence, outfile):
   print("syntesize")
-  with open("output.wav", "wb") as f:
+  with open(outfile, "wb") as f:
     f.write(model.synthesize(sequence))
