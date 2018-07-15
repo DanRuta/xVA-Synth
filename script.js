@@ -66,7 +66,7 @@ window.toggleSpinnerButtons = () => {
 
 generateVoiceButton.addEventListener("click", () => {
 
-    if (generateVoiceButton.dataset.modelQuery) {
+    if (generateVoiceButton.dataset.modelQuery && generateVoiceButton.dataset.modelQuery!="null") {
 
         spinnerModal("Loading model...")
         fetch("http://localhost:8008/loadModel", {
@@ -76,6 +76,7 @@ generateVoiceButton.addEventListener("click", () => {
             closeModal()
             generateVoiceButton.dataset.modelQuery = null
             generateVoiceButton.innerHTML = "Generate Voice"
+            generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
         })
     } else {
         toggleSpinnerButtons()
@@ -140,12 +141,17 @@ const changeGame = () => {
 
             try {fs.mkdirSync(`output/${meta[0]}/${modelMeta.id}`)} catch (e) {/*Do nothing*/}
 
-            generateVoiceButton.innerHTML = "Load model"
-            generateVoiceButton.dataset.modelQuery = JSON.stringify({
-                outputs: parseInt(modelMeta.outputs),
-                model: `models/${meta[0]}/${modelMeta.id}`,
-                cmudict: modelMeta.cmudict
-            })
+            generateVoiceButton.dataset.modelQuery = null
+
+            if (generateVoiceButton.dataset.modelIDLoaded != modelMeta.id) {
+                generateVoiceButton.innerHTML = "Load model"
+                generateVoiceButton.dataset.modelQuery = JSON.stringify({
+                    outputs: parseInt(modelMeta.outputs),
+                    model: `models/${meta[0]}/${modelMeta.id}`,
+                    cmudict: modelMeta.cmudict
+                })
+                generateVoiceButton.dataset.modelIDToLoad = modelMeta.id
+            }
             generateVoiceButton.disabled = false
 
             title.innerHTML = button.innerHTML
