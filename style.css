@@ -261,6 +261,9 @@
  .modal > div {
      margin: 10px;
  }
+ .modal button {
+     margin-left: 10px;
+ }
  /*Chrome*/
  #chrome {
      display: flex;

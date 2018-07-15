@@ -56,37 +56,6 @@ const loadAllModels = () => {
     })
 }
 
-const toggleModal = (modal, onOff) => {
-
-    onOff = onOff==undefined ? modalContainer.style.opacity=="1" : onOff
-    modal = modal || Array.from(document.querySelectorAll(".modal")).find(e => e.style.display!="none")
-    console.log(modal)
-
-    if (onOff) {
-        modalContainer.style.opacity = 0
-        setTimeout(() => {
-            modal.style.display = "none"
-            modalContainer.style.display = "none"
-            modalContainer.style.zIndex = 0
-        })
-    } else {
-        modal.style.display = "flex"
-        modalContainer.style.display = "flex"
-        modalContainer.style.opacity = 1
-        modalContainer.style.zIndex = 4
-    }
-
-    if (onOff) {
-        document.querySelectorAll(".modal").forEach(m => m.style.display = "none")
-    }
-}
-modalContainer.addEventListener("click", event => event.target==modalContainer && toggleModal())
-Array.from(document.querySelectorAll(".modalNoButton")).forEach(e => e.addEventListener("click", () => toggleModal()))
-
-cogButton.addEventListener("click", () => {
-    toggleModal(deleteFileModal, false)
-})
-
 window.toggleSpinnerButtons = () => {
     const spinnerVisible = window.getComputedStyle(spinner).display == "block"
     spinner.style.display = spinnerVisible ? "none" : "block"
@@ -158,7 +127,7 @@ const changeGame = () => {
             keepSampleButton.style.display = "none"
             samplePlay.style.display = "none"
 
-            console.log("Loading model....")
+            spinnerModal("Loading model...")
             try {fs.mkdirSync(`output/${meta[0]}/${modelMeta.id}`)} catch (e) {/*Do nothing*/}
 
             fetch("http://localhost:8008/loadModel", {
@@ -169,7 +138,7 @@ const changeGame = () => {
                     cmudict: modelMeta.cmudict
                 })
             }).then(r=>r.text()).then(res => {
-                console.log("Done loading model")
+                closeModal()
 
                 // Voice samples
                 voiceSamples.innerHTML = ""
@@ -192,7 +161,10 @@ const changeGame = () => {
                         })
                         const deleteFileButton = createElem("div", "&#10060;")
                         deleteFileButton.addEventListener("click", () => {
-                            toggleModal(deleteFileModal, false)
+                            // toggleModal(deleteFileModal, false)
+                            confirmModal("Are you sure you'd like to delete this file?").then(response => {
+
+                            })
                         })
                         audioControls.appendChild(audio)
                         audioControls.appendChild(openFileLocationButton)
@@ -226,3 +198,45 @@ loadAllModels().then(() => {
     }
     changeGame()
 })
+
+
+const createModal = (type, message) => {
+    return new Promise(resolve => {
+        const modal = createElem("div.modal#activeModal", {style: {opacity: 0}}, createElem("span", message))
+
+        if (type=="confirm") {
+            const yesButton = createElem("button", "Yes")
+            const noButton = createElem("button", "No")
+            modal.appendChild(createElem("div", yesButton, noButton))
+
+            yesButton.addEventListener("click", () => {
+                resolve(true)
+                closeModal()
+            })
+            noButton.addEventListener("click", () => {
+                resolve(false)
+                closeModal()
+            })
+        } else {
+            modal.appendChild(createElem("div.spinner", {style: {borderLeftColor: document.querySelector("button").style.background}}))
+        }
+
+        modalContainer.appendChild(modal)
+        modalContainer.style.opacity = 0
+        modalContainer.style.display = "flex"
+
+        requestAnimationFrame(() => requestAnimationFrame(() => modalContainer.style.opacity = 1))
+    })
+}
+const closeModal = () => {
+    modalContainer.style.opacity = 0
+    setTimeout(() => {
+        modalContainer.style.display = "none"
+        activeModal.remove()
+    }, 300)
+}
+
+window.confirmModal = message => new Promise(resolve => resolve(createModal("confirm", message)))
+window.spinnerModal = message => new Promise(resolve => resolve(createModal("spinner", message)))
+
+modalContainer.addEventListener("click", event => event.target==modalContainer && closeModal())
