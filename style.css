@@ -14,6 +14,11 @@
  button:hover, .voiceType:hover {
      filter: brightness(110%);
  }
+ button:disabled {
+     background-color: gray;
+     opacity: 0.65;
+     cursor: not-allowed;
+ }
  body {
      margin: 0;
      overflow: hidden;

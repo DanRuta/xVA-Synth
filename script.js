@@ -65,20 +65,34 @@ window.toggleSpinnerButtons = () => {
 }
 
 generateVoiceButton.addEventListener("click", () => {
-    toggleSpinnerButtons()
 
-    const game = gameDropdown.value.split("-")[0]
-    const voiceType = title.dataset.modelId
+    if (generateVoiceButton.dataset.modelQuery) {
 
-    const sequence = text_to_sequence(dialogueInput.value).join(",")
-    const outputFileName = dialogueInput.value.slice(0, 30)
-
-    fetch("http://localhost:8008/synthesize", {
-        method: "Post",
-        body: JSON.stringify({sequence: sequence, outfile: `output/${game}/${voiceType}/${outputFileName}.wav`})
-    }).then(r=>r.text()).then(() => {
+        spinnerModal("Loading model...")
+        fetch("http://localhost:8008/loadModel", {
+            method: "Post",
+            body: generateVoiceButton.dataset.modelQuery
+        }).then(r=>r.text()).then(res => {
+            closeModal()
+            generateVoiceButton.dataset.modelQuery = null
+            generateVoiceButton.innerHTML = "Generate Voice"
+        })
+    } else {
         toggleSpinnerButtons()
-    })
+
+        const game = gameDropdown.value.split("-")[0]
+        const voiceType = title.dataset.modelId
+
+        const sequence = text_to_sequence(dialogueInput.value).join(",")
+        const outputFileName = dialogueInput.value.slice(0, 30)
+
+        fetch("http://localhost:8008/synthesize", {
+            method: "Post",
+            body: JSON.stringify({sequence: sequence, outfile: `output/${game}/${voiceType}/${outputFileName}.wav`})
+        }).then(r=>r.text()).then(() => {
+            toggleSpinnerButtons()
+        })
+    }
 })
 
 samplePlay.addEventListener("click", () => {
@@ -91,6 +105,8 @@ samplePlay.addEventListener("click", () => {
 const changeGame = () => {
 
     const meta = gameDropdown.value.split("-")
+    generateVoiceButton.disabled = true
+    generateVoiceButton.innerHTML = "Generate Voice"
 
     if (meta) {
         const background = `linear-gradient(0deg, grey 0, rgba(0,0,0,0)), url("assets/${meta.join("-")}"), grey`
@@ -122,58 +138,54 @@ const changeGame = () => {
 
         button.addEventListener("click", () => {
 
+            try {fs.mkdirSync(`output/${meta[0]}/${modelMeta.id}`)} catch (e) {/*Do nothing*/}
+
+            generateVoiceButton.innerHTML = "Load model"
+            generateVoiceButton.dataset.modelQuery = JSON.stringify({
+                outputs: parseInt(modelMeta.outputs),
+                model: `models/${meta[0]}/${modelMeta.id}`,
+                cmudict: modelMeta.cmudict
+            })
+            generateVoiceButton.disabled = false
+
             title.innerHTML = button.innerHTML
             title.dataset.modelId = modelMeta.id
             keepSampleButton.style.display = "none"
             samplePlay.style.display = "none"
 
-            spinnerModal("Loading model...")
-            try {fs.mkdirSync(`output/${meta[0]}/${modelMeta.id}`)} catch (e) {/*Do nothing*/}
+            // Voice samples
+            voiceSamples.innerHTML = ""
+            fs.readdir(`output/${meta[0]}/${button.dataset.modelId}`, (err, files) => {
 
-            fetch("http://localhost:8008/loadModel", {
-                method: "Post",
-                body: JSON.stringify({
-                    outputs: parseInt(modelMeta.outputs),
-                    model: `models/${meta[0]}/${modelMeta.id}`,
-                    cmudict: modelMeta.cmudict
-                })
-            }).then(r=>r.text()).then(res => {
-                closeModal()
+                if (err) return
 
-                // Voice samples
-                voiceSamples.innerHTML = ""
-                fs.readdir(`output/${meta[0]}/${button.dataset.modelId}`, (err, files) => {
+                files.filter(f => f.endsWith(".wav")).forEach(file => {
 
-                    if (err) return
-
-                    files.filter(f => f.endsWith(".wav")).forEach(file => {
-
-                        const sample = createElem("div.sample", createElem("div", file.split(".wav")[0]))
-                        const audioControls = createElem("div")
-                        const audio = createElem("audio", {controls: true}, createElem("source", {
-                            src: `output/${meta[0]}/${button.dataset.modelId}/${file}`,
-                            type: "audio/wav"
-                        }))
-                        const openFileLocationButton = createElem("div", "&#10064;")
-                        openFileLocationButton.addEventListener("click", () => {
-                            const path = `${__dirname}/output/${meta[0]}/${button.dataset.modelId}/${file}`
-                            shell.showItemInFolder(path)
-                        })
-                        const deleteFileButton = createElem("div", "&#10060;")
-                        deleteFileButton.addEventListener("click", () => {
-                            confirmModal("Are you sure you'd like to delete this file?").then(confirmation => {
-                                if (confirmation) {
-                                    fs.unlinkSync(`output/${meta[0]}/${button.dataset.modelId}/${file}`)
-                                    sample.remove()
-                                }
-                            })
-                        })
-                        audioControls.appendChild(audio)
-                        audioControls.appendChild(openFileLocationButton)
-                        audioControls.appendChild(deleteFileButton)
-                        sample.appendChild(audioControls)
-                        voiceSamples.appendChild(sample)
+                    const sample = createElem("div.sample", createElem("div", file.split(".wav")[0]))
+                    const audioControls = createElem("div")
+                    const audio = createElem("audio", {controls: true}, createElem("source", {
+                        src: `output/${meta[0]}/${button.dataset.modelId}/${file}`,
+                        type: "audio/wav"
+                    }))
+                    const openFileLocationButton = createElem("div", "&#10064;")
+                    openFileLocationButton.addEventListener("click", () => {
+                        const path = `${__dirname}/output/${meta[0]}/${button.dataset.modelId}/${file}`
+                        shell.showItemInFolder(path)
                     })
+                    const deleteFileButton = createElem("div", "&#10060;")
+                    deleteFileButton.addEventListener("click", () => {
+                        confirmModal("Are you sure you'd like to delete this file?").then(confirmation => {
+                            if (confirmation) {
+                                fs.unlinkSync(`output/${meta[0]}/${button.dataset.modelId}/${file}`)
+                                sample.remove()
+                            }
+                        })
+                    })
+                    audioControls.appendChild(audio)
+                    audioControls.appendChild(openFileLocationButton)
+                    audioControls.appendChild(deleteFileButton)
+                    sample.appendChild(audioControls)
+                    voiceSamples.appendChild(sample)
                 })
             })
         })
