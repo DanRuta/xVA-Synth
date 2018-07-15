@@ -205,6 +205,7 @@ loadAllModels().then(() => {
 const createModal = (type, message) => {
     return new Promise(resolve => {
         const modal = createElem("div.modal#activeModal", {style: {opacity: 0}}, createElem("span", message))
+        modal.dataset.type = type
 
         if (type=="confirm") {
             const yesButton = createElem("button", "Yes")
@@ -241,4 +242,8 @@ const closeModal = () => {
 window.confirmModal = message => new Promise(resolve => resolve(createModal("confirm", message)))
 window.spinnerModal = message => new Promise(resolve => resolve(createModal("spinner", message)))
 
-modalContainer.addEventListener("click", event => event.target==modalContainer && closeModal())
+modalContainer.addEventListener("click", event => {
+    if (event.target==modalContainer && activeModal.dataset.type!="spinner") {
+        closeModal()
+    }
+})
