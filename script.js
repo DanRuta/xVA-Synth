@@ -278,3 +278,13 @@ modalContainer.addEventListener("click", event => {
         closeModal()
     }
 })
+
+dialogueInput.addEventListener("keyup", () => {
+    localStorage.setItem("dialogueInput", dialogueInput.value)
+})
+
+const dialogueInputCache = localStorage.getItem("dialogueInput")
+
+if (dialogueInputCache) {
+    dialogueInput.value = dialogueInputCache
+}
