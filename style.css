@@ -137,6 +137,7 @@
      margin-left: 2.5vw;
      margin-right: 2.5vw;
      margin-top: 9px;
+     overflow-x: hidden;
      text-align: center;
  }
  #buttonContainer {

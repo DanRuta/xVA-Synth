@@ -88,7 +88,7 @@ generateVoiceButton.addEventListener("click", () => {
         const sequence = text_to_sequence(dialogueInput.value).join(",")
         const outputFileName = dialogueInput.value.slice(0, 50)
 
-        try {fs.unlinkSync(samplePlay.dataset.tempFileLocation)} catch (e) {/*Do nothing*/}
+        try {fs.unlinkSync(localStorage.getItem("tempFileLocation"))} catch (e) {/*Do nothing*/}
 
         // For some reason, the samplePlay audio element does not update the source when the file name is the same
         const tempFileLocation = `./output/temp-${Math.random().toString().split(".")[1]}.wav`
@@ -99,12 +99,16 @@ generateVoiceButton.addEventListener("click", () => {
         }).then(r=>r.text()).then(() => {
             toggleSpinnerButtons()
             keepSampleButton.dataset.newFileLocation = `./output/${game}/${voiceType}/${outputFileName}.wav`
+            keepSampleButton.disabled = false
             samplePlay.dataset.tempFileLocation = tempFileLocation
             samplePlay.innerHTML = ""
             const audio = createElem("audio", {controls: true, style: {width:"100px"}},
                     createElem("source", {src: samplePlay.dataset.tempFileLocation, type: "audio/wav"}))
             samplePlay.appendChild(audio)
             audio.load()
+
+            // Persistance across sessions
+            localStorage.setItem("tempFileLocation", tempFileLocation)
         })
     }
 })
@@ -120,6 +124,7 @@ keepSampleButton.addEventListener("click", () => {
 
         fs.rename(`${__dirname}/${fromLocation}`, `${__dirname}/${toLocation}`, err => {
             voiceSamples.appendChild(makeSample(keepSampleButton.dataset.newFileLocation))
+            keepSampleButton.disabled = true
         })
     }
 })
