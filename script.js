@@ -166,6 +166,14 @@ const changeGame = () => {
 
         button.addEventListener("click", () => {
 
+            if (modelMeta.description) {
+                description.innerHTML = modelMeta.description
+                description.className = "withContent"
+            } else {
+                description.innerHTML = ""
+                description.className = ""
+            }
+
             try {fs.mkdirSync(`${path}/output/${meta[0]}/${modelMeta.id}`)} catch (e) {/*Do nothing*/}
 
             generateVoiceButton.dataset.modelQuery = null

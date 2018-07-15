@@ -2,5 +2,6 @@
     "id": "malebreton",
     "name": "Male Breton",
     "outputs": "20",
+    "description": "The voices of male Bretons, including characters like Jauffre",
     "cmudict": false
 }

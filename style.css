@@ -98,6 +98,7 @@
  }
  #topRight {
      display: block;
+     padding-bottom: 5px;
  }
  #title {
      display: flex;
@@ -129,6 +130,15 @@
      margin-top: -30px;
      float: right;
      cursor: pointer;
+ }
+ #description {
+     color: white;
+     text-shadow: 0 0 1px black;
+     text-align: center;
+     height: 20px;
+ }
+ #description.withContent {
+     background-color: rgba(0,0,0,0.2);
  }
  textarea {
      opacity: 0.9;
@@ -167,7 +177,7 @@
  }
  #voiceSamples {
      width: calc(95vw - 300px);
-     height: calc(90vh - 145px);
+     height: calc(90vh - 165px);
      background: rgba(255,255,255,0.1);
      margin-left: 2.5vw;
      margin-right: 2.5vw;
