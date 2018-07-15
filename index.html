@@ -61,8 +61,8 @@ const {remote} = require("electron")
 // Chrome
 chromeMin.addEventListener("click", () => remote.getCurrentWindow().minimize())
 chromeMax.addEventListener("click", () => {
-    const window = remote.getCurrentWindow()
-    window.isMaximized() ? window.maximize() : window.unmaximize()
+    const w = remote.getCurrentWindow()
+    w.isMaximized() ? w.unmaximize() : w.maximize()
 })
 chromeQuit.addEventListener("click", () => remote.getCurrentWindow().close())
 </script>
