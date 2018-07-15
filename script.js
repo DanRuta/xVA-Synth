@@ -161,9 +161,11 @@ const changeGame = () => {
                         })
                         const deleteFileButton = createElem("div", "&#10060;")
                         deleteFileButton.addEventListener("click", () => {
-                            // toggleModal(deleteFileModal, false)
-                            confirmModal("Are you sure you'd like to delete this file?").then(response => {
-
+                            confirmModal("Are you sure you'd like to delete this file?").then(confirmation => {
+                                if (confirmation) {
+                                    fs.unlinkSync(`output/${meta[0]}/${button.dataset.modelId}/${file}`)
+                                    sample.remove()
+                                }
                             })
                         })
                         audioControls.appendChild(audio)
