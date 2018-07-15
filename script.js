@@ -7,8 +7,6 @@ const {text_to_sequence, english_cleaners} = require("./text.js")
 
 window.games = {}
 window.models = {}
-window.text_to_sequence = text_to_sequence
-window.english_cleaners = english_cleaners
 
 // Set up folders
 try {fs.mkdirSync("models")} catch (e) {/*Do nothing*/}
@@ -85,30 +83,35 @@ generateVoiceButton.addEventListener("click", () => {
         const voiceType = title.dataset.modelId
 
         const sequence = text_to_sequence(dialogueInput.value).join(",")
-        const outputFileName = dialogueInput.value.slice(0, 30)
+        const outputFileName = dialogueInput.value.slice(0, 50)
+
+        try {fs.unlinkSync(samplePlay.dataset.tempFileLocation)} catch (e) {/*Do nothing*/}
+
+        // For some reason, the samplePlay audio element does not update the source when the file name is the same
+        const tempFileLocation = `output/temp-${Math.random().toString().split(".")[1]}.wav`
 
         fetch("http://localhost:8008/synthesize", {
             method: "Post",
-            body: JSON.stringify({sequence: sequence, outfile: "output/temp.wav"})
+            body: JSON.stringify({sequence: sequence, outfile: tempFileLocation})
         }).then(r=>r.text()).then(() => {
             toggleSpinnerButtons()
             keepSampleButton.dataset.newFileLocation = `output/${game}/${voiceType}/${outputFileName}.wav`
+            samplePlay.dataset.tempFileLocation = tempFileLocation
+            samplePlay.innerHTML = ""
+            const audio = createElem("audio", {controls: true, style: {width:"70px"}},
+                    createElem("source", {src: samplePlay.dataset.tempFileLocation, type: "audio/wav"}))
+            samplePlay.appendChild(audio)
+            audio.load()
         })
     }
 })
 
 keepSampleButton.addEventListener("click", () => {
     if (keepSampleButton.dataset.newFileLocation) {
-        fs.rename("output/temp.wav", keepSampleButton.dataset.newFileLocation, err => {
+        fs.rename(samplePlay.dataset.tempFileLocation, keepSampleButton.dataset.newFileLocation, err => {
             voiceSamples.appendChild(makeSample(keepSampleButton.dataset.newFileLocation))
         })
     }
-})
-
-samplePlay.addEventListener("click", () => {
-    // TODO
-    console.log(samplePlay.innerHTML)
-    samplePlay.innerHTML = samplePlay.innerHTML=="▶" ? "&#9632;" : "&#9654;"
 })
 
 // Change game
