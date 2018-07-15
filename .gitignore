@@ -6,3 +6,4 @@ python/
 __pycache__/
 .cache/
 *.pyc
+server.log
