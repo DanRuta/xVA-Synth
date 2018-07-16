@@ -2,7 +2,7 @@ const PRODUCTION = process.mainModule.filename.includes("resources")
 const path = PRODUCTION ? "resources/app" : "."
 
 const fs = require("fs")
-const {shell, app, BrowserWindow} = require("electron")
+const {shell, app, BrowserWindow, ipcMain} = require("electron")
 const spawn = require("child_process").spawn
 const pythonProcess = spawn("python", [`${path}/server.py`], {stdio: "ignore"})
 
@@ -24,6 +24,10 @@ const createWindow = () => {
 
     mainWindow.on("closed", () => mainWindow = null)
 }
+
+ipcMain.on("resize", (event, arg) => {
+    mainWindow.setSize(arg.width, arg.height)
+})
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

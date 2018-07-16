@@ -4,12 +4,18 @@ const PRODUCTION = process.mainModule.filename.includes("resources")
 const path = PRODUCTION ? "./resources/app" : "."
 
 const fs = require("fs")
-const {shell} = require("electron")
+const {shell, ipcRenderer} = require("electron")
 const fetch = require("node-fetch")
 const {text_to_sequence, english_cleaners} = require("./text.js")
 
 window.games = {}
 window.models = {}
+
+const customWindowSize = localStorage.getItem("customWindowSize")
+if (customWindowSize) {
+    const [height, width] = customWindowSize.split(",").map(v => parseInt(v))
+    ipcRenderer.send("resize", {height, width})
+}
 
 // Set up folders
 try {fs.mkdirSync(`${path}/models`)} catch (e) {/*Do nothing*/}
@@ -343,3 +349,7 @@ const dialogueInputCache = localStorage.getItem("dialogueInput")
 if (dialogueInputCache) {
     dialogueInput.value = dialogueInputCache
 }
+
+window.addEventListener("resize", e => {
+    localStorage.setItem("customWindowSize", `${window.innerHeight},${window.innerWidth}`)
+})
