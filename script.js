@@ -164,6 +164,16 @@ const changeGame = () => {
         button.style.background = `#${meta[1]}`
         button.dataset.modelId = modelMeta.id
 
+        // Quick voice set preview, if there is a preview file
+        button.addEventListener("contextmenu", () => {
+            if (modelMeta.preview) {
+                const audio = createElem("audio", {autoplay: true}, createElem("source", {
+                    src: `${path}/models/${model.split("/")[0]}/${modelMeta.preview}`
+                }))
+                audio.play()
+            }
+        })
+
         button.addEventListener("click", () => {
 
             if (modelMeta.description) {
