@@ -101,20 +101,24 @@ generateVoiceButton.addEventListener("click", () => {
 
         fetch("http://localhost:8008/synthesize", {
             method: "Post",
-            body: JSON.stringify({sequence: sequence, outfile: `${path}/${tempFileLocation.slice(1, tempFileLocation.length)}`})
-        }).then(r=>r.text()).then(() => {
-            toggleSpinnerButtons()
-            keepSampleButton.dataset.newFileLocation = `./output/${game}/${voiceType}/${outputFileName}.wav`
-            keepSampleButton.disabled = false
-            samplePlay.dataset.tempFileLocation = tempFileLocation
-            samplePlay.innerHTML = ""
-            const audio = createElem("audio", {controls: true, style: {width:"100px"}},
-                    createElem("source", {src: samplePlay.dataset.tempFileLocation, type: "audio/wav"}))
-            samplePlay.appendChild(audio)
-            audio.load()
+            body: JSON.stringify({sequence: sequence})
+        })
+        .then(blob => {
+            blob.body.pipe(fs.createWriteStream(tempFileLocation))
+            .on("close", () => {
+                toggleSpinnerButtons()
+                keepSampleButton.dataset.newFileLocation = `./output/${game}/${voiceType}/${outputFileName}.wav`
+                keepSampleButton.disabled = false
+                samplePlay.dataset.tempFileLocation = tempFileLocation
+                samplePlay.innerHTML = ""
+                const audio = createElem("audio", {controls: true, style: {width:"100px"}},
+                        createElem("source", {src: samplePlay.dataset.tempFileLocation, type: "audio/wav"}))
+                samplePlay.appendChild(audio)
+                audio.load()
 
-            // Persistance across sessions
-            localStorage.setItem("tempFileLocation", tempFileLocation)
+                // Persistance across sessions
+                localStorage.setItem("tempFileLocation", tempFileLocation)
+            })
         })
     }
 })

@@ -25,15 +25,15 @@ logger.addHandler(ch)
 logger.info("New session")
 
 class Handler(BaseHTTPRequestHandler):
-    def _set_response(self):
+    def _set_response(self, type):
         self.send_response(200)
-        self.send_header("Content-Type", "text/html")
+        self.send_header("Content-Type", type)
         self.end_headers()
 
     def do_GET(self):
         returnString = "[DEBUG] Get request for {}".format(self.path).encode("utf-8")
         logger.info(returnString)
-        self._set_response()
+        self._set_response("text/html")
         self.wfile.write(returnString)
 
     def do_POST(self):
@@ -49,14 +49,18 @@ class Handler(BaseHTTPRequestHandler):
             print(post_data)
             logger.info(post_data)
 
+            responseType = "text/html"
+            returnData = "POST request for {}".format(self.path).encode('utf-8')
+
             if self.path == "/loadModel":
                 model = eval.loadModel(model=post_data["model"], outputs=post_data["outputs"], cmudict=post_data["cmudict"])
 
             if self.path == "/synthesize":
-                eval.syntesize(model, list(map(int, post_data["sequence"].split(","))), post_data["outfile"])
+                responseType = "audio/wav"
+                returnData = model.synthesize(list(map(int, post_data["sequence"].split(","))))
 
-            self._set_response()
-            self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
+            self._set_response(responseType)
+            self.wfile.write(returnData)
         except Exception as e:
             logger.info("Post Error:\n {}".format(repr(e)))
             logger.info(traceback.format_exc())
