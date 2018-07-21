@@ -1,7 +1,7 @@
 import io
 import os
 import re
-from librosa import output
+import librosa
 import tensorflow as tf
 from tensorflow.contrib.rnn import GRUCell, MultiRNNCell, OutputProjectionWrapper, ResidualWrapper
 from tensorflow.contrib.seq2seq import BasicDecoder, BahdanauAttention, AttentionWrapper
@@ -176,7 +176,8 @@ class Synthesizer:
     out = io.BytesIO()
 
     wav *= 32767 / max(0.01, np.max(np.abs(wav)))
-    output.write_wav(out, wav.astype(np.int16), hparams.sample_rate)
+    librosa.output.write_wav(out, wav.astype(np.int16), hparams.sample_rate)
+
     return out.getvalue()
 
 
@@ -226,3 +227,8 @@ def loadModel(model, outputs, cmudict):
   synth = Synthesizer()
   synth.load(model)
   return synth
+
+def syntesize(model, sequence, outfile):
+  print("syntesize")
+  with open(outfile, "wb") as f:
+    f.write(model.synthesize(sequence))
