@@ -1,10 +1,18 @@
+
 const PRODUCTION = process.mainModule.filename.includes("resources")
 const path = PRODUCTION ? "resources/app" : "."
 
 const fs = require("fs")
 const {shell, app, BrowserWindow, ipcMain} = require("electron")
-const spawn = require("child_process").spawn
-const pythonProcess = spawn("python", [`${path}/server.py`], {stdio: "ignore"})
+const {spawn} = require("child_process")
+
+let pythonProcess
+
+if (PRODUCTION) {
+    pythonProcess = spawn(`${path}/cpython/server.exe`, {stdio: "ignore"})
+} else {
+    pythonProcess = spawn("python", [`${path}/server.py`], {stdio: "ignore"})
+}
 
 let mainWindow
 
