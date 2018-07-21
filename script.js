@@ -55,8 +55,18 @@ const loadAllModels = () => {
                         games[game].models.push(`${game}/${fileName}`)
                     }
                 })
-                resolve()
             })
+
+            // Update app title if only one game has models loaded
+            const singleGame = Object.keys(games)
+
+            if (singleGame.length==1) {
+                const prefix = games[singleGame[0]].gameAsset.split("-")[2]
+                document.title = `${prefix}VA Synth`
+                dragBar.innerHTML = `${prefix}VA Synth`
+            }
+
+            resolve()
         })
 
         setTimeout(() => willExecute=false, 1000)
