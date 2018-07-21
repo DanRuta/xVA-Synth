@@ -85,7 +85,7 @@ generateVoiceButton.addEventListener("click", () => {
 
     if (generateVoiceButton.dataset.modelQuery && generateVoiceButton.dataset.modelQuery!="null") {
 
-        spinnerModal("Loading model...")
+        spinnerModal("Loading model (may take a minute)...")
         fetch("http://localhost:8008/loadModel", {
             method: "Post",
             body: generateVoiceButton.dataset.modelQuery
