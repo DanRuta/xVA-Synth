@@ -2,6 +2,7 @@
 import os
 import eval
 import logging
+from logging.handlers import RotatingFileHandler
 import json
 import traceback
 from sys import argv
@@ -13,7 +14,7 @@ model = 0
 
 logger = logging.getLogger('serverLog')
 logger.setLevel(logging.DEBUG)
-fh = logging.FileHandler('{}\server.log'.format(os.path.dirname(os.path.realpath(__file__))))
+fh = RotatingFileHandler('{}\server.log'.format(os.path.dirname(os.path.realpath(__file__))), maxBytes=5*1024*1024, backupCount=2)
 fh.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
 ch.setLevel(logging.ERROR)
