@@ -172,6 +172,12 @@ const changeGame = () => {
     voiceSamples.innerHTML = ""
     title.innerHTML = "Select Voice Type"
 
+    // No models found
+    if (!Object.keys(games).length) {
+        title.innerHTML = "No models found"
+        return
+    }
+
     games[meta[0]].models.forEach(model => {
 
         const modelMeta = JSON.parse(fs.readFileSync(`${path}/models/${model}`))
