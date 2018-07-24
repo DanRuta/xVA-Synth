@@ -184,6 +184,8 @@ const changeGame = () => {
         return
     }
 
+    const buttons = []
+
     games[meta[0]].models.forEach(model => {
 
         const modelMeta = JSON.parse(fs.readFileSync(`${path}/models/${model}`))
@@ -243,8 +245,12 @@ const changeGame = () => {
                 })
             })
         })
-        voiceTypeContainer.appendChild(button)
+        buttons.push(button)
     })
+
+    buttons.sort((a,b) => a.innerHTML<b.innerHTML?-1:1)
+        .forEach(button => voiceTypeContainer.appendChild(button))
+
 }
 gameDropdown.addEventListener("change", changeGame)
 
