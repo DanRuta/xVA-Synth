@@ -22,7 +22,8 @@ try {fs.mkdirSync(`${path}/models`)} catch (e) {/*Do nothing*/}
 try {fs.mkdirSync(`${path}/output`)} catch (e) {/*Do nothing*/}
 try {fs.mkdirSync(`${path}/assets`)} catch (e) {/*Do nothing*/}
 
-let willExecute = false
+let fileRenameCounter = 0
+let fileChangeCounter = 0
 
 const loadAllModels = () => {
     return new Promise(resolve => {
@@ -68,8 +69,6 @@ const loadAllModels = () => {
 
             resolve()
         })
-
-        setTimeout(() => willExecute=false, 1000)
     })
 }
 
@@ -271,10 +270,33 @@ const makeSample = src => {
 
 // Watch for new models being added, and load them into the app
 fs.watch(`${path}/models`, {recursive: true, persistent: true}, (eventType, filename) => {
-    if (!willExecute) {
-        willExecute = true
-        loadAllModels()
+
+    if (eventType=="rename") {
+        fileRenameCounter++
     }
+
+    if (eventType=="change") {
+        fileChangeCounter++
+    }
+
+    if (fileRenameCounter==(fileChangeCounter/3) || (!fileChangeCounter && fileRenameCounter>=4)) {
+        setTimeout(() => {
+            if (fileRenameCounter==(fileChangeCounter/3) || (!fileChangeCounter && fileRenameCounter>=4)) {
+                fileRenameCounter = 0
+                fileChangeCounter = 0
+                loadAllModels().then(() => {
+                    changeGame()
+                })
+            }
+        })
+    }
+
+    // Reset the counter when audio preview files throw deletion counters off by one
+    setTimeout(() => {
+        if (fileRenameCounter==1 && fileChangeCounter==0) {
+            fileRenameCounter = 0
+        }
+    }, 3000)
 })
 
 loadAllModels().then(() => {
