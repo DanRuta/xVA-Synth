@@ -376,7 +376,7 @@ if (PRODUCTION) {
     setTimeout(() => {
         loadSpinnerClosed = true
         closeModal()
-    }, 3000)
+    }, 4000)
 }
 
 modalContainer.addEventListener("click", event => {

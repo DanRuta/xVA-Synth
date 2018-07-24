@@ -2,9 +2,11 @@
   "name": "xVASynth",
   "version": "1.0.0",
   "description": "Speech synthesis in the style of voice actors.",
+  "productName": "xVASynth",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package-windows": "electron-packager ./ --overwrite --prune=true --icon=assets/icon.ico"
   },
   "repository": "https://github.com/DanRuta/xVA-Synth",
   "author": "DanRuta",
