@@ -7,7 +7,7 @@
   "scripts": {
     "start": "electron .",
     "package-windows": "electron-packager ./ --overwrite --prune=true --icon=assets/icon.ico --out=release-builds",
-    "package-linux": "electron-packager ./ --platform=linux --overwrite --prune=true --icon=assets/icon.ico --out=release-builds",
+    "package-linux": "electron-packager ./ --platform=linux --overwrite --prune=true --icon=assets/icon.ico --out=release-builds"
   },
   "repository": "https://github.com/DanRuta/xVA-Synth",
   "author": "DanRuta",
