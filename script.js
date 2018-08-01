@@ -8,6 +8,7 @@ const {shell, ipcRenderer} = require("electron")
 const fetch = require("node-fetch")
 const {text_to_sequence, english_cleaners} = require("./text.js")
 
+let themeColour
 window.games = {}
 window.models = {}
 
@@ -155,19 +156,20 @@ keepSampleButton.addEventListener("click", () => {
 const changeGame = () => {
 
     const meta = gameDropdown.value.split("-")
+    themeColour = meta[1]
     generateVoiceButton.disabled = true
     generateVoiceButton.innerHTML = "Generate Voice"
 
     if (meta) {
         const background = `linear-gradient(0deg, grey 0, rgba(0,0,0,0)), url("assets/${meta.join("-")}"), grey`
         right.style.background = background
-        Array.from(document.querySelectorAll("button")).forEach(e => e.style.background = `#${meta[1]}`)
-        Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.background = `#${meta[1]}`)
-        Array.from(document.querySelectorAll(".spinner")).forEach(e => e.style.borderLeftColor = `#${meta[1]}`)
+        Array.from(document.querySelectorAll("button")).forEach(e => e.style.background = `#${themeColour}`)
+        Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.background = `#${themeColour}`)
+        Array.from(document.querySelectorAll(".spinner")).forEach(e => e.style.borderLeftColor = `#${themeColour}`)
     }
 
     cssHack.innerHTML = `::selection {
-        background: #${meta[1]};
+        background: #${themeColour};
     }`
 
     try {fs.mkdirSync(`${path}/output/${meta[0]}`)} catch (e) {/*Do nothing*/}
@@ -191,7 +193,7 @@ const changeGame = () => {
         const modelMeta = JSON.parse(fs.readFileSync(`${path}/models/${model}`))
 
         const button = createElem("div.voiceType", modelMeta.name)
-        button.style.background = `#${meta[1]}`
+        button.style.background = `#${themeColour}`
         button.dataset.modelId = modelMeta.id
 
         // Quick voice set preview, if there is a preview file
@@ -329,8 +331,10 @@ const createModal = (type, message) => {
         modal.dataset.type = type
 
         if (type=="confirm") {
-            const yesButton = createElem("button", "Yes")
-            const noButton = createElem("button", "No")
+            const yesButton = createElem("button", {style: {background: `#${themeColour}`}})
+            yesButton.innerHTML = "Yes"
+            const noButton = createElem("button", {style: {background: `#${themeColour}`}})
+            noButton.innerHTML = "No"
             modal.appendChild(createElem("div", yesButton, noButton))
 
             yesButton.addEventListener("click", () => {
