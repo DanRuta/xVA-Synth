@@ -124,7 +124,7 @@ generateVoiceButton.addEventListener("click", () => {
             keepSampleButton.disabled = false
             samplePlay.dataset.tempFileLocation = tempFileLocation
             samplePlay.innerHTML = ""
-            const audio = createElem("audio", {controls: true, style: {width:"100px"}},
+            const audio = createElem("audio", {controls: true, style: {width:"150px"}},
                     createElem("source", {src: samplePlay.dataset.tempFileLocation, type: "audio/wav"}))
             samplePlay.appendChild(audio)
             audio.load()
