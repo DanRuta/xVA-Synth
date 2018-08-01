@@ -6,8 +6,6 @@ The app serves as a framework, which loads and uses whichever models are given t
 
 <img width="100%" src="readme images/github-README.png">
 
-<audio><source src="models/skyrim/malesoldier.wav" type="audio/wav"></audio>
-
 
 ## Instructions
 
