@@ -23,6 +23,7 @@ Given the very small amount of data used in training, and the somewhat outdated 
 
 The best approach I have found is to generate samples of at least 2 seconds in length, and not much more than 5. If you need a lot of text to be synthesized, the current best approach is to synthesize smaller clauses, and splicing them together in Audacity. If you need something really short, and it can't synthesize it, you can add a small sentence (EG `Some stuff.`) before and/or after your text, and cutting it out in Audacity.
 
+All models have also been trained on my personal machine, with a GTX 1080, meaning that `batch_size` had to be limited, to stay within memory constraints. With any luck, I may get access to some beefier machines in the future to train models with better attention.
 
 ## Pro tips:
 
@@ -51,6 +52,8 @@ Use pyinstaller to compile the python, and run the scripts in `package.json` to 
 ### App
 This is an just early experiment. The quality of the voice files currently leaves to be desired, due to the low amount of data available. As technology improves, time permitting, the core synthesis algorithms will get updates, and if necessary, models retrained.
 
+The app is capable of using CMUDict for the models that have been trained with it. So far, however, the models that I have trained with support for it have been of lower quality. However, if trained with with support for it, CMUDict syntax can be used in the input textarea.
+
 ### Models
 
 Models are being trained for the following games:
@@ -60,3 +63,7 @@ Models are being trained for the following games:
 - Fallout 4
 
 Time/interest/data permitting, other games/categories may be explored.
+
+## Credits
+
+Models are trained, and evaluation is done using code from keithito's implementation of Tacotron: https://github.com/keithito/tacotron
