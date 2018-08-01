@@ -108,7 +108,7 @@ generateVoiceButton.addEventListener("click", () => {
         const voiceType = title.dataset.modelId
 
         const sequence = text_to_sequence(dialogueInput.value).join(",")
-        const outputFileName = dialogueInput.value.slice(0, 50).replace("?", "")
+        const outputFileName = dialogueInput.value.slice(0, 260).replace("?", "")
 
         try {fs.unlinkSync(localStorage.getItem("tempFileLocation"))} catch (e) {/*Do nothing*/}
 
