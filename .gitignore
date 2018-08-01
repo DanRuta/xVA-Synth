@@ -1,6 +1,7 @@
 xVASynthEnv
 node_modules
-*.wav
+output/*.wav
+output/**/*.wav
 *.ckpt
 Plan.todo
 __pycache__/
