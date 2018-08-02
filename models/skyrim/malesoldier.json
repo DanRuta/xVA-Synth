@@ -1,7 +1,7 @@
 {
     "id": "malesoldier",
     "name": "Male Soldier",
-    "outputs": "11",
+    "meta": "steps=515000, outputs_per_step=11, batch_size=16",
     "preview": "malesoldier.wav",
     "cmudict": false
 }
