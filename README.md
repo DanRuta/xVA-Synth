@@ -29,11 +29,15 @@ All models have also been trained on my personal machine, with a GTX 1080, meani
 
 - Right click a voice set in the left bar to hear a sample of the voice.
 
-- To change pronounciation, you can change spelling
+- To change pronounciation, you can change spelling (cmudict is supported for models that were trained with it)
 
-- You can use full stops and commas to change the timing
+- You can use full stops and commas to change timing
 
 - Try doing multiple takes, using different spellings, punctuation and input lengths.
+
+- A model's first synthesis takes the longest. Subsequent ones are faster due to caching.
+
+- Acronyms should be spelled out phonetically. EG: xVA -> Ex vee ay
 
 
 ## Development
