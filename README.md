@@ -39,6 +39,7 @@ All models have also been trained on my personal machine, with a GTX 1080, meani
 
 - Acronyms should be spelled out phonetically. EG: xVA -> Ex vee ay
 
+- Numbers automatically get converted to text. However, if you need to pronounce years, such as 1990 -> nineteen ninety, instead of one thousand nine hundred and ninety, you should split the two numbers, like 19 90.
 
 ## Development
 
@@ -51,7 +52,7 @@ The app uses both JavaScript (Electron, UI) and Python code (Tacotron Model). As
 Use pyinstaller to compile the python, and run the scripts in `package.json` to create the electron distributables.
 
 
-## Plans
+## Future Plans
 
 ### App
 This is an just early experiment. The quality of the voice files currently leaves to be desired, due to the low amount of data available. As technology improves, time permitting, the core synthesis algorithms will get updates, and if necessary, models retrained.
