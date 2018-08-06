@@ -51,6 +51,28 @@ The app uses both JavaScript (Electron, UI) and Python code (Tacotron Model). As
 
 Use pyinstaller to compile the python, and run the scripts in `package.json` to create the electron distributables.
 
+## Models
+
+The existing models have been trained on roughly 500k steps, each, at roughly 10 outputs_per_step, with batch_size of 16 (in order to be able to fit everything on 8GB of VRAM).
+
+Currently, the following models have been trained:
+
+### Skyrim:
+
+<ul>
+    <li>Male Dunmer</li>
+    <li>Male Soldier</li>
+</ul>
+
+### Oblivion:
+<ul>
+    <li>Male Breton</li>
+</ul>
+
+### Fallout 4:
+<ul>
+    <li>Nora (needs re-training)</li>
+</ul>
 
 ## Future Plans
 
