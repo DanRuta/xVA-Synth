@@ -1,0 +1,8 @@
+{
+    "id": "femaleeventoned",
+    "name": "Female Even Toned",
+    "outputs": 10,
+    "meta": "steps=483000, outputs_per_step=10, batch_size=16",
+    "preview": "femaleeventoned.wav",
+    "cmudict": false
+}
