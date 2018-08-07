@@ -4,5 +4,6 @@
     "outputs": "10",
     "preview": "maledunmer.wav",
     "meta": "steps=519000, outputs_per_step=10, batch_size=16",
+    "version": 1.0,
     "cmudict": false
 }

@@ -4,5 +4,6 @@
     "description": "The voices of male Bretons, including characters like Jauffre",
     "meta": "steps=516000, outputs_per_step=20, batch_size=16",
     "preview": "malebreton.wav",
+    "version": 1.0,
     "cmudict": false
 }
