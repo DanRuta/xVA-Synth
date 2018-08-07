@@ -2,7 +2,7 @@
     "id": "malebreton",
     "name": "Male Breton",
     "description": "The voices of male Bretons, including characters like Jauffre",
-    "outputs": "20",
+    "outputs": 20,
     "preview": "malebreton.wav",
     "cmudict": false
 }
