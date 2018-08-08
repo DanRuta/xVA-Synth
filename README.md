@@ -60,6 +60,7 @@ Currently, the following models have been trained:
 ### Skyrim:
 
 <ul>
+    <li>Female Even Toned</li>
     <li>Male Dunmer</li>
     <li>Male Soldier</li>
 </ul>
