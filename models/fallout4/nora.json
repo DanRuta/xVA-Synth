@@ -9,6 +9,11 @@
             "gameId": "fallout4",
             "voiceId": "nora",
             "voiceName": "Nora"
+        },
+        {
+            "gameId": "falloutnv",
+            "voiceId": "FemaleAdult04",
+            "voiceName": "Female Adult 4"
         }
     ]
 }
