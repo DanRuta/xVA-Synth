@@ -75,6 +75,12 @@ Currently, the following models have been trained:
     <li>Nora (needs re-training)</li>
 </ul>
 
+### Fallout New Vegas:
+<ul>
+    <li>Joshua Graham (Same model as Skyrim Male Dunmer)</li>
+    <li>FemaleAdult04 (needs re-training) (Same model as Fallout 4 Nora)</li>
+</ul>
+
 ## Future Plans
 
 ### App
@@ -89,6 +95,7 @@ Models are being trained for the following games:
 - The Elder Scrolls V: Skyrim
 - The Elder Scrolls IV: Oblivion
 - Fallout 4
+- Fallout New Vegas
 
 Time/interest/data permitting, other games/categories may be explored.
 
