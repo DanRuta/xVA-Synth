@@ -69,7 +69,7 @@ const loadAllModels = () => {
             // Update app title if only one game has models loaded
             const singleGame = Object.keys(games)
 
-            if (singleGame.length==1) {
+            if (singleGame.filter(game => !game.startsWith("other")).length==1) {
                 const prefix = games[singleGame[0]].gameAsset.split("-")[2]
                 document.title = `${prefix}VA Synth`
                 dragBar.innerHTML = `${prefix}VA Synth`
