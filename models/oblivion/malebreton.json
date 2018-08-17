@@ -1,10 +1,14 @@
 {
-    "id": "malebreton",
-    "name": "Male Breton",
-    "description": "The voices of male Bretons, including characters like Jauffre",
     "outputs": 20,
     "meta": "steps=516000, outputs_per_step=20, batch_size=16",
-    "preview": "malebreton.wav",
     "version": 1.0,
-    "cmudict": false
+    "cmudict": false,
+    "games": [
+        {
+            "gameId": "oblivion",
+            "voiceId": "malebreton",
+            "voiceName": "Male Breton",
+            "voiceDescription": "The voices of male Bretons, including characters like Jauffre"
+        }
+    ]
 }

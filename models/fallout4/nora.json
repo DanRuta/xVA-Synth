@@ -1,7 +1,14 @@
 {
-    "id": "nora",
-    "name": "Nora",
     "outputs": 5,
-    "ckpt": "515",
-    "cmudict": false
+    "meta": "steps=515000",
+    "version": 1.0,
+    "cmudict": false,
+
+    "games": [
+        {
+            "gameId": "fallout4",
+            "voiceId": "nora",
+            "voiceName": "Nora"
+        }
+    ]
 }

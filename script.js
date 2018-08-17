@@ -36,8 +36,8 @@ let fileChangeCounter = 0
 const loadAllModels = () => {
     return new Promise(resolve => {
         fs.readdir(`${path}/models`, (err, gameDirs) => {
-            gameDirs.filter(name => !name.includes(".")).forEach(game => {
-                const files = fs.readdirSync(`${path}/models/${game}`).filter(f => f.endsWith(".json"))
+            gameDirs.filter(name => !name.includes(".")).forEach(gameFolder => {
+                const files = fs.readdirSync(`${path}/models/${gameFolder}`).filter(f => f.endsWith(".json"))
 
                 if (!files.length) {
                     return
@@ -45,23 +45,29 @@ const loadAllModels = () => {
 
                 files.forEach(fileName => {
 
-                    if (!models.hasOwnProperty(`${game}/${fileName}`)) {
+                    if (!models.hasOwnProperty(`${gameFolder}/${fileName}`)) {
 
-                        models[`${game}/${fileName}`] = null
+                        models[`${gameFolder}/${fileName}`] = null
 
-                        if (!games.hasOwnProperty(game)) {
-                            const gameAsset = fs.readdirSync(`${path}/assets`).find(f => f.startsWith(game))
-                            const option = document.createElement("option")
-                            option.value = gameAsset
-                            option.innerHTML = gameAsset.split("-").reverse()[0].split(".")[0]
-                            gameDropdown.appendChild(option)
-                            games[game] = {
-                                models: [],
-                                gameAsset
+                        const model = JSON.parse(fs.readFileSync(`models/${gameFolder}/${fileName}`, "utf8"))
+
+                        model.games.forEach(({gameId, voiceId, voiceName, voiceDescription}) => {
+
+                            if (!games.hasOwnProperty(gameId)) {
+                                const gameAsset = fs.readdirSync(`${path}/assets`).find(f => f.startsWith(gameId))
+                                const option = document.createElement("option")
+                                option.value = gameAsset
+                                option.innerHTML = gameAsset.split("-").reverse()[0].split(".")[0]
+                                gameDropdown.appendChild(option)
+                                games[gameId] = {
+                                    models: [],
+                                    gameAsset
+                                }
                             }
-                        }
 
-                        games[game].models.push(`${game}/${fileName}`)
+                            const audioPreviewPath = `${gameFolder}/${model.games.find(({gameId}) => gameId==gameFolder).voiceId}`
+                            games[gameId].models.push({model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription})
+                        })
                     }
                 })
             })
@@ -79,78 +85,6 @@ const loadAllModels = () => {
         })
     })
 }
-
-window.toggleSpinnerButtons = () => {
-    const spinnerVisible = window.getComputedStyle(spinner).display == "block"
-    spinner.style.display = spinnerVisible ? "none" : "block"
-    keepSampleButton.style.display = spinnerVisible ? "block" : "none"
-    generateVoiceButton.style.display = spinnerVisible ? "block" : "none"
-    samplePlay.style.display = spinnerVisible ? "flex" : "none"
-}
-
-generateVoiceButton.addEventListener("click", () => {
-
-    if (generateVoiceButton.dataset.modelQuery && generateVoiceButton.dataset.modelQuery!="null") {
-
-        spinnerModal("Loading model (may take a minute)...")
-        fetch("http://localhost:8008/loadModel", {
-            method: "Post",
-            body: generateVoiceButton.dataset.modelQuery
-        }).then(r=>r.text()).then(res => {
-            closeModal()
-            generateVoiceButton.dataset.modelQuery = null
-            generateVoiceButton.innerHTML = "Generate Voice"
-            generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
-        })
-    } else {
-        toggleSpinnerButtons()
-
-        const game = gameDropdown.value.split("-")[0]
-        const voiceType = title.dataset.modelId
-
-        const sequence = text_to_sequence(dialogueInput.value).join(",")
-        const outputFileName = dialogueInput.value.slice(0, 260).replace("?", "")
-
-        try {fs.unlinkSync(localStorage.getItem("tempFileLocation"))} catch (e) {/*Do nothing*/}
-
-        // For some reason, the samplePlay audio element does not update the source when the file name is the same
-        const tempFileLocation = `./output/temp-${Math.random().toString().split(".")[1]}.wav`
-
-        fetch("http://localhost:8008/synthesize", {
-            method: "Post",
-            body: JSON.stringify({sequence: sequence, outfile: `${path}/${tempFileLocation.slice(1, tempFileLocation.length)}`})
-        }).then(r=>r.text()).then(() => {
-            toggleSpinnerButtons()
-            keepSampleButton.dataset.newFileLocation = `./output/${game}/${voiceType}/${outputFileName}.wav`
-            keepSampleButton.disabled = false
-            samplePlay.dataset.tempFileLocation = tempFileLocation
-            samplePlay.innerHTML = ""
-            const audio = createElem("audio", {controls: true, style: {width:"150px"}},
-                    createElem("source", {src: samplePlay.dataset.tempFileLocation, type: "audio/wav"}))
-            samplePlay.appendChild(audio)
-            audio.load()
-
-            // Persistance across sessions
-            localStorage.setItem("tempFileLocation", tempFileLocation)
-        })
-    }
-})
-
-keepSampleButton.addEventListener("click", () => {
-    if (keepSampleButton.dataset.newFileLocation) {
-
-        let fromLocation = samplePlay.dataset.tempFileLocation
-        let toLocation = keepSampleButton.dataset.newFileLocation
-
-        fromLocation = fromLocation.slice(1, fromLocation.length)
-        toLocation = toLocation.slice(1, toLocation.length)
-
-        fs.rename(`${__dirname}/${fromLocation}`, `${__dirname}/${toLocation}`, err => {
-            voiceSamples.appendChild(makeSample(keepSampleButton.dataset.newFileLocation))
-            keepSampleButton.disabled = true
-        })
-    }
-})
 
 // Change game
 const changeGame = () => {
@@ -188,51 +122,51 @@ const changeGame = () => {
 
     const buttons = []
 
-    games[meta[0]].models.forEach(model => {
+    games[meta[0]].models.forEach(({model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription}) => {
 
-        const modelMeta = JSON.parse(fs.readFileSync(`${path}/models/${model}`))
-
-        const button = createElem("div.voiceType", modelMeta.name)
+        const button = createElem("div.voiceType", voiceName)
         button.style.background = `#${themeColour}`
-        button.dataset.modelId = modelMeta.id
+        button.dataset.modelId = voiceId
 
         // Quick voice set preview, if there is a preview file
         button.addEventListener("contextmenu", () => {
-            if (modelMeta.preview) {
-                const audio = createElem("audio", {autoplay: true}, createElem("source", {
-                    src: `${path}/models/${model.split("/")[0]}/${modelMeta.preview}`
-                }))
-                audio.play()
-            }
+            const audio = createElem("audio", {autoplay: true}, createElem("source", {
+                src: `${path}/models/${audioPreviewPath}.wav`
+            }))
+            audio.play()
         })
 
         button.addEventListener("click", () => {
 
-            if (modelMeta.description) {
-                description.innerHTML = modelMeta.description
+            if (voiceDescription) {
+                description.innerHTML = voiceDescription
                 description.className = "withContent"
             } else {
                 description.innerHTML = ""
                 description.className = ""
             }
 
-            try {fs.mkdirSync(`${path}/output/${meta[0]}/${modelMeta.id}`)} catch (e) {/*Do nothing*/}
+            try {fs.mkdirSync(`${path}/output/${meta[0]}/${voiceId}`)} catch (e) {/*Do nothing*/}
 
             generateVoiceButton.dataset.modelQuery = null
 
-            if (generateVoiceButton.dataset.modelIDLoaded != modelMeta.id) {
+            if (generateVoiceButton.dataset.modelIDLoaded != voiceId) {
                 generateVoiceButton.innerHTML = "Load model"
+
+                const modelGameFolder = audioPreviewPath.split("/")[0]
+                const modelFileName = audioPreviewPath.split("/")[1].split(".wav")[0]
+
                 generateVoiceButton.dataset.modelQuery = JSON.stringify({
-                    outputs: parseInt(modelMeta.outputs),
-                    model: `${path}/models/${meta[0]}/${modelMeta.id}`,
-                    cmudict: modelMeta.cmudict
+                    outputs: parseInt(model.outputs),
+                    model: `${path}/models/${modelGameFolder}/${modelFileName}`,
+                    cmudict: model.cmudict
                 })
-                generateVoiceButton.dataset.modelIDToLoad = modelMeta.id
+                generateVoiceButton.dataset.modelIDToLoad = voiceId
             }
             generateVoiceButton.disabled = false
 
             title.innerHTML = button.innerHTML
-            title.dataset.modelId = modelMeta.id
+            title.dataset.modelId = voiceId
             keepSampleButton.style.display = "none"
             samplePlay.style.display = "none"
 
@@ -254,8 +188,6 @@ const changeGame = () => {
         .forEach(button => voiceTypeContainer.appendChild(button))
 
 }
-gameDropdown.addEventListener("change", changeGame)
-
 
 const makeSample = src => {
     const sample = createElem("div.sample", createElem("div", src.split("/").reverse()[0].split(".wav")[0]))
@@ -282,6 +214,82 @@ const makeSample = src => {
     sample.appendChild(audioControls)
     return sample
 }
+
+
+window.toggleSpinnerButtons = () => {
+    const spinnerVisible = window.getComputedStyle(spinner).display == "block"
+    spinner.style.display = spinnerVisible ? "none" : "block"
+    keepSampleButton.style.display = spinnerVisible ? "block" : "none"
+    generateVoiceButton.style.display = spinnerVisible ? "block" : "none"
+    samplePlay.style.display = spinnerVisible ? "flex" : "none"
+}
+
+generateVoiceButton.addEventListener("click", () => {
+
+    if (generateVoiceButton.dataset.modelQuery && generateVoiceButton.dataset.modelQuery!="null") {
+
+        spinnerModal("Loading model (may take a minute)...")
+        fetch(`http://localhost:8008/loadModel`, {
+            method: "Post",
+            body: generateVoiceButton.dataset.modelQuery
+        }).then(r=>r.text()).then(res => {
+            closeModal()
+            generateVoiceButton.dataset.modelQuery = null
+            generateVoiceButton.innerHTML = "Generate Voice"
+            generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
+        })
+    } else {
+        toggleSpinnerButtons()
+
+        const game = gameDropdown.value.split("-")[0]
+        const voiceType = title.dataset.modelId
+
+        const sequence = text_to_sequence(dialogueInput.value).join(",")
+        const outputFileName = dialogueInput.value.slice(0, 260).replace("?", "")
+
+        try {fs.unlinkSync(localStorage.getItem("tempFileLocation"))} catch (e) {/*Do nothing*/}
+
+        // For some reason, the samplePlay audio element does not update the source when the file name is the same
+        const tempFileLocation = `./output/temp-${Math.random().toString().split(".")[1]}.wav`
+
+        fetch(`http://localhost:8008/synthesize`, {
+            method: "Post",
+            body: JSON.stringify({sequence: sequence, outfile: `${path}/${tempFileLocation.slice(1, tempFileLocation.length)}`})
+        }).then(r=>r.text()).then(() => {
+            toggleSpinnerButtons()
+            keepSampleButton.dataset.newFileLocation = `./output/${game}/${voiceType}/${outputFileName}.wav`
+            keepSampleButton.disabled = false
+            samplePlay.dataset.tempFileLocation = tempFileLocation
+            samplePlay.innerHTML = ""
+            const audio = createElem("audio", {controls: true, style: {width:"150px"}},
+                    createElem("source", {src: samplePlay.dataset.tempFileLocation, type: "audio/wav"}))
+            samplePlay.appendChild(audio)
+            audio.load()
+
+            // Persistance across sessions
+            localStorage.setItem("tempFileLocation", tempFileLocation)
+        })
+    }
+})
+
+keepSampleButton.addEventListener("click", () => {
+    if (keepSampleButton.dataset.newFileLocation) {
+
+        let fromLocation = samplePlay.dataset.tempFileLocation
+        let toLocation = keepSampleButton.dataset.newFileLocation
+
+        fromLocation = fromLocation.slice(1, fromLocation.length)
+        toLocation = toLocation.slice(1, toLocation.length)
+
+        fs.rename(`${__dirname}/${fromLocation}`, `${__dirname}/${toLocation}`, err => {
+            voiceSamples.appendChild(makeSample(keepSampleButton.dataset.newFileLocation))
+            keepSampleButton.disabled = true
+        })
+    }
+})
+
+
+gameDropdown.addEventListener("change", changeGame)
 
 // Watch for new models being added, and load them into the app
 fs.watch(`${path}/models`, {recursive: true, persistent: true}, (eventType, filename) => {
@@ -323,6 +331,8 @@ loadAllModels().then(() => {
     }
     changeGame()
 })
+
+
 
 
 const createModal = (type, message) => {
