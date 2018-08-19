@@ -53,7 +53,7 @@ Use pyinstaller to compile the python, and run the scripts in `package.json` to 
 
 ## Models
 
-The existing models have been trained on roughly 500k steps, each, at roughly 10 outputs_per_step, with batch_size of 16 (in order to be able to fit everything on 8GB of VRAM).
+The existing models have been trained on roughly 500k steps, each, at roughly 10 outputs_per_step, with batch_size of 16 or 24 (in order to be able to fit everything on 8GB of VRAM).
 
 Currently, the following models have been trained:
 
@@ -68,6 +68,7 @@ Currently, the following models have been trained:
 ### Oblivion:
 <ul>
     <li>Male Breton</li>
+    <li>Uriel Septim</li>
 </ul>
 
 ### Fallout 4:
