@@ -72,15 +72,6 @@ const loadAllModels = () => {
                 })
             })
 
-            // Update app title if only one game has models loaded
-            const singleGame = Object.keys(games)
-
-            if (singleGame.filter(game => !game.startsWith("other")).length==1) {
-                const prefix = games[singleGame[0]].gameAsset.split("-")[2]
-                document.title = `${prefix}VA Synth`
-                dragBar.innerHTML = `${prefix}VA Synth`
-            }
-
             resolve()
         })
     })
@@ -93,6 +84,10 @@ const changeGame = () => {
     themeColour = meta[1]
     generateVoiceButton.disabled = true
     generateVoiceButton.innerHTML = "Generate Voice"
+
+    // Change the app title
+    document.title = `${meta[2]}VA Synth`
+    dragBar.innerHTML = `${meta[2]}VA Synth`
 
     if (meta) {
         const background = `linear-gradient(0deg, grey 0, rgba(0,0,0,0)), url("assets/${meta.join("-")}"), grey`
