@@ -101,6 +101,11 @@ Models are being trained for the following games:
 
 Time/interest/data permitting, other games/categories may be explored.
 
+### Sound quality
+
+Time permitting, post-processing effects may be explored, such as de essing, denoising, etc
+
+
 ## Credits
 
 Models are trained, and evaluation is done using code from keithito's implementation of Tacotron: https://github.com/keithito/tacotron
