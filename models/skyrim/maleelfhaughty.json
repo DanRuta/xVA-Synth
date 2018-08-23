@@ -1,0 +1,13 @@
+{
+    "outputs": 10,
+    "meta": "steps=500000, outputs_per_step=10, batch_size=24",
+    "version": 1.0,
+    "cmudict": false,
+    "games": [
+        {
+            "gameId": "skyrim",
+            "voiceId": "maleelfhaughty",
+            "voiceName": "Male Elf Haughty"
+        }
+    ]
+}
