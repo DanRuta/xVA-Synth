@@ -63,6 +63,7 @@ Currently, the following models have been trained:
     <li>Female Even Toned</li>
     <li>Male Dunmer</li>
     <li>Male Soldier</li>
+    <li>Male Elf Haughty</li>
 </ul>
 
 ### Oblivion:
