@@ -234,6 +234,12 @@ generateVoiceButton.addEventListener("click", () => {
             generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
         })
     } else {
+
+        const existingSample = samplePlay.querySelector("audio")
+        if (existingSample) {
+            existingSample.pause()
+        }
+
         toggleSpinnerButtons()
 
         const game = gameDropdown.value.split("-")[0]
