@@ -145,7 +145,12 @@ const changeGame = () => {
 
             generateVoiceButton.dataset.modelQuery = null
 
-            if (generateVoiceButton.dataset.modelIDLoaded != voiceId) {
+            // The model is already loaded. Don't re-load it.
+            if (generateVoiceButton.dataset.modelIDLoaded == voiceId) {
+                generateVoiceButton.innerHTML = "Generate Voice"
+                generateVoiceButton.dataset.modelQuery = "null"
+
+            } else {
                 generateVoiceButton.innerHTML = "Load model"
 
                 const modelGameFolder = audioPreviewPath.split("/")[0]
