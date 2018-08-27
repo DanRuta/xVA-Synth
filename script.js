@@ -237,6 +237,12 @@ generateVoiceButton.addEventListener("click", () => {
             generateVoiceButton.dataset.modelQuery = null
             generateVoiceButton.innerHTML = "Generate Voice"
             generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
+        }).catch(e => {
+            if (e.code =="ENOENT") {
+                closeModal().then(() => {
+                    createModal("error", "There was an issue connecting to the python server.<br><br>Try again in a few seconds. If the issue persists, make sure localhost port 8008 is free, or send the server.log file to me on GitHub or Nexus.")
+                })
+            }
         })
     } else {
 
@@ -361,6 +367,15 @@ const createModal = (type, message) => {
                 resolve(false)
                 closeModal()
             })
+        } else if (type=="error") {
+            const closeButton = createElem("button", {style: {background: `#${themeColour}`}})
+            closeButton.innerHTML = "Close"
+            modal.appendChild(createElem("div", closeButton))
+
+            closeButton.addEventListener("click", () => {
+                resolve(false)
+                closeModal()
+            })
         } else {
             modal.appendChild(createElem("div.spinner", {style: {borderLeftColor: document.querySelector("button").style.background}}))
         }
@@ -373,11 +388,14 @@ const createModal = (type, message) => {
     })
 }
 const closeModal = () => {
-    modalContainer.style.opacity = 0
-    setTimeout(() => {
-        modalContainer.style.display = "none"
-        activeModal.remove()
-    }, 300)
+    return new Promise(resolve => {
+        modalContainer.style.opacity = 0
+        setTimeout(() => {
+            modalContainer.style.display = "none"
+            activeModal.remove()
+            resolve()
+        }, 300)
+    })
 }
 
 window.confirmModal = message => new Promise(resolve => resolve(createModal("confirm", message)))
