@@ -125,10 +125,9 @@ const changeGame = () => {
 
         // Quick voice set preview, if there is a preview file
         button.addEventListener("contextmenu", () => {
-            const audio = createElem("audio", {autoplay: true}, createElem("source", {
+            const audioPreview = createElem("audio", {autoplay: false}, createElem("source", {
                 src: `${path}/models/${audioPreviewPath}.wav`
             }))
-            audio.play()
         })
 
         button.addEventListener("click", () => {
@@ -228,7 +227,7 @@ generateVoiceButton.addEventListener("click", () => {
 
     if (generateVoiceButton.dataset.modelQuery && generateVoiceButton.dataset.modelQuery!="null") {
 
-        spinnerModal("Loading model (may take a minute)...")
+        spinnerModal("Loading model<br>(may take a minute...)")
         fetch(`http://localhost:8008/loadModel`, {
             method: "Post",
             body: generateVoiceButton.dataset.modelQuery
