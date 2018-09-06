@@ -99,11 +99,18 @@ const changeGame = () => {
     dragBar.innerHTML = `${meta[2]}VA Synth`
 
     if (meta) {
-        const background = `linear-gradient(0deg, grey 0, rgba(0,0,0,0)), url("assets/${meta.join("-")}"), grey`
-        right.style.background = background
+        const background = `linear-gradient(0deg, grey 0px, rgba(0,0,0,0)), url("assets/${meta.join("-")}")`
         Array.from(document.querySelectorAll("button")).forEach(e => e.style.background = `#${themeColour}`)
         Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.background = `#${themeColour}`)
         Array.from(document.querySelectorAll(".spinner")).forEach(e => e.style.borderLeftColor = `#${themeColour}`)
+
+        // Fade the background image transition
+        rightBG1.style.background = background
+        rightBG2.style.opacity = 0
+        setTimeout(() => {
+            rightBG2.style.background = rightBG1.style.background
+            rightBG2.style.opacity = 1
+        }, 1000)
     }
 
     cssHack.innerHTML = `::selection {

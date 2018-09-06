@@ -40,12 +40,20 @@
  }
  #right {
      width: calc(100vw - 300px);
+     z-index: 1;
+ }
+ #rightBG1, #rightBG2 {
+     width: calc(100vw - 300px);
      background: linear-gradient(0deg, grey 0, rgba(0,0,0,0)), grey;
      background-repeat: no-repeat !important;
      background-position-x: 100% !important;
      background-size: cover !important;
-     transition: background 0.2s;
-     transition: background-image 0.2s ease-in-out;
+     height: 100%;
+     z-index: -1;
+     position: absolute;
+ }
+ #rightBG2 {
+     transition: opacity 500ms;
  }
  .top {
      display: flex;
@@ -100,6 +108,7 @@
  #topRight {
      display: block;
      padding-bottom: 5px;
+     z-index: 3;
  }
  #title {
      display: flex;
