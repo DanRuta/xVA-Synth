@@ -1,0 +1,19 @@
+{
+    "outputs": 10,
+    "meta": "steps=504000, outputs_per_step=10",
+    "version": 1.0,
+    "cmudict": false,
+
+    "games": [
+        {
+            "gameId": "fallout3",
+            "voiceId": "narrator",
+            "voiceName": "Narrator"
+        },
+        {
+            "gameId": "falloutnv",
+            "voiceId": "narrator",
+            "voiceName": "Narrator"
+        }
+    ]
+}

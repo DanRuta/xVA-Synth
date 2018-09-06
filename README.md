@@ -55,7 +55,7 @@ Use pyinstaller to compile the python, and run the scripts in `package.json` to 
 
 The existing models have been trained on roughly 500k steps, each, at roughly 10 outputs_per_step, with batch_size of 16 or 24 (in order to be able to fit everything on 8GB of VRAM).
 
-Currently, the following models have been trained:
+Currently, the following voices/characters have been trained:
 
 ### Skyrim:
 
@@ -72,6 +72,11 @@ Currently, the following models have been trained:
     <li>Uriel Septim</li>
 </ul>
 
+### Fallout 3:
+<ul>
+    <li>Narrator</li>
+</ul>
+
 ### Fallout 4:
 <ul>
     <li>Nora (needs re-training)</li>
@@ -79,9 +84,12 @@ Currently, the following models have been trained:
 
 ### Fallout New Vegas:
 <ul>
-    <li>Joshua Graham (Same model as Skyrim Male Dunmer)</li>
-    <li>FemaleAdult04 (needs re-training) (Same model as Fallout 4 Nora)</li>
+    <li>Joshua Graham</li>
+    <li>FemaleAdult04 (needs re-training)</li>
+    <li>Narrator</li>
 </ul>
+
+Some of these share the same model, due to having the same voice actor, across games.
 
 ## Future Plans
 
@@ -96,6 +104,7 @@ Models are being trained for the following games:
 
 - The Elder Scrolls V: Skyrim
 - The Elder Scrolls IV: Oblivion
+- Fallout 3
 - Fallout 4
 - Fallout New Vegas
 
