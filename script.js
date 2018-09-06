@@ -50,18 +50,27 @@ const loadAllModels = () => {
                         models[`${gameFolder}/${fileName}`] = null
 
                         const model = JSON.parse(fs.readFileSync(`models/${gameFolder}/${fileName}`, "utf8"))
-
                         model.games.forEach(({gameId, voiceId, voiceName, voiceDescription}) => {
 
                             if (!games.hasOwnProperty(gameId)) {
+
                                 const gameAsset = fs.readdirSync(`${path}/assets`).find(f => f.startsWith(gameId))
                                 const option = document.createElement("option")
                                 option.value = gameAsset
                                 option.innerHTML = gameAsset.split("-").reverse()[0].split(".")[0]
-                                gameDropdown.appendChild(option)
                                 games[gameId] = {
                                     models: [],
                                     gameAsset
+                                }
+
+                                // Insert the dropdown option, in alphabetical order, except for Other
+                                const existingOptions = Array.from(gameDropdown.childNodes)
+
+                                if (existingOptions.length && option.innerHTML!="Other") {
+                                    const afterElement = existingOptions.find(el => el.text>option.innerHTML || el.text=="Other")
+                                    gameDropdown.insertBefore(option, afterElement)
+                                } else {
+                                    gameDropdown.appendChild(option)
                                 }
                             }
 
