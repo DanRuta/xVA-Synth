@@ -64,17 +64,25 @@ Currently, the following voices/characters have been trained:
     <li>Male Dunmer</li>
     <li>Male Soldier</li>
     <li>Male Elf Haughty</li>
+    <li>Sheogorath</li>
 </ul>
 
 ### Oblivion:
 <ul>
     <li>Male Breton</li>
     <li>Uriel Septim</li>
+    <li>Male Imperial</li>
+</ul>
+
+### Morrowind:
+<ul>
+    <li>Male Bretons and Orcs</li>
 </ul>
 
 ### Fallout 3:
 <ul>
     <li>Narrator</li>
+    <li>Mr Burke</li>
 </ul>
 
 ### Fallout 4:
@@ -104,6 +112,7 @@ Models are being trained for the following games:
 
 - The Elder Scrolls V: Skyrim
 - The Elder Scrolls IV: Oblivion
+- The Elder Scrolls III: Morrowind
 - Fallout 3
 - Fallout 4
 - Fallout New Vegas

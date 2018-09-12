@@ -1,0 +1,29 @@
+{
+    "outputs": 10,
+    "meta": "steps=516000, outputs_per_step=10, batch_size=26",
+    "version": 1.0,
+    "cmudict": false,
+    "games": [
+        {
+            "gameId": "oblivion",
+            "voiceId": "maleimperial",
+            "voiceName": "Male Imperial",
+            "description": "And Sheogorath"
+        },
+        {
+            "gameId": "fallout3",
+            "voiceId": "mrburke",
+            "voiceName": "Mr Burke"
+        },
+        {
+            "gameId": "morrowind",
+            "voiceId": "maleimperial",
+            "voiceName": "Male Bretons and Orcs"
+        },
+        {
+            "gameId": "skyrim",
+            "voiceId": "sheogorath",
+            "voiceName": "Sheogorath"
+        }
+    ]
+}
