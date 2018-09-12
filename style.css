@@ -263,6 +263,7 @@
      width: 100vw;
      transition: opacity 300ms;
      background: rgba(0,0,0,0.5);
+     z-index: 100;
  }
  .modal {
      display: flex;
