@@ -88,6 +88,7 @@ Currently, the following voices/characters have been trained:
 ### Fallout 4:
 <ul>
     <li>Nora (needs re-training)</li>
+    <li>Nate</li>
 </ul>
 
 ### Fallout New Vegas:

@@ -1,0 +1,14 @@
+{
+    "outputs": 10,
+    "meta": "steps=689000, outputs_per_step=10, batch_size=(26 until 563, 36 from there on)",
+    "version": 1.0,
+    "cmudict": false,
+
+    "games": [
+        {
+            "gameId": "fallout4",
+            "voiceId": "nate",
+            "voiceName": "Nate"
+        }
+    ]
+}
