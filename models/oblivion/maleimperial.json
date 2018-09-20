@@ -1,6 +1,6 @@
 {
     "outputs": 10,
-    "meta": "steps=516000, outputs_per_step=10, batch_size=26",
+    "meta": "steps=616000, outputs_per_step=10, batch_size=26",
     "version": 1.0,
     "cmudict": false,
     "games": [
