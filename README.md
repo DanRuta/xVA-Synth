@@ -65,6 +65,7 @@ Currently, the following voices/characters have been trained:
     <li>Male Soldier</li>
     <li>Male Elf Haughty</li>
     <li>Sheogorath</li>
+    <li>Delphine</li>
 </ul>
 
 ### Oblivion:

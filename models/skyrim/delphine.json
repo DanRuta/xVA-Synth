@@ -1,0 +1,12 @@
+{
+    "outputs": 10,
+    "meta": "steps=501000, outputs_per_step=10, batch_size=26",
+    "cmudict": false,
+    "games": [
+        {
+            "gameId": "skyrim",
+            "voiceId": "delphine",
+            "voiceName": "Delphine"
+        }
+    ]
+}
