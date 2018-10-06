@@ -1,17 +1,32 @@
 # xVA Synth
 
-Tacotron based Electron app for voice synthesis in the style of specific voices and characters from Bethesda games.
+xVASynth is an experimental, machine learning based speech synthesis app, using voices from characters/voice sets from Bethesda games.
 
-The app serves as a framework, which loads and uses whichever models are given to it. As such, the app does nothing by itself, and models need to be installed. Models which have a corresponding asset file will be loaded in its respective game/category. Anything else gets loaded in the "Other" category.
 
 <img width="100%" src="readme images/github-README.png">
 
 
+## What this is
+
+This is an Electron UI wrapped around a stripped down version of the original Tacotron (implementation by keithito). The app serves as a framework, which loads and uses whichever models are given to it. As such, the app does nothing by itself, and models need to be installed. Models which have a corresponding asset file will be loaded in its respective game/category. Anything else gets loaded in the "Other" category.
+
+
+## Why this exists
+
+This has no real purpose yet, to a user, other than just to play around with the voices. At the moment, the quality is not there yet, and until I can get some of the newer models to work, these will not be usable in anything. Some voices had very little amounts of dialogue, and lots is needed for high quality. However, the long term plan is to get to a high enough quality to synthesize new voice acting lines, for new mods (eg. quest mods).
+
+## Installation
+The base application can be downloaded and placed anywhere. Aim to install it onto an SSD, if you have the space, to reduce voice set loading time. To install voice sets, you can drop the files into the directory, like you would if manually installing a texture mod. To verify, the files should go in `xVASynth/resources/app/models/<game>/`
+
+
 ## Instructions
 
-Once the app is up and running, select the voice set category from the top left dropdown, then click a specific voice set.
+To start, double click the xVASynth.exe file, and make sure to click Allow, if Windows asks for permission to run the python server script (this is used internally).
 
-A list of already synthesized audio files, if any, is displayed. For synthesis, click the `Load model` button. This may take a minute, on a slow machine.
+
+Once the app is up and running, select the voice set category (the game) from the top left dropdown, then click a specific voice set.
+
+A list of already synthesized audio files for that voice set, if any, is displayed. For synthesis, click the `Load model` button. This may take a minute, on a slow machine.
 
 Once finished, type your text in the text area and click the `Generate Voice` button. Once generated, you will be shown a preview of the output. Click the `Keep sample` button to save to file, or click the `Generate Voice` after making ammends to the text input, to discard it and re-generate.
 
@@ -19,7 +34,7 @@ In the below list of audio files, you can preview, click to open the containing 
 
 **Note about synthesis quality**
 
-Given the very small amount of data used in training, and the somewhat outdated synthesis code, the output is mediocre at best, and outright terrible at other times. Proper sentences can be still be created with trial and error.
+Given the very small amount of data used in training, the somewhat outdated synthesis code, the output is mediocre at best, and outright terrible at other times. Proper sentences can be still be created with trial and error.
 
 The best approach I have found is to generate samples of at least 2 seconds in length, and not much more than 5. If you need a lot of text to be synthesized, the current best approach is to synthesize smaller clauses, and splicing them together in Audacity. If you need something really short, and it can't synthesize it, you can add a small sentence (EG `Some stuff.`) before and/or after your text, and cutting it out in Audacity.
 
@@ -106,6 +121,8 @@ Some of these share the same model, due to having the same voice actor, across g
 ### App
 This is an just early experiment. The quality of the voice files currently leaves to be desired, due to the low amount of data available. As technology improves, time permitting, the core synthesis algorithms will get updates, and if necessary, models retrained.
 
+Training a specific voice set takes about 6-7 days, on average, depending on the hyper-parameters used. In total, about 4 months went into getting the first list of voices trained. However, about 90% of the time/work that went into this went into collecting, aligning, and pre-processing the audio files. When trying out newer models, things should move along a bit faster, as the data has already been put together.
+
 The app is capable of using CMUDict for the models that have been trained with it. So far, however, the models that I have trained with support for it have been of lower quality. However, if trained with with support for it, CMUDict syntax can be used in the input textarea.
 
 ### Models
@@ -121,10 +138,9 @@ Models are being trained for the following games:
 
 Time/interest/data permitting, other games/categories may be explored.
 
-### Sound quality
+## Contribute
 
-Time permitting, post-processing effects may be explored, such as de essing, denoising, etc
-
+This project is the first time I've explored neural voice synthesis, so if you have more experience than me, and/or think you can contribute in any way, don't hesitate to contact me, or open an issue!
 
 ## Credits
 
