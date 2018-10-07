@@ -77,7 +77,7 @@ Use pyinstaller to compile the python, and run the scripts in `package.json` to 
 
 ## Models
 
-The existing models have been trained on roughly 500k steps, each, at roughly 10 outputs_per_step, with batch_size of 16 or 24 (in order to be able to fit everything on 8GB of VRAM).
+The existing models have been trained on roughly 500k steps, each, at roughly 5 or 10 outputs_per_step, with batch_size of 16-32 (in order to be able to fit everything on 8GB of VRAM).
 
 With varying degrees of success, the following voices/characters have been trained:
 
@@ -128,10 +128,10 @@ Some of these share the same model, due to having the same voice actor, across g
 ## Future Plans
 
 ### Voices
-I have data for quite a lot more voices, but only enough-ish for 2 or 3 more. After these, I will try to re-do some of the earlier, existing ones, having now got more experience training voices. The other voices that I have data for will probably only be made with other models (not the original Tacotron), if I can get them to work on Windows.
+I have data for quite a lot more voices, but only enough-ish per voice for 2 or 3 more. After these, I will try to re-do some of the earlier, existing ones, having now got more experience training voices. The other voices that I have data for will probably only be made with other models (not the original Tacotron), if they can manage with less data, and if I can get them to work on Windows.
 
 ### App
-This is an just early experiment. The quality of the voice files currently leaves to be desired, due to the low amount of data available. As technology improves, time permitting, the core synthesis algorithms will get updates, and if necessary, models retrained.
+This is just an early experiment. The quality of the voice files currently leaves to be desired, due to the low amount of data available. As technology improves, time permitting, the core synthesis algorithms will get updates, and if necessary, models retrained.
 
 Training a single voice set takes about 6-7 days, on average, depending on the hyper-parameters used. In total, about 4 months went into getting the first list of voices trained. However, about 90% of the time/work that went into this went into collecting, aligning, and pre-processing the audio files. When trying out newer models, things should move along a bit faster, as the data has already been put together.
 
