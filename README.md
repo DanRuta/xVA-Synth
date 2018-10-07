@@ -2,11 +2,15 @@
 
 xVASynth is an experimental, machine learning based speech synthesis app, using voices from characters/voice sets from Bethesda games.
 
+## See it in action
 
-<img width="100%" src="readme images/github-README.png">
-
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=ofN0yMI9PNI
+" target="_blank"><img src="http://img.youtube.com/vi/ofN0yMI9PNI/0.jpg"
+alt="xVASynth YouTube demo" width="240" height="180" border="10" /></a>
 
 ## What this is
+
+<img width="100%" src="readme images/github-README.png">
 
 This is an Electron UI wrapped around a stripped down version of the original Tacotron (implementation by keithito). The app serves as a framework, which loads and uses whichever models are given to it. As such, the app does nothing by itself, and models need to be installed. Models which have a corresponding asset file will be loaded in its respective game/category. Anything else gets loaded in the "Other" category.
 
@@ -38,7 +42,12 @@ Given the very small amount of data used in training, the somewhat outdated synt
 
 The best approach I have found is to generate samples of at least 2 seconds in length, and not much more than 5. If you need a lot of text to be synthesized, the current best approach is to synthesize smaller clauses, and splicing them together in Audacity. If you need something really short, and it can't synthesize it, you can add a small sentence (EG `Some stuff.`) before and/or after your text, and cutting it out in Audacity.
 
-All models have also been trained on my personal machine, with a GTX 1080, meaning that `batch_size` had to be limited, to stay within memory constraints. With any luck, I may get access to some beefier machines in the future to train models with better attention.
+If synthesis fails, some things you can try are:
+* Trying out different punctuation (full stops, commas, nothing)
+* Try out different lengths of dialogue
+* Starting the text with some words which you know works (to get the ball rolling)
+
+All models have been trained on my personal machine, with a GTX 1080, meaning that `batch_size` had to be limited, to stay within memory constraints. With any luck, I may get access to some beefier machines in the future to train models with better attention.
 
 ## Pro tips:
 
@@ -70,7 +79,7 @@ Use pyinstaller to compile the python, and run the scripts in `package.json` to 
 
 The existing models have been trained on roughly 500k steps, each, at roughly 10 outputs_per_step, with batch_size of 16 or 24 (in order to be able to fit everything on 8GB of VRAM).
 
-Currently, the following voices/characters have been trained:
+With varying degrees of success, the following voices/characters have been trained:
 
 ### Skyrim:
 
