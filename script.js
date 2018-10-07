@@ -49,7 +49,7 @@ const loadAllModels = () => {
 
                         models[`${gameFolder}/${fileName}`] = null
 
-                        const model = JSON.parse(fs.readFileSync(`models/${gameFolder}/${fileName}`, "utf8"))
+                        const model = JSON.parse(fs.readFileSync(`${path}/models/${gameFolder}/${fileName}`, "utf8"))
                         model.games.forEach(({gameId, voiceId, voiceName, voiceDescription}) => {
 
                             if (!games.hasOwnProperty(gameId)) {
@@ -218,7 +218,7 @@ const makeSample = src => {
     deleteFileButton.addEventListener("click", () => {
         confirmModal("Are you sure you'd like to delete this file?").then(confirmation => {
             if (confirmation) {
-                fs.unlinkSync(src)
+                fs.unlinkSync(`${path}${src.slice(1, src.length)}`)
                 sample.remove()
             }
         })
@@ -253,6 +253,7 @@ generateVoiceButton.addEventListener("click", () => {
             generateVoiceButton.innerHTML = "Generate Voice"
             generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
         }).catch(e => {
+            console.log(e)
             if (e.code =="ENOENT") {
                 closeModal().then(() => {
                     createModal("error", "There was an issue connecting to the python server.<br><br>Try again in a few seconds. If the issue persists, make sure localhost port 8008 is free, or send the server.log file to me on GitHub or Nexus.")
@@ -271,7 +272,7 @@ generateVoiceButton.addEventListener("click", () => {
         const game = gameDropdown.value.split("-")[0]
         const voiceType = title.dataset.modelId
 
-        const sequence = text_to_sequence(dialogueInput.value).join(",")
+        const sequence = text_to_sequence(dialogueInput.value.trim()).join(",")
         const outputFileName = dialogueInput.value.slice(0, 260).replace("?", "")
 
         try {fs.unlinkSync(localStorage.getItem("tempFileLocation"))} catch (e) {/*Do nothing*/}
