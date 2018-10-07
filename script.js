@@ -142,7 +142,7 @@ const changeGame = () => {
         // Quick voice set preview, if there is a preview file
         button.addEventListener("contextmenu", () => {
             const audioPreview = createElem("audio", {autoplay: false}, createElem("source", {
-                src: `${path}/models/${audioPreviewPath}.wav`
+                src: `./models/${audioPreviewPath}.wav`
             }))
         })
 

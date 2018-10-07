@@ -2,7 +2,7 @@
 
 xVASynth is an experimental, machine learning based speech synthesis app, using voices from characters/voice sets from Bethesda games.
 
-## See it in action
+## See it in action (YouTube link)
 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=ofN0yMI9PNI
 " target="_blank"><img src="http://img.youtube.com/vi/ofN0yMI9PNI/0.jpg"
@@ -12,7 +12,7 @@ alt="xVASynth YouTube demo" width="240" height="180" border="10" /></a>
 
 <img width="100%" src="readme images/github-README.png">
 
-This is an Electron UI wrapped around a stripped down version of the original Tacotron (implementation by keithito). The app serves as a framework, which loads and uses whichever models are given to it. As such, the app does nothing by itself, and models need to be installed. Models which have a corresponding asset file will be loaded in its respective game/category. Anything else gets loaded in the "Other" category.
+This is an Electron UI wrapped around a stripped down version of the original Tacotron (implementation by keithito). The app serves as a framework, which loads and uses whichever models are given to it. As such, the app does nothing by itself, and models need to be installed. Models which have a corresponding asset file will be loaded in their respective game/category. Anything else gets loaded in the "Other" category.
 
 
 ## Why this exists
@@ -38,7 +38,7 @@ In the below list of audio files, you can preview, click to open the containing 
 
 **Note about synthesis quality**
 
-Given the very small amount of data used in training, the somewhat outdated synthesis code, the output is mediocre at best, and outright terrible at other times. Proper sentences can be still be created with trial and error.
+Given the very small amount of data used in training, the somewhat outdated synthesis code, and my inexperience with this, the output is mediocre at best, and outright terrible other times. Proper sentences can be still be created with trial and error, and some patience.
 
 The best approach I have found is to generate samples of at least 2 seconds in length, and not much more than 5. If you need a lot of text to be synthesized, the current best approach is to synthesize smaller clauses, and splicing them together in Audacity. If you need something really short, and it can't synthesize it, you can add a small sentence (EG `Some stuff.`) before and/or after your text, and cutting it out in Audacity.
 
@@ -73,7 +73,7 @@ The app uses both JavaScript (Electron, UI) and Python code (Tacotron Model). As
 
 ## Packaging
 
-Use pyinstaller to compile the python, and run the scripts in `package.json` to create the electron distributables.
+Use pyinstaller to compile the python, and run the scripts in `package.json` to create the electron distributables. Though, if you're just tweaking small things in JS/HTML/CSS, it may be easier to just copy over the files into an existing packaged distributable. There's no code obfuscation or anything like that in place.
 
 ## Models
 
@@ -123,18 +123,21 @@ With varying degrees of success, the following voices/characters have been train
     <li>Narrator</li>
 </ul>
 
-Some of these share the same model, due to having the same voice actor, across games.
+Some of these share the same model, due to having the same voice actor, across games. Some voices were trained together for the majority of iterations, and only fine-tuned at the end, independently.
 
 ## Future Plans
+
+### Voices
+I have data for quite a lot more voices, but only enough-ish for 2 or 3 more. After these, I will try to re-do some of the earlier, existing ones, having now got more experience training voices. The other voices that I have data for will probably only be made with other models (not the original Tacotron), if I can get them to work on Windows.
 
 ### App
 This is an just early experiment. The quality of the voice files currently leaves to be desired, due to the low amount of data available. As technology improves, time permitting, the core synthesis algorithms will get updates, and if necessary, models retrained.
 
-Training a specific voice set takes about 6-7 days, on average, depending on the hyper-parameters used. In total, about 4 months went into getting the first list of voices trained. However, about 90% of the time/work that went into this went into collecting, aligning, and pre-processing the audio files. When trying out newer models, things should move along a bit faster, as the data has already been put together.
+Training a single voice set takes about 6-7 days, on average, depending on the hyper-parameters used. In total, about 4 months went into getting the first list of voices trained. However, about 90% of the time/work that went into this went into collecting, aligning, and pre-processing the audio files. When trying out newer models, things should move along a bit faster, as the data has already been put together.
 
 The app is capable of using CMUDict for the models that have been trained with it. So far, however, the models that I have trained with support for it have been of lower quality. However, if trained with with support for it, CMUDict syntax can be used in the input textarea.
 
-### Models
+### Games
 
 Models are being trained for the following games:
 
@@ -149,7 +152,7 @@ Time/interest/data permitting, other games/categories may be explored.
 
 ## Contribute
 
-This project is the first time I've explored neural voice synthesis, so if you have more experience than me, and/or think you can contribute in any way, don't hesitate to contact me, or open an issue!
+This project is the first time I've explored machine learning based voice synthesis, so if you have more experience than me, and/or think you can contribute in any way, don't hesitate to contact me, or open an issue!
 
 ## Credits
 

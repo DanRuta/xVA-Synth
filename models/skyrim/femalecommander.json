@@ -1,0 +1,13 @@
+{
+    "outputs": 10,
+    "meta": "steps=490000, outputs_per_step=10, batch_size=32",
+    "version": 1.0,
+    "cmudict": false,
+    "games": [
+        {
+            "gameId": "skyrim",
+            "voiceId": "femalecommander",
+            "voiceName": "Female Commander"
+        }
+    ]
+}
