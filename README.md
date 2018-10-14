@@ -25,7 +25,7 @@ The base application can be downloaded and placed anywhere. Aim to install it on
 
 ## Instructions
 
-To start, double click the xVASynth.exe file, and make sure to click Allow, if Windows asks for permission to run the python server script (this is used internally).
+To start, download the latest release (from here: https://github.com/DanRuta/xVA-Synth/releases), double click the xVASynth.exe file, and make sure to click Allow, if Windows asks for permission to run the python server script (this is used internally). Alternatively, check out the `Development` section, to see how to run the non-packaged dev code.
 
 
 Once the app is up and running, select the voice set category (the game) from the top left dropdown, then click a specific voice set.
