@@ -133,6 +133,8 @@ const changeGame = () => {
 
     const buttons = []
 
+    console.log(meta[0])
+    // if (games[meta[0]].length) {
     games[meta[0]].models.forEach(({model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription}) => {
 
         const button = createElem("div.voiceType", voiceName)
@@ -198,6 +200,7 @@ const changeGame = () => {
         })
         buttons.push(button)
     })
+    // }
 
     buttons.sort((a,b) => a.innerHTML<b.innerHTML?-1:1)
         .forEach(button => voiceTypeContainer.appendChild(button))
@@ -272,7 +275,8 @@ generateVoiceButton.addEventListener("click", () => {
         const game = gameDropdown.value.split("-")[0]
         const voiceType = title.dataset.modelId
 
-        const sequence = text_to_sequence(dialogueInput.value.trim()).join(",")
+        // const sequence = text_to_sequence(dialogueInput.value.trim()).join(",")
+        const sequence = dialogueInput.value.trim()
         const outputFileName = dialogueInput.value.slice(0, 260).replace("?", "")
 
         try {fs.unlinkSync(localStorage.getItem("tempFileLocation"))} catch (e) {/*Do nothing*/}
@@ -349,6 +353,36 @@ fs.watch(`${path}/models`, {recursive: true, persistent: true}, (eventType, file
         }
     }, 3000)
 })
+
+
+
+let startingSplashInterval
+let loadingStage = 0
+startingSplashInterval = setInterval(() => {
+    if (fs.existsSync("./FASTPITCH_LOADING")) {
+        if (loadingStage==0) {
+            spinnerModal("Loading...<br>May take a minute<br>Building FastPitch model...")
+            loadingStage = 1
+        }
+    } else if (fs.existsSync("./WAVEGLOW_LOADING")) {
+        if (loadingStage==1) {
+            // closeModal()
+            // spinnerModal("Loading...<br>May take a minute<br>Loading WaveGlow model...")
+            activeModal.children[0].innerHTML = "Loading...<br>May take a minute<br>Loading WaveGlow model..."
+            loadingStage = 2
+        }
+    } else if (fs.existsSync("./SERVER_STARTING")) {
+        if (loadingStage==2) {
+            // closeModal()
+            // spinnerModal("Starting up the python backend...")
+            activeModal.children[0].innerHTML = "Starting up the python backend..."
+            loadingStage = 3
+        }
+    } else {
+        closeModal()
+        clearInterval(startingSplashInterval)
+    }
+}, 100)
 
 loadAllModels().then(() => {
     // Load the last selected game

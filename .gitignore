@@ -1,4 +1,4 @@
-xVASynthEnv
+xVAEnv
 node_modules
 output/*.wav
 output/**/*.wav
