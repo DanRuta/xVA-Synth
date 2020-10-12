@@ -29,7 +29,7 @@ import numpy as np
 
 import torch
 
-from common.utils import to_gpu
+from python.common.utils import to_gpu
 from tacotron2.data_function import TextMelLoader
 
 

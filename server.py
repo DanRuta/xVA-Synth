@@ -11,7 +11,6 @@ import logging
 from logging.handlers import RotatingFileHandler
 import json
 import traceback
-from sys import argv
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 print("Start")
@@ -30,6 +29,7 @@ ch.setFormatter(formatter)
 logger.addHandler(fh)
 logger.addHandler(ch)
 logger.info("New session")
+import pyinstaller_imports
 
 try:
     import fastpitch
@@ -39,7 +39,11 @@ except:
 
 
 use_gpu = True
-fastpitch_model = fastpitch.init(use_gpu=use_gpu)
+try:
+    fastpitch_model = fastpitch.init(use_gpu=use_gpu)
+except:
+    print(traceback.format_exc())
+    logger.info(traceback.format_exc())
 print("Models ready")
 logger.info("Models ready")
 os.remove("./WAVEGLOW_LOADING")

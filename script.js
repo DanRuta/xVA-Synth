@@ -453,25 +453,25 @@ window.spinnerModal = message => new Promise(resolve => resolve(createModal("spi
 
 // Need to put a small delay to keep a user from immediatelly going to load a model, because the
 // python server takes a few seconds to boot up, and the request would cause an infinite spinner
-if (PRODUCTION) {
-    let loadSpinnerClosed = false
-    spinnerModal("Loading...")
+// if (PRODUCTION) {
+//     let loadSpinnerClosed = false
+//     spinnerModal("Loading...")
 
-    // So I'm watching for changes on the log file, which always gets written to, first when the server starts
-    fs.watch(`${path}/`, {persistent: true}, (eventType, filename) => {
-        if (filename=="server.log" && !loadSpinnerClosed) {
-            loadSpinnerClosed = true
-            closeModal()
-        }
-    })
+//     // So I'm watching for changes on the log file, which always gets written to, first when the server starts
+//     fs.watch(`${path}/`, {persistent: true}, (eventType, filename) => {
+//         if (filename=="server.log" && !loadSpinnerClosed) {
+//             loadSpinnerClosed = true
+//             closeModal()
+//         }
+//     })
 
-    // Seems to sometimes take too long to detect the file change, so I'm placing a limit,
-    // because the server IS up by this point, usually. Leaves some time padding for navigation, also
-    setTimeout(() => {
-        loadSpinnerClosed = true
-        closeModal()
-    }, 4000)
-}
+//     // Seems to sometimes take too long to detect the file change, so I'm placing a limit,
+//     // because the server IS up by this point, usually. Leaves some time padding for navigation, also
+//     setTimeout(() => {
+//         loadSpinnerClosed = true
+//         closeModal()
+//     }, 4000)
+// }
 
 modalContainer.addEventListener("click", event => {
     if (event.target==modalContainer && activeModal.dataset.type!="spinner") {

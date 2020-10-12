@@ -32,8 +32,8 @@ import torch
 import torch.utils.data
 
 import common.layers as layers
-from common.utils import load_wav_to_torch, load_filepaths_and_text, to_gpu
-from common.text import text_to_sequence
+from python.common.utils import load_wav_to_torch, load_filepaths_and_text, to_gpu
+from python.common.text import text_to_sequence
 
 
 class TextMelLoader(torch.utils.data.Dataset):

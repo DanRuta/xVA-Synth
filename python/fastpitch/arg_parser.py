@@ -27,7 +27,7 @@
 
 import argparse
 
-from common.text import symbols
+from python.common.text import symbols
 
 
 def parse_fastpitch_args(parent, add_help=False):

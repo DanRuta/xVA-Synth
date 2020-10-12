@@ -16,8 +16,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from common.utils import mask_from_lens
-from common.text.symbols import pad_idx, symbols
+from python.common.utils import mask_from_lens
+from python.common.text.symbols import pad_idx, symbols
 
 
 class PositionalEmbedding(nn.Module):
@@ -209,7 +209,7 @@ class MultiHeadAttn(nn.Module):
         attn_prob = F.softmax(attn_score, dim=3)
         attn_prob = self.dropatt(attn_prob)
 
-        # [bsz x n_head x qlen x klen] * [klen x bsz x n_head x d_head] 
+        # [bsz x n_head x qlen x klen] * [klen x bsz x n_head x d_head]
         #     -> [qlen x bsz x n_head x d_head]
         attn_vec = torch.einsum('bnij,bjnd->bind', (attn_prob, head_v))
         attn_vec = attn_vec.contiguous().view(

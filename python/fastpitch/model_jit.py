@@ -31,7 +31,7 @@ import torch
 from torch import nn as nn
 from torch.nn.utils.rnn import pad_sequence
 
-from common.layers import ConvReLUNorm
+from python.common.layers import ConvReLUNorm
 from fastpitch.transformer_jit import FFTransformer
 
 
@@ -85,18 +85,18 @@ class TemporalPredictor(nn.Module):
 
 class FastPitch(nn.Module):
     def __init__(self, n_mel_channels, max_seq_len, n_symbols,
-                 symbols_embedding_dim, in_fft_n_layers, in_fft_n_heads, 
+                 symbols_embedding_dim, in_fft_n_layers, in_fft_n_heads,
                  in_fft_d_head,
                  in_fft_conv1d_kernel_size, in_fft_conv1d_filter_size,
-                 in_fft_output_size, 
+                 in_fft_output_size,
                  p_in_fft_dropout,  p_in_fft_dropatt, p_in_fft_dropemb,
                  out_fft_n_layers, out_fft_n_heads, out_fft_d_head,
                  out_fft_conv1d_kernel_size, out_fft_conv1d_filter_size,
-                 out_fft_output_size, 
+                 out_fft_output_size,
                  p_out_fft_dropout,  p_out_fft_dropatt, p_out_fft_dropemb,
-                 dur_predictor_kernel_size, dur_predictor_filter_size, 
+                 dur_predictor_kernel_size, dur_predictor_filter_size,
                  p_dur_predictor_dropout, dur_predictor_n_layers,
-                 pitch_predictor_kernel_size, pitch_predictor_filter_size, 
+                 pitch_predictor_kernel_size, pitch_predictor_filter_size,
                  p_pitch_predictor_dropout, pitch_predictor_n_layers):
         super(FastPitch, self).__init__()
         del max_seq_len  # unused
@@ -204,7 +204,7 @@ class FastPitch(nn.Module):
             pitch_emb = self.pitch_emb(pitch_pred.unsqueeze(1)).transpose(1, 2)
         else:
             pitch_emb = self.pitch_emb(pitch_tgt.unsqueeze(1)).transpose(1, 2)
-            
+
         enc_out = enc_out + pitch_emb
 
         len_regulated, dec_lens = regulate_len(

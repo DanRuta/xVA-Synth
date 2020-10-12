@@ -28,7 +28,7 @@
 import torch
 import random
 import common.layers as layers
-from common.utils import load_wav_to_torch, load_filepaths_and_text, to_gpu
+from python.common.utils import load_wav_to_torch, load_filepaths_and_text, to_gpu
 
 
 class MelAudioLoader(torch.utils.data.Dataset):

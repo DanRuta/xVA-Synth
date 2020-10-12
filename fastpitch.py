@@ -64,7 +64,10 @@ def init (use_gpu):
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        waveglow = load_and_setup_model('WaveGlow', parser, "./models/waveglow_256channels_universal_v4.pt", device, forward_is_infer=True)
+        wg_ckpt_path = "./resources/app/models/waveglow_256channels_universal_v4.pt"
+        if not os.path.exists(wg_ckpt_path):
+            wg_ckpt_path = "./models/waveglow_256channels_universal_v4.pt"
+        waveglow = load_and_setup_model('WaveGlow', parser, wg_ckpt_path, device, forward_is_infer=True)
         denoiser = Denoiser(waveglow).to(device)
         waveglow = getattr(waveglow, 'infer', waveglow)
 

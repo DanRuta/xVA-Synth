@@ -29,7 +29,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from common.utils import mask_from_lens
+from python.common.utils import mask_from_lens
 
 
 class FastPitchLoss(nn.Module):
@@ -73,7 +73,7 @@ class FastPitchLoss(nn.Module):
             'mel_loss': mel_loss.clone().detach(),
             'duration_predictor_loss': dur_pred_loss.clone().detach(),
             'pitch_loss': pitch_loss.clone().detach(),
-            'dur_error': (torch.abs(dur_pred - dur_tgt).sum() 
+            'dur_error': (torch.abs(dur_pred - dur_tgt).sum()
                           / dur_mask.sum()).detach(),
         }
         assert meta_agg in ('sum', 'mean')

@@ -73,7 +73,12 @@ The app uses both JavaScript (Electron, UI) and Python code (Tacotron Model). As
 
 ## Packaging
 
-Use pyinstaller to compile the python, and run the scripts in `package.json` to create the electron distributables. Though, if you're just tweaking small things in JS/HTML/CSS, it may be easier to just copy over the files into an existing packaged distributable. There's no code obfuscation or anything like that in place.
+First, run the scripts in `package.json` to create the electron distributables.
+Second, use pyinstaller to compile the python. `pip install pyinstaller` and run `pyinstaller -F server.spec`. Discard the `build` folder, and move the `server` folder (in `dist`) into `release-builds/xVASynth-win32-x64/resources/app`, and rename it to `cpython`. Distribute the contents in `xVASynth-win32-x64` and run app through `xVASynth.exe`.
+
+Run the distributed app once and check the `server.log` file for any problems. You may need to copy over asset files from dependencies manually, if they fail to get copied over by pyinstaller. For example, librosa has two files in `util/example_data` that need to get copied over to `cpython/librosa/util/example_data/`.
+
+Though, if you're just tweaking small things in JS/HTML/CSS, it may be easier to just edit/copy over the files into an existing packaged distributable. There's no code obfuscation or anything like that in place.
 
 ## Models
 

@@ -11,3 +11,8 @@ server.log
 cpython
 xVASynth-win*
 model.rar
+build
+dist
+FASTPITCH_LOADING
+WAVEGLOW_LOADING
+SERVER_STARTING
