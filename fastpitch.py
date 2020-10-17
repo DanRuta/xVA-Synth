@@ -70,7 +70,6 @@ def init (use_gpu):
             wg_ckpt_path = "./models/waveglow_256channels_universal_v4.pt"
         waveglow = load_and_setup_model('WaveGlow', parser, wg_ckpt_path, device, forward_is_infer=True).to(device)
         denoiser = Denoiser(waveglow, device).to(device)
-        waveglow = getattr(waveglow, 'infer', waveglow)
 
     fastpitch.waveglow = waveglow
     fastpitch.denoiser = denoiser
@@ -87,7 +86,7 @@ def loadModel (fastpitch, ckpt):
     fastpitch.eval()
     return fastpitch
 
-def infer(text, output, fastpitch, pace=1.0, pitch_data=None):
+def infer(user_settings, text, output, fastpitch, pace=1.0, pitch_data=None):
 
     print(f'Inferring: "{text}" ({len(text)})')
 
@@ -103,7 +102,7 @@ def infer(text, output, fastpitch, pace=1.0, pitch_data=None):
 
         mel, mel_lens, dur_pred, pitch_pred = fastpitch.infer_advanced(text, pace=pace, pitch_data=pitch_data)
 
-        audios = fastpitch.waveglow(mel, sigma=sigma_infer)
+        audios = fastpitch.waveglow.infer(mel, sigma=sigma_infer)
         audios = fastpitch.denoiser(audios.float(), strength=denoising_strength).squeeze(1)
 
         for i, audio in enumerate(audios):

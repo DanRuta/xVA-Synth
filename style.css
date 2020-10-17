@@ -240,7 +240,7 @@
      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.9);
  }
 
- #modalContainer {
+ #modalContainer, #settingsContainer {
      display: flex;
      justify-content: center;
      align-items: center;
@@ -437,4 +437,55 @@
  }
  #adv_opts > div > div > span {
      margin-right: 5px;
+ }
+ .flexTable {
+     display: flex;
+     flex-direction: column;
+ }
+
+ .flexTable > div {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     width: 100%;
+     max-width: 400px;
+ }
+
+ .flexTable > div > :not(script) {
+     display: flex;
+     justify-content: center;
+     flex-direction: column;
+     min-height: 25px;
+     width: 50%;
+     padding: 0;
+     margin: 3px 0 3px 0;
+     align-items: center;
+ }
+
+ .flexTable > div > div:nth-child(1){
+     justify-content: center;
+     width: 50%;
+     padding-left: 25px;
+     /*font-style: italic;*/
+     align-items: flex-end;
+ }
+ .flexTable > div > div > input[type="submit"], .flexTable > div > div > a {
+     align-self: flex-start !important;
+ }
+
+ .flexTable > div > div > span.view-calendar > input {
+     width: 95%;
+ }
+
+ #settingsCog {
+     display: flex;
+     position: fixed;
+     z-index: 1000;
+     width: 50px;
+     top: 35px;
+     right: 0px;
+ }
+ #settingsCog > svg {
+     height: 25px;
+     cursor: pointer;
  }

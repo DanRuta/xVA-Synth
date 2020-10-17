@@ -74,6 +74,10 @@ class STFT(torch.nn.Module):
         self.register_buffer('forward_basis', forward_basis.float())
         self.register_buffer('inverse_basis', inverse_basis.float())
 
+        inv_t_weight = self.inverse_basis.unsqueeze(-1)
+        self.inv_t = torch.nn.ConvTranspose2d(in_channels=inv_t_weight.shape[1], out_channels=inv_t_weight.shape[3], kernel_size=inv_t_weight.shape[3], stride=self.hop_length, padding=0, bias=None)
+        self.inv_t.weight.data = inv_t_weight
+
     def transform(self, input_data):
         num_batches = input_data.size(0)
         num_samples = input_data.size(1)
@@ -109,12 +113,7 @@ class STFT(torch.nn.Module):
             [magnitude*torch.cos(phase), magnitude*torch.sin(phase)], dim=1)
 
         with torch.no_grad():
-            inverse_transform = F.conv_transpose2d(
-                recombine_magnitude_phase.unsqueeze(-1),
-                self.inverse_basis.unsqueeze(-1),
-                stride=self.hop_length,
-                padding=0).squeeze(-1)
-
+            inverse_transform = self.inv_t(recombine_magnitude_phase.unsqueeze(-1)).squeeze(-1)
         if self.window is not None:
             window_sum = window_sumsquare(
                 self.window, magnitude.size(-1), hop_length=self.hop_length,
@@ -140,3 +139,9 @@ class STFT(torch.nn.Module):
         self.magnitude, self.phase = self.transform(input_data)
         reconstruction = self.inverse(self.magnitude, self.phase)
         return reconstruction
+
+    def set_device(self, device):
+        self.device = device
+        self = self.to(self.device)
+        self.inv_t = self.inv_t.to(self.device)
+

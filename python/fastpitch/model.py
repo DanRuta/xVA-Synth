@@ -183,7 +183,6 @@ class FastPitch(nn.Module):
 
         # Pitch over chars
         pitch_pred = self.pitch_predictor(enc_out, enc_mask)
-        print(f'pitch_pred, {pitch_pred.shape}') # tensor <1, #num_characters>
 
         if pitch_transform is not None:
             if self.pitch_std[0] == 0.0:

@@ -13,6 +13,8 @@ import json
 import traceback
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+import torch
+
 print("Start")
 
 fastpitch_model = 0
@@ -37,8 +39,19 @@ except:
     print(traceback.format_exc())
     logger.info(traceback.format_exc())
 
+user_settings = {"use_gpu": True}
+try:
+    with open("usersettings.csv", "r") as f:
+        data = f.read().split("\n")
+        head = data[0].split(",")
+        values = data[1].split(",")
+        for h, hv in enumerate(head):
+            user_settings[hv] = values[h]
+except:
+    pass
 
-use_gpu = True
+use_gpu = user_settings["use_gpu"]=="True"
+print(f'user_settings, {user_settings}')
 try:
     fastpitch_model = fastpitch.init(use_gpu=use_gpu)
 except:
@@ -46,7 +59,10 @@ except:
     logger.info(traceback.format_exc())
 print("Models ready")
 logger.info("Models ready")
-os.remove("./WAVEGLOW_LOADING")
+try:
+    os.remove("./WAVEGLOW_LOADING")
+except:
+    pass
 
 class Handler(BaseHTTPRequestHandler):
     def _set_response(self):
@@ -71,8 +87,21 @@ class Handler(BaseHTTPRequestHandler):
 
             print("POST")
             print(self.path)
-            print(post_data)
             logger.info(post_data)
+
+            if self.path == "/setDevice":
+                use_gpu = post_data["device"]=="gpu"
+                fastpitch_model.device = torch.device('cuda' if use_gpu else 'cpu')
+                fastpitch_model = fastpitch_model.to(fastpitch_model.device)
+
+                fastpitch_model.waveglow.set_device(fastpitch_model.device)
+                fastpitch_model.denoiser.set_device(fastpitch_model.device)
+
+                user_settings["use_gpu"] = use_gpu
+                with open("usersettings.csv", "w+") as f:
+                    head = list(user_settings.keys())
+                    vals = ",".join([str(user_settings[h]) for h in head])
+                    f.write("\n".join([",".join(head), vals]))
 
             if self.path == "/loadModel":
                 fastpitch_model = fastpitch.loadModel(fastpitch_model, ckpt=post_data["model"])
@@ -84,7 +113,7 @@ class Handler(BaseHTTPRequestHandler):
                 duration = post_data["duration"] if "duration" in post_data else None
                 pitch_data = [pitch, duration]
 
-                pitch_durations_text = fastpitch.infer(text, out_path, fastpitch=fastpitch_model, pitch_data=pitch_data)
+                pitch_durations_text = fastpitch.infer(user_settings, text, out_path, fastpitch=fastpitch_model, pitch_data=pitch_data)
 
             self._set_response()
             logger.info("pitch_durations_text")
@@ -98,7 +127,10 @@ class Handler(BaseHTTPRequestHandler):
 server = HTTPServer(("",8008), Handler)
 print("Server ready")
 logger.info("Server ready")
-os.remove("./SERVER_STARTING")
+try:
+    os.remove("./SERVER_STARTING")
+except:
+    pass
 try:
     server.serve_forever()
 except KeyboardInterrupt:

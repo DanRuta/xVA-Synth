@@ -70,17 +70,20 @@ class Invertible1x1Conv(torch.nn.Module):
                 # Reverse computation
                 W_inverse = W.float().inverse()
                 W_inverse = Variable(W_inverse[..., None])
-                # if z.type() == 'torch.cuda.HalfTensor':
                 if "HalfTensor" in z.type():
                     W_inverse = W_inverse.half()
                 self.W_inverse = W_inverse
-            z = F.conv1d(z, self.W_inverse, bias=None, stride=1, padding=0)
+                self.conv.weight.data = self.W_inverse
+            z = self.conv(z)
             return z
         else:
             # Forward computation
             log_det_W = batch_size * n_of_groups * torch.logdet(W)
             z = self.conv(z)
             return z, log_det_W
+
+    def set_device (self, device):
+        self.conv = self.conv.to(device)
 
 
 class WN(torch.nn.Module):
@@ -182,6 +185,14 @@ class WaveGlow(torch.nn.Module):
             self.convinv.append(Invertible1x1Conv(n_remaining_channels))
             self.WN.append(WN(n_half, n_mel_channels*n_group, **WN_config))
         self.n_remaining_channels = n_remaining_channels  # Useful during inference
+
+    def set_device (self, device):
+        self.device = device
+        self = self.to(self.device)
+        self.WN = self.WN.to(self.device)
+        self.convinv = self.convinv.to(self.device)
+        for child in self.convinv.children():
+            child.set_device(device)
 
     def forward(self, forward_input):
         """

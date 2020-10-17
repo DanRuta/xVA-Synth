@@ -13,11 +13,17 @@ window.games = {}
 window.models = {}
 window.pitchEditor = {resetPitch: null, resetDurs: null, resetDursMult: null}
 
-const customWindowSize = localStorage.getItem("customWindowSize")
-if (customWindowSize) {
-    const [height, width] = customWindowSize.split(",").map(v => parseInt(v))
-    ipcRenderer.send("resize", {height, width})
+// Load user settings
+window.userSettings = localStorage.getItem("userSettings") || {useGPU: false, customWindowSize:`${window.innerHeight},${window.innerWidth}`}
+if ((typeof window.userSettings)=="string") {
+    window.userSettings = JSON.parse(window.userSettings)
 }
+useGPUCbx.checked = window.userSettings.useGPU
+const [height, width] = window.userSettings.customWindowSize.split(",").map(v => parseInt(v))
+ipcRenderer.send("resize", {height, width})
+localStorage.setItem("userSettings", JSON.stringify(window.userSettings))
+
+
 
 // Set up folders
 try {fs.mkdirSync(`${path}/models`)} catch (e) {/*Do nothing*/}
@@ -324,6 +330,7 @@ generateVoiceButton.addEventListener("click", () => {
         }).catch(res => {
             console.log(res)
             window.errorModal(`Something went wrong`)
+            toggleSpinnerButtons()
         })
     }
 })
@@ -457,11 +464,11 @@ const createModal = (type, message) => {
         requestAnimationFrame(() => requestAnimationFrame(() => modalContainer.style.opacity = 1))
     })
 }
-const closeModal = () => {
+const closeModal = (container=modalContainer) => {
     return new Promise(resolve => {
-        modalContainer.style.opacity = 0
+        container.style.opacity = 0
         setTimeout(() => {
-            modalContainer.style.display = "none"
+            container.style.display = "none"
             try {
                 activeModal.remove()
             } catch (e) {}
@@ -492,7 +499,8 @@ if (dialogueInputCache) {
 }
 
 window.addEventListener("resize", e => {
-    localStorage.setItem("customWindowSize", `${window.innerHeight},${window.innerWidth}`)
+    window.userSettings.customWindowSize = `${window.innerHeight},${window.innerWidth}`
+    localStorage.setItem("userSettings", JSON.stringify(userSettings))
 })
 
 
@@ -649,3 +657,35 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
         letters.forEach((_, l) => set_letter_display(letterElems[l], l, new_lengths[l], null))
     })
 }
+
+
+// Settings
+// ========
+settingsCog.addEventListener("click", () => {
+    settingsContainer.style.opacity = 0
+    settingsContainer.style.display = "flex"
+    requestAnimationFrame(() => requestAnimationFrame(() => settingsContainer.style.opacity = 1))
+})
+settingsContainer.addEventListener("click", event => {
+    if (event.target==settingsContainer) {
+        closeModal(settingsContainer)
+    }
+})
+useGPUCbx.addEventListener("change", () => {
+    spinnerModal("Changing device...")
+    fetch(`http://localhost:8008/setDevice`, {
+        method: "Post",
+        body: JSON.stringify({device: useGPUCbx.checked ? "gpu" : "cpu"})
+    }).then(r=>r.text()).then(res => {
+        closeModal()
+        window.userSettings.useGPU = useGPUCbx.checked
+        localStorage.setItem("userSettings", JSON.stringify(window.userSettings))
+    }).catch(e => {
+        console.log(e)
+        if (e.code =="ENOENT") {
+            closeModal().then(() => {
+                createModal("error", "There was a problem")
+            })
+        }
+    })
+})
