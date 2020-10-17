@@ -34,15 +34,10 @@ import torch
 # enabling modules discovery from global entrypoint
 sys.path.append(abspath(dirname(__file__)+'/'))
 from python.fastpitch.model import FastPitch as _FastPitch
-# from python.fastpitch.model_jit import FastPitch as _FastPitchJIT
-from python.tacotron2.model import Tacotron2
 from python.model import WaveGlow
 
 
 def parse_model_args(model_name, parser, add_help=False):
-    if model_name == 'Tacotron2':
-        from python.tacotron2.arg_parser import parse_tacotron2_args
-        return parse_tacotron2_args(parser, add_help)
     if model_name == 'WaveGlow':
         from python.arg_parser import parse_waveglow_args
         return parse_waveglow_args(parser, add_help)
@@ -70,21 +65,11 @@ def init_bn(module):
         init_bn(child)
 
 
-def get_model(model_name, model_config, device,
-              uniform_initialize_bn_weight=False, forward_is_infer=False,
-              jitable=False):
-    """ Code chooses a model based on name"""
+def get_model(model_name, model_config, device, uniform_initialize_bn_weight=False, forward_is_infer=False, jitable=False):
     model = None
-    if model_name == 'Tacotron2':
-        if forward_is_infer:
-            class Tacotron2__forward_is_infer(Tacotron2):
-                def forward(self, inputs, input_lengths):
-                    return self.infer(inputs, input_lengths)
-            model = Tacotron2__forward_is_infer(**model_config)
-        else:
-            model = Tacotron2(**model_config)
+    model_config["device"] = device
 
-    elif model_name == 'WaveGlow':
+    if model_name == 'WaveGlow':
         if forward_is_infer:
             class WaveGlow__forward_is_infer(WaveGlow):
                 def forward(self, spect, sigma=1.0):
@@ -101,8 +86,7 @@ def get_model(model_name, model_config, device,
                 def forward(self, inputs, input_lengths=None, pace: float = 1.0,
                             dur_tgt: Optional[torch.Tensor] = None,
                             pitch_tgt: Optional[torch.Tensor] = None,
-                            pitch_transform=None):
-                    # return self.infer(inputs, input_lengths, pace=pace,
+                            pitch_transform=None, device=None):
                     return self.infer_advanced(inputs, input_lengths, pace=pace,
                                       dur_tgt=dur_tgt, pitch_tgt=pitch_tgt,
                                       pitch_transform=pitch_transform)
@@ -121,42 +105,7 @@ def get_model(model_name, model_config, device,
 
 
 def get_model_config(model_name, args):
-    """ Code chooses a model based on name"""
-    if model_name == 'Tacotron2':
-        model_config = dict(
-            # optimization
-            mask_padding=args.mask_padding,
-            # audio
-            n_mel_channels=args.n_mel_channels,
-            # symbols
-            n_symbols=args.n_symbols,
-            symbols_embedding_dim=args.symbols_embedding_dim,
-            # encoder
-            encoder_kernel_size=args.encoder_kernel_size,
-            encoder_n_convolutions=args.encoder_n_convolutions,
-            encoder_embedding_dim=args.encoder_embedding_dim,
-            # attention
-            attention_rnn_dim=args.attention_rnn_dim,
-            attention_dim=args.attention_dim,
-            # attention location
-            attention_location_n_filters=args.attention_location_n_filters,
-            attention_location_kernel_size=args.attention_location_kernel_size,
-            # decoder
-            n_frames_per_step=args.n_frames_per_step,
-            decoder_rnn_dim=args.decoder_rnn_dim,
-            prenet_dim=args.prenet_dim,
-            max_decoder_steps=args.max_decoder_steps,
-            gate_threshold=args.gate_threshold,
-            p_attention_dropout=args.p_attention_dropout,
-            p_decoder_dropout=args.p_decoder_dropout,
-            # postnet
-            postnet_embedding_dim=args.postnet_embedding_dim,
-            postnet_kernel_size=args.postnet_kernel_size,
-            postnet_n_convolutions=args.postnet_n_convolutions,
-            decoder_no_early_stopping=args.decoder_no_early_stopping,
-        )
-        return model_config
-    elif model_name == 'WaveGlow':
+    if model_name == 'WaveGlow':
         model_config = dict(
             n_mel_channels=args.n_mel_channels,
             n_flows=args.flows,

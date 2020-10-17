@@ -40,25 +40,6 @@ def fused_add_tanh_sigmoid_multiply(input_a, input_b, n_channels):
     return acts
 
 
-class WaveGlowLoss(torch.nn.Module):
-    def __init__(self, sigma=1.0):
-        super(WaveGlowLoss, self).__init__()
-        self.sigma = sigma
-
-    def forward(self, model_output):
-        z, log_s_list, log_det_W_list = model_output
-        for i, log_s in enumerate(log_s_list):
-            if i == 0:
-                log_s_total = torch.sum(log_s)
-                log_det_W_total = log_det_W_list[i]
-            else:
-                log_s_total = log_s_total + torch.sum(log_s)
-                log_det_W_total += log_det_W_list[i]
-
-        loss = torch.sum(z*z)/(2*self.sigma*self.sigma) - log_s_total - log_det_W_total
-        return loss/(z.size(0)*z.size(1)*z.size(2))
-
-
 class Invertible1x1Conv(torch.nn.Module):
     """
     The layer outputs both the convolution, and the log determinant
@@ -67,8 +48,7 @@ class Invertible1x1Conv(torch.nn.Module):
     """
     def __init__(self, c):
         super(Invertible1x1Conv, self).__init__()
-        self.conv = torch.nn.Conv1d(c, c, kernel_size=1, stride=1, padding=0,
-                                    bias=False)
+        self.conv = torch.nn.Conv1d(c, c, kernel_size=1, stride=1, padding=0, bias=False)
 
         # Sample a random orthonormal matrix to initialize weights
         W = torch.qr(torch.FloatTensor(c, c).normal_())[0]
@@ -90,7 +70,8 @@ class Invertible1x1Conv(torch.nn.Module):
                 # Reverse computation
                 W_inverse = W.float().inverse()
                 W_inverse = Variable(W_inverse[..., None])
-                if z.type() == 'torch.cuda.HalfTensor':
+                # if z.type() == 'torch.cuda.HalfTensor':
+                if "HalfTensor" in z.type():
                     W_inverse = W_inverse.half()
                 self.W_inverse = W_inverse
             z = F.conv1d(z, self.W_inverse, bias=None, stride=1, padding=0)
@@ -176,13 +157,11 @@ class WN(torch.nn.Module):
 
 
 class WaveGlow(torch.nn.Module):
-    def __init__(self, n_mel_channels, n_flows, n_group, n_early_every,
-                 n_early_size, WN_config):
+    def __init__(self, n_mel_channels, n_flows, n_group, n_early_every, n_early_size, WN_config, device=None):
         super(WaveGlow, self).__init__()
 
-        self.upsample = torch.nn.ConvTranspose1d(n_mel_channels,
-                                                 n_mel_channels,
-                                                 1024, stride=256)
+        self.device = device
+        self.upsample = torch.nn.ConvTranspose1d(n_mel_channels, n_mel_channels, 1024, stride=256)
         assert(n_group % 2 == 0)
         self.n_flows = n_flows
         self.n_group = n_group
@@ -257,14 +236,14 @@ class WaveGlow(torch.nn.Module):
         spect = spect.unfold(2, self.n_group, self.n_group).permute(0, 2, 1, 3)
         spect = spect.contiguous().view(spect.size(0), spect.size(1), -1).permute(0, 2, 1)
 
-        if spect.type() == 'torch.cuda.HalfTensor':
-            audio = torch.cuda.HalfTensor(spect.size(0),
+        if "HalfTensor" in spect.type():
+            audio = torch.HalfTensor(spect.size(0),
                                           self.n_remaining_channels,
-                                          spect.size(2)).normal_()
+                                          spect.size(2)).normal_().to(self.device)
         else:
-            audio = torch.cuda.FloatTensor(spect.size(0),
+            audio = torch.FloatTensor(spect.size(0),
                                            self.n_remaining_channels,
-                                           spect.size(2)).normal_()
+                                           spect.size(2)).normal_().to(self.device)
 
         audio = torch.autograd.Variable(sigma*audio)
 
@@ -283,10 +262,10 @@ class WaveGlow(torch.nn.Module):
             audio = self.convinv[k](audio, reverse=True)
 
             if k % self.n_early_every == 0 and k > 0:
-                if spect.type() == 'torch.cuda.HalfTensor':
-                    z = torch.cuda.HalfTensor(spect.size(0), self.n_early_size, spect.size(2)).normal_()
+                if "HalfTensor" in spect.type():
+                    z = torch.HalfTensor(spect.size(0), self.n_early_size, spect.size(2)).normal_().to(self.device)
                 else:
-                    z = torch.cuda.FloatTensor(spect.size(0), self.n_early_size, spect.size(2)).normal_()
+                    z = torch.FloatTensor(spect.size(0), self.n_early_size, spect.size(2)).normal_().to(self.device)
                 audio = torch.cat((sigma*z, audio),1)
 
         audio = audio.permute(0,2,1).contiguous().view(audio.size(0), -1).data

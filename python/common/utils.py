@@ -63,13 +63,6 @@ def stats_filename(dataset_path, filelist_path, feature_name):
     return Path(dataset_path, f'{feature_name}_stats__{stem}.json')
 
 
-def to_gpu(x):
-    x = x.contiguous()
-    if torch.cuda.is_available():
-        x = x.cuda(non_blocking=True)
-    return torch.autograd.Variable(x)
-
-
 def to_device_async(tensor, device):
     return tensor.to(device, non_blocking=True)
 

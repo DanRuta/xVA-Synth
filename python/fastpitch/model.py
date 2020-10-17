@@ -51,8 +51,7 @@ def regulate_len(durations, enc_out, pace=1.0, mel_max_len=None):
 class TemporalPredictor(nn.Module):
     """Predicts a single float per each temporal location"""
 
-    def __init__(self, input_size, filter_size, kernel_size, dropout,
-                 n_layers=2):
+    def __init__(self, input_size, filter_size, kernel_size, dropout, n_layers=2, device=None):
         super(TemporalPredictor, self).__init__()
 
         self.layers = nn.Sequential(*[
@@ -83,7 +82,7 @@ class FastPitch(nn.Module):
                  dur_predictor_kernel_size, dur_predictor_filter_size,
                  p_dur_predictor_dropout, dur_predictor_n_layers,
                  pitch_predictor_kernel_size, pitch_predictor_filter_size,
-                 p_pitch_predictor_dropout, pitch_predictor_n_layers):
+                 p_pitch_predictor_dropout, pitch_predictor_n_layers, device=None):
         super(FastPitch, self).__init__()
         del max_seq_len  # unused
         del n_symbols
