@@ -11,7 +11,7 @@ const {text_to_sequence, english_cleaners} = require("./text.js")
 let themeColour
 window.games = {}
 window.models = {}
-window.pitchEditor = {resetPitch: null, resetDurs: null}
+window.pitchEditor = {resetPitch: null, resetDurs: null, resetDursMult: null}
 
 const customWindowSize = localStorage.getItem("customWindowSize")
 if (customWindowSize) {
@@ -304,6 +304,7 @@ generateVoiceButton.addEventListener("click", () => {
             if (pitch.length==0) {
                 window.pitchEditor.resetPitch = pitchData
                 window.pitchEditor.resetDurs = durationsData
+                window.pitchEditor.resetDursMult = window.pitchEditor.resetDurs.map(v=>1)
             }
 
             setPitchEditorValues(sequence.replace(/\s/g, "_").split(""), pitchData, durationsData)
@@ -550,7 +551,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
 
         slider.addEventListener("mousedown", () => {
             letterFocus = l
-            letterLength.value = parseInt(lengthsMult[letterFocus])
+            letterLength.value = parseInt(window.pitchEditor.resetDursMult[letterFocus])
         })
 
         slider.addEventListener("change", () => {
@@ -603,7 +604,8 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
         if (lengthsMult[letterFocus] != letterLength.value) {
             has_been_changed = true
         }
-        lengthsMult[letterFocus] = letterLength.value
+        lengthsMult[letterFocus] = parseFloat(letterLength.value)
+        window.pitchEditor.resetDursMult[letterFocus] = parseFloat(letterLength.value)
         lengthsMult.forEach((v,vi) => window.pitchEditor.dursNew[vi] = lengthsOrig[vi]*v)
 
         const letterElem = letterElems[letterFocus]
