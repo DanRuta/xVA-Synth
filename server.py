@@ -67,6 +67,7 @@ class Handler(BaseHTTPRequestHandler):
 
             content_length = int(self.headers['Content-Length'])
             post_data = json.loads(self.rfile.read(content_length).decode('utf-8'))
+            pitch_durations_text = "POST request for {}".format(self.path)
 
             print("POST")
             print(self.path)
@@ -79,14 +80,16 @@ class Handler(BaseHTTPRequestHandler):
             if self.path == "/synthesize":
                 text = post_data["sequence"]
                 out_path = post_data["outfile"]
-                pitch_data = None
-                pace = 1.0
-                if "pace" in post_data:
-                    pace = float(post_data["pace"])
-                fastpitch.infer(text, out_path, fastpitch=fastpitch_model, pitch_data=pitch_data, pace=pace)
+                pitch = post_data["pitch"] if "pitch" in post_data else None
+                duration = post_data["duration"] if "duration" in post_data else None
+                pitch_data = [pitch, duration]
+
+                pitch_durations_text = fastpitch.infer(text, out_path, fastpitch=fastpitch_model, pitch_data=pitch_data)
 
             self._set_response()
-            self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
+            logger.info("pitch_durations_text")
+            logger.info(pitch_durations_text)
+            self.wfile.write(pitch_durations_text.encode("utf-8"))
         except Exception as e:
             logger.info("Post Error:\n {}".format(repr(e)))
             print(traceback.format_exc())

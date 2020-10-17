@@ -111,7 +111,9 @@ def infer(text, output, fastpitch, pace=1.0, pitch_data=None):
             audio = audio/torch.max(torch.abs(audio))
             write(output, sampling_rate, audio.cpu().numpy())
 
-    return [pitch_pred.cpu().detach().numpy()[0], dur_pred.cpu().detach().numpy()[0]]
+    [pitch, durations] = [pitch_pred.cpu().detach().numpy()[0], dur_pred.cpu().detach().numpy()[0]]
+    pitch_durations_text = ",".join([str(v) for v in pitch])+"\n"+",".join([str(v) for v in durations])
+    return pitch_durations_text
 
 
 if __name__ == '__main__':
@@ -128,5 +130,6 @@ if __name__ == '__main__':
 
     # [pitch, durations] = infer("A short, sweet sentence, for test.", f'./output/ralph_cosham/audio_devset1.tsv/out_minimal.wav', fastpitch, waveglow, denoiser, pitch_data=pitch_data, pace=1.0)
     [pitch, durations] = infer("A short, sweet sentence, for test.", f'./output/ralph_cosham/audio_devset1.tsv/out_minimal.wav', fastpitch, pitch_data=pitch_data, pace=1.0)
+
     print(f'pitch, {pitch} {pitch.shape}')
     print(f'durations, {durations} {durations.shape}')

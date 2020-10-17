@@ -219,7 +219,7 @@ class FastPitch(nn.Module):
         # Input FFT
         enc_out, enc_mask = self.encoder(inputs)
 
-        if pitch_data is not None:
+        if pitch_data is not None and pitch_data[0] is not None and len(pitch_data[0]) and pitch_data[1] is not None and len(pitch_data[1]):
             pitch_pred, dur_pred = pitch_data
             dur_pred = torch.tensor(dur_pred)
             dur_pred = dur_pred.view((1, dur_pred.shape[0])).float().to(self.device)

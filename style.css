@@ -118,22 +118,6 @@
      text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
      color: black;
  }
-/* #settingsContainer {
-     font-size: 24pt;
-     margin-right: -10%;
-     text-shadow: 0 0 white;
-     font-weight: bolder;
-     cursor: pointer;
-     background: rgba(255,255,255,0.8);
-     border-radius: 100px;
-     height: 30px;
-     width: 40px;
-     display: flex;
-     justify-content: center;
-     align-items: flex-end;
-     padding-top: 10px;
-     box-shadow: 0px 0px 5px 1px black inset;
- }*/
  #topRight > svg {
      height: 30px;
      width: 30px;
@@ -187,10 +171,11 @@
  }
  #voiceSamples {
      width: calc(95vw - 300px);
-     height: calc(90vh - 165px);
+     height: calc(90vh - 185px - 250px);
      background: rgba(255,255,255,0.1);
      margin-left: 2.5vw;
      margin-right: 2.5vw;
+     margin-top: 20px;
      overflow-y: auto;
  }
  .sample {
@@ -251,6 +236,7 @@
  }
  ::-webkit-scrollbar-thumb {
      border-radius: 10px;
+     /*background: rgba(218,142,58, 0.5) !important;*/
      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.9);
  }
 
@@ -323,4 +309,81 @@
  }
  #chromeQuit:hover {
      color: red !important;
+ }
+
+
+ /*===========================================================================*/
+ /*======================== Pitch editor =====================================*/
+ /*===========================================================================*/
+ input[type=checkbox] {
+     height: 20px;
+     width: 20px;
+ }
+
+ #editorContainer {
+     overflow-x: scroll;
+     margin-left: 2.5vw;
+     margin-right: 2.5vw;
+ }
+ #letterLength {
+     width: 200px;
+ }
+ #editor {
+     font-family: monospace;
+     width: 7500px;
+     height: 200px;
+     height: 180px;
+     display: flex;
+     overflow-x: auto;
+     overflow-y: hidden;
+     align-items: center;
+     padding-left: 25px;
+ }
+ .letter > div:first-child {
+     height: 10px;
+     margin-top: -15px;
+ }
+ .letter {
+     height: 200px;
+     height: 150px;
+     width: 50px;
+     cursor: pointer;
+     display: inline-flex;
+     margin-top: -30px;
+ }
+ #editor > div > div {
+     text-align: center;
+     font-size: 20pt;
+ }
+
+ .slider::-webkit-slider-thumb {
+   -webkit-appearance: none;
+   cursor: pointer;
+   cursor: n-resize;
+   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+ }
+
+ .slider {
+   -webkit-appearance: none;
+   transform: rotate(270deg);
+   width: 150px !important;
+   min-width: 150px !important;
+   max-width: 150px !important;
+   height: 50px;
+   margin-left: -85px;
+ }
+
+ .slider::-webkit-slider-thumb {
+   -webkit-appearance: none;
+   width: 10px;
+   height: 50px;
+   margin-top: 0px;
+
+   border-radius: 0px;
+   border: none;
+   background: rgba(218,142,58, 0.9) !important;
+ }
+
+ .slider:focus {
+   outline: none;
  }

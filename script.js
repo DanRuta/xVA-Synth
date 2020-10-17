@@ -11,6 +11,7 @@ const {text_to_sequence, english_cleaners} = require("./text.js")
 let themeColour
 window.games = {}
 window.models = {}
+window.pitchEditor = {resetPitch: null, resetDurs: null}
 
 const customWindowSize = localStorage.getItem("customWindowSize")
 if (customWindowSize) {
@@ -133,8 +134,6 @@ const changeGame = () => {
 
     const buttons = []
 
-    console.log(meta[0])
-    // if (games[meta[0]].length) {
     games[meta[0]].models.forEach(({model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription}) => {
 
         const button = createElem("div.voiceType", voiceName)
@@ -246,7 +245,7 @@ generateVoiceButton.addEventListener("click", () => {
 
     if (generateVoiceButton.dataset.modelQuery && generateVoiceButton.dataset.modelQuery!="null") {
 
-        spinnerModal("Loading model<br>(may take a minute...)")
+        spinnerModal("Loading voice set<br>(may take a minute...)")
         fetch(`http://localhost:8008/loadModel`, {
             method: "Post",
             body: generateVoiceButton.dataset.modelQuery
@@ -283,11 +282,32 @@ generateVoiceButton.addEventListener("click", () => {
 
         // For some reason, the samplePlay audio element does not update the source when the file name is the same
         const tempFileLocation = `./output/temp-${Math.random().toString().split(".")[1]}.wav`
+        let pitch = []
+        let duration = []
+
+        if (editor.innerHTML && editor.innerHTML.length && window.pitchEditor.sequence && sequence.length==window.pitchEditor.sequence.length) {
+            pitch = window.pitchEditor.pitchNew
+            duration = window.pitchEditor.dursNew
+        }
 
         fetch(`http://localhost:8008/synthesize`, {
             method: "Post",
-            body: JSON.stringify({sequence: sequence, outfile: `${path}/${tempFileLocation.slice(1, tempFileLocation.length)}`})
-        }).then(r=>r.text()).then(() => {
+            body: JSON.stringify({sequence: sequence, pitch, duration, outfile: `${path}/${tempFileLocation.slice(1, tempFileLocation.length)}`})
+        }).then(r=>r.text()).then(res => {
+            res = res.split("\n")
+            let pitchData = res[0]
+            let durationsData = res[1]
+            pitchData = pitchData.split(",").map(v => parseFloat(v))
+            durationsData = durationsData.split(",").map(v => parseFloat(v))
+            window.pitchEditor.sequence = sequence
+
+            if (pitch.length==0) {
+                window.pitchEditor.resetPitch = pitchData
+                window.pitchEditor.resetDurs = durationsData
+            }
+
+            setPitchEditorValues(sequence.replace(/\s/g, "_").split(""), pitchData, durationsData)
+
             toggleSpinnerButtons()
             keepSampleButton.dataset.newFileLocation = `./output/${game}/${voiceType}/${outputFileName}.wav`
             keepSampleButton.disabled = false
@@ -300,6 +320,9 @@ generateVoiceButton.addEventListener("click", () => {
 
             // Persistance across sessions
             localStorage.setItem("tempFileLocation", tempFileLocation)
+        }).catch(res => {
+            console.log(res)
+            window.errorModal(`Something went wrong`)
         })
     }
 })
@@ -361,21 +384,17 @@ let loadingStage = 0
 startingSplashInterval = setInterval(() => {
     if (fs.existsSync("./FASTPITCH_LOADING")) {
         if (loadingStage==0) {
-            spinnerModal("Loading...<br>May take a minute<br>Building FastPitch model...")
+            spinnerModal("Loading...<br>May take a minute<br><br>Building FastPitch model...")
             loadingStage = 1
         }
     } else if (fs.existsSync("./WAVEGLOW_LOADING")) {
         if (loadingStage==1) {
-            // closeModal()
-            // spinnerModal("Loading...<br>May take a minute<br>Loading WaveGlow model...")
-            activeModal.children[0].innerHTML = "Loading...<br>May take a minute<br>Loading WaveGlow model..."
+            activeModal.children[0].innerHTML = "Loading...<br>May take a minute<br><br>Loading WaveGlow model..."
             loadingStage = 2
         }
     } else if (fs.existsSync("./SERVER_STARTING")) {
         if (loadingStage==2) {
-            // closeModal()
-            // spinnerModal("Starting up the python backend...")
-            activeModal.children[0].innerHTML = "Starting up the python backend..."
+            activeModal.children[0].innerHTML = "Loading...<br>May take a minute<br><br>Starting up the python backend..."
             loadingStage = 3
         }
     } else {
@@ -442,7 +461,9 @@ const closeModal = () => {
         modalContainer.style.opacity = 0
         setTimeout(() => {
             modalContainer.style.display = "none"
-            activeModal.remove()
+            try {
+                activeModal.remove()
+            } catch (e) {}
             resolve()
         }, 300)
     })
@@ -450,6 +471,7 @@ const closeModal = () => {
 
 window.confirmModal = message => new Promise(resolve => resolve(createModal("confirm", message)))
 window.spinnerModal = message => new Promise(resolve => resolve(createModal("spinner", message)))
+window.errorModal = message => new Promise(resolve => resolve(createModal("error", message)))
 
 // Need to put a small delay to keep a user from immediatelly going to load a model, because the
 // python server takes a few seconds to boot up, and the request would cause an infinite spinner
@@ -492,3 +514,158 @@ if (dialogueInputCache) {
 window.addEventListener("resize", e => {
     localStorage.setItem("customWindowSize", `${window.innerHeight},${window.innerWidth}`)
 })
+
+
+
+
+const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
+
+    editor.innerHTML = ""
+
+    let lengthsMult = lengthsOrig.map(l => 1)
+    let pacingMult = lengthsOrig.map(l => 1)
+
+    window.pitchEditor.pitchNew = pitchOrig.map(p=>p)
+    window.pitchEditor.dursNew = lengthsOrig.map(v=>v)
+
+
+    const letterElems = []
+    const css_hack_items = []
+    const elemsWidths = []
+    let letterFocus = -1
+    let autoinfer_timer = null
+    let has_been_changed = false
+
+    const set_letter_display = (elem, elem_i, length=null, value=null) => {
+
+        if (length != null) {
+            const elem_length = length/2
+            elem.style.width = `${parseInt(elem_length/2)}px`
+            elem.children[1].style.height = `${elem_length}px`
+            // elem.children[1].style.marginTop = `${-parseInt(elem_length/2)+100}px`
+            elem.children[1].style.marginTop = `${-parseInt(elem_length/2)+65}px`
+            css_hack_items[elem_i].innerHTML = `#slider_${elem_i}::-webkit-slider-thumb {height: ${elem_length}px;}`
+            elemsWidths[elem_i] = elem_length
+            elem.style.paddingLeft = `${parseInt(elem_length/2)}px`
+            editor.style.width = `${parseInt(elemsWidths.reduce((p,c)=>p+c,1)*1.25)}px`
+        }
+
+        if (value != null) {
+            elem.children[1].value = value
+        }
+    }
+
+
+    letters.forEach((letter, l) => {
+
+        const letterDiv = createElem("div.letter", createElem("div", letter))
+        const slider = createElem(`input.slider#slider_${l}`, {
+            type: "range",
+            orient: "vertical",
+            step: 0.001,
+            min: -5,
+            max:  5,
+            value: pitchOrig[l]
+        })
+        letterDiv.appendChild(slider)
+
+        slider.addEventListener("mousedown", () => {
+            letterFocus = l
+            letterLength.value = parseInt(lengthsMult[letterFocus])
+        })
+
+        slider.addEventListener("change", () => {
+            window.pitchEditor.pitchNew[l] = parseFloat(slider.value)
+            has_been_changed = true
+            if (autoplay_ckbx.checked) {
+                generateVoiceButton.click()
+            }
+        })
+
+
+        let length = lengthsOrig[l] * lengthsMult[l] * 10 + 50
+
+        letterDiv.style.width = `${parseInt(length/2)}px`
+        slider.style.height = `${length}px`
+
+        // slider.style.marginLeft = `${-83+parseInt(l/2)}px`
+        slider.style.marginLeft = `${-83}px`
+        letterDiv.style.paddingLeft = `${parseInt(length/2)}px`
+
+        const css_hack_elem = createElem("style", `#slider_${l}::-webkit-slider-thumb {height: ${length}px;}`)
+        css_hack_items.push(css_hack_elem)
+        css_hack_pitch_editor.appendChild(css_hack_elem)
+        elemsWidths.push(length)
+        editor.style.width = `${parseInt(elemsWidths.reduce((p,c)=>p+c,1)*1.15)}px`
+
+        editor.appendChild(letterDiv)
+        letterElems.push(letterDiv)
+
+        set_letter_display(letterDiv, l, length, pitchOrig[l])
+    })
+
+
+    const infer = () => {
+        movingSlider = false
+        generateVoiceButton.click()
+    }
+
+
+    let movingSlider = false
+    letterLength.addEventListener("mousedown", () => movingSlider=true)
+    letterLength.addEventListener("mouseup", () => movingSlider=false)
+    letterLength.addEventListener("change", () => movingSlider=false)
+
+
+    letterLength.addEventListener("mousemove", () => {
+        if (letterFocus<0) {
+            return
+        }
+
+        if (lengthsMult[letterFocus] != letterLength.value) {
+            has_been_changed = true
+        }
+        lengthsMult[letterFocus] = letterLength.value
+        lengthsMult.forEach((v,vi) => window.pitchEditor.dursNew[vi] = lengthsOrig[vi]*v)
+
+        const letterElem = letterElems[letterFocus]
+        const newWidth = lengthsOrig[letterFocus] * lengthsMult[letterFocus] * pace_slid.value //* 100
+        set_letter_display(letterElem, letterFocus, newWidth * 10 + 50)
+
+        if (autoinfer_timer != null) {
+            clearTimeout(autoinfer_timer)
+            autoinfer_timer = null
+        }
+        if (autoplay_ckbx.checked) {
+            autoinfer_timer = setTimeout(infer, 500)
+        }
+    })
+
+    // Reset button
+    reset_btn.addEventListener("click", () => {
+        lengthsMult = lengthsOrig.map(l => 1)
+        window.pitchEditor.dursNew = window.editor.resetDurs
+        window.pitchEditor.pitchNew = window.editor.resetPitch.map(p=>p)
+        letters.forEach((_, l) => set_letter_display(letterElems[l], l, window.editor.resetDurs[l]*10+50, window.pitchEditor.pitchNew[l]))
+    })
+    amplify_btn.addEventListener("click", () => {
+        window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p*1.1)
+        letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
+    })
+    flatten_btn.addEventListener("click", () => {
+        window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p*0.9)
+        letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
+    })
+    increase_btn.addEventListener("click", () => {
+        window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p+=0.1)
+        letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
+    })
+    decrease_btn.addEventListener("click", () => {
+        window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p-=0.1)
+        letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
+    })
+    pace_slid.addEventListener("change", () => {
+        const new_lengths = lengthsOrig.map((v,l) => v * lengthsMult[l] * pace_slid.value)
+        letters.forEach((_, l) => set_letter_display(letterElems[l], l, new_lengths[l], null))
+    })
+}
