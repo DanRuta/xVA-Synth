@@ -338,6 +338,10 @@
      overflow-y: hidden;
      align-items: center;
      padding-left: 25px;
+
+     min-width: calc(94vw - 300px);
+     height: 145px;
+     background: rgba(255,255,255,0.2);
  }
  .letter > div:first-child {
      height: 10px;
@@ -354,6 +358,8 @@
  #editor > div > div {
      text-align: center;
      font-size: 20pt;
+
+     margin-right: 20px;
  }
 
  .slider::-webkit-slider-thumb {
@@ -386,4 +392,49 @@
 
  .slider:focus {
    outline: none;
+ }
+ #adv {
+     height: 250px;
+ }
+ .letter:nth-child(even) > input {
+     background-color: rgba(0,0,0,0.3);
+ }
+ .letter:nth-child(odd) > input {
+     background-color: rgba(255,255,255,0.3);
+ }
+ .slider {
+     width: 100px !important;
+     min-width: 100px !important;
+     max-width: 100px !important;
+     margin-left: -100px;
+ }
+ .letter {
+     text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+     margin-top: 40px;
+     margin-left: 3px;
+ }
+
+ #adv_opts{
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     margin-top: 4px;
+ }
+ #adv_opts > div {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     background: rgba(255,255,255,0.2);
+     margin-bottom: 5px;
+ }
+ #adv_opts > div > button {
+     margin: 5px;
+ }
+ #adv_opts > div > div {
+     margin: 5px;
+     display: flex;
+     align-items: center;
+ }
+ #adv_opts > div > div > span {
+     margin-right: 5px;
  }
