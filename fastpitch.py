@@ -38,8 +38,10 @@ def load_and_setup_model(model_name, parser, checkpoint, device, forward_is_infe
                 sd = {k.replace('module.', ''): v for k,v in sd.items()}
 
             model.load_state_dict(sd, strict=False)
-        else:
+        if 'model' in checkpoint_data:
             model = checkpoint_data['model']
+        else:
+            model = checkpoint_data
         print(f'Loaded {model_name}{status}')
 
     if model_name == "WaveGlow":
@@ -81,7 +83,9 @@ def loadModel (fastpitch, ckpt):
     print(f'Loading FastPitch model: {ckpt}')
 
     checkpoint_data = torch.load(ckpt+".pt")
-    fastpitch.load_state_dict(checkpoint_data['state_dict'], strict=False)
+    if 'state_dict' in checkpoint_data:
+        checkpoint_data = checkpoint_data['state_dict']
+    fastpitch.load_state_dict(checkpoint_data, strict=False)
 
     fastpitch.eval()
     return fastpitch
