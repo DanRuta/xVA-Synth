@@ -14,15 +14,20 @@ window.models = {}
 window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null}
 
 // Load user settings
-window.userSettings = localStorage.getItem("userSettings") || {useGPU: false, customWindowSize:`${window.innerHeight},${window.innerWidth}`}
+window.userSettings = localStorage.getItem("userSettings") ||
+{useGPU: false, customWindowSize:`${window.innerHeight},${window.innerWidth}`, autoplay: false}
 if ((typeof window.userSettings)=="string") {
     window.userSettings = JSON.parse(window.userSettings)
 }
+
 useGPUCbx.checked = window.userSettings.useGPU
+autoplay_ckbx.checked = window.userSettings.autoplay
+
 const [height, width] = window.userSettings.customWindowSize.split(",").map(v => parseInt(v))
 ipcRenderer.send("resize", {height, width})
-localStorage.setItem("userSettings", JSON.stringify(window.userSettings))
 
+const saveUserSettings = () => localStorage.setItem("userSettings", JSON.stringify(window.userSettings))
+saveUserSettings()
 
 
 // Set up folders
@@ -510,7 +515,7 @@ if (dialogueInputCache) {
 
 window.addEventListener("resize", e => {
     window.userSettings.customWindowSize = `${window.innerHeight},${window.innerWidth}`
-    localStorage.setItem("userSettings", JSON.stringify(userSettings))
+    saveUserSettings()
 })
 
 
@@ -668,6 +673,10 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
         letters.forEach((_, l) => set_letter_display(letterElems[l], l, new_lengths[l]* 10 + 50, null))
     })
 }
+autoplay_ckbx.addEventListener("change", () => {
+    window.userSettings.autoplay = autoplay_ckbx.checked
+    saveUserSettings()
+})
 
 
 // Settings
@@ -690,7 +699,7 @@ useGPUCbx.addEventListener("change", () => {
     }).then(r=>r.text()).then(res => {
         closeModal()
         window.userSettings.useGPU = useGPUCbx.checked
-        localStorage.setItem("userSettings", JSON.stringify(window.userSettings))
+        saveUserSettings()
     }).catch(e => {
         console.log(e)
         if (e.code =="ENOENT") {
