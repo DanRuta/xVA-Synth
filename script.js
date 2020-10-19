@@ -562,7 +562,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
 
         slider.addEventListener("mousedown", () => {
             letterFocus = l
-            letterLength.value = parseInt(window.pitchEditor.resetDursMult[letterFocus])
+            letterLength.value = parseInt(lengthsMult[letterFocus])
         })
 
         slider.addEventListener("change", () => {
@@ -574,7 +574,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
         })
 
 
-        let length = lengthsOrig[l] * lengthsMult[l] * 10 + 50
+        let length = lengthsOrig[l] * lengthsMult[l] * pace_slid.value * 10 + 50
 
         letterDiv.style.width = `${parseInt(length/2)}px`
         slider.style.height = `${length}px`
