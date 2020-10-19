@@ -11,7 +11,7 @@ const {text_to_sequence, english_cleaners} = require("./text.js")
 let themeColour
 window.games = {}
 window.models = {}
-window.pitchEditor = {resetPitch: null, resetDurs: null, resetDursMult: null}
+window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null}
 
 // Load user settings
 window.userSettings = localStorage.getItem("userSettings") || {useGPU: false, customWindowSize:`${window.innerHeight},${window.innerWidth}`}
@@ -293,10 +293,11 @@ generateVoiceButton.addEventListener("click", () => {
         let pitch = []
         let duration = []
 
-        if (editor.innerHTML && editor.innerHTML.length && window.pitchEditor.sequence && sequence.length==window.pitchEditor.sequence.length) {
+        if (editor.innerHTML && editor.innerHTML.length && window.pitchEditor.sequence && sequence.length==window.pitchEditor.sequence.length && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
             pitch = window.pitchEditor.pitchNew
             duration = window.pitchEditor.dursNew
         }
+        window.pitchEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
 
         fetch(`http://localhost:8008/synthesize`, {
             method: "Post",
