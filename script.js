@@ -634,9 +634,9 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
     // Reset button
     reset_btn.addEventListener("click", () => {
         lengthsMult = lengthsOrig.map(l => 1)
-        window.pitchEditor.dursNew = window.editor.resetDurs
-        window.pitchEditor.pitchNew = window.editor.resetPitch.map(p=>p)
-        letters.forEach((_, l) => set_letter_display(letterElems[l], l, window.editor.resetDurs[l]*10+50, window.pitchEditor.pitchNew[l]))
+        window.pitchEditor.dursNew = window.pitchEditor.resetDurs
+        window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map(p=>p)
+        letters.forEach((_, l) => set_letter_display(letterElems[l], l, window.pitchEditor.resetDurs[l]*10+50, window.pitchEditor.pitchNew[l]))
     })
     amplify_btn.addEventListener("click", () => {
         window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p*1.1)
@@ -655,8 +655,9 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
         letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
     })
     pace_slid.addEventListener("change", () => {
-        const new_lengths = lengthsOrig.map((v,l) => v * lengthsMult[l] * pace_slid.value)
-        letters.forEach((_, l) => set_letter_display(letterElems[l], l, new_lengths[l], null))
+        const new_lengths = window.pitchEditor.resetDurs.map((v,l) => v * lengthsMult[l] * pace_slid.value)
+        window.pitchEditor.dursNew = new_lengths
+        letters.forEach((_, l) => set_letter_display(letterElems[l], l, new_lengths[l]* 10 + 50, null))
     })
 }
 
