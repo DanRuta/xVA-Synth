@@ -122,7 +122,14 @@ const changeGame = () => {
 
     cssHack.innerHTML = `::selection {
         background: #${themeColour};
-    }`
+    }
+    ::-webkit-scrollbar-thumb {
+        background-color: #${themeColour} !important;
+    }
+    .slider::-webkit-slider-thumb {
+        background-color: #${themeColour} !important;
+    }
+    `
 
     try {fs.mkdirSync(`${path}/output/${meta[0]}`)} catch (e) {/*Do nothing*/}
     localStorage.setItem("lastGame", gameDropdown.value)
