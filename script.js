@@ -226,7 +226,9 @@ const makeSample = src => {
     deleteFileButton.addEventListener("click", () => {
         confirmModal("Are you sure you'd like to delete this file?").then(confirmation => {
             if (confirmation) {
-                fs.unlinkSync(`${path}${src.slice(1, src.length)}`)
+                try {
+                    fs.unlinkSync(`${path}${src.slice(1, src.length)}`)
+                } catch (e) {}
                 sample.remove()
             }
         })
