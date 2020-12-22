@@ -27,10 +27,10 @@ def load_and_setup_model(model_name, parser, checkpoint, device, forward_is_infe
 
     model_config = models.get_model_config(model_name, model_args)
     model = models.get_model(model_name, model_config, device, forward_is_infer=forward_is_infer, jitable=jitable)
+    model.eval()
 
     if checkpoint is not None:
-        checkpoint_data = torch.load(checkpoint)
-        status = ''
+        checkpoint_data = torch.load(checkpoint, map_location="cpu")
 
         if 'state_dict' in checkpoint_data:
             sd = checkpoint_data['state_dict']
@@ -42,7 +42,7 @@ def load_and_setup_model(model_name, parser, checkpoint, device, forward_is_infe
             model = checkpoint_data['model']
         else:
             model = checkpoint_data
-        print(f'Loaded {model_name}{status}')
+        print(f'Loaded {model_name}')
 
     if model_name == "WaveGlow":
         model = model.remove_weightnorm(model)
@@ -82,7 +82,7 @@ def init (use_gpu):
 def loadModel (fastpitch, ckpt):
     print(f'Loading FastPitch model: {ckpt}')
 
-    checkpoint_data = torch.load(ckpt+".pt")
+    checkpoint_data = torch.load(ckpt+".pt", map_location="cpu")
     if 'state_dict' in checkpoint_data:
         checkpoint_data = checkpoint_data['state_dict']
     fastpitch.load_state_dict(checkpoint_data, strict=False)
