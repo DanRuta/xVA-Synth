@@ -308,10 +308,12 @@ generateVoiceButton.addEventListener("click", () => {
         const tempFileLocation = `./output/temp-${Math.random().toString().split(".")[1]}.wav`
         let pitch = []
         let duration = []
+        let quick_n_dirty = false
 
         if (editor.innerHTML && editor.innerHTML.length && window.pitchEditor.sequence && sequence.length==window.pitchEditor.sequence.length && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
             pitch = window.pitchEditor.pitchNew
             duration = window.pitchEditor.dursNew
+            quick_n_dirty = window.userSettings.quick_n_dirty
         }
         window.pitchEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
 
@@ -319,7 +321,11 @@ generateVoiceButton.addEventListener("click", () => {
 
         fetch(`http://localhost:8008/synthesize`, {
             method: "Post",
-            body: JSON.stringify({sequence: sequence, pitch, duration, speaker_i, outfile: `${path}/${tempFileLocation.slice(1, tempFileLocation.length)}`})
+            body: JSON.stringify({
+                sequence, pitch, duration, speaker_i,
+                outfile: `${path}/${tempFileLocation.slice(1, tempFileLocation.length)}`,
+                hifi_gan: quick_n_dirty
+            })
         }).then(r=>r.text()).then(res => {
             res = res.split("\n")
             let pitchData = res[0]
@@ -681,6 +687,10 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
 }
 autoplay_ckbx.addEventListener("change", () => {
     window.userSettings.autoplay = autoplay_ckbx.checked
+    saveUserSettings()
+})
+qnd_ckbx.addEventListener("change", () => {
+    window.userSettings.quick_n_dirty = qnd_ckbx.checked
     saveUserSettings()
 })
 

@@ -57,6 +57,7 @@ try:
 except:
     print(traceback.format_exc())
     logger.info(traceback.format_exc())
+
 print("Models ready")
 logger.info("Models ready")
 try:
@@ -96,6 +97,7 @@ class Handler(BaseHTTPRequestHandler):
 
                 fastpitch_model.waveglow.set_device(fastpitch_model.device)
                 fastpitch_model.denoiser.set_device(fastpitch_model.device)
+                fastpitch_model.hifi_gan.to(fastpitch_model.device)
 
                 user_settings["use_gpu"] = use_gpu
                 with open("usersettings.csv", "w+") as f:
@@ -112,9 +114,10 @@ class Handler(BaseHTTPRequestHandler):
                 pitch = post_data["pitch"] if "pitch" in post_data else None
                 duration = post_data["duration"] if "duration" in post_data else None
                 speaker_i = post_data["speaker_i"]
+                hifi_gan = post_data["hifi_gan"]
                 pitch_data = [pitch, duration]
 
-                pitch_durations_text = fastpitch.infer(user_settings, text, out_path, fastpitch=fastpitch_model, speaker_i=speaker_i, pitch_data=pitch_data)
+                pitch_durations_text = fastpitch.infer(user_settings, text, out_path, fastpitch=fastpitch_model, hifi_gan=hifi_gan, speaker_i=speaker_i, pitch_data=pitch_data)
 
             self._set_response()
             logger.info("pitch_durations_text")

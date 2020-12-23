@@ -1,4 +1,5 @@
 import os
+import json
 import argparse
 # import models
 from python import models
@@ -19,6 +20,11 @@ from python import model as glow
 from python.denoiser import Denoiser
 sys.modules['glow'] = glow
 
+from python.hifi_gan import Generator
+class AttrDict(dict):
+    def __init__(self, *args, **kwargs):
+        super(AttrDict, self).__init__(*args, **kwargs)
+        self.__dict__ = self
 
 
 
@@ -83,6 +89,17 @@ def init (use_gpu):
     fastpitch.waveglow = waveglow
     fastpitch.denoiser = denoiser
 
+    # Hi-Fi GAN
+    config_file = os.path.join(f'./python/config.json')
+    with open(config_file) as f:
+        data = f.read()
+
+    json_config = json.loads(data)
+    h = AttrDict(json_config)
+    fastpitch.hifi_gan = Generator(h).to(device)
+    hifigan_ckpt = torch.load(f'./python/generator_v2', map_location=device)
+    fastpitch.hifi_gan.load_state_dict(hifigan_ckpt['generator'])
+
     return fastpitch
 
 
@@ -100,7 +117,7 @@ def loadModel (fastpitch, ckpt, n_speakers, device):
     fastpitch.eval()
     return fastpitch
 
-def infer(user_settings, text, output, fastpitch, speaker_i, pace=1.0, pitch_data=None):
+def infer(user_settings, text, output, fastpitch, hifi_gan, speaker_i, pace=1.0, pitch_data=None):
 
     print(f'Inferring: "{text}" ({len(text)})')
 
@@ -116,13 +133,20 @@ def infer(user_settings, text, output, fastpitch, speaker_i, pace=1.0, pitch_dat
 
         mel, mel_lens, dur_pred, pitch_pred = fastpitch.infer_advanced(text, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data)
 
-        audios = fastpitch.waveglow.infer(mel, sigma=sigma_infer)
-        audios = fastpitch.denoiser(audios.float(), strength=denoising_strength).squeeze(1)
+        if hifi_gan:
+            y_g_hat = fastpitch.hifi_gan(mel)
+            audio = y_g_hat.squeeze()
+            audio = audio * 32768.0
+            audio = audio.cpu().numpy().astype('int16')
+            write(output, sampling_rate, audio)
+        else:
+            audios = fastpitch.waveglow.infer(mel, sigma=sigma_infer)
+            audios = fastpitch.denoiser(audios.float(), strength=denoising_strength).squeeze(1)
 
-        for i, audio in enumerate(audios):
-            audio = audio[:mel_lens[i].item() * stft_hop_length]
-            audio = audio/torch.max(torch.abs(audio))
-            write(output, sampling_rate, audio.cpu().numpy())
+            for i, audio in enumerate(audios):
+                audio = audio[:mel_lens[i].item() * stft_hop_length]
+                audio = audio/torch.max(torch.abs(audio))
+                write(output, sampling_rate, audio.cpu().numpy())
 
     [pitch, durations] = [pitch_pred.cpu().detach().numpy()[0], dur_pred.cpu().detach().numpy()[0]]
     pitch_durations_text = ",".join([str(v) for v in pitch])+"\n"+",".join([str(v) for v in durations])
