@@ -8,6 +8,7 @@ import warnings
 
 import torch
 from scipy.io.wavfile import write
+import torch.nn as nn
 from torch.nn.utils.rnn import pad_sequence
 
 # from common.text import text_to_sequence
@@ -36,6 +37,12 @@ def load_and_setup_model(model_name, parser, checkpoint, device, forward_is_infe
             sd = checkpoint_data['state_dict']
             if any(key.startswith('module.') for key in sd):
                 sd = {k.replace('module.', ''): v for k,v in sd.items()}
+
+            TEMP_NUM_SPEAKERS = 5
+            symbols_embedding_dim = 384
+            model.speaker_emb = nn.Embedding(TEMP_NUM_SPEAKERS, symbols_embedding_dim).to(device)
+            if "speaker_emb.weight" not in sd:
+                sd["speaker_emb.weight"] = torch.rand((TEMP_NUM_SPEAKERS, 384))
 
             model.load_state_dict(sd, strict=False)
         if 'model' in checkpoint_data:
@@ -79,18 +86,21 @@ def init (use_gpu):
     return fastpitch
 
 
-def loadModel (fastpitch, ckpt):
+def loadModel (fastpitch, ckpt, n_speakers, device):
     print(f'Loading FastPitch model: {ckpt}')
 
     checkpoint_data = torch.load(ckpt+".pt", map_location="cpu")
     if 'state_dict' in checkpoint_data:
         checkpoint_data = checkpoint_data['state_dict']
+
+    symbols_embedding_dim = 384
+    fastpitch.speaker_emb = nn.Embedding(n_speakers, symbols_embedding_dim).to(device)
     fastpitch.load_state_dict(checkpoint_data, strict=False)
 
     fastpitch.eval()
     return fastpitch
 
-def infer(user_settings, text, output, fastpitch, pace=1.0, pitch_data=None):
+def infer(user_settings, text, output, fastpitch, speaker_i, pace=1.0, pitch_data=None):
 
     print(f'Inferring: "{text}" ({len(text)})')
 
@@ -104,7 +114,7 @@ def infer(user_settings, text, output, fastpitch, pace=1.0, pitch_data=None):
 
     with torch.no_grad():
 
-        mel, mel_lens, dur_pred, pitch_pred = fastpitch.infer_advanced(text, pace=pace, pitch_data=pitch_data)
+        mel, mel_lens, dur_pred, pitch_pred = fastpitch.infer_advanced(text, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data)
 
         audios = fastpitch.waveglow.infer(mel, sigma=sigma_infer)
         audios = fastpitch.denoiser(audios.float(), strength=denoising_strength).squeeze(1)

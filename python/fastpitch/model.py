@@ -69,23 +69,23 @@ class TemporalPredictor(nn.Module):
 
 
 class FastPitch(nn.Module):
-    def __init__(self, n_mel_channels, max_seq_len, n_symbols,
+    def __init__(self, n_mel_channels, max_seq_len, n_symbols, padding_idx,
                  symbols_embedding_dim, in_fft_n_layers, in_fft_n_heads,
                  in_fft_d_head,
                  in_fft_conv1d_kernel_size, in_fft_conv1d_filter_size,
                  in_fft_output_size,
-                 p_in_fft_dropout,  p_in_fft_dropatt, p_in_fft_dropemb,
+                 p_in_fft_dropout, p_in_fft_dropatt, p_in_fft_dropemb,
                  out_fft_n_layers, out_fft_n_heads, out_fft_d_head,
                  out_fft_conv1d_kernel_size, out_fft_conv1d_filter_size,
                  out_fft_output_size,
-                 p_out_fft_dropout,  p_out_fft_dropatt, p_out_fft_dropemb,
+                 p_out_fft_dropout, p_out_fft_dropatt, p_out_fft_dropemb,
                  dur_predictor_kernel_size, dur_predictor_filter_size,
                  p_dur_predictor_dropout, dur_predictor_n_layers,
                  pitch_predictor_kernel_size, pitch_predictor_filter_size,
-                 p_pitch_predictor_dropout, pitch_predictor_n_layers, device=None):
+                 p_pitch_predictor_dropout, pitch_predictor_n_layers,
+                 pitch_embedding_kernel_size, n_speakers, speaker_emb_weight, device=None):
         super(FastPitch, self).__init__()
         del max_seq_len  # unused
-        del n_symbols
 
         self.encoder = FFTransformer(
             n_layer=in_fft_n_layers, n_head=in_fft_n_heads,
@@ -96,8 +96,17 @@ class FastPitch(nn.Module):
             dropout=p_in_fft_dropout,
             dropatt=p_in_fft_dropatt,
             dropemb=p_in_fft_dropemb,
+            embed_input=True,
             d_embed=symbols_embedding_dim,
-            embed_input=True)
+            n_embed=n_symbols,
+            padding_idx=padding_idx)
+
+        if n_speakers > 1:
+            self.speaker_emb = nn.Embedding(n_speakers, symbols_embedding_dim)
+            print(f'self.speaker_emb, {self.speaker_emb}')
+        else:
+            self.speaker_emb = None
+        self.speaker_emb_weight = speaker_emb_weight
 
         self.duration_predictor = TemporalPredictor(
             in_fft_output_size,
@@ -115,8 +124,9 @@ class FastPitch(nn.Module):
             dropout=p_out_fft_dropout,
             dropatt=p_out_fft_dropatt,
             dropemb=p_out_fft_dropemb,
-            d_embed=symbols_embedding_dim,
-            embed_input=False)
+            embed_input=False,
+            d_embed=symbols_embedding_dim
+        )
 
         self.pitch_predictor = TemporalPredictor(
             in_fft_output_size,
@@ -124,8 +134,11 @@ class FastPitch(nn.Module):
             kernel_size=pitch_predictor_kernel_size,
             dropout=p_pitch_predictor_dropout, n_layers=pitch_predictor_n_layers
         )
-        self.pitch_emb = nn.Conv1d(1, symbols_embedding_dim, kernel_size=3,
-                                   padding=1)
+
+        self.pitch_emb = nn.Conv1d(
+            1, symbols_embedding_dim,
+            kernel_size=pitch_embedding_kernel_size,
+            padding=int((pitch_embedding_kernel_size - 1) / 2))
 
         # Store values precomputed for training data within the model
         self.register_buffer('pitch_mean', torch.zeros(1))
@@ -135,12 +148,18 @@ class FastPitch(nn.Module):
 
     def forward(self, inputs, use_gt_durations=True, use_gt_pitch=True,
                 pace=1.0, max_duration=75):
-        # [text_padded, input_lengths, mel_padded, output_lengths, dur_padded, dur_lens, pitch_padded]
-        inputs, _, mel_tgt, _, dur_tgt, _, pitch_tgt = inputs
+        inputs, _, mel_tgt, _, dur_tgt, _, pitch_tgt, speaker = inputs
         mel_max_len = mel_tgt.size(2)
 
+        # Calculate speaker embedding
+        if self.speaker_emb is None:
+            spk_emb = 0
+        else:
+            spk_emb = self.speaker_emb(speaker).unsqueeze(1)
+            spk_emb.mul_(self.speaker_emb_weight)
+
         # Input FFT
-        enc_out, enc_mask = self.encoder(inputs)
+        enc_out, enc_mask = self.encoder(inputs, conditioning=spk_emb)
 
         # Embedded for predictors
         pred_enc_out, pred_enc_mask = enc_out, enc_mask
@@ -167,12 +186,19 @@ class FastPitch(nn.Module):
         mel_out = self.proj(dec_out)
         return mel_out, dec_mask, dur_pred, log_dur_pred, pitch_pred
 
-    def infer(self, inputs, input_lens=None, pace=1.0, dur_tgt=None, pitch_tgt=None,
-              pitch_transform=None, max_duration=75):
+    def infer(self, inputs, input_lens, pace=1.0, dur_tgt=None, pitch_tgt=None,
+              pitch_transform=None, max_duration=75, speaker=0):
         del input_lens  # unused
 
+        if self.speaker_emb is None:
+            spk_emb = 0
+        else:
+            speaker = torch.ones(inputs.size(0)).long().to(inputs.device) * speaker
+            spk_emb = self.speaker_emb(speaker).unsqueeze(1)
+            spk_emb.mul_(self.speaker_emb_weight)
+
         # Input FFT
-        enc_out, enc_mask = self.encoder(inputs)
+        enc_out, enc_mask = self.encoder(inputs, conditioning=spk_emb)
 
         # Embedded for predictors
         pred_enc_out, pred_enc_mask = enc_out, enc_mask
@@ -190,10 +216,7 @@ class FastPitch(nn.Module):
                 mean, std = 218.14, 67.24
             else:
                 mean, std = self.pitch_mean[0], self.pitch_std[0]
-            pitch_pred = pitch_transform(pitch_pred, mean, std)
-            # I think I need to unroll pitch_pred (I think it's array-like) into individual transforms
-            # over individual pitch outputs. Need a mapping between pitch(es) and text labels
-            # (which will map to transformations such as pitch)
+            pitch_pred = pitch_transform(pitch_pred, enc_mask.sum(dim=(1,2)), mean, std)
 
         if pitch_tgt is None:
             pitch_emb = self.pitch_emb(pitch_pred.unsqueeze(1)).transpose(1, 2)
@@ -212,40 +235,39 @@ class FastPitch(nn.Module):
         mel_out = mel_out.permute(0, 2, 1)  # For inference.py
         return mel_out, dec_lens, dur_pred, pitch_pred
 
-    def infer_advanced (self, inputs, pace=1.0, pitch_data=None, max_duration=75):
+    def infer_advanced (self, inputs, speaker_i, pace=1.0, pitch_data=None, max_duration=75):
+
+        speaker = torch.ones(inputs.size(0)).long().to(inputs.device) * speaker_i
+        spk_emb = self.speaker_emb(speaker).unsqueeze(1)
+        spk_emb.mul_(self.speaker_emb_weight)
 
         # Input FFT
-        enc_out, enc_mask = self.encoder(inputs)
-
+        enc_out, enc_mask = self.encoder(inputs, conditioning=spk_emb)
         if pitch_data is not None and pitch_data[0] is not None and len(pitch_data[0]) and pitch_data[1] is not None and len(pitch_data[1]):
             pitch_pred, dur_pred = pitch_data
             dur_pred = torch.tensor(dur_pred)
             dur_pred = dur_pred.view((1, dur_pred.shape[0])).float().to(self.device)
-
             pitch_pred = torch.tensor(pitch_pred)
             pitch_pred = pitch_pred.view((1, pitch_pred.shape[0])).float().to(self.device)
             pitch_pred_out = pitch_pred
         else:
             # Embedded for predictors
             pred_enc_out, pred_enc_mask = enc_out, enc_mask
-
             # Predict durations
             log_dur_pred = self.duration_predictor(pred_enc_out, pred_enc_mask)
             dur_pred = torch.clamp(torch.exp(log_dur_pred) - 1, 0, max_duration)
-
             # Pitch over chars
             pitch_pred = self.pitch_predictor(enc_out, enc_mask)
             pitch_pred_out = pitch_pred
-
         pitch_emb = self.pitch_emb(pitch_pred_out.unsqueeze(1)).transpose(1, 2)
-
         enc_out = enc_out + pitch_emb
         len_regulated, dec_lens = regulate_len(dur_pred, enc_out, pace, mel_max_len=None)
-
         dec_out, dec_mask = self.decoder(len_regulated, dec_lens)
         mel_out = self.proj(dec_out)
         mel_out = mel_out.permute(0, 2, 1)  # For inference.py
         return mel_out, dec_lens, dur_pred, pitch_pred
+
+
 
 
 

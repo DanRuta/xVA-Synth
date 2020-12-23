@@ -95,6 +95,7 @@ class WN(torch.nn.Module):
     def __init__(self, n_in_channels, n_mel_channels, n_layers, n_channels,
                  kernel_size):
         super(WN, self).__init__()
+        n_channels = int(n_channels/2)
         assert(kernel_size % 2 == 1)
         assert(n_channels % 2 == 0)
         self.n_layers = n_layers

@@ -12,6 +12,7 @@ let themeColour
 window.games = {}
 window.models = {}
 window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null}
+window.currentModel = undefined
 
 // Load user settings
 window.userSettings = localStorage.getItem("userSettings") ||
@@ -167,6 +168,8 @@ const changeGame = () => {
 
         button.addEventListener("click", () => {
 
+            window.currentModel = model
+
             if (voiceDescription) {
                 description.innerHTML = voiceDescription
                 description.className = "withContent"
@@ -193,6 +196,7 @@ const changeGame = () => {
                 generateVoiceButton.dataset.modelQuery = JSON.stringify({
                     outputs: parseInt(model.outputs),
                     model: `${path}/models/${modelGameFolder}/${modelFileName}`,
+                    model_speakers: model.emb_size,
                     cmudict: model.cmudict
                 })
                 generateVoiceButton.dataset.modelIDToLoad = voiceId
@@ -311,9 +315,11 @@ generateVoiceButton.addEventListener("click", () => {
         }
         window.pitchEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
 
+        const speaker_i = window.currentModel.games[0].emb_i
+
         fetch(`http://localhost:8008/synthesize`, {
             method: "Post",
-            body: JSON.stringify({sequence: sequence, pitch, duration, outfile: `${path}/${tempFileLocation.slice(1, tempFileLocation.length)}`})
+            body: JSON.stringify({sequence: sequence, pitch, duration, speaker_i, outfile: `${path}/${tempFileLocation.slice(1, tempFileLocation.length)}`})
         }).then(r=>r.text()).then(res => {
             res = res.split("\n")
             let pitchData = res[0]

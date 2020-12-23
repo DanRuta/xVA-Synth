@@ -80,6 +80,11 @@ def get_model(model_name, model_config, device, uniform_initialize_bn_weight=Fal
 
     elif model_name == 'FastPitch':
 
+        model_config["padding_idx"] = 0
+        model_config["pitch_embedding_kernel_size"] = 3
+        model_config["n_speakers"] = 5
+        model_config["speaker_emb_weight"] = 1.0
+
         if forward_is_infer:
 
             class FastPitch__forward_is_infer(_FastPitch):

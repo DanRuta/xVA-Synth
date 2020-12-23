@@ -104,16 +104,17 @@ class Handler(BaseHTTPRequestHandler):
                     f.write("\n".join([",".join(head), vals]))
 
             if self.path == "/loadModel":
-                fastpitch_model = fastpitch.loadModel(fastpitch_model, ckpt=post_data["model"])
+                fastpitch_model = fastpitch.loadModel(fastpitch_model, ckpt=post_data["model"], n_speakers=post_data["model_speakers"], device=fastpitch_model.device)
 
             if self.path == "/synthesize":
                 text = post_data["sequence"]
                 out_path = post_data["outfile"]
                 pitch = post_data["pitch"] if "pitch" in post_data else None
                 duration = post_data["duration"] if "duration" in post_data else None
+                speaker_i = post_data["speaker_i"]
                 pitch_data = [pitch, duration]
 
-                pitch_durations_text = fastpitch.infer(user_settings, text, out_path, fastpitch=fastpitch_model, pitch_data=pitch_data)
+                pitch_durations_text = fastpitch.infer(user_settings, text, out_path, fastpitch=fastpitch_model, speaker_i=speaker_i, pitch_data=pitch_data)
 
             self._set_response()
             logger.info("pitch_durations_text")
