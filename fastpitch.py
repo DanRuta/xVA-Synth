@@ -65,7 +65,7 @@ def load_and_setup_model(model_name, parser, checkpoint, device, forward_is_infe
 
 
 
-def init (use_gpu):
+def init (use_gpu, hifi_gan):
     torch.backends.cudnn.benchmark = True
     device = torch.device('cuda' if use_gpu else 'cpu')
     parser = argparse.ArgumentParser(description='PyTorch FastPitch Inference', allow_abbrev=False)
@@ -78,16 +78,10 @@ def init (use_gpu):
     except:
         pass
 
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        wg_ckpt_path = "./resources/app/models/waveglow_256channels_universal_v4.pt"
-        if not os.path.exists(wg_ckpt_path):
-            wg_ckpt_path = "./models/waveglow_256channels_universal_v4.pt"
-        waveglow = load_and_setup_model('WaveGlow', parser, wg_ckpt_path, device, forward_is_infer=True).to(device)
-        denoiser = Denoiser(waveglow, device).to(device)
-
-    fastpitch.waveglow = waveglow
-    fastpitch.denoiser = denoiser
+    if hifi_gan:
+        fastpitch.waveglow = None
+    else:
+        fastpitch = init_waveglow(use_gpu, fastpitch)
 
     # Hi-Fi GAN
     config_file = os.path.join(f'./python/config.json')
@@ -100,6 +94,23 @@ def init (use_gpu):
     hifigan_ckpt = torch.load(f'./python/generator_v2', map_location=device)
     fastpitch.hifi_gan.load_state_dict(hifigan_ckpt['generator'])
 
+    return fastpitch
+
+def init_waveglow (use_gpu, fastpitch):
+
+    device = torch.device('cuda' if use_gpu else 'cpu')
+    parser = argparse.ArgumentParser(description='PyTorch FastPitch Inference', allow_abbrev=False)
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        wg_ckpt_path = "./resources/app/models/waveglow_256channels_universal_v4.pt"
+        if not os.path.exists(wg_ckpt_path):
+            wg_ckpt_path = "./models/waveglow_256channels_universal_v4.pt"
+        waveglow = load_and_setup_model('WaveGlow', parser, wg_ckpt_path, device, forward_is_infer=True).to(device)
+        denoiser = Denoiser(waveglow, device).to(device)
+
+    fastpitch.waveglow = waveglow
+    fastpitch.denoiser = denoiser
     return fastpitch
 
 

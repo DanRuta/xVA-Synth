@@ -39,7 +39,7 @@ except:
     print(traceback.format_exc())
     logger.info(traceback.format_exc())
 
-user_settings = {"use_gpu": True}
+user_settings = {"use_gpu": True, "hifi_gan": False}
 try:
     with open("usersettings.csv", "r") as f:
         data = f.read().split("\n")
@@ -50,10 +50,17 @@ try:
 except:
     pass
 
+def write_settings ():
+    with open("usersettings.csv", "w+") as f:
+        head = list(user_settings.keys())
+        vals = ",".join([str(user_settings[h]) for h in head])
+        f.write("\n".join([",".join(head), vals]))
+
+
 use_gpu = user_settings["use_gpu"]=="True"
 print(f'user_settings, {user_settings}')
 try:
-    fastpitch_model = fastpitch.init(use_gpu=use_gpu)
+    fastpitch_model = fastpitch.init(use_gpu=use_gpu, hifi_gan=user_settings["hifi_gan"]=="True")
 except:
     print(traceback.format_exc())
     logger.info(traceback.format_exc())
@@ -90,20 +97,27 @@ class Handler(BaseHTTPRequestHandler):
             print(self.path)
             logger.info(post_data)
 
+            if self.path == "/setMode":
+                hifi_gan = post_data["hifi_gan"]=="qnd"
+                user_settings["hifi_gan"] = hifi_gan
+                write_settings()
+
+                if not hifi_gan and fastpitch_model.waveglow is None:
+                    use_gpu = user_settings["use_gpu"]=="True"
+                    fastpitch_model = fastpitch.init_waveglow(use_gpu, fastpitch_model)
+
             if self.path == "/setDevice":
                 use_gpu = post_data["device"]=="gpu"
                 fastpitch_model.device = torch.device('cuda' if use_gpu else 'cpu')
                 fastpitch_model = fastpitch_model.to(fastpitch_model.device)
 
-                fastpitch_model.waveglow.set_device(fastpitch_model.device)
-                fastpitch_model.denoiser.set_device(fastpitch_model.device)
+                if fastpitch_model.waveglow is not None:
+                    fastpitch_model.waveglow.set_device(fastpitch_model.device)
+                    fastpitch_model.denoiser.set_device(fastpitch_model.device)
                 fastpitch_model.hifi_gan.to(fastpitch_model.device)
 
                 user_settings["use_gpu"] = use_gpu
-                with open("usersettings.csv", "w+") as f:
-                    head = list(user_settings.keys())
-                    vals = ",".join([str(user_settings[h]) for h in head])
-                    f.write("\n".join([",".join(head), vals]))
+                write_settings()
 
             if self.path == "/loadModel":
                 fastpitch_model = fastpitch.loadModel(fastpitch_model, ckpt=post_data["model"], n_speakers=post_data["model_speakers"], device=fastpitch_model.device)

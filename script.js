@@ -313,8 +313,8 @@ generateVoiceButton.addEventListener("click", () => {
         if (editor.innerHTML && editor.innerHTML.length && window.pitchEditor.sequence && sequence.length==window.pitchEditor.sequence.length && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
             pitch = window.pitchEditor.pitchNew
             duration = window.pitchEditor.dursNew
-            quick_n_dirty = window.userSettings.quick_n_dirty
         }
+        quick_n_dirty = window.userSettings.quick_n_dirty
         window.pitchEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
 
         const speaker_i = window.currentModel.games[0].emb_i
@@ -689,8 +689,16 @@ autoplay_ckbx.addEventListener("change", () => {
     window.userSettings.autoplay = autoplay_ckbx.checked
     saveUserSettings()
 })
+qnd_ckbx.checked = window.userSettings.quick_n_dirty
 qnd_ckbx.addEventListener("change", () => {
     window.userSettings.quick_n_dirty = qnd_ckbx.checked
+    spinnerModal("Changing models...")
+    fetch(`http://localhost:8008/setMode`, {
+        method: "Post",
+        body: JSON.stringify({hifi_gan: window.userSettings.quick_n_dirty ? "qnd" : "wg"})
+    }).then(() => {
+        closeModal()
+    })
     saveUserSettings()
 })
 
