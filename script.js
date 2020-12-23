@@ -362,6 +362,12 @@ generateVoiceButton.addEventListener("click", () => {
     }
 })
 
+const saveFile = (from, to) => {
+    fs.rename(from, to, err => {
+        voiceSamples.appendChild(makeSample(keepSampleButton.dataset.newFileLocation))
+        keepSampleButton.disabled = true
+    })
+}
 keepSampleButton.addEventListener("click", () => {
     if (keepSampleButton.dataset.newFileLocation) {
 
@@ -371,10 +377,35 @@ keepSampleButton.addEventListener("click", () => {
         fromLocation = fromLocation.slice(1, fromLocation.length)
         toLocation = toLocation.slice(1, toLocation.length)
 
-        fs.rename(`${__dirname}/${fromLocation}`, `${__dirname}/${toLocation}`, err => {
-            voiceSamples.appendChild(makeSample(keepSampleButton.dataset.newFileLocation))
-            keepSampleButton.disabled = true
-        })
+        // File name conflict
+        if (fs.existsSync(`${__dirname}/${toLocation}`)) {
+
+            createModal("prompt", {
+                prompt: "File already exists. Adjust the file name here, or submit without changing to overwrite the old file.",
+                value: toLocation.split("/").reverse()[0]
+            }).then(newFileName => {
+
+                // Remove the entry from the output files' preview
+                Array.from(voiceSamples.querySelectorAll("div.sample")).forEach(sampleElem => {
+                    const source = sampleElem.querySelector("source")
+                    const sourceSrc = "."+source.src.split("xVA-Synth")[1].split("%20").join(" ")
+                    if (sourceSrc == keepSampleButton.dataset.newFileLocation) {
+                        sampleElem.parentNode.removeChild(sampleElem)
+                    }
+                })
+
+                // Remove the old file and write the new one in
+                fs.unlink(`${__dirname}/${toLocation}`, err => {
+                    toLocation = toLocation.split("/").reverse()
+                    toLocation[0] = newFileName.replace(".wav", "") + ".wav"
+                    toLocation = toLocation.reverse()
+                    saveFile(`${__dirname}/${fromLocation}`, `${__dirname}/${toLocation.join("/")}`)
+                })
+            })
+
+        } else {
+            saveFile(`${__dirname}/${fromLocation}`, `${__dirname}/${toLocation}`)
+        }
     }
 })
 
@@ -453,7 +484,8 @@ loadAllModels().then(() => {
 
 const createModal = (type, message) => {
     return new Promise(resolve => {
-        const modal = createElem("div.modal#activeModal", {style: {opacity: 0}}, createElem("span", message))
+        const displayMessage = message.prompt ? message.prompt : message
+        const modal = createElem("div.modal#activeModal", {style: {opacity: 0}}, createElem("span", displayMessage))
         modal.dataset.type = type
 
         if (type=="confirm") {
@@ -478,6 +510,17 @@ const createModal = (type, message) => {
 
             closeButton.addEventListener("click", () => {
                 resolve(false)
+                closeModal()
+            })
+        } else if (type=="prompt") {
+            const closeButton = createElem("button", {style: {background: `#${themeColour}`}})
+            closeButton.innerHTML = "Submit"
+            const inputElem = createElem("input", {type: "text", value: message.value})
+            modal.appendChild(createElem("div", inputElem))
+            modal.appendChild(createElem("div", closeButton))
+
+            closeButton.addEventListener("click", () => {
+                resolve(inputElem.value)
                 closeModal()
             })
         } else {

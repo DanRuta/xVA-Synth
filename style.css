@@ -280,6 +280,11 @@
  .modal button {
      margin-left: 10px;
  }
+ .modal > div > input[type=text] {
+     padding: 5px;
+     width: 25vw;
+     text-align: center;
+ }
  /*Chrome*/
  #chrome {
      display: flex;
