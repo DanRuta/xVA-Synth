@@ -364,7 +364,7 @@ generateVoiceButton.addEventListener("click", () => {
 
 const saveFile = (from, to) => {
     fs.rename(from, to, err => {
-        voiceSamples.appendChild(makeSample(keepSampleButton.dataset.newFileLocation))
+        voiceSamples.appendChild(makeSample(to))
         keepSampleButton.disabled = true
     })
 }
@@ -385,22 +385,40 @@ keepSampleButton.addEventListener("click", () => {
                 value: toLocation.split("/").reverse()[0]
             }).then(newFileName => {
 
-                // Remove the entry from the output files' preview
-                Array.from(voiceSamples.querySelectorAll("div.sample")).forEach(sampleElem => {
-                    const source = sampleElem.querySelector("source")
-                    const sourceSrc = "."+source.src.split("xVA-Synth")[1].split("%20").join(" ")
-                    if (sourceSrc == keepSampleButton.dataset.newFileLocation) {
-                        sampleElem.parentNode.removeChild(sampleElem)
-                    }
-                })
+                let toLocationOut = toLocation.split("/").reverse()
+                toLocationOut[0] = newFileName.replace(".wav", "") + ".wav"
+                let outDir = toLocationOut
+                outDir.shift()
 
-                // Remove the old file and write the new one in
-                fs.unlink(`${__dirname}/${toLocation}`, err => {
-                    toLocation = toLocation.split("/").reverse()
-                    toLocation[0] = newFileName.replace(".wav", "") + ".wav"
-                    toLocation = toLocation.reverse()
-                    saveFile(`${__dirname}/${fromLocation}`, `${__dirname}/${toLocation.join("/")}`)
-                })
+                const existingFiles = fs.readdirSync(`${__dirname}/${outDir.reverse().join("/")}`)
+                const existingFileConflict = existingFiles.filter(name => name==newFileName)
+
+                toLocationOut.shift()
+                toLocationOut.push(newFileName.replace(".wav", "") + ".wav")
+
+                const finalOutLocation = `${__dirname}/${toLocationOut.join("/")}`
+
+                if (existingFileConflict.length) {
+                    // Remove the entry from the output files' preview
+                    Array.from(voiceSamples.querySelectorAll("div.sample")).forEach(sampleElem => {
+                        const source = sampleElem.querySelector("source")
+                        let sourceSrc = "."+source.src.split("xVA-Synth")[1].split("%20").join(" ")
+                        sourceSrc = sourceSrc.split("/").reverse()
+                        const finalFileName = finalOutLocation.split("/").reverse()
+
+                        if (sourceSrc[0] == finalFileName[0]) {
+                            sampleElem.parentNode.removeChild(sampleElem)
+                        }
+                    })
+
+                    // Remove the old file and write the new one in
+                    fs.unlink(finalOutLocation, err => {
+                        saveFile(`${__dirname}/${fromLocation}`, finalOutLocation)
+                    })
+
+                } else {
+                    saveFile(`${__dirname}/${fromLocation}`, `${__dirname}/${toLocationOut.join("/")}`)
+                }
             })
 
         } else {
