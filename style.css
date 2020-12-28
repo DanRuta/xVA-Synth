@@ -486,6 +486,11 @@
      width: 95%;
  }
 
+ .renameSVG {
+     height: 20px;
+     width: 20px;
+ }
+
  #settingsCog {
      display: flex;
      position: fixed;
