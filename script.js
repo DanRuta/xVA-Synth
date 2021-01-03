@@ -329,7 +329,7 @@ generateVoiceButton.addEventListener("click", () => {
         let duration = []
         let quick_n_dirty = false
 
-        if (editor.innerHTML && editor.innerHTML.length && window.pitchEditor.sequence && sequence.length==window.pitchEditor.inputSequence.length && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
+        if (editor.innerHTML && editor.innerHTML.length && window.pitchEditor.sequence && sequence==window.pitchEditor.inputSequence && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
             pitch = window.pitchEditor.pitchNew
             duration = window.pitchEditor.dursNew
         }
