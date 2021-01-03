@@ -12,11 +12,8 @@ from scipy.io.wavfile import write
 import torch.nn as nn
 from torch.nn.utils.rnn import pad_sequence
 
-# from common.text import text_to_sequence
-from python.common.text import text_to_sequence
-# from waveglow import model as glow
+from python.common.text import text_to_sequence, sequence_to_text
 from python import model as glow
-# from waveglow.denoiser import Denoiser
 from python.denoiser import Denoiser
 sys.modules['glow'] = glow
 
@@ -137,7 +134,9 @@ def infer(user_settings, text, output, fastpitch, hifi_gan, speaker_i, pace=1.0,
     sampling_rate = 22050
     denoising_strength = 0.01
 
-    text = torch.LongTensor(text_to_sequence(text, ['english_cleaners']))
+    sequence = text_to_sequence(text, ['english_cleaners'])
+    cleaned_text = sequence_to_text(sequence)
+    text = torch.LongTensor(sequence)
     text = pad_sequence([text], batch_first=True).to(fastpitch.device)
 
     with torch.no_grad():
@@ -161,4 +160,4 @@ def infer(user_settings, text, output, fastpitch, hifi_gan, speaker_i, pace=1.0,
 
     [pitch, durations] = [pitch_pred.cpu().detach().numpy()[0], dur_pred.cpu().detach().numpy()[0]]
     pitch_durations_text = ",".join([str(v) for v in pitch])+"\n"+",".join([str(v) for v in durations])
-    return pitch_durations_text
+    return pitch_durations_text +"\n"+cleaned_text

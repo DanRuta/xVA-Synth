@@ -329,7 +329,7 @@ generateVoiceButton.addEventListener("click", () => {
         let duration = []
         let quick_n_dirty = false
 
-        if (editor.innerHTML && editor.innerHTML.length && window.pitchEditor.sequence && sequence.length==window.pitchEditor.sequence.length && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
+        if (editor.innerHTML && editor.innerHTML.length && window.pitchEditor.sequence && sequence.length==window.pitchEditor.inputSequence.length && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
             pitch = window.pitchEditor.pitchNew
             duration = window.pitchEditor.dursNew
         }
@@ -349,9 +349,11 @@ generateVoiceButton.addEventListener("click", () => {
             res = res.split("\n")
             let pitchData = res[0]
             let durationsData = res[1]
+            let cleanedSequence = res[2]
             pitchData = pitchData.split(",").map(v => parseFloat(v))
             durationsData = durationsData.split(",").map(v => parseFloat(v))
-            window.pitchEditor.sequence = sequence
+            window.pitchEditor.inputSequence = sequence
+            window.pitchEditor.sequence = cleanedSequence
 
             if (pitch.length==0) {
                 window.pitchEditor.resetPitch = pitchData
@@ -359,7 +361,7 @@ generateVoiceButton.addEventListener("click", () => {
                 window.pitchEditor.resetDursMult = window.pitchEditor.resetDurs.map(v=>1)
             }
 
-            setPitchEditorValues(sequence.replace(/\s/g, "_").split(""), pitchData, durationsData)
+            setPitchEditorValues(cleanedSequence.replace(/\s/g, "_").split(""), pitchData, durationsData)
 
             toggleSpinnerButtons()
             keepSampleButton.dataset.newFileLocation = `./output/${game}/${voiceType}/${outputFileName}.wav`

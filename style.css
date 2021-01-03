@@ -104,7 +104,7 @@
      text-align: center;
      background-color: darkgrey;
      margin: 5px;
-     padding-top: 1px;
+     padding: 2px;
  }
  #topRight {
      display: block;
