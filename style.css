@@ -278,7 +278,7 @@
      margin: 10px;
  }
  .modal button {
-     margin-left: 10px;
+     margin: 5px;
  }
  .modal > div > input[type=text] {
      padding: 5px;
@@ -491,7 +491,7 @@
      width: 20px;
  }
 
- #settingsCog {
+ #settingsCog, #patreonIcon {
      display: flex;
      position: fixed;
      z-index: 1000;
@@ -499,8 +499,20 @@
      top: 35px;
      right: 0px;
  }
- #settingsCog > svg {
+ #patreonIcon {
+    right: 30px;
+    top: 34px;
+    cursor: pointer;
+ }
+ #patreonIcon > img {
+    height: 30px !important;
+    width: 30px;
+ }
+ #settingsCog > svg, #patreonIcon > img {
      height: 25px;
      cursor: pointer;
      filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7))
+ }
+ #activeModal > span {
+     overflow-y: auto;
  }

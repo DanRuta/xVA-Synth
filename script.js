@@ -784,6 +784,32 @@ qnd_ckbx.addEventListener("change", () => {
     saveUserSettings()
 })
 
+// Patreon
+// =======
+patreonIcon.addEventListener("click", () => {
+
+    const data = fs.readFileSync("patreon.txt", "utf8")
+    const names = new Set()
+    console.log("data", data)
+    data.split("\r\n").forEach(name => names.add(name))
+    names.add("minermanb")
+    console.log("names", names)
+
+    let content = `You can support development on patreon at this link:<br>
+        <span id="patreonLink" style='color:#${themeColour};text-decoration: underline;cursor:pointer;'>PATREON</span>
+        <br><hr><br>Special thanks:`
+    names.forEach(name => content += `<br>${name}`)
+
+    // for (let i=0;i<100;i++) {
+    //     content += "<br>name"
+    // }
+
+    createModal("error", content)
+    patreonLink.addEventListener("click", () => {
+        shell.openExternal("https://patreon.com")
+    })
+})
+fetch("http://danruta.co.uk/patreon.txt").then(r=>r.text()).then(data => fs.writeFileSync("patreon.txt", data, "utf8"))
 
 // Settings
 // ========
