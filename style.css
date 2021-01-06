@@ -290,7 +290,9 @@
      display: flex;
      height: 25px;
      width: 100vw;
-     background-color: #383838;
+     background-color: #1c1c1c;
+     opacity: 0.88;
+     transition: opacity 300ms;
  }
  #dragBar {
      flex-grow: 1;

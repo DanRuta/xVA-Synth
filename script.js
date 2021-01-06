@@ -451,38 +451,6 @@ keepSampleButton.addEventListener("click", () => {
 
 gameDropdown.addEventListener("change", changeGame)
 
-// Watch for new models being added, and load them into the app
-fs.watch(`${path}/models`, {recursive: true, persistent: true}, (eventType, filename) => {
-
-    if (eventType=="rename") {
-        fileRenameCounter++
-    }
-
-    if (eventType=="change") {
-        fileChangeCounter++
-    }
-
-    if (fileRenameCounter==(fileChangeCounter/3) || (!fileChangeCounter && fileRenameCounter>=4)) {
-        setTimeout(() => {
-            if (fileRenameCounter==(fileChangeCounter/3) || (!fileChangeCounter && fileRenameCounter>=4)) {
-                fileRenameCounter = 0
-                fileChangeCounter = 0
-                loadAllModels().then(() => {
-                    changeGame()
-                })
-            }
-        })
-    }
-
-    // Reset the counter when audio preview files throw deletion counters off by one
-    setTimeout(() => {
-        if (fileRenameCounter==1 && fileChangeCounter==0) {
-            fileRenameCounter = 0
-        }
-    }, 3000)
-})
-
-
 
 let startingSplashInterval
 let loadingStage = 0
@@ -571,11 +539,13 @@ const createModal = (type, message) => {
         modalContainer.style.display = "flex"
 
         requestAnimationFrame(() => requestAnimationFrame(() => modalContainer.style.opacity = 1))
+        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
     })
 }
 const closeModal = (container=modalContainer) => {
     return new Promise(resolve => {
         container.style.opacity = 0
+        chrome.style.opacity = 0.88
         setTimeout(() => {
             container.style.display = "none"
             try {
@@ -810,7 +780,9 @@ fetch("http://danruta.co.uk/patreon.txt").then(r=>r.text()).then(data => fs.writ
 settingsCog.addEventListener("click", () => {
     settingsContainer.style.opacity = 0
     settingsContainer.style.display = "flex"
+    chrome.style.opacity = 0.88
     requestAnimationFrame(() => requestAnimationFrame(() => settingsContainer.style.opacity = 1))
+    requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
 })
 settingsContainer.addEventListener("click", event => {
     if (event.target==settingsContainer) {
