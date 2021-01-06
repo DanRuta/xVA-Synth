@@ -63,7 +63,7 @@ const loadAllModels = () => {
                         models[`${gameFolder}/${fileName}`] = null
 
                         const model = JSON.parse(fs.readFileSync(`${path}/models/${gameFolder}/${fileName}`, "utf8"))
-                        model.games.forEach(({gameId, voiceId, voiceName, voiceDescription}) => {
+                        model.games.forEach(({gameId, voiceId, voiceName, voiceDescription, gender}) => {
 
                             if (!games.hasOwnProperty(gameId)) {
 
@@ -88,7 +88,20 @@ const loadAllModels = () => {
                             }
 
                             const audioPreviewPath = `${gameFolder}/${model.games.find(({gameId}) => gameId==gameFolder).voiceId}`
-                            games[gameId].models.push({model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription})
+                            const existingDuplicates = []
+                            games[gameId].models.forEach((item,i) => {
+                                if (item.voiceId==voiceId) {
+                                    existingDuplicates.push([item, i])
+                                }
+                            })
+                            if (existingDuplicates.length) {
+                                if (existingDuplicates[0][0].modelVersion<model.modelVersion) {
+                                    games[gameId].models.splice(existingDuplicates[0][1], 1)
+                                    games[gameId].models.push({model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, gender, modelVersion: model.modelVersion})
+                                }
+                            } else {
+                                games[gameId].models.push({model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, gender, modelVersion: model.modelVersion})
+                            }
                         })
                     }
                 })
