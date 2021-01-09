@@ -4,8 +4,8 @@ xVASynth is a machine learning based speech synthesis app, using voices from cha
 
 ## See it in action (YouTube link)
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=v=xqJ-ujWvu7s
-" target="_blank"><img src="http://img.youtube.com/vi/v=xqJ-ujWvu7s/0.jpg"
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=xqJ-ujWvu7s
+" target="_blank"><img src="http://img.youtube.com/vi/xqJ-ujWvu7s/0.jpg"
 alt="xVASynth YouTube demo" width="240" height="180" border="10" /></a>
 
 
