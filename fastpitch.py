@@ -6,7 +6,7 @@ from python import models
 import sys
 import warnings
 
-
+import traceback
 import torch
 from scipy.io.wavfile import write
 import torch.nn as nn
@@ -62,7 +62,7 @@ def load_and_setup_model(model_name, parser, checkpoint, device, forward_is_infe
 
 
 
-def init (use_gpu, hifi_gan):
+def init (PROD, use_gpu, hifi_gan):
     torch.backends.cudnn.benchmark = True
     device = torch.device('cuda' if use_gpu else 'cpu')
     parser = argparse.ArgumentParser(description='PyTorch FastPitch Inference', allow_abbrev=False)
@@ -71,7 +71,7 @@ def init (use_gpu, hifi_gan):
     fastpitch.device = device
 
     try:
-        os.remove("./FASTPITCH_LOADING")
+        os.remove(f'{"./resources/app" if PROD else "."}/FASTPITCH_LOADING')
     except:
         pass
 
@@ -81,14 +81,14 @@ def init (use_gpu, hifi_gan):
         fastpitch = init_waveglow(use_gpu, fastpitch)
 
     # Hi-Fi GAN
-    config_file = os.path.join(f'./python/config.json')
+    config_file = os.path.join(f'{"./resources/app" if PROD else "."}/python/config.json')
     with open(config_file) as f:
         data = f.read()
 
     json_config = json.loads(data)
     h = AttrDict(json_config)
     fastpitch.hifi_gan = Generator(h).to(device)
-    hifigan_ckpt = torch.load(f'./python/generator_v2', map_location=device)
+    hifigan_ckpt = torch.load(f'{"./resources/app" if PROD else "."}/python/generator_v2', map_location=device)
     fastpitch.hifi_gan.load_state_dict(hifigan_ckpt['generator'])
 
     return fastpitch

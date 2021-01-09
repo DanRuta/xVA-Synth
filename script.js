@@ -359,7 +359,7 @@ generateVoiceButton.addEventListener("click", () => {
             body: JSON.stringify({
                 sequence, pitch, duration, speaker_i,
                 outfile: `${path}/${tempFileLocation.slice(1, tempFileLocation.length)}`,
-                hifi_gan: quick_n_dirty
+                hifi_gan: !!quick_n_dirty
             })
         }).then(r=>r.text()).then(res => {
             res = res.split("\n")

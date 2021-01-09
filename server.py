@@ -1,19 +1,30 @@
-
-with open("./FASTPITCH_LOADING", "w+") as f:
-    f.write("")
-with open("./WAVEGLOW_LOADING", "w+") as f:
-    f.write("")
-with open("./SERVER_STARTING", "w+") as f:
-    f.write("")
-
 import os
+
+PROD = "xVASynth-win32-x64" in os.getcwd()
+
+with open("./DEBUG.txt", "w+") as f:
+    f.write(os.getcwd())
+with open(f'{"./resources/app" if PROD else "."}/FASTPITCH_LOADING', "w+") as f:
+    f.write("")
+with open(f'{"./resources/app" if PROD else "."}/WAVEGLOW_LOADING', "w+") as f:
+    f.write("")
+with open(f'{"./resources/app" if PROD else "."}/SERVER_STARTING', "w+") as f:
+    f.write("")
+
+import numpy
+import pyinstaller_imports
+
 import logging
 from logging.handlers import RotatingFileHandler
 import json
 import traceback
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-import torch
+try:
+    import torch
+except:
+    with open("./DEBUG_err_import_torch.txt", "w+") as f:
+        f.write(traceback.format_exc())
 
 print("Start")
 
@@ -31,7 +42,6 @@ ch.setFormatter(formatter)
 logger.addHandler(fh)
 logger.addHandler(ch)
 logger.info("New session")
-import pyinstaller_imports
 
 try:
     import fastpitch
@@ -39,9 +49,11 @@ except:
     print(traceback.format_exc())
     logger.info(traceback.format_exc())
 
+
+# User settings
 user_settings = {"use_gpu": True, "hifi_gan": False}
 try:
-    with open("usersettings.csv", "r") as f:
+    with open(f'{"./resources/app" if PROD else "."}/usersettings.csv', "r") as f:
         data = f.read().split("\n")
         head = data[0].split(",")
         values = data[1].split(",")
@@ -51,7 +63,7 @@ except:
     pass
 
 def write_settings ():
-    with open("usersettings.csv", "w+") as f:
+    with open(f'{"./resources/app" if PROD else "."}/usersettings.csv', "w+") as f:
         head = list(user_settings.keys())
         vals = ",".join([str(user_settings[h]) for h in head])
         f.write("\n".join([",".join(head), vals]))
@@ -60,15 +72,20 @@ def write_settings ():
 use_gpu = user_settings["use_gpu"]=="True"
 print(f'user_settings, {user_settings}')
 try:
-    fastpitch_model = fastpitch.init(use_gpu=use_gpu, hifi_gan=user_settings["hifi_gan"]=="True")
+    fastpitch_model = fastpitch.init(PROD, use_gpu=use_gpu, hifi_gan=user_settings["hifi_gan"]=="True")
 except:
     print(traceback.format_exc())
     logger.info(traceback.format_exc())
 
+
+# Server
+with open("./DEBUG_start.txt", "w+") as f:
+    f.write("Starting")
+
 print("Models ready")
 logger.info("Models ready")
 try:
-    os.remove("./WAVEGLOW_LOADING")
+    os.remove(f'{"./resources/app" if PROD else "."}/WAVEGLOW_LOADING')
 except:
     pass
 
@@ -85,6 +102,7 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(returnString)
 
     def do_POST(self):
+        post_data = ""
         try:
             global fastpitch_model
             logger.info("POST {}".format(self.path))
@@ -120,7 +138,8 @@ class Handler(BaseHTTPRequestHandler):
                 write_settings()
 
             if self.path == "/loadModel":
-                fastpitch_model = fastpitch.loadModel(fastpitch_model, ckpt=post_data["model"], n_speakers=post_data["model_speakers"], device=fastpitch_model.device)
+                ckpt = post_data["model"]
+                fastpitch_model = fastpitch.loadModel(fastpitch_model, ckpt=ckpt, n_speakers=post_data["model_speakers"], device=fastpitch_model.device)
 
             if self.path == "/synthesize":
                 text = post_data["sequence"]
@@ -128,7 +147,7 @@ class Handler(BaseHTTPRequestHandler):
                 pitch = post_data["pitch"] if "pitch" in post_data else None
                 duration = post_data["duration"] if "duration" in post_data else None
                 speaker_i = post_data["speaker_i"]
-                hifi_gan = post_data["hifi_gan"]
+                hifi_gan = post_data["hifi_gan"] if "hifi_gan" in post_data else False
                 pitch_data = [pitch, duration]
 
                 pitch_durations_text = fastpitch.infer(user_settings, text, out_path, fastpitch=fastpitch_model, hifi_gan=hifi_gan, speaker_i=speaker_i, pitch_data=pitch_data)
@@ -138,15 +157,20 @@ class Handler(BaseHTTPRequestHandler):
             logger.info(pitch_durations_text)
             self.wfile.write(pitch_durations_text.encode("utf-8"))
         except Exception as e:
+            with open("./DEBUG_request.txt", "w+") as f:
+                f.write(traceback.format_exc())
+                f.write(str(post_data))
             logger.info("Post Error:\n {}".format(repr(e)))
             print(traceback.format_exc())
             logger.info(traceback.format_exc())
 
 server = HTTPServer(("",8008), Handler)
+with open("./DEBUG_server_up.txt", "w+") as f:
+    f.write("Starting")
 print("Server ready")
 logger.info("Server ready")
 try:
-    os.remove("./SERVER_STARTING")
+    os.remove(f'{"./resources/app" if PROD else "."}/SERVER_STARTING')
 except:
     pass
 try:

@@ -15,6 +15,8 @@ This is an Electron UI wrapped around inference of FastPitch models trained on v
 
 The main benefit of this tool is allowing mod creators to generate new voice lines for third party game modifications (mods). There are other uses, such as creating machinima, and just generally having fun with familiar voices.
 
+Join chat on Discord here: https://discord.gg/nv7c6E2TzV
+
 
 ## Installation
 The base application can be downloaded and placed anywhere. Aim to install it onto an SSD, if you have the space, to reduce voice set loading time. To install voice sets, you can drop the files into the respective game directory: `xVASynth/resources/app/models/<game>/`
@@ -43,7 +45,7 @@ Finally, a low-quality but high-speed vocoder model is available through the "Qu
 
 **Note about synthesis quality**
 
-The best approach I have found is to generate samples of at least 2 seconds in length, and not much more than 5. If you need a lot of text to be synthesized, the current best approach is to synthesize smaller clauses, and splicing them together in Audacity. You can vary the punctuation and spelling of words to get different output.
+The best approach I have found is to generate samples of at least 2 seconds in length, and not much more than 5 (short is good for the less good voices). If you need a lot of text to be synthesized, the current best approach is to synthesize smaller clauses, and splicing them together in Audacity. You can vary the punctuation and spelling of words to get different output.
 
 All models have been trained on my personal machine, with a GTX 1080, meaning that `batch_size` had to be limited, to stay within memory constraints. With any luck, I may get access to some beefier machines in the future to train higher quality models.
 
@@ -70,7 +72,9 @@ The app uses both JavaScript (Electron, UI) and Python code (FastPitch Model). A
 First, run the scripts in `package.json` to create the electron distributables.
 Second, use pyinstaller to compile the python. `pip install pyinstaller` and run `pyinstaller -F server.spec`. Discard the `build` folder, and move the `server` folder (in `dist`) into `release-builds/xVASynth-win32-x64/resources/app`, and rename it to `cpython`. Distribute the contents in `xVASynth-win32-x64` and run app through `xVASynth.exe`.
 
-Run the distributed app once and check the `server.log` file for any problems. You may need to copy over asset files from dependencies manually, if they fail to get copied over by pyinstaller. For example, librosa has two files in `util/example_data` that need to get copied over to `cpython/librosa/util/example_data/`.
+Run the distributed app once and check the `server.log` file for any problems. You may need to copy over asset files from dependencies manually, if they fail to get copied over by pyinstaller. For example, librosa has two files in `<your env>Lib/site-packages/librosa/util/example_data` that need to get copied over to `cpython/librosa/util/example_data/` (you may need to create this second directory structure).
+
+Make sure you remove your environment folder, if it is copied over to the distributed output.
 
 Though, if you're just tweaking small things in JS/HTML/CSS, it may be easier to just edit/copy over the files into an existing packaged distributable. There's no code obfuscation or anything like that in place.
 
