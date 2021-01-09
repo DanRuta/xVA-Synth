@@ -250,7 +250,10 @@ const makeSample = src => {
         type: "audio/wav"
     }))
     const openFileLocationButton = createElem("div", "&#10064;")
-    openFileLocationButton.addEventListener("click", () => shell.showItemInFolder(`${__dirname}/${src}`))
+    openFileLocationButton.addEventListener("click", () => {
+        console.log("open dir", src)
+        shell.showItemInFolder(src)
+    })
 
     const renameButton = createElem("div", `<svg class="renameSVG" version="1.0" xmlns="http:\/\/www.w3.org/2000/svg" width="344.000000pt" height="344.000000pt" viewBox="0 0 344.000000 344.000000" preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,344.000000) scale(0.100000,-0.100000)" fill="#555555" stroke="none"><path d="M1489 2353 l-936 -938 -197 -623 c-109 -343 -195 -626 -192 -629 2 -3 284 84 626 193 l621 198 937 938 c889 891 937 940 934 971 -11 108 -86 289 -167 403 -157 219 -395 371 -655 418 l-34 6 -937 -937z m1103 671 c135 -45 253 -135 337 -257 41 -61 96 -178 112 -241 l12 -48 -129 -129 -129 -129 -287 287 -288 288 127 127 c79 79 135 128 148 128 11 0 55 -12 97 -26z m-1798 -1783 c174 -79 354 -248 436 -409 59 -116 72 -104 -213 -196 l-248 -80 -104 104 c-58 58 -105 109 -105 115 0 23 154 495 162 495 5 0 37 -13 72 -29z"/></g></svg>`)
     renameButton.addEventListener("click", () => {
