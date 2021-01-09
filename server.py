@@ -1,16 +1,34 @@
-
 import os
-import eval
+
+PROD = "xVASynth-win32-x64" in os.getcwd()
+
+with open("./DEBUG.txt", "w+") as f:
+    f.write(os.getcwd())
+with open(f'{"./resources/app" if PROD else "."}/FASTPITCH_LOADING', "w+") as f:
+    f.write("")
+with open(f'{"./resources/app" if PROD else "."}/WAVEGLOW_LOADING', "w+") as f:
+    f.write("")
+with open(f'{"./resources/app" if PROD else "."}/SERVER_STARTING', "w+") as f:
+    f.write("")
+
+import numpy
+import pyinstaller_imports
+
 import logging
 from logging.handlers import RotatingFileHandler
 import json
 import traceback
-from sys import argv
 from http.server import BaseHTTPRequestHandler, HTTPServer
+
+try:
+    import torch
+except:
+    with open("./DEBUG_err_import_torch.txt", "w+") as f:
+        f.write(traceback.format_exc())
 
 print("Start")
 
-model = 0
+fastpitch_model = 0
 
 logger = logging.getLogger('serverLog')
 logger.setLevel(logging.DEBUG)
@@ -25,6 +43,52 @@ logger.addHandler(fh)
 logger.addHandler(ch)
 logger.info("New session")
 
+try:
+    import fastpitch
+except:
+    print(traceback.format_exc())
+    logger.info(traceback.format_exc())
+
+
+# User settings
+user_settings = {"use_gpu": True, "hifi_gan": False}
+try:
+    with open(f'{"./resources/app" if PROD else "."}/usersettings.csv', "r") as f:
+        data = f.read().split("\n")
+        head = data[0].split(",")
+        values = data[1].split(",")
+        for h, hv in enumerate(head):
+            user_settings[hv] = values[h]
+except:
+    pass
+
+def write_settings ():
+    with open(f'{"./resources/app" if PROD else "."}/usersettings.csv', "w+") as f:
+        head = list(user_settings.keys())
+        vals = ",".join([str(user_settings[h]) for h in head])
+        f.write("\n".join([",".join(head), vals]))
+
+
+use_gpu = user_settings["use_gpu"]=="True"
+print(f'user_settings, {user_settings}')
+try:
+    fastpitch_model = fastpitch.init(PROD, use_gpu=use_gpu, hifi_gan=user_settings["hifi_gan"]=="True")
+except:
+    print(traceback.format_exc())
+    logger.info(traceback.format_exc())
+
+
+# Server
+with open("./DEBUG_start.txt", "w+") as f:
+    f.write("Starting")
+
+print("Models ready")
+logger.info("Models ready")
+try:
+    os.remove(f'{"./resources/app" if PROD else "."}/WAVEGLOW_LOADING')
+except:
+    pass
+
 class Handler(BaseHTTPRequestHandler):
     def _set_response(self):
         self.send_response(200)
@@ -38,31 +102,77 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(returnString)
 
     def do_POST(self):
+        post_data = ""
         try:
-            global model
+            global fastpitch_model
             logger.info("POST {}".format(self.path))
 
             content_length = int(self.headers['Content-Length'])
             post_data = json.loads(self.rfile.read(content_length).decode('utf-8'))
+            pitch_durations_text = "POST request for {}".format(self.path)
 
             print("POST")
             print(self.path)
-            print(post_data)
             logger.info(post_data)
 
+            if self.path == "/setMode":
+                hifi_gan = post_data["hifi_gan"]=="qnd"
+                user_settings["hifi_gan"] = hifi_gan
+                write_settings()
+
+                if not hifi_gan and fastpitch_model.waveglow is None:
+                    use_gpu = user_settings["use_gpu"]=="True"
+                    fastpitch_model = fastpitch.init_waveglow(use_gpu, fastpitch_model)
+
+            if self.path == "/setDevice":
+                use_gpu = post_data["device"]=="gpu"
+                fastpitch_model.device = torch.device('cuda' if use_gpu else 'cpu')
+                fastpitch_model = fastpitch_model.to(fastpitch_model.device)
+
+                if fastpitch_model.waveglow is not None:
+                    fastpitch_model.waveglow.set_device(fastpitch_model.device)
+                    fastpitch_model.denoiser.set_device(fastpitch_model.device)
+                fastpitch_model.hifi_gan.to(fastpitch_model.device)
+
+                user_settings["use_gpu"] = use_gpu
+                write_settings()
+
             if self.path == "/loadModel":
-                model = eval.loadModel(model=post_data["model"], outputs=post_data["outputs"], cmudict=post_data["cmudict"])
+                ckpt = post_data["model"]
+                fastpitch_model = fastpitch.loadModel(fastpitch_model, ckpt=ckpt, n_speakers=post_data["model_speakers"], device=fastpitch_model.device)
 
             if self.path == "/synthesize":
-                eval.syntesize(model, list(map(int, post_data["sequence"].split(","))), post_data["outfile"])
+                text = post_data["sequence"]
+                out_path = post_data["outfile"]
+                pitch = post_data["pitch"] if "pitch" in post_data else None
+                duration = post_data["duration"] if "duration" in post_data else None
+                speaker_i = post_data["speaker_i"]
+                hifi_gan = post_data["hifi_gan"] if "hifi_gan" in post_data else False
+                pitch_data = [pitch, duration]
+
+                pitch_durations_text = fastpitch.infer(user_settings, text, out_path, fastpitch=fastpitch_model, hifi_gan=hifi_gan, speaker_i=speaker_i, pitch_data=pitch_data)
 
             self._set_response()
-            self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
+            logger.info("pitch_durations_text")
+            logger.info(pitch_durations_text)
+            self.wfile.write(pitch_durations_text.encode("utf-8"))
         except Exception as e:
+            with open("./DEBUG_request.txt", "w+") as f:
+                f.write(traceback.format_exc())
+                f.write(str(post_data))
             logger.info("Post Error:\n {}".format(repr(e)))
+            print(traceback.format_exc())
             logger.info(traceback.format_exc())
 
 server = HTTPServer(("",8008), Handler)
+with open("./DEBUG_server_up.txt", "w+") as f:
+    f.write("Starting")
+print("Server ready")
+logger.info("Server ready")
+try:
+    os.remove(f'{"./resources/app" if PROD else "."}/SERVER_STARTING')
+except:
+    pass
 try:
     server.serve_forever()
 except KeyboardInterrupt:

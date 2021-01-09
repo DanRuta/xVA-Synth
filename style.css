@@ -84,6 +84,7 @@
      color: white;
      background: rgba(0,0,0,0);
      border: none;
+     cursor: pointer;
  }
  option {
      color: black;
@@ -103,7 +104,7 @@
      text-align: center;
      background-color: darkgrey;
      margin: 5px;
-     padding-top: 1px;
+     padding: 2px;
  }
  #topRight {
      display: block;
@@ -118,22 +119,6 @@
      text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
      color: black;
  }
-/* #settingsContainer {
-     font-size: 24pt;
-     margin-right: -10%;
-     text-shadow: 0 0 white;
-     font-weight: bolder;
-     cursor: pointer;
-     background: rgba(255,255,255,0.8);
-     border-radius: 100px;
-     height: 30px;
-     width: 40px;
-     display: flex;
-     justify-content: center;
-     align-items: flex-end;
-     padding-top: 10px;
-     box-shadow: 0px 0px 5px 1px black inset;
- }*/
  #topRight > svg {
      height: 30px;
      width: 30px;
@@ -187,10 +172,11 @@
  }
  #voiceSamples {
      width: calc(95vw - 300px);
-     height: calc(90vh - 165px);
+     height: calc(90vh - 185px - 250px);
      background: rgba(255,255,255,0.1);
      margin-left: 2.5vw;
      margin-right: 2.5vw;
+     margin-top: 20px;
      overflow-y: auto;
  }
  .sample {
@@ -251,10 +237,13 @@
  }
  ::-webkit-scrollbar-thumb {
      border-radius: 10px;
+     /*background: rgba(218,142,58, 0.5) !important;*/
      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.9);
+     transition: background-color 500ms;
+     opacity: 0.5;
  }
 
- #modalContainer {
+ #modalContainer, #settingsContainer {
      display: flex;
      justify-content: center;
      align-items: center;
@@ -289,14 +278,28 @@
      margin: 10px;
  }
  .modal button {
-     margin-left: 10px;
+     margin: 5px;
+ }
+ .modal > div > input[type=text] {
+     padding: 5px;
+     width: 25vw;
+     text-align: center;
+ }
+ #app_version {
+     display: flex;
+     justify-content: center;
+ }
+ #settingsOptionsContainer {
+     flex-grow: 1;
  }
  /*Chrome*/
  #chrome {
      display: flex;
      height: 25px;
      width: 100vw;
-     background-color: #383838;
+     background-color: #1c1c1c;
+     opacity: 0.88;
+     transition: opacity 300ms;
  }
  #dragBar {
      flex-grow: 1;
@@ -323,4 +326,202 @@
  }
  #chromeQuit:hover {
      color: red !important;
+ }
+
+
+ /*===========================================================================*/
+ /*======================== Pitch editor =====================================*/
+ /*===========================================================================*/
+ input[type=checkbox] {
+     height: 20px;
+     width: 20px;
+ }
+
+ #editorContainer {
+     overflow-x: scroll;
+     margin-left: 2.5vw;
+     margin-right: 2.5vw;
+ }
+ #letterLength {
+     width: 200px;
+ }
+ #editor {
+     font-family: monospace;
+     width: 7500px;
+     height: 200px;
+     height: 180px;
+     display: flex;
+     overflow-x: auto;
+     overflow-y: hidden;
+     align-items: center;
+     padding-left: 25px;
+
+     min-width: calc(94vw - 300px);
+     height: 145px;
+     background: rgba(255,255,255,0.2);
+ }
+ .letter > div:first-child {
+     height: 10px;
+     margin-top: -15px;
+ }
+ .letter {
+     height: 200px;
+     height: 150px;
+     width: 50px;
+     cursor: pointer;
+     display: inline-flex;
+     margin-top: -30px;
+ }
+ #editor > div > div {
+     text-align: center;
+     font-size: 20pt;
+
+     margin-right: 20px;
+ }
+
+ .slider::-webkit-slider-thumb {
+   -webkit-appearance: none;
+   cursor: pointer;
+   cursor: n-resize;
+   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+ }
+
+ .slider {
+   -webkit-appearance: none;
+   transform: rotate(270deg);
+   width: 150px !important;
+   min-width: 150px !important;
+   max-width: 150px !important;
+   height: 50px;
+   margin-left: -85px;
+ }
+
+ .slider::-webkit-slider-thumb {
+   -webkit-appearance: none;
+   width: 10px;
+   height: 50px;
+   margin-top: 0px;
+
+   border-radius: 0px;
+   border: none;
+   background: rgba(218,142,58, 0.9) !important;
+   transition: background-color 500ms;
+ }
+
+ .slider:focus {
+   outline: none;
+ }
+ #adv {
+     height: 250px;
+ }
+ .letter:nth-child(even) > input {
+     background-color: rgba(0,0,0,0.3);
+ }
+ .letter:nth-child(odd) > input {
+     background-color: rgba(255,255,255,0.3);
+ }
+ .slider {
+     width: 100px !important;
+     min-width: 100px !important;
+     max-width: 100px !important;
+     margin-left: -100px;
+ }
+ .letter {
+     text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+     margin-top: 40px;
+     margin-left: 3px;
+ }
+
+ #adv_opts{
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     margin-top: 4px;
+ }
+ #adv_opts > div {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     background: rgba(255,255,255,0.2);
+     margin-bottom: 5px;
+ }
+ #adv_opts > div > button {
+     margin: 5px;
+ }
+ #adv_opts > div > div {
+     margin: 5px;
+     display: flex;
+     align-items: center;
+ }
+ #adv_opts > div > div > span {
+     margin-right: 5px;
+ }
+ .flexTable {
+     display: flex;
+     flex-direction: column;
+ }
+
+ .flexTable > div {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     width: 100%;
+     max-width: 400px;
+ }
+
+ .flexTable > div > :not(script) {
+     display: flex;
+     justify-content: center;
+     flex-direction: column;
+     min-height: 25px;
+     width: 50%;
+     padding: 0;
+     margin: 3px 0 3px 0;
+     align-items: center;
+ }
+
+ .flexTable > div > div:nth-child(1){
+     justify-content: center;
+     width: 50%;
+     padding-left: 25px;
+     /*font-style: italic;*/
+     align-items: flex-end;
+ }
+ .flexTable > div > div > input[type="submit"], .flexTable > div > div > a {
+     align-self: flex-start !important;
+ }
+
+ .flexTable > div > div > span.view-calendar > input {
+     width: 95%;
+ }
+
+ .renameSVG {
+     height: 20px;
+     width: 20px;
+ }
+
+ #settingsCog, #patreonIcon {
+     display: flex;
+     position: fixed;
+     z-index: 1000;
+     width: 50px;
+     top: 35px;
+     right: 0px;
+ }
+ #patreonIcon {
+    right: 30px;
+    top: 34px;
+    cursor: pointer;
+ }
+ #patreonIcon > img {
+    height: 30px !important;
+    width: 30px;
+ }
+ #settingsCog > svg, #patreonIcon > img {
+     height: 25px;
+     cursor: pointer;
+     filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7))
+ }
+ #activeModal > span {
+     overflow-y: auto;
  }

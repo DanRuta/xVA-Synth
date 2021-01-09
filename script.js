@@ -11,12 +11,25 @@ const {text_to_sequence, english_cleaners} = require("./text.js")
 let themeColour
 window.games = {}
 window.models = {}
+window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null}
+window.currentModel = undefined
 
-const customWindowSize = localStorage.getItem("customWindowSize")
-if (customWindowSize) {
-    const [height, width] = customWindowSize.split(",").map(v => parseInt(v))
-    ipcRenderer.send("resize", {height, width})
+// Load user settings
+window.userSettings = localStorage.getItem("userSettings") ||
+{useGPU: false, customWindowSize:`${window.innerHeight},${window.innerWidth}`, autoplay: false}
+if ((typeof window.userSettings)=="string") {
+    window.userSettings = JSON.parse(window.userSettings)
 }
+
+useGPUCbx.checked = window.userSettings.useGPU
+autoplay_ckbx.checked = window.userSettings.autoplay
+
+const [height, width] = window.userSettings.customWindowSize.split(",").map(v => parseInt(v))
+ipcRenderer.send("resize", {height, width})
+
+const saveUserSettings = () => localStorage.setItem("userSettings", JSON.stringify(window.userSettings))
+saveUserSettings()
+
 
 // Set up folders
 try {fs.mkdirSync(`${path}/models`)} catch (e) {/*Do nothing*/}
@@ -50,7 +63,7 @@ const loadAllModels = () => {
                         models[`${gameFolder}/${fileName}`] = null
 
                         const model = JSON.parse(fs.readFileSync(`${path}/models/${gameFolder}/${fileName}`, "utf8"))
-                        model.games.forEach(({gameId, voiceId, voiceName, voiceDescription}) => {
+                        model.games.forEach(({gameId, voiceId, voiceName, voiceDescription, gender}) => {
 
                             if (!games.hasOwnProperty(gameId)) {
 
@@ -75,7 +88,20 @@ const loadAllModels = () => {
                             }
 
                             const audioPreviewPath = `${gameFolder}/${model.games.find(({gameId}) => gameId==gameFolder).voiceId}`
-                            games[gameId].models.push({model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription})
+                            const existingDuplicates = []
+                            games[gameId].models.forEach((item,i) => {
+                                if (item.voiceId==voiceId) {
+                                    existingDuplicates.push([item, i])
+                                }
+                            })
+                            if (existingDuplicates.length) {
+                                if (existingDuplicates[0][0].modelVersion<model.modelVersion) {
+                                    games[gameId].models.splice(existingDuplicates[0][1], 1)
+                                    games[gameId].models.push({model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, gender, modelVersion: model.modelVersion})
+                                }
+                            } else {
+                                games[gameId].models.push({model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, gender, modelVersion: model.modelVersion})
+                            }
                         })
                     }
                 })
@@ -95,8 +121,13 @@ const changeGame = () => {
     generateVoiceButton.innerHTML = "Generate Voice"
 
     // Change the app title
-    document.title = `${meta[2]}VA Synth`
-    dragBar.innerHTML = `${meta[2]}VA Synth`
+    if (meta[2]) {
+        document.title = `${meta[2]}VA Synth`
+        dragBar.innerHTML = `${meta[2]}VA Synth`
+    } else {
+        document.title = `xVA Synth`
+        dragBar.innerHTML = `xVA Synth`
+    }
 
     if (meta) {
         const background = `linear-gradient(0deg, grey 0px, rgba(0,0,0,0)), url("assets/${meta.join("-")}")`
@@ -115,7 +146,14 @@ const changeGame = () => {
 
     cssHack.innerHTML = `::selection {
         background: #${themeColour};
-    }`
+    }
+    ::-webkit-scrollbar-thumb {
+        background-color: #${themeColour} !important;
+    }
+    .slider::-webkit-slider-thumb {
+        background-color: #${themeColour} !important;
+    }
+    `
 
     try {fs.mkdirSync(`${path}/output/${meta[0]}`)} catch (e) {/*Do nothing*/}
     localStorage.setItem("lastGame", gameDropdown.value)
@@ -148,6 +186,8 @@ const changeGame = () => {
 
         button.addEventListener("click", () => {
 
+            window.currentModel = model
+
             if (voiceDescription) {
                 description.innerHTML = voiceDescription
                 description.className = "withContent"
@@ -174,6 +214,7 @@ const changeGame = () => {
                 generateVoiceButton.dataset.modelQuery = JSON.stringify({
                     outputs: parseInt(model.outputs),
                     model: `${path}/models/${modelGameFolder}/${modelFileName}`,
+                    model_speakers: model.emb_size,
                     cmudict: model.cmudict
                 })
                 generateVoiceButton.dataset.modelIDToLoad = voiceId
@@ -198,6 +239,7 @@ const changeGame = () => {
         })
         buttons.push(button)
     })
+    // }
 
     buttons.sort((a,b) => a.innerHTML<b.innerHTML?-1:1)
         .forEach(button => voiceTypeContainer.appendChild(button))
@@ -205,24 +247,48 @@ const changeGame = () => {
 }
 
 const makeSample = src => {
-    const sample = createElem("div.sample", createElem("div", src.split("/").reverse()[0].split(".wav")[0]))
+    const fileName = src.split("/").reverse()[0]
+    const sample = createElem("div.sample", createElem("div", fileName.split(".wav")[0]))
     const audioControls = createElem("div")
     const audio = createElem("audio", {controls: true}, createElem("source", {
         src: src,
         type: "audio/wav"
     }))
     const openFileLocationButton = createElem("div", "&#10064;")
-    openFileLocationButton.addEventListener("click", () => shell.showItemInFolder(`${__dirname}/${src}`))
+    openFileLocationButton.addEventListener("click", () => {
+        console.log("open dir", src)
+        shell.showItemInFolder(src)
+    })
+
+    const renameButton = createElem("div", `<svg class="renameSVG" version="1.0" xmlns="http:\/\/www.w3.org/2000/svg" width="344.000000pt" height="344.000000pt" viewBox="0 0 344.000000 344.000000" preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,344.000000) scale(0.100000,-0.100000)" fill="#555555" stroke="none"><path d="M1489 2353 l-936 -938 -197 -623 c-109 -343 -195 -626 -192 -629 2 -3 284 84 626 193 l621 198 937 938 c889 891 937 940 934 971 -11 108 -86 289 -167 403 -157 219 -395 371 -655 418 l-34 6 -937 -937z m1103 671 c135 -45 253 -135 337 -257 41 -61 96 -178 112 -241 l12 -48 -129 -129 -129 -129 -287 287 -288 288 127 127 c79 79 135 128 148 128 11 0 55 -12 97 -26z m-1798 -1783 c174 -79 354 -248 436 -409 59 -116 72 -104 -213 -196 l-248 -80 -104 104 c-58 58 -105 109 -105 115 0 23 154 495 162 495 5 0 37 -13 72 -29z"/></g></svg>`)
+    renameButton.addEventListener("click", () => {
+        createModal("prompt", {
+            prompt: "Enter new file name, or submit unchanged to cancel.",
+            value: sample.querySelector("div").innerHTML+".wav"
+        }).then(newFileName => {
+            if (newFileName!=fileName) {
+                const oldPath = src.split("/").reverse()
+                const newPath = src.split("/").reverse()
+                oldPath[0] = sample.querySelector("div").innerHTML+".wav"
+                newPath[0] = newFileName
+                fs.renameSync(oldPath.reverse().join("/"), newPath.reverse().join("/"))
+                sample.querySelector("div").innerHTML = newFileName.split(".wav")[0]
+            }
+        })
+    })
 
     const deleteFileButton = createElem("div", "&#10060;")
     deleteFileButton.addEventListener("click", () => {
         confirmModal("Are you sure you'd like to delete this file?").then(confirmation => {
             if (confirmation) {
-                fs.unlinkSync(`${path}${src.slice(1, src.length)}`)
+                try {
+                    fs.unlinkSync(`${path}${src.slice(1, src.length)}`)
+                } catch (e) {}
                 sample.remove()
             }
         })
     })
+    audioControls.appendChild(renameButton)
     audioControls.appendChild(audio)
     audioControls.appendChild(openFileLocationButton)
     audioControls.appendChild(deleteFileButton)
@@ -243,7 +309,7 @@ generateVoiceButton.addEventListener("click", () => {
 
     if (generateVoiceButton.dataset.modelQuery && generateVoiceButton.dataset.modelQuery!="null") {
 
-        spinnerModal("Loading model<br>(may take a minute...)")
+        spinnerModal("Loading voice set<br>(may take a minute...)")
         fetch(`http://localhost:8008/loadModel`, {
             method: "Post",
             body: generateVoiceButton.dataset.modelQuery
@@ -272,18 +338,52 @@ generateVoiceButton.addEventListener("click", () => {
         const game = gameDropdown.value.split("-")[0]
         const voiceType = title.dataset.modelId
 
-        const sequence = text_to_sequence(dialogueInput.value.trim()).join(",")
+        // const sequence = text_to_sequence(dialogueInput.value.trim()).join(",")
+        const sequence = dialogueInput.value.trim()
         const outputFileName = dialogueInput.value.slice(0, 260).replace("?", "")
 
         try {fs.unlinkSync(localStorage.getItem("tempFileLocation"))} catch (e) {/*Do nothing*/}
 
         // For some reason, the samplePlay audio element does not update the source when the file name is the same
         const tempFileLocation = `./output/temp-${Math.random().toString().split(".")[1]}.wav`
+        let pitch = []
+        let duration = []
+        let quick_n_dirty = false
+
+        if (editor.innerHTML && editor.innerHTML.length && window.pitchEditor.sequence && sequence==window.pitchEditor.inputSequence && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
+            pitch = window.pitchEditor.pitchNew
+            duration = window.pitchEditor.dursNew
+        }
+        quick_n_dirty = window.userSettings.quick_n_dirty
+        window.pitchEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
+
+        const speaker_i = window.currentModel.games[0].emb_i
 
         fetch(`http://localhost:8008/synthesize`, {
             method: "Post",
-            body: JSON.stringify({sequence: sequence, outfile: `${path}/${tempFileLocation.slice(1, tempFileLocation.length)}`})
-        }).then(r=>r.text()).then(() => {
+            body: JSON.stringify({
+                sequence, pitch, duration, speaker_i,
+                outfile: `${path}/${tempFileLocation.slice(1, tempFileLocation.length)}`,
+                hifi_gan: !!quick_n_dirty
+            })
+        }).then(r=>r.text()).then(res => {
+            res = res.split("\n")
+            let pitchData = res[0]
+            let durationsData = res[1]
+            let cleanedSequence = res[2]
+            pitchData = pitchData.split(",").map(v => parseFloat(v))
+            durationsData = durationsData.split(",").map(v => parseFloat(v))
+            window.pitchEditor.inputSequence = sequence
+            window.pitchEditor.sequence = cleanedSequence
+
+            if (pitch.length==0) {
+                window.pitchEditor.resetPitch = pitchData
+                window.pitchEditor.resetDurs = durationsData
+                window.pitchEditor.resetDursMult = window.pitchEditor.resetDurs.map(v=>1)
+            }
+
+            setPitchEditorValues(cleanedSequence.replace(/\s/g, "_").split(""), pitchData, durationsData)
+
             toggleSpinnerButtons()
             keepSampleButton.dataset.newFileLocation = `./output/${game}/${voiceType}/${outputFileName}.wav`
             keepSampleButton.disabled = false
@@ -296,10 +396,20 @@ generateVoiceButton.addEventListener("click", () => {
 
             // Persistance across sessions
             localStorage.setItem("tempFileLocation", tempFileLocation)
+        }).catch(res => {
+            console.log(res)
+            window.errorModal(`Something went wrong`)
+            toggleSpinnerButtons()
         })
     }
 })
 
+const saveFile = (from, to) => {
+    fs.rename(from, to, err => {
+        voiceSamples.appendChild(makeSample(to))
+        keepSampleButton.disabled = true
+    })
+}
 keepSampleButton.addEventListener("click", () => {
     if (keepSampleButton.dataset.newFileLocation) {
 
@@ -309,46 +419,83 @@ keepSampleButton.addEventListener("click", () => {
         fromLocation = fromLocation.slice(1, fromLocation.length)
         toLocation = toLocation.slice(1, toLocation.length)
 
-        fs.rename(`${__dirname}/${fromLocation}`, `${__dirname}/${toLocation}`, err => {
-            voiceSamples.appendChild(makeSample(keepSampleButton.dataset.newFileLocation))
-            keepSampleButton.disabled = true
-        })
+        // File name conflict
+        if (fs.existsSync(`${__dirname}/${toLocation}`)) {
+
+            createModal("prompt", {
+                prompt: "File already exists. Adjust the file name here, or submit without changing to overwrite the old file.",
+                value: toLocation.split("/").reverse()[0]
+            }).then(newFileName => {
+
+                let toLocationOut = toLocation.split("/").reverse()
+                toLocationOut[0] = newFileName.replace(".wav", "") + ".wav"
+                let outDir = toLocationOut
+                outDir.shift()
+
+                const existingFiles = fs.readdirSync(`${__dirname}/${outDir.reverse().join("/")}`)
+                const existingFileConflict = existingFiles.filter(name => name==newFileName)
+
+                toLocationOut.shift()
+                toLocationOut.push(newFileName.replace(".wav", "") + ".wav")
+
+                const finalOutLocation = `${__dirname}/${toLocationOut.join("/")}`
+
+                if (existingFileConflict.length) {
+                    // Remove the entry from the output files' preview
+                    Array.from(voiceSamples.querySelectorAll("div.sample")).forEach(sampleElem => {
+                        const source = sampleElem.querySelector("source")
+                        let sourceSrc = "."+source.src.split("xVA-Synth")[1].split("%20").join(" ")
+                        sourceSrc = sourceSrc.split("/").reverse()
+                        const finalFileName = finalOutLocation.split("/").reverse()
+
+                        if (sourceSrc[0] == finalFileName[0]) {
+                            sampleElem.parentNode.removeChild(sampleElem)
+                        }
+                    })
+
+                    // Remove the old file and write the new one in
+                    fs.unlink(finalOutLocation, err => {
+                        saveFile(`${__dirname}/${fromLocation}`, finalOutLocation)
+                    })
+
+                } else {
+                    saveFile(`${__dirname}/${fromLocation}`, `${__dirname}/${toLocationOut.join("/")}`)
+                }
+            })
+
+        } else {
+            saveFile(`${__dirname}/${fromLocation}`, `${__dirname}/${toLocation}`)
+        }
     }
 })
 
 
 gameDropdown.addEventListener("change", changeGame)
 
-// Watch for new models being added, and load them into the app
-fs.watch(`${path}/models`, {recursive: true, persistent: true}, (eventType, filename) => {
 
-    if (eventType=="rename") {
-        fileRenameCounter++
-    }
-
-    if (eventType=="change") {
-        fileChangeCounter++
-    }
-
-    if (fileRenameCounter==(fileChangeCounter/3) || (!fileChangeCounter && fileRenameCounter>=4)) {
-        setTimeout(() => {
-            if (fileRenameCounter==(fileChangeCounter/3) || (!fileChangeCounter && fileRenameCounter>=4)) {
-                fileRenameCounter = 0
-                fileChangeCounter = 0
-                loadAllModels().then(() => {
-                    changeGame()
-                })
-            }
-        })
-    }
-
-    // Reset the counter when audio preview files throw deletion counters off by one
-    setTimeout(() => {
-        if (fileRenameCounter==1 && fileChangeCounter==0) {
-            fileRenameCounter = 0
+let startingSplashInterval
+let loadingStage = 0
+startingSplashInterval = setInterval(() => {
+    if (fs.existsSync(`${path}/FASTPITCH_LOADING`)) {
+        if (loadingStage==0) {
+            spinnerModal("Loading...<br>May take a minute<br><br>Building FastPitch model...")
+            loadingStage = 1
         }
-    }, 3000)
-})
+    } else if (fs.existsSync(`${path}/WAVEGLOW_LOADING`)) {
+        if (loadingStage==1) {
+            activeModal.children[0].innerHTML = "Loading...<br>May take a minute<br><br>Loading WaveGlow model..."
+            loadingStage = 2
+        }
+    } else if (fs.existsSync(`${path}/SERVER_STARTING`)) {
+        if (loadingStage==2) {
+            activeModal.children[0].innerHTML = "Loading...<br>May take a minute<br><br>Starting up the python backend..."
+            loadingStage = 3
+        }
+    } else {
+        closeModal()
+        clearInterval(startingSplashInterval)
+    }
+}, 100)
 
 loadAllModels().then(() => {
     // Load the last selected game
@@ -365,7 +512,8 @@ loadAllModels().then(() => {
 
 const createModal = (type, message) => {
     return new Promise(resolve => {
-        const modal = createElem("div.modal#activeModal", {style: {opacity: 0}}, createElem("span", message))
+        const displayMessage = message.prompt ? message.prompt : message
+        const modal = createElem("div.modal#activeModal", {style: {opacity: 0}}, createElem("span", displayMessage))
         modal.dataset.type = type
 
         if (type=="confirm") {
@@ -392,6 +540,17 @@ const createModal = (type, message) => {
                 resolve(false)
                 closeModal()
             })
+        } else if (type=="prompt") {
+            const closeButton = createElem("button", {style: {background: `#${themeColour}`}})
+            closeButton.innerHTML = "Submit"
+            const inputElem = createElem("input", {type: "text", value: message.value})
+            modal.appendChild(createElem("div", inputElem))
+            modal.appendChild(createElem("div", closeButton))
+
+            closeButton.addEventListener("click", () => {
+                resolve(inputElem.value)
+                closeModal()
+            })
         } else {
             modal.appendChild(createElem("div.spinner", {style: {borderLeftColor: document.querySelector("button").style.background}}))
         }
@@ -401,14 +560,18 @@ const createModal = (type, message) => {
         modalContainer.style.display = "flex"
 
         requestAnimationFrame(() => requestAnimationFrame(() => modalContainer.style.opacity = 1))
+        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
     })
 }
-const closeModal = () => {
+const closeModal = (container=modalContainer) => {
     return new Promise(resolve => {
-        modalContainer.style.opacity = 0
+        container.style.opacity = 0
+        chrome.style.opacity = 0.88
         setTimeout(() => {
-            modalContainer.style.display = "none"
-            activeModal.remove()
+            container.style.display = "none"
+            try {
+                activeModal.remove()
+            } catch (e) {}
             resolve()
         }, 300)
     })
@@ -416,28 +579,8 @@ const closeModal = () => {
 
 window.confirmModal = message => new Promise(resolve => resolve(createModal("confirm", message)))
 window.spinnerModal = message => new Promise(resolve => resolve(createModal("spinner", message)))
+window.errorModal = message => new Promise(resolve => resolve(createModal("error", message)))
 
-// Need to put a small delay to keep a user from immediatelly going to load a model, because the
-// python server takes a few seconds to boot up, and the request would cause an infinite spinner
-if (PRODUCTION) {
-    let loadSpinnerClosed = false
-    spinnerModal("Loading...")
-
-    // So I'm watching for changes on the log file, which always gets written to, first when the server starts
-    fs.watch(`${path}/`, {persistent: true}, (eventType, filename) => {
-        if (filename=="server.log" && !loadSpinnerClosed) {
-            loadSpinnerClosed = true
-            closeModal()
-        }
-    })
-
-    // Seems to sometimes take too long to detect the file change, so I'm placing a limit,
-    // because the server IS up by this point, usually. Leaves some time padding for navigation, also
-    setTimeout(() => {
-        loadSpinnerClosed = true
-        closeModal()
-    }, 4000)
-}
 
 modalContainer.addEventListener("click", event => {
     if (event.target==modalContainer && activeModal.dataset.type!="spinner") {
@@ -456,5 +599,232 @@ if (dialogueInputCache) {
 }
 
 window.addEventListener("resize", e => {
-    localStorage.setItem("customWindowSize", `${window.innerHeight},${window.innerWidth}`)
+    window.userSettings.customWindowSize = `${window.innerHeight},${window.innerWidth}`
+    saveUserSettings()
+})
+
+
+
+
+const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
+
+    editor.innerHTML = ""
+
+    let lengthsMult = lengthsOrig.map(l => 1)
+    let pacingMult = lengthsOrig.map(l => 1)
+
+    window.pitchEditor.pitchNew = pitchOrig.map(p=>p)
+    window.pitchEditor.dursNew = lengthsOrig.map(v=>v)
+
+
+    const letterElems = []
+    const css_hack_items = []
+    const elemsWidths = []
+    let letterFocus = -1
+    let autoinfer_timer = null
+    let has_been_changed = false
+
+    const set_letter_display = (elem, elem_i, length=null, value=null) => {
+
+        if (length != null) {
+            const elem_length = length/2
+            elem.style.width = `${parseInt(elem_length/2)}px`
+            elem.children[1].style.height = `${elem_length}px`
+            // elem.children[1].style.marginTop = `${-parseInt(elem_length/2)+100}px`
+            elem.children[1].style.marginTop = `${-parseInt(elem_length/2)+65}px`
+            css_hack_items[elem_i].innerHTML = `#slider_${elem_i}::-webkit-slider-thumb {height: ${elem_length}px;}`
+            elemsWidths[elem_i] = elem_length
+            elem.style.paddingLeft = `${parseInt(elem_length/2)}px`
+            editor.style.width = `${parseInt(elemsWidths.reduce((p,c)=>p+c,1)*1.25)}px`
+        }
+
+        if (value != null) {
+            elem.children[1].value = value
+        }
+    }
+
+
+    letters.forEach((letter, l) => {
+
+        const letterDiv = createElem("div.letter", createElem("div", letter))
+        const slider = createElem(`input.slider#slider_${l}`, {
+            type: "range",
+            orient: "vertical",
+            step: 0.001,
+            min: -4,
+            max:  4,
+            value: pitchOrig[l]
+        })
+        letterDiv.appendChild(slider)
+
+        slider.addEventListener("mousedown", () => {
+            letterFocus = l
+            letterLength.value = parseInt(lengthsMult[letterFocus])
+        })
+
+        slider.addEventListener("change", () => {
+            window.pitchEditor.pitchNew[l] = parseFloat(slider.value)
+            has_been_changed = true
+            if (autoplay_ckbx.checked) {
+                generateVoiceButton.click()
+            }
+        })
+
+
+        let length = lengthsOrig[l] * lengthsMult[l] * pace_slid.value * 10 + 50
+
+        letterDiv.style.width = `${parseInt(length/2)}px`
+        slider.style.height = `${length}px`
+
+        slider.style.marginLeft = `${-83}px`
+        letterDiv.style.paddingLeft = `${parseInt(length/2)}px`
+
+        const css_hack_elem = createElem("style", `#slider_${l}::-webkit-slider-thumb {height: ${length}px;}`)
+        css_hack_items.push(css_hack_elem)
+        css_hack_pitch_editor.appendChild(css_hack_elem)
+        elemsWidths.push(length)
+        editor.style.width = `${parseInt(elemsWidths.reduce((p,c)=>p+c,1)*1.15)}px`
+
+        editor.appendChild(letterDiv)
+        letterElems.push(letterDiv)
+
+        set_letter_display(letterDiv, l, length, pitchOrig[l])
+    })
+
+
+    const infer = () => {
+        movingSlider = false
+        generateVoiceButton.click()
+    }
+
+
+    let movingSlider = false
+    letterLength.addEventListener("mousedown", () => movingSlider=true)
+    letterLength.addEventListener("mouseup", () => movingSlider=false)
+    letterLength.addEventListener("change", () => movingSlider=false)
+
+
+    letterLength.addEventListener("mousemove", () => {
+        if (letterFocus<0) {
+            return
+        }
+
+        if (lengthsMult[letterFocus] != letterLength.value) {
+            has_been_changed = true
+        }
+        lengthsMult[letterFocus] = parseFloat(letterLength.value)
+        window.pitchEditor.resetDursMult[letterFocus] = parseFloat(letterLength.value)
+        lengthsMult.forEach((v,vi) => window.pitchEditor.dursNew[vi] = lengthsOrig[vi]*v)
+
+        const letterElem = letterElems[letterFocus]
+        const newWidth = lengthsOrig[letterFocus] * lengthsMult[letterFocus] * pace_slid.value //* 100
+        set_letter_display(letterElem, letterFocus, newWidth * 10 + 50)
+
+        if (autoinfer_timer != null) {
+            clearTimeout(autoinfer_timer)
+            autoinfer_timer = null
+        }
+        if (autoplay_ckbx.checked) {
+            autoinfer_timer = setTimeout(infer, 500)
+        }
+    })
+
+    // Reset button
+    reset_btn.addEventListener("click", () => {
+        lengthsMult = lengthsOrig.map(l => 1)
+        window.pitchEditor.dursNew = window.pitchEditor.resetDurs
+        window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map(p=>p)
+        letters.forEach((_, l) => set_letter_display(letterElems[l], l, window.pitchEditor.resetDurs[l]*10+50, window.pitchEditor.pitchNew[l]))
+    })
+    amplify_btn.addEventListener("click", () => {
+        window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p*1.1)
+        letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
+    })
+    flatten_btn.addEventListener("click", () => {
+        window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p*0.9)
+        letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
+    })
+    increase_btn.addEventListener("click", () => {
+        window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p+=0.1)
+        letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
+    })
+    decrease_btn.addEventListener("click", () => {
+        window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p-=0.1)
+        letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
+    })
+    pace_slid.addEventListener("change", () => {
+        const new_lengths = window.pitchEditor.resetDurs.map((v,l) => v * lengthsMult[l] * pace_slid.value)
+        window.pitchEditor.dursNew = new_lengths
+        letters.forEach((_, l) => set_letter_display(letterElems[l], l, new_lengths[l]* 10 + 50, null))
+    })
+}
+autoplay_ckbx.addEventListener("change", () => {
+    window.userSettings.autoplay = autoplay_ckbx.checked
+    saveUserSettings()
+})
+qnd_ckbx.checked = window.userSettings.quick_n_dirty
+qnd_ckbx.addEventListener("change", () => {
+    window.userSettings.quick_n_dirty = qnd_ckbx.checked
+    spinnerModal("Changing models...")
+    fetch(`http://localhost:8008/setMode`, {
+        method: "Post",
+        body: JSON.stringify({hifi_gan: window.userSettings.quick_n_dirty ? "qnd" : "wg"})
+    }).then(() => {
+        closeModal()
+    })
+    saveUserSettings()
+})
+
+// Patreon
+// =======
+patreonIcon.addEventListener("click", () => {
+
+    const data = fs.readFileSync("patreon.txt", "utf8")
+    const names = new Set()
+    data.split("\r\n").forEach(name => names.add(name))
+    names.add("minermanb")
+
+    let content = `You can support development on patreon at this link:<br>
+        <span id="patreonLink" style='color:#${themeColour};text-decoration: underline;cursor:pointer;'>PATREON</span>
+        <br><hr><br>Special thanks:`
+    names.forEach(name => content += `<br>${name}`)
+
+    createModal("error", content)
+    patreonLink.addEventListener("click", () => {
+        shell.openExternal("https://patreon.com")
+    })
+})
+fetch("http://danruta.co.uk/patreon.txt").then(r=>r.text()).then(data => fs.writeFileSync("patreon.txt", data, "utf8"))
+
+// Settings
+// ========
+settingsCog.addEventListener("click", () => {
+    settingsContainer.style.opacity = 0
+    settingsContainer.style.display = "flex"
+    chrome.style.opacity = 0.88
+    requestAnimationFrame(() => requestAnimationFrame(() => settingsContainer.style.opacity = 1))
+    requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
+})
+settingsContainer.addEventListener("click", event => {
+    if (event.target==settingsContainer) {
+        closeModal(settingsContainer)
+    }
+})
+useGPUCbx.addEventListener("change", () => {
+    spinnerModal("Changing device...")
+    fetch(`http://localhost:8008/setDevice`, {
+        method: "Post",
+        body: JSON.stringify({device: useGPUCbx.checked ? "gpu" : "cpu"})
+    }).then(r=>r.text()).then(res => {
+        closeModal()
+        window.userSettings.useGPU = useGPUCbx.checked
+        saveUserSettings()
+    }).catch(e => {
+        console.log(e)
+        if (e.code =="ENOENT") {
+            closeModal().then(() => {
+                createModal("error", "There was a problem")
+            })
+        }
+    })
 })

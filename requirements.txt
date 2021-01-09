@@ -1,2 +1,4 @@
-librosa==0.5.1
-tensorflow
+scipy==1.5.2
+unidecode==1.1.1
+inflect==4.1.0
+librosa==0.8.0
