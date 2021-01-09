@@ -476,17 +476,17 @@ gameDropdown.addEventListener("change", changeGame)
 let startingSplashInterval
 let loadingStage = 0
 startingSplashInterval = setInterval(() => {
-    if (fs.existsSync("./FASTPITCH_LOADING")) {
+    if (fs.existsSync(`${path}/FASTPITCH_LOADING`)) {
         if (loadingStage==0) {
             spinnerModal("Loading...<br>May take a minute<br><br>Building FastPitch model...")
             loadingStage = 1
         }
-    } else if (fs.existsSync("./WAVEGLOW_LOADING")) {
+    } else if (fs.existsSync(`${path}/WAVEGLOW_LOADING`)) {
         if (loadingStage==1) {
             activeModal.children[0].innerHTML = "Loading...<br>May take a minute<br><br>Loading WaveGlow model..."
             loadingStage = 2
         }
-    } else if (fs.existsSync("./SERVER_STARTING")) {
+    } else if (fs.existsSync(`${path}/SERVER_STARTING`)) {
         if (loadingStage==2) {
             activeModal.children[0].innerHTML = "Loading...<br>May take a minute<br><br>Starting up the python backend..."
             loadingStage = 3
