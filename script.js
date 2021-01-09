@@ -121,8 +121,13 @@ const changeGame = () => {
     generateVoiceButton.innerHTML = "Generate Voice"
 
     // Change the app title
-    document.title = `${meta[2]}VA Synth`
-    dragBar.innerHTML = `${meta[2]}VA Synth`
+    if (meta[2]) {
+        document.title = `${meta[2]}VA Synth`
+        dragBar.innerHTML = `${meta[2]}VA Synth`
+    } else {
+        document.title = `xVA Synth`
+        dragBar.innerHTML = `xVA Synth`
+    }
 
     if (meta) {
         const background = `linear-gradient(0deg, grey 0px, rgba(0,0,0,0)), url("assets/${meta.join("-")}")`

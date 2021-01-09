@@ -285,6 +285,13 @@
      width: 25vw;
      text-align: center;
  }
+ #app_version {
+     display: flex;
+     justify-content: center;
+ }
+ #settingsOptionsContainer {
+     flex-grow: 1;
+ }
  /*Chrome*/
  #chrome {
      display: flex;
