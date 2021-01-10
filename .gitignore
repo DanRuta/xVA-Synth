@@ -16,3 +16,7 @@ dist
 FASTPITCH_LOADING
 WAVEGLOW_LOADING
 SERVER_STARTING
+DEBUG*
+models
+release-builds
+package-lock.json

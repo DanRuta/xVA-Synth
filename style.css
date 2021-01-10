@@ -243,7 +243,7 @@
      opacity: 0.5;
  }
 
- #modalContainer, #settingsContainer {
+ #modalContainer, #settingsContainer, #updatesContainer {
      display: flex;
      justify-content: center;
      align-items: center;
@@ -500,13 +500,31 @@
      width: 20px;
  }
 
- #settingsCog, #patreonIcon {
+ #settingsCog, #patreonIcon, #updatesIcon {
      display: flex;
      position: fixed;
      z-index: 1000;
      width: 50px;
      top: 35px;
      right: 0px;
+ }
+ #updatesIcon {
+    right: 80px;
+    top: 37px;
+ }
+ #updatesContainer > div {
+     height: 40vh;
+ }
+ #updatesLogList {
+     width: 100%;
+     max-height: 150px;
+     overflow-y: auto;
+ }
+ /*#updatesLogList > div {
+     min-height: 25px;
+ }*/
+ #updatesLogList > div > div:first-child {
+     width: 25%;
  }
  #patreonIcon {
     right: 30px;
@@ -517,7 +535,7 @@
     height: 30px !important;
     width: 30px;
  }
- #settingsCog > svg, #patreonIcon > img {
+ #settingsCog > svg, #patreonIcon > img, #updatesIcon > svg {
      height: 25px;
      cursor: pointer;
      filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7))

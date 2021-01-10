@@ -13,6 +13,7 @@ window.games = {}
 window.models = {}
 window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null}
 window.currentModel = undefined
+window.appVersion = "1.0.1"
 
 // Load user settings
 window.userSettings = localStorage.getItem("userSettings") ||
@@ -828,3 +829,63 @@ useGPUCbx.addEventListener("change", () => {
         }
     })
 })
+
+
+// Updates
+// =======
+app_version.innerHTML = window.appVersion
+updatesVersions.innerHTML = `This app version: ${window.appVersion}`
+
+const checkForUpdates = () => {
+    fetch("http://danruta.co.uk/xvasynth_updates.txt").then(r=>r.json()).then(data => {
+        fs.writeFileSync("updates.json", JSON.stringify(data), "utf8")
+        checkUpdates.innerHTML = "Check for updates now"
+        showUpdates()
+    }).catch(() => {
+        checkUpdates.innerHTML = "Can't reach server"
+    })
+}
+const showUpdates = () => {
+    window.updatesLog = fs.readFileSync("updates.json", "utf8")
+    window.updatesLog = JSON.parse(window.updatesLog)
+    const sortedLogVersions = Object.keys(window.updatesLog).map( a => a.split('.').map( n => +n+100000 ).join('.') ).sort()
+        .map( a => a.split('.').map( n => +n-100000 ).join('.') )
+
+    const appIsUpToDate = sortedLogVersions.indexOf(window.appVersion)==(sortedLogVersions.length-1)
+    console.log("appIsUpToDate", appIsUpToDate, window.appVersion, sortedLogVersions, sortedLogVersions.indexOf(window.appVersion))
+
+    if (!appIsUpToDate) {
+        update_nothing.style.display = "none"
+        update_something.style.display = "block"
+        updatesVersions.innerHTML = `This app version: ${window.appVersion}. Available: ${sortedLogVersions[sortedLogVersions.length-1]}`
+        console.log(`Update available: This: ${window.appVersion}, available: ${sortedLogVersions[sortedLogVersions.length-1]}`)
+    } else {
+        updatesVersions.innerHTML = `This app version: ${window.appVersion}. Up-to-date.`
+        console.log("App is up-to-date")
+    }
+
+    updatesLogList.innerHTML = ""
+    sortedLogVersions.forEach(version => {
+        const versionLabel = createElem("div", version)
+        const versionText = createElem("div", window.updatesLog[version])
+        updatesLogList.appendChild(createElem("div", versionLabel, versionText))
+    })
+}
+checkForUpdates()
+updatesIcon.addEventListener("click", () => {
+    updatesContainer.style.opacity = 0
+    updatesContainer.style.display = "flex"
+    chrome.style.opacity = 0.88
+    requestAnimationFrame(() => requestAnimationFrame(() => updatesContainer.style.opacity = 1))
+    requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
+})
+updatesContainer.addEventListener("click", event => {
+    if (event.target==updatesContainer) {
+        closeModal(updatesContainer)
+    }
+})
+checkUpdates.addEventListener("click", () => {
+    checkUpdates.innerHTML = "Checking for updates..."
+    checkForUpdates()
+})
+showUpdates()
