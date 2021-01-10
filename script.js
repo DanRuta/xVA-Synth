@@ -852,7 +852,6 @@ const showUpdates = () => {
         .map( a => a.split('.').map( n => +n-100000 ).join('.') )
 
     const appIsUpToDate = sortedLogVersions.indexOf(window.appVersion)==(sortedLogVersions.length-1)
-    console.log("appIsUpToDate", appIsUpToDate, window.appVersion, sortedLogVersions, sortedLogVersions.indexOf(window.appVersion))
 
     if (!appIsUpToDate) {
         update_nothing.style.display = "none"
