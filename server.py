@@ -1,6 +1,6 @@
 import os
 
-PROD = "xVASynth-win32-x64" in os.getcwd()
+PROD = (not (os.getcwd() == "F:\\Speech\\xVA-Synth") and "Plan.todo" in os.getcwd())
 
 with open("./DEBUG.txt", "w+") as f:
     f.write(os.getcwd())
