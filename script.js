@@ -13,17 +13,18 @@ window.games = {}
 window.models = {}
 window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null}
 window.currentModel = undefined
-window.appVersion = "1.0.1"
+window.appVersion = "v1.0.3"
 
 // Load user settings
 window.userSettings = localStorage.getItem("userSettings") ||
-{useGPU: false, customWindowSize:`${window.innerHeight},${window.innerWidth}`, autoplay: false}
+{useGPU: false, customWindowSize:`${window.innerHeight},${window.innerWidth}`, autoplay: false, autoPlayGen: false}
 if ((typeof window.userSettings)=="string") {
     window.userSettings = JSON.parse(window.userSettings)
 }
 
 useGPUCbx.checked = window.userSettings.useGPU
 autoplay_ckbx.checked = window.userSettings.autoplay
+setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
 
 const [height, width] = window.userSettings.customWindowSize.split(",").map(v => parseInt(v))
 ipcRenderer.send("resize", {height, width})
@@ -394,6 +395,9 @@ generateVoiceButton.addEventListener("click", () => {
                     createElem("source", {src: samplePlay.dataset.tempFileLocation, type: "audio/wav"}))
             samplePlay.appendChild(audio)
             audio.load()
+            if (window.userSettings.autoPlayGen) {
+                audio.play()
+            }
 
             // Persistance across sessions
             localStorage.setItem("tempFileLocation", tempFileLocation)
@@ -829,6 +833,10 @@ useGPUCbx.addEventListener("change", () => {
         }
     })
 })
+setting_autoplaygenCbx.addEventListener("click", () => {
+    window.userSettings.autoPlayGen = setting_autoplaygenCbx.checked
+    saveUserSettings()
+})
 
 
 // Updates
@@ -851,15 +859,16 @@ const showUpdates = () => {
     const sortedLogVersions = Object.keys(window.updatesLog).map( a => a.split('.').map( n => +n+100000 ).join('.') ).sort()
         .map( a => a.split('.').map( n => +n-100000 ).join('.') )
 
-    const appIsUpToDate = sortedLogVersions.indexOf(window.appVersion)==(sortedLogVersions.length-1)
+    const appVersion = window.appVersion.replace("v", "")
+    const appIsUpToDate = sortedLogVersions.indexOf(appVersion)==(sortedLogVersions.length-1) || sortedLogVersions.indexOf(appVersion)==-1
 
     if (!appIsUpToDate) {
         update_nothing.style.display = "none"
         update_something.style.display = "block"
-        updatesVersions.innerHTML = `This app version: ${window.appVersion}. Available: ${sortedLogVersions[sortedLogVersions.length-1]}`
-        console.log(`Update available: This: ${window.appVersion}, available: ${sortedLogVersions[sortedLogVersions.length-1]}`)
+        updatesVersions.innerHTML = `This app version: ${appVersion}. Available: ${sortedLogVersions[sortedLogVersions.length-1]}`
+        console.log(`Update available: This: ${appVersion}, available: ${sortedLogVersions[sortedLogVersions.length-1]}`)
     } else {
-        updatesVersions.innerHTML = `This app version: ${window.appVersion}. Up-to-date.`
+        updatesVersions.innerHTML = `This app version: ${appVersion}. Up-to-date.`
         console.log("App is up-to-date")
     }
 

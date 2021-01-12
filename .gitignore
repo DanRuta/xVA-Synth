@@ -1,4 +1,5 @@
 xVAEnv
+xVAEnvCPU
 node_modules
 output/*.wav
 output/**/*.wav

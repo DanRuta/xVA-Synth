@@ -291,6 +291,7 @@
  }
  #settingsOptionsContainer {
      flex-grow: 1;
+     width: 75%;
  }
  /*Chrome*/
  #chrome {
