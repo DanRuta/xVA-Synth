@@ -418,7 +418,7 @@ keepSampleButton.addEventListener("click", () => {
         let toLocation = keepSampleButton.dataset.newFileLocation
 
         fromLocation = fromLocation.slice(1, fromLocation.length)
-        toLocation = toLocation.slice(1, toLocation.length)
+        toLocation = toLocation.slice(1, toLocation.length).replace(/\?/g, "")
 
         // File name conflict
         if (fs.existsSync(`${__dirname}/${toLocation}`)) {
@@ -437,7 +437,7 @@ keepSampleButton.addEventListener("click", () => {
                 const existingFileConflict = existingFiles.filter(name => name==newFileName)
 
                 toLocationOut.shift()
-                toLocationOut.push(newFileName.replace(".wav", "") + ".wav")
+                toLocationOut.push(newFileName.replace(".wav", "") + ".wav").replace(/\?/g, "")
 
                 const finalOutLocation = `${__dirname}/${toLocationOut.join("/")}`
 
