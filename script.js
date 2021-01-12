@@ -11,7 +11,7 @@ const {text_to_sequence, english_cleaners} = require("./text.js")
 let themeColour
 window.games = {}
 window.models = {}
-window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null}
+window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null, letterFocus: -1}
 window.currentModel = undefined
 window.appVersion = "v1.0.3"
 
@@ -625,7 +625,6 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
     const letterElems = []
     const css_hack_items = []
     const elemsWidths = []
-    let letterFocus = -1
     let autoinfer_timer = null
     let has_been_changed = false
 
@@ -635,7 +634,6 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
             const elem_length = length/2
             elem.style.width = `${parseInt(elem_length/2)}px`
             elem.children[1].style.height = `${elem_length}px`
-            // elem.children[1].style.marginTop = `${-parseInt(elem_length/2)+100}px`
             elem.children[1].style.marginTop = `${-parseInt(elem_length/2)+65}px`
             css_hack_items[elem_i].innerHTML = `#slider_${elem_i}::-webkit-slider-thumb {height: ${elem_length}px;}`
             elemsWidths[elem_i] = elem_length
@@ -663,8 +661,8 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
         letterDiv.appendChild(slider)
 
         slider.addEventListener("mousedown", () => {
-            letterFocus = l
-            letterLength.value = parseInt(lengthsMult[letterFocus])
+            window.pitchEditor.letterFocus = l
+            letterLength.value = parseInt(lengthsMult[window.pitchEditor.letterFocus])
         })
 
         slider.addEventListener("change", () => {
@@ -709,21 +707,32 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
     letterLength.addEventListener("change", () => movingSlider=false)
 
 
+    resetLetter_btn.addEventListener("click", () => {
+        if (window.pitchEditor.letterFocus<0) {
+            return
+        }
+        if (lengthsMult[window.pitchEditor.letterFocus] != letterLength.value) {
+            has_been_changed = true
+        }
+        window.pitchEditor.dursNew[window.pitchEditor.letterFocus] = window.pitchEditor.resetDurs[window.pitchEditor.letterFocus]
+        window.pitchEditor.pitchNew[window.pitchEditor.letterFocus] = window.pitchEditor.resetPitch[window.pitchEditor.letterFocus]
+        set_letter_display(letterElems[window.pitchEditor.letterFocus], window.pitchEditor.letterFocus, window.pitchEditor.resetDurs[window.pitchEditor.letterFocus]*10+50, window.pitchEditor.pitchNew[window.pitchEditor.letterFocus])
+    })
     letterLength.addEventListener("mousemove", () => {
-        if (letterFocus<0) {
+        if (window.pitchEditor.letterFocus<0) {
             return
         }
 
-        if (lengthsMult[letterFocus] != letterLength.value) {
+        if (lengthsMult[window.pitchEditor.letterFocus] != letterLength.value) {
             has_been_changed = true
         }
-        lengthsMult[letterFocus] = parseFloat(letterLength.value)
-        window.pitchEditor.resetDursMult[letterFocus] = parseFloat(letterLength.value)
+        lengthsMult[window.pitchEditor.letterFocus] = parseFloat(letterLength.value)
+        window.pitchEditor.resetDursMult[window.pitchEditor.letterFocus] = parseFloat(letterLength.value)
         lengthsMult.forEach((v,vi) => window.pitchEditor.dursNew[vi] = lengthsOrig[vi]*v)
 
-        const letterElem = letterElems[letterFocus]
-        const newWidth = lengthsOrig[letterFocus] * lengthsMult[letterFocus] * pace_slid.value //* 100
-        set_letter_display(letterElem, letterFocus, newWidth * 10 + 50)
+        const letterElem = letterElems[window.pitchEditor.letterFocus]
+        const newWidth = lengthsOrig[window.pitchEditor.letterFocus] * lengthsMult[window.pitchEditor.letterFocus] * pace_slid.value //* 100
+        set_letter_display(letterElem, window.pitchEditor.letterFocus, newWidth * 10 + 50)
 
         if (autoinfer_timer != null) {
             clearTimeout(autoinfer_timer)
