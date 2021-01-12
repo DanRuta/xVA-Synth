@@ -661,7 +661,11 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
         letterDiv.appendChild(slider)
 
         slider.addEventListener("mousedown", () => {
+            if (window.pitchEditor.letterFocus>0) {
+                letterElems[window.pitchEditor.letterFocus].style.color = "black"
+            }
             window.pitchEditor.letterFocus = l
+            letterElems[l].style.color = "red"
             letterLength.value = parseInt(lengthsMult[window.pitchEditor.letterFocus])
         })
 
