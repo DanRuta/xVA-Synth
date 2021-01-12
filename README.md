@@ -11,6 +11,8 @@ alt="xVASynth YouTube demo" width="240" height="180" border="10" /></a>
 
 <img width="100%" src="readme images/github-README.png">
 
+Article: https://becominghuman.ai/generating-neural-speech-synthesis-voice-acting-using-xvasynth-fc978fdf24c1
+
 This is an Electron UI wrapped around inference of FastPitch models trained on voice data from video games. The app serves as a framework, which loads and uses whichever models are given to it. As such, the app does nothing by itself, and models need to be installed. Models which have a corresponding asset file will be loaded in their respective game/category. Anything else gets loaded in the "Other" category.
 
 The main benefit of this tool is allowing mod creators to generate new voice lines for third party game modifications (mods). There are other uses, such as creating machinima, and just generally having fun with familiar voices.
@@ -19,6 +21,9 @@ Join chat on Discord here: https://discord.gg/nv7c6E2TzV
 
 
 ## Installation
+
+Where possible, make sure you download the app from the Nexus websites. There the compiled version will be the most up-to-date.
+
 The base application can be downloaded and placed anywhere. Aim to install it onto an SSD, if you have the space, to reduce voice set loading time. To install voice sets, you can drop the files into the respective game directory: `xVASynth/resources/app/models/<game>/`
 
 
