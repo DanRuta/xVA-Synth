@@ -47,6 +47,7 @@ fs.readdir("output", (err, files) => {
 
 let fileRenameCounter = 0
 let fileChangeCounter = 0
+let isGenerating = false
 
 const loadAllModels = () => {
     return new Promise(resolve => {
@@ -330,6 +331,16 @@ generateVoiceButton.addEventListener("click", () => {
         })
     } else {
 
+        if (isGenerating) {
+            return
+        }
+        isGenerating = true
+
+        const sequence = dialogueInput.value.trim()
+        if (sequence.length==0) {
+            return
+        }
+
         const existingSample = samplePlay.querySelector("audio")
         if (existingSample) {
             existingSample.pause()
@@ -369,6 +380,7 @@ generateVoiceButton.addEventListener("click", () => {
                 hifi_gan: !!quick_n_dirty
             })
         }).then(r=>r.text()).then(res => {
+            isGenerating = false
             res = res.split("\n")
             let pitchData = res[0]
             let durationsData = res[1]
@@ -402,6 +414,7 @@ generateVoiceButton.addEventListener("click", () => {
             // Persistance across sessions
             localStorage.setItem("tempFileLocation", tempFileLocation)
         }).catch(res => {
+            isGenerating = false
             console.log(res)
             window.errorModal(`Something went wrong`)
             toggleSpinnerButtons()
@@ -701,7 +714,10 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
 
     const infer = () => {
         movingSlider = false
-        generateVoiceButton.click()
+        has_been_changed = false
+        if (!isGenerating) {
+            generateVoiceButton.click()
+        }
     }
 
 
@@ -738,12 +754,16 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
         const newWidth = lengthsOrig[window.pitchEditor.letterFocus] * lengthsMult[window.pitchEditor.letterFocus] * pace_slid.value //* 100
         set_letter_display(letterElem, window.pitchEditor.letterFocus, newWidth * 10 + 50)
 
-        if (autoinfer_timer != null) {
-            clearTimeout(autoinfer_timer)
-            autoinfer_timer = null
-        }
-        if (autoplay_ckbx.checked) {
-            autoinfer_timer = setTimeout(infer, 500)
+    })
+    letterLength.addEventListener("mouseup", () => {
+        if (has_been_changed) {
+            if (autoinfer_timer != null) {
+                clearTimeout(autoinfer_timer)
+                autoinfer_timer = null
+            }
+            if (autoplay_ckbx.checked) {
+                autoinfer_timer = setTimeout(infer, 500)
+            }
         }
     })
 
