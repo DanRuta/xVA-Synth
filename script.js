@@ -13,7 +13,7 @@ window.games = {}
 window.models = {}
 window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null, letterFocus: -1}
 window.currentModel = undefined
-window.appVersion = "v1.0.3"
+window.appVersion = "v1.0.6"
 
 // Load user settings
 window.userSettings = localStorage.getItem("userSettings") ||
@@ -351,9 +351,7 @@ generateVoiceButton.addEventListener("click", () => {
         const game = gameDropdown.value.split("-")[0]
         const voiceType = title.dataset.modelId
 
-        // const sequence = text_to_sequence(dialogueInput.value.trim()).join(",")
-        const sequence = dialogueInput.value.trim()
-        const outputFileName = dialogueInput.value.slice(0, 260).replace("?", "")
+        const outputFileName = dialogueInput.value.slice(0, 260).replace(/[\/\\:\*?<>"|]*/g, "")
 
         try {fs.unlinkSync(localStorage.getItem("tempFileLocation"))} catch (e) {/*Do nothing*/}
 
@@ -435,7 +433,9 @@ keepSampleButton.addEventListener("click", () => {
         let toLocation = keepSampleButton.dataset.newFileLocation
 
         fromLocation = fromLocation.slice(1, fromLocation.length)
-        toLocation = toLocation.slice(1, toLocation.length).replace(/\?/g, "")
+        toLocation = toLocation.slice(1, toLocation.length).split("/")
+        toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/[\/\\:\*?<>"|]*/g, "")
+        toLocation = toLocation.join("/")
 
         // File name conflict
         if (fs.existsSync(`${__dirname}/${toLocation}`)) {
@@ -451,10 +451,11 @@ keepSampleButton.addEventListener("click", () => {
                 outDir.shift()
 
                 const existingFiles = fs.readdirSync(`${__dirname}/${outDir.reverse().join("/")}`)
+                newFileName = (newFileName.replace(".wav", "") + ".wav").replace(/[\/\\:\*?<>"|]*/g, "")
                 const existingFileConflict = existingFiles.filter(name => name==newFileName)
 
                 toLocationOut.shift()
-                toLocationOut.push(newFileName.replace(".wav", "") + ".wav").replace(/\?/g, "")
+                toLocationOut.push(newFileName)
 
                 const finalOutLocation = `${__dirname}/${toLocationOut.join("/")}`
 
