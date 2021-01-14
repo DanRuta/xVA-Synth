@@ -102,6 +102,19 @@ try:
 except:
     pass
 
+
+def setDevice (use_gpu):
+    global fastpitch_model
+    fastpitch_model.device = torch.device('cuda' if use_gpu else 'cpu')
+    fastpitch_model = fastpitch_model.to(fastpitch_model.device)
+
+    if fastpitch_model.waveglow is not None:
+        fastpitch_model.waveglow.set_device(fastpitch_model.device)
+        fastpitch_model.denoiser.set_device(fastpitch_model.device)
+    fastpitch_model.hifi_gan.to(fastpitch_model.device)
+setDevice(user_settings["use_gpu"])
+
+
 class Handler(BaseHTTPRequestHandler):
     def _set_response(self):
         self.send_response(200)
@@ -139,13 +152,7 @@ class Handler(BaseHTTPRequestHandler):
 
             if self.path == "/setDevice":
                 use_gpu = post_data["device"]=="gpu"
-                fastpitch_model.device = torch.device('cuda' if use_gpu else 'cpu')
-                fastpitch_model = fastpitch_model.to(fastpitch_model.device)
-
-                if fastpitch_model.waveglow is not None:
-                    fastpitch_model.waveglow.set_device(fastpitch_model.device)
-                    fastpitch_model.denoiser.set_device(fastpitch_model.device)
-                fastpitch_model.hifi_gan.to(fastpitch_model.device)
+                setDevice(use_gpu)
 
                 user_settings["use_gpu"] = use_gpu
                 write_settings()
