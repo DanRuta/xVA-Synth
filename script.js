@@ -7,13 +7,26 @@ const fs = require("fs")
 const {shell, ipcRenderer} = require("electron")
 const fetch = require("node-fetch")
 const {text_to_sequence, english_cleaners} = require("./text.js")
+const {xVAAppLogger} = require("./appLogger.js")
 
 let themeColour
+window.appVersion = "v1.0.6"
+window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
+const oldCError = console.error
+console.error = (data) => {
+    window.appLogger.log(data)
+    oldCError(arguments)
+}
+process.on(`uncaughtException`, data => window.appLogger.log(data))
+window.onerror = (err, url, lineNum) => window.appLogger.log(err)
+
+window.addEventListener("error", function (e) {window.appLogger.log(e.error.stack)})
+window.addEventListener('unhandledrejection', function (e) {window.appLogger.log(e.reason.stack)})
+
 window.games = {}
 window.models = {}
 window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null, letterFocus: -1}
 window.currentModel = undefined
-window.appVersion = "v1.0.6"
 
 // Load user settings
 window.userSettings = localStorage.getItem("userSettings") ||
@@ -21,6 +34,7 @@ window.userSettings = localStorage.getItem("userSettings") ||
 if ((typeof window.userSettings)=="string") {
     window.userSettings = JSON.parse(window.userSettings)
 }
+window.appLogger.log(`Settings: ${JSON.stringify(window.userSettings)}`)
 
 useGPUCbx.checked = window.userSettings.useGPU
 autoplay_ckbx.checked = window.userSettings.autoplay
@@ -249,7 +263,7 @@ const changeGame = () => {
 
 }
 
-const makeSample = src => {
+const makeSample = (src, newSample) => {
     const fileName = src.split("/").reverse()[0]
     const sample = createElem("div.sample", createElem("div", fileName.split(".wav")[0]))
     const audioControls = createElem("div")
@@ -284,10 +298,11 @@ const makeSample = src => {
     deleteFileButton.addEventListener("click", () => {
         confirmModal("Are you sure you'd like to delete this file?").then(confirmation => {
             if (confirmation) {
-                try {
+                window.appLogger.log(`Deleting${newSample?"new":" "} file: ${src}`)
+                if (newSample) {
                     fs.unlinkSync(src)
-                } catch (e) {
-                    console.log(e)
+                } else {
+                    fs.unlinkSync(`${path}/${src}`)
                 }
                 sample.remove()
             }
@@ -313,6 +328,8 @@ window.toggleSpinnerButtons = () => {
 generateVoiceButton.addEventListener("click", () => {
 
     if (generateVoiceButton.dataset.modelQuery && generateVoiceButton.dataset.modelQuery!="null") {
+
+        window.appLogger.log(`Loading voice set: ${JSON.parse(generateVoiceButton.dataset.modelQuery).model}`)
 
         spinnerModal("Loading voice set<br>(may take a minute...)")
         fetch(`http://localhost:8008/loadModel`, {
@@ -372,6 +389,7 @@ generateVoiceButton.addEventListener("click", () => {
 
         const speaker_i = window.currentModel.games[0].emb_i
 
+        window.appLogger.log(`Synthesising audio: ${sequence}`)
         fetch(`http://localhost:8008/synthesize`, {
             method: "Post",
             body: JSON.stringify({
@@ -424,7 +442,7 @@ generateVoiceButton.addEventListener("click", () => {
 
 const saveFile = (from, to) => {
     fs.rename(from, to, err => {
-        voiceSamples.appendChild(makeSample(to))
+        voiceSamples.appendChild(makeSample(to, true))
         keepSampleButton.disabled = true
     })
 }
