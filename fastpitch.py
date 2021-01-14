@@ -69,6 +69,7 @@ def init (PROD, use_gpu, hifi_gan):
 
     fastpitch = load_and_setup_model('FastPitch', parser, None, device, forward_is_infer=True, jitable=False)
     fastpitch.device = device
+    fastpitch.waveglow = None
 
     try:
         os.remove(f'{"./resources/app" if PROD else "."}/FASTPITCH_LOADING')
@@ -94,6 +95,9 @@ def init (PROD, use_gpu, hifi_gan):
     return fastpitch
 
 def init_waveglow (use_gpu, fastpitch):
+
+    if fastpitch.waveglow is not None:
+        return fastpitch
 
     device = torch.device('cuda' if use_gpu else 'cpu')
     parser = argparse.ArgumentParser(description='PyTorch FastPitch Inference', allow_abbrev=False)
@@ -150,6 +154,8 @@ def infer(user_settings, text, output, fastpitch, hifi_gan, speaker_i, pace=1.0,
             audio = audio.cpu().numpy().astype('int16')
             write(output, sampling_rate, audio)
         else:
+            init_waveglow(user_settings["use_gpu"], fastpitch)
+
             audios = fastpitch.waveglow.infer(mel, sigma=sigma_infer)
             audios = fastpitch.denoiser(audios.float(), strength=denoising_strength).squeeze(1)
 
