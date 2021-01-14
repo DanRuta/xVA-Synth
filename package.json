@@ -12,7 +12,7 @@
   "repository": "https://github.com/DanRuta/xVA-Synth",
   "author": "DanRuta",
   "devDependencies": {
-    "electron": "2.0.0"
+    "electron": "7.2.4"
   },
   "dependencies": {
     "node-fetch": "^2.1.2"
