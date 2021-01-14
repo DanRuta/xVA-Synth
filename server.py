@@ -72,6 +72,7 @@ try:
             user_settings[hv] = values[h]
     if CPU_ONLY:
         user_settings["use_gpu"] = False
+    logger.info(str(user_settings))
 except:
     pass
 
