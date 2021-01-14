@@ -77,7 +77,7 @@ The app uses both JavaScript (Electron, UI) and Python code (FastPitch Model). A
 First, run the scripts in `package.json` to create the electron distributables.
 Second, use pyinstaller to compile the python. `pip install pyinstaller` and run `pyinstaller -F server.spec`. Discard the `build` folder, and move the `server` folder (in `dist`) into `release-builds/xVASynth-win32-x64/resources/app`, and rename it to `cpython`. Distribute the contents in `xVASynth-win32-x64` and run app through `xVASynth.exe`.
 
-Run the distributed app once and check the `server.log` file for any problems. You may need to copy over asset files from dependencies manually, if they fail to get copied over by pyinstaller. For example, librosa has two files in `<your env>Lib/site-packages/librosa/util/example_data` that need to get copied over to `cpython/librosa/util/example_data/` (you may need to create this second directory structure).
+Run the distributed app once and check the `server.log` file for any problems, remove any unnecessary files before distribution.
 
 Make sure you remove your environment folder, if it is copied over to the distributed output.
 
