@@ -667,8 +667,8 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
             type: "range",
             orient: "vertical",
             step: 0.001,
-            min: -4,
-            max:  4,
+            min: -3,
+            max:  3,
             value: pitchOrig[l]
         })
         letterDiv.appendChild(slider)
