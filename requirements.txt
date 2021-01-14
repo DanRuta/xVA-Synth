@@ -1,4 +1,14 @@
 scipy==1.5.2
+chardet==3.0.4
+importlib-metadata==2.0.0
+joblib==0.17.0
+llvmlite==0.34.0
+numba==0.51.2
+numpy==1.16.4
+packaging==20.4
+pyinstaller-hooks-contrib==2020.9
+scikit-learn==0.23.2
 unidecode==1.1.1
 inflect==4.1.0
 librosa==0.8.0
+pyinstaller==4.0
