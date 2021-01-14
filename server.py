@@ -1,6 +1,10 @@
 import os
+import traceback
 
 PROD = (not (os.getcwd() == "F:\\Speech\\xVA-Synth") and "Plan.todo" in os.getcwd())
+# PROD = True
+CPU_ONLY = False
+CPU_ONLY = True
 
 with open("./DEBUG.txt", "w+") as f:
     f.write(os.getcwd())
@@ -11,14 +15,17 @@ with open(f'{"./resources/app" if PROD else "."}/WAVEGLOW_LOADING', "w+") as f:
 with open(f'{"./resources/app" if PROD else "."}/SERVER_STARTING', "w+") as f:
     f.write("")
 
-import numpy
-import pyinstaller_imports
+try:
+    import numpy
+    import pyinstaller_imports
 
-import logging
-from logging.handlers import RotatingFileHandler
-import json
-import traceback
-from http.server import BaseHTTPRequestHandler, HTTPServer
+    import logging
+    from logging.handlers import RotatingFileHandler
+    import json
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+except:
+    with open("./DEBUG_err_imports.txt", "w+") as f:
+        f.write(traceback.format_exc())
 
 try:
     import torch
@@ -30,18 +37,22 @@ print("Start")
 
 fastpitch_model = 0
 
-logger = logging.getLogger('serverLog')
-logger.setLevel(logging.DEBUG)
-fh = RotatingFileHandler('{}\server.log'.format(os.path.dirname(os.path.realpath(__file__))), maxBytes=5*1024*1024, backupCount=2)
-fh.setLevel(logging.DEBUG)
-ch = logging.StreamHandler()
-ch.setLevel(logging.ERROR)
-formatter = logging.Formatter('%(asctime)s - %(message)s')
-fh.setFormatter(formatter)
-ch.setFormatter(formatter)
-logger.addHandler(fh)
-logger.addHandler(ch)
-logger.info("New session")
+try:
+    logger = logging.getLogger('serverLog')
+    logger.setLevel(logging.DEBUG)
+    fh = RotatingFileHandler('{}\server.log'.format(os.path.dirname(os.path.realpath(__file__))), maxBytes=5*1024*1024, backupCount=2)
+    fh.setLevel(logging.DEBUG)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.ERROR)
+    formatter = logging.Formatter('%(asctime)s - %(message)s')
+    fh.setFormatter(formatter)
+    ch.setFormatter(formatter)
+    logger.addHandler(fh)
+    logger.addHandler(ch)
+    logger.info("New session")
+except:
+    with open("./DEBUG_err_logger.txt", "w+") as f:
+        f.write(traceback.format_exc())
 
 try:
     import fastpitch
@@ -51,7 +62,7 @@ except:
 
 
 # User settings
-user_settings = {"use_gpu": True, "hifi_gan": False}
+user_settings = {"use_gpu": not CPU_ONLY, "hifi_gan": False}
 try:
     with open(f'{"./resources/app" if PROD else "."}/usersettings.csv', "r") as f:
         data = f.read().split("\n")
@@ -59,6 +70,8 @@ try:
         values = data[1].split(",")
         for h, hv in enumerate(head):
             user_settings[hv] = values[h]
+    if CPU_ONLY:
+        user_settings["use_gpu"] = False
 except:
     pass
 
@@ -67,7 +80,6 @@ def write_settings ():
         head = list(user_settings.keys())
         vals = ",".join([str(user_settings[h]) for h in head])
         f.write("\n".join([",".join(head), vals]))
-
 
 use_gpu = user_settings["use_gpu"]=="True"
 print(f'user_settings, {user_settings}')
