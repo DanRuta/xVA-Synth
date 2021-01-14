@@ -285,8 +285,10 @@ const makeSample = src => {
         confirmModal("Are you sure you'd like to delete this file?").then(confirmation => {
             if (confirmation) {
                 try {
-                    fs.unlinkSync(`${path}${src.slice(1, src.length)}`)
-                } catch (e) {}
+                    fs.unlinkSync(src)
+                } catch (e) {
+                    console.log(e)
+                }
                 sample.remove()
             }
         })
