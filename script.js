@@ -54,9 +54,11 @@ try {fs.mkdirSync(`${path}/assets`)} catch (e) {/*Do nothing*/}
 
 // Clean up temp files
 fs.readdir("output", (err, files) => {
-    files.filter(f => f.startsWith("temp-")).forEach(file => {
-        fs.unlink(`output/${file}`, err => err&&console.log(err))
-    })
+    if (files && files.length) {
+        files.filter(f => f.startsWith("temp-")).forEach(file => {
+            fs.unlink(`output/${file}`, err => err&&console.log(err))
+        })
+    }
 })
 
 let fileRenameCounter = 0
