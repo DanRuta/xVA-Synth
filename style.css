@@ -206,6 +206,9 @@
      font-size: 18pt;
      cursor: pointer;
  }
+ .sample:hover {
+     opacity: 0.9;
+ }
  audio {
      width: 200px;
  }
