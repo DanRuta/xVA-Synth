@@ -298,7 +298,7 @@ const makeSample = (src, newSample) => {
 
     const deleteFileButton = createElem("div", "&#10060;")
     deleteFileButton.addEventListener("click", () => {
-        confirmModal("Are you sure you'd like to delete this file?").then(confirmation => {
+        confirmModal(`Are you sure you'd like to delete this file?<br><br><i>${fileName}</i>`).then(confirmation => {
             if (confirmation) {
                 window.appLogger.log(`Deleting${newSample?"new":" "} file: ${src}`)
                 if (newSample) {
