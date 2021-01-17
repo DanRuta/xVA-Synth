@@ -25,7 +25,7 @@ window.addEventListener('unhandledrejection', function (e) {window.appLogger.log
 
 window.games = {}
 window.models = {}
-window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null, letterFocus: -1, ampFlatCounter: 0, hasChanged: false}
+window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null, letterFocus: -1, ampFlatCounter: 0, hasChanged: false, lengthsMult: []}
 window.currentModel = undefined
 
 // Load user settings
@@ -381,11 +381,13 @@ generateVoiceButton.addEventListener("click", () => {
         let pitch = []
         let duration = []
         let quick_n_dirty = false
+        let isFreshRegen = true
 
         if (editor.innerHTML && editor.innerHTML.length && window.pitchEditor.sequence && sequence==window.pitchEditor.inputSequence
             && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
             pitch = window.pitchEditor.pitchNew
             duration = window.pitchEditor.dursNew
+            isFreshRegen = false
         }
         quick_n_dirty = window.userSettings.quick_n_dirty
         window.pitchEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
@@ -418,7 +420,7 @@ generateVoiceButton.addEventListener("click", () => {
                 window.pitchEditor.resetDursMult = window.pitchEditor.resetDurs.map(v=>1)
             }
 
-            setPitchEditorValues(cleanedSequence.replace(/\s/g, "_").split(""), pitchData, durationsData)
+            setPitchEditorValues(cleanedSequence.replace(/\s/g, "_").split(""), pitchData, durationsData, isFreshRegen)
 
             toggleSpinnerButtons()
             keepSampleButton.dataset.newFileLocation = `./output/${game}/${voiceType}/${outputFileName}.wav`
@@ -650,11 +652,13 @@ window.addEventListener("resize", e => {
 
 
 
-const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
+const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => {
 
     editor.innerHTML = ""
 
-    let lengthsMult = lengthsOrig.map(l => 1)
+    if (isFreshRegen || window.pitchEditor.lengthsMult.length==0) {
+        window.pitchEditor.lengthsMult = lengthsOrig.map(l => 1)
+    }
     let pacingMult = lengthsOrig.map(l => 1)
 
     window.pitchEditor.pitchNew = pitchOrig.map(p=>p)
@@ -705,8 +709,11 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
             }
             window.pitchEditor.letterFocus = l
             letterElems[l].style.color = "red"
-            letterLength.value = parseInt(lengthsMult[window.pitchEditor.letterFocus])
+            letterLength.value = parseInt(window.pitchEditor.lengthsMult[window.pitchEditor.letterFocus])
         })
+        if (window.pitchEditor.letterFocus == l) {
+            letterDiv.style.color = "red"
+        }
 
         slider.addEventListener("change", () => {
             window.pitchEditor.pitchNew[l] = parseFloat(slider.value)
@@ -717,7 +724,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
         })
 
 
-        let length = lengthsOrig[l] * lengthsMult[l] * pace_slid.value * 10 + 50
+        let length = window.pitchEditor.resetDurs[l] * window.pitchEditor.lengthsMult[l] * pace_slid.value * 10 + 50
 
         letterDiv.style.width = `${parseInt(length/2)}px`
         slider.style.height = `${length}px`
@@ -757,7 +764,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
         if (window.pitchEditor.letterFocus<0) {
             return
         }
-        if (lengthsMult[window.pitchEditor.letterFocus] != letterLength.value) {
+        if (window.pitchEditor.lengthsMult[window.pitchEditor.letterFocus] != letterLength.value) {
             has_been_changed = true
         }
         window.pitchEditor.dursNew[window.pitchEditor.letterFocus] = window.pitchEditor.resetDurs[window.pitchEditor.letterFocus]
@@ -765,21 +772,19 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
         set_letter_display(letterElems[window.pitchEditor.letterFocus], window.pitchEditor.letterFocus, window.pitchEditor.resetDurs[window.pitchEditor.letterFocus]*10+50, window.pitchEditor.pitchNew[window.pitchEditor.letterFocus])
     })
     letterLength.addEventListener("mousemove", () => {
-        if (window.pitchEditor.letterFocus<0) {
+        if (window.pitchEditor.letterFocus<0 || !movingSlider) {
             return
         }
 
-        if (lengthsMult[window.pitchEditor.letterFocus] != letterLength.value) {
+        if (window.pitchEditor.lengthsMult[window.pitchEditor.letterFocus] != letterLength.value) {
             has_been_changed = true
         }
-        lengthsMult[window.pitchEditor.letterFocus] = parseFloat(letterLength.value)
-        window.pitchEditor.resetDursMult[window.pitchEditor.letterFocus] = parseFloat(letterLength.value)
-        lengthsMult.forEach((v,vi) => window.pitchEditor.dursNew[vi] = lengthsOrig[vi]*v)
+        window.pitchEditor.lengthsMult[window.pitchEditor.letterFocus] = parseFloat(letterLength.value)
+        window.pitchEditor.lengthsMult.forEach((v,vi) => window.pitchEditor.dursNew[vi] = window.pitchEditor.resetDurs[vi] * v * pace_slid.value)
 
         const letterElem = letterElems[window.pitchEditor.letterFocus]
-        const newWidth = lengthsOrig[window.pitchEditor.letterFocus] * lengthsMult[window.pitchEditor.letterFocus] * pace_slid.value //* 100
+        const newWidth = window.pitchEditor.resetDurs[window.pitchEditor.letterFocus] * window.pitchEditor.lengthsMult[window.pitchEditor.letterFocus] * pace_slid.value //* 100
         set_letter_display(letterElem, window.pitchEditor.letterFocus, newWidth * 10 + 50)
-
     })
     letterLength.addEventListener("mouseup", () => {
         if (has_been_changed) {
@@ -795,7 +800,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
 
     // Reset button
     reset_btn.addEventListener("click", () => {
-        lengthsMult = lengthsOrig.map(l => 1)
+        window.pitchEditor.lengthsMult = lengthsOrig.map(l => 1)
         window.pitchEditor.dursNew = window.pitchEditor.resetDurs
         window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map(p=>p)
         letters.forEach((_, l) => set_letter_display(letterElems[l], l, window.pitchEditor.resetDurs[l]*10+50, window.pitchEditor.pitchNew[l]))
@@ -819,7 +824,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
         letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
     })
     pace_slid.addEventListener("change", () => {
-        const new_lengths = window.pitchEditor.resetDurs.map((v,l) => v * lengthsMult[l] * pace_slid.value)
+        const new_lengths = window.pitchEditor.resetDurs.map((v,l) => v * window.pitchEditor.lengthsMult[l] * pace_slid.value)
         window.pitchEditor.dursNew = new_lengths
         letters.forEach((_, l) => set_letter_display(letterElems[l], l, new_lengths[l]* 10 + 50, null))
     })
