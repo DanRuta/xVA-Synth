@@ -10,7 +10,7 @@ const {text_to_sequence, english_cleaners} = require("./text.js")
 const {xVAAppLogger} = require("./appLogger.js")
 
 let themeColour
-window.appVersion = "v1.0.6"
+window.appVersion = "v1.0.7"
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 const oldCError = console.error
 console.error = (data) => {
@@ -27,6 +27,7 @@ window.games = {}
 window.models = {}
 window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null, letterFocus: -1, ampFlatCounter: 0, hasChanged: false, lengthsMult: []}
 window.currentModel = undefined
+window.currentModelButton = undefined
 
 // Load user settings
 window.userSettings = localStorage.getItem("userSettings") ||
@@ -69,6 +70,25 @@ const loadAllModels = () => {
     return new Promise(resolve => {
         fs.readdir(`${path}/models`, (err, gameDirs) => {
             gameDirs.filter(name => !name.includes(".")).forEach(gameFolder => {
+
+                // Initialize the default output directory setting for this game
+                if (!Object.keys(window.userSettings).includes(`outpath_${gameFolder}`)) {
+                    window.userSettings[`outpath_${gameFolder}`] = `${__dirname.replace(/\\/g,"/")}/${path.slice(1,path.length)}/output/${gameFolder}`.replace(/\/\//g, "/")
+                    saveUserSettings()
+                }
+                // Create and populate the settings menu entry for this
+                const outPathElem = createElem("input", {value: window.userSettings[`outpath_${gameFolder}`]})
+                outPathElem.addEventListener("change", () => {
+                    outPathElem.value = outPathElem.value.replace(/\/\//g, "/").replace(/\\/g,"/")
+                    window.userSettings[`outpath_${gameFolder}`] = outPathElem.value
+                    saveUserSettings()
+                    if (window.currentModelButton) {
+                        window.currentModelButton.click()
+                    }
+                })
+                const gameName = fs.readdirSync(`${path}/assets`).find(f => f.startsWith(gameFolder)).split("-").reverse()[0].split(".")[0]
+                settingsOptionsContainer.appendChild(createElem("div", [createElem("div", `${gameName} output folder`), createElem("div", outPathElem)]))
+
                 const files = fs.readdirSync(`${path}/models/${gameFolder}`).filter(f => f.endsWith(".json"))
 
                 if (!files.length) {
@@ -199,13 +219,14 @@ const changeGame = () => {
         // Quick voice set preview, if there is a preview file
         button.addEventListener("contextmenu", () => {
             const audioPreview = createElem("audio", {autoplay: false}, createElem("source", {
-                src: `./models/${audioPreviewPath}.wav`
+                src: `${path}/models/${audioPreviewPath}.wav`
             }))
         })
 
         button.addEventListener("click", () => {
 
             window.currentModel = model
+            window.currentModelButton = button
 
             if (voiceDescription) {
                 description.innerHTML = voiceDescription
@@ -214,8 +235,6 @@ const changeGame = () => {
                 description.innerHTML = ""
                 description.className = ""
             }
-
-            try {fs.mkdirSync(`${path}/output/${meta[0]}/${voiceId}`)} catch (e) {/*Do nothing*/}
 
             generateVoiceButton.dataset.modelQuery = null
 
@@ -247,18 +266,17 @@ const changeGame = () => {
 
             // Voice samples
             voiceSamples.innerHTML = ""
-            fs.readdir(`${path}/output/${meta[0]}/${button.dataset.modelId}`, (err, files) => {
+            fs.readdir(`${window.userSettings[`outpath_${meta[0]}`]}/${button.dataset.modelId}`, (err, files) => {
 
                 if (err) return
 
                 files.filter(f => f.endsWith(".wav")).forEach(file => {
-                    voiceSamples.appendChild(makeSample(`./output/${meta[0]}/${button.dataset.modelId}/${file}`))
+                    voiceSamples.appendChild(makeSample(`${window.userSettings[`outpath_${meta[0]}`]}/${button.dataset.modelId}/${file}`))
                 })
             })
         })
         buttons.push(button)
     })
-    // }
 
     buttons.sort((a,b) => a.innerHTML<b.innerHTML?-1:1)
         .forEach(button => voiceTypeContainer.appendChild(button))
@@ -266,7 +284,7 @@ const changeGame = () => {
 }
 
 const makeSample = (src, newSample) => {
-    const fileName = src.split("/").reverse()[0]
+    const fileName = src.split("/").reverse()[0].split("%20").join(" ")
     const sample = createElem("div.sample", createElem("div", fileName.split(".wav")[0]))
     const audioControls = createElem("div")
     const audio = createElem("audio", {controls: true}, createElem("source", {
@@ -329,6 +347,12 @@ window.toggleSpinnerButtons = () => {
 
 generateVoiceButton.addEventListener("click", () => {
 
+    const game = gameDropdown.value.split("-")[0]
+
+    try {fs.mkdirSync(window.userSettings[`outpath_${game}`])} catch (e) {/*Do nothing*/}
+    try {fs.mkdirSync(`${window.userSettings[`outpath_${game}`]}/${voiceId}`)} catch (e) {/*Do nothing*/}
+
+
     if (generateVoiceButton.dataset.modelQuery && generateVoiceButton.dataset.modelQuery!="null") {
 
         window.appLogger.log(`Loading voice set: ${JSON.parse(generateVoiceButton.dataset.modelQuery).model}`)
@@ -369,15 +393,13 @@ generateVoiceButton.addEventListener("click", () => {
 
         toggleSpinnerButtons()
 
-        const game = gameDropdown.value.split("-")[0]
         const voiceType = title.dataset.modelId
-
         const outputFileName = dialogueInput.value.slice(0, 260).replace(/\n/g, " ").replace(/[\/\\:\*?<>"|]*/g, "")
 
         try {fs.unlinkSync(localStorage.getItem("tempFileLocation"))} catch (e) {/*Do nothing*/}
 
         // For some reason, the samplePlay audio element does not update the source when the file name is the same
-        const tempFileLocation = `./output/temp-${Math.random().toString().split(".")[1]}.wav`
+        const tempFileLocation = `${path}/output/temp-${Math.random().toString().split(".")[1]}.wav`
         let pitch = []
         let duration = []
         let quick_n_dirty = false
@@ -423,7 +445,7 @@ generateVoiceButton.addEventListener("click", () => {
             setPitchEditorValues(cleanedSequence.replace(/\s/g, "_").split(""), pitchData, durationsData, isFreshRegen)
 
             toggleSpinnerButtons()
-            keepSampleButton.dataset.newFileLocation = `./output/${game}/${voiceType}/${outputFileName}.wav`
+            keepSampleButton.dataset.newFileLocation = `${window.userSettings[`outpath_${game}`]}/${voiceType}/${outputFileName}.wav`
             keepSampleButton.disabled = false
             samplePlay.dataset.tempFileLocation = tempFileLocation
             samplePlay.innerHTML = ""
@@ -447,7 +469,18 @@ generateVoiceButton.addEventListener("click", () => {
 })
 
 const saveFile = (from, to) => {
-    fs.rename(from, to, err => {
+    to = to.split("%20").join(" ")
+    // Make the containing folder if it does not already exist
+    let containerFolderPath = to.split("/")
+    containerFolderPath = containerFolderPath.slice(0,containerFolderPath.length-1).join("/")
+
+    try {fs.mkdirSync(containerFolderPath)} catch (e) {/*Do nothing*/}
+
+    fs.copyFile(from, to, err => {
+        if (err) {
+            console.log(err)
+            window.appLogger.log(err)
+        }
         voiceSamples.appendChild(makeSample(to, true))
         keepSampleButton.disabled = true
     })
@@ -458,13 +491,12 @@ keepSampleButton.addEventListener("click", () => {
         let fromLocation = samplePlay.dataset.tempFileLocation
         let toLocation = keepSampleButton.dataset.newFileLocation
 
-        fromLocation = fromLocation.slice(1, fromLocation.length)
-        toLocation = toLocation.slice(1, toLocation.length).split("/")
+        toLocation = toLocation.split("/")
         toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/[\/\\:\*?<>"|]*/g, "")
         toLocation = toLocation.join("/")
 
         // File name conflict
-        if (fs.existsSync(`${__dirname}/${toLocation}`)) {
+        if (fs.existsSync(toLocation)) {
 
             createModal("prompt", {
                 prompt: "File already exists. Adjust the file name here, or submit without changing to overwrite the old file.",
@@ -476,20 +508,19 @@ keepSampleButton.addEventListener("click", () => {
                 let outDir = toLocationOut
                 outDir.shift()
 
-                const existingFiles = fs.readdirSync(`${__dirname}/${outDir.reverse().join("/")}`)
+                const existingFiles = fs.readdirSync(outDir.reverse().join("/"))
                 newFileName = (newFileName.replace(".wav", "") + ".wav").replace(/[\/\\:\*?<>"|]*/g, "")
                 const existingFileConflict = existingFiles.filter(name => name==newFileName)
 
-                toLocationOut.shift()
                 toLocationOut.push(newFileName)
 
-                const finalOutLocation = `${__dirname}/${toLocationOut.join("/")}`
+                const finalOutLocation = toLocationOut.join("/")
 
                 if (existingFileConflict.length) {
                     // Remove the entry from the output files' preview
                     Array.from(voiceSamples.querySelectorAll("div.sample")).forEach(sampleElem => {
                         const source = sampleElem.querySelector("source")
-                        let sourceSrc = "."+source.src.split("xVA-Synth")[1].split("%20").join(" ")
+                        let sourceSrc = source.src.split("%20").join(" ").replace("file:///", "")
                         sourceSrc = sourceSrc.split("/").reverse()
                         const finalFileName = finalOutLocation.split("/").reverse()
 
@@ -500,16 +531,23 @@ keepSampleButton.addEventListener("click", () => {
 
                     // Remove the old file and write the new one in
                     fs.unlink(finalOutLocation, err => {
-                        saveFile(`${__dirname}/${fromLocation}`, finalOutLocation)
+                        if (err) {
+                            console.log(err)
+                            window.appLogger.log(err)
+                        }
+                        console.log(fromLocation, "finalOutLocation", finalOutLocation)
+                        saveFile(fromLocation, finalOutLocation)
                     })
 
                 } else {
-                    saveFile(`${__dirname}/${fromLocation}`, `${__dirname}/${toLocationOut.join("/")}`)
+                    saveFile(fromLocation, toLocationOut.join("/"))
                 }
             })
 
         } else {
-            saveFile(`${__dirname}/${fromLocation}`, `${__dirname}/${toLocation}`)
+            console.log("fromLocation", fromLocation)
+            console.log("toLocation", toLocation)
+            saveFile(fromLocation, toLocation)
         }
     }
 })
