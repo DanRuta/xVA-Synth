@@ -53,7 +53,7 @@ try {fs.mkdirSync(`${path}/output`)} catch (e) {/*Do nothing*/}
 try {fs.mkdirSync(`${path}/assets`)} catch (e) {/*Do nothing*/}
 
 // Clean up temp files
-fs.readdir("output", (err, files) => {
+fs.readdir(`${path}/output`, (err, files) => {
     if (files && files.length) {
         files.filter(f => f.startsWith("temp-")).forEach(file => {
             fs.unlink(`output/${file}`, err => err&&console.log(err))
