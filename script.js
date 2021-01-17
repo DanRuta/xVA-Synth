@@ -372,7 +372,7 @@ generateVoiceButton.addEventListener("click", () => {
         const game = gameDropdown.value.split("-")[0]
         const voiceType = title.dataset.modelId
 
-        const outputFileName = dialogueInput.value.slice(0, 260).replace(/[\/\\:\*?<>"|]*/g, "")
+        const outputFileName = dialogueInput.value.slice(0, 260).replace(/\n/g, " ").replace(/[\/\\:\*?<>"|]*/g, "")
 
         try {fs.unlinkSync(localStorage.getItem("tempFileLocation"))} catch (e) {/*Do nothing*/}
 
