@@ -25,7 +25,7 @@ window.addEventListener('unhandledrejection', function (e) {window.appLogger.log
 
 window.games = {}
 window.models = {}
-window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null, letterFocus: -1}
+window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null, letterFocus: -1, ampFlatCounter: 0}
 window.currentModel = undefined
 
 // Load user settings
@@ -411,6 +411,7 @@ generateVoiceButton.addEventListener("click", () => {
             window.pitchEditor.sequence = cleanedSequence
 
             if (pitch.length==0) {
+                window.pitchEditor.ampFlatCounter = 0
                 window.pitchEditor.resetPitch = pitchData
                 window.pitchEditor.resetDurs = durationsData
                 window.pitchEditor.resetDursMult = window.pitchEditor.resetDurs.map(v=>1)
@@ -798,11 +799,13 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig) => {
         letters.forEach((_, l) => set_letter_display(letterElems[l], l, window.pitchEditor.resetDurs[l]*10+50, window.pitchEditor.pitchNew[l]))
     })
     amplify_btn.addEventListener("click", () => {
-        window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p*1.1)
+        window.pitchEditor.ampFlatCounter += 1
+        window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map(p=>p*(1+window.pitchEditor.ampFlatCounter*0.1))
         letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
     })
     flatten_btn.addEventListener("click", () => {
-        window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p*0.9)
+        window.pitchEditor.ampFlatCounter -= 1
+        window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map(p=>p*Math.max(0, 1+window.pitchEditor.ampFlatCounter*0.1))
         letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
     })
     increase_btn.addEventListener("click", () => {
