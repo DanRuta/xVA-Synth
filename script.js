@@ -25,7 +25,7 @@ window.addEventListener('unhandledrejection', function (e) {window.appLogger.log
 
 window.games = {}
 window.models = {}
-window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null, letterFocus: -1, ampFlatCounter: 0}
+window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null, letterFocus: -1, ampFlatCounter: 0, hasChanged: false}
 window.currentModel = undefined
 
 // Load user settings
@@ -382,7 +382,8 @@ generateVoiceButton.addEventListener("click", () => {
         let duration = []
         let quick_n_dirty = false
 
-        if (editor.innerHTML && editor.innerHTML.length && window.pitchEditor.sequence && sequence==window.pitchEditor.inputSequence && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
+        if (editor.innerHTML && editor.innerHTML.length && window.pitchEditor.sequence && sequence==window.pitchEditor.inputSequence
+            && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
             pitch = window.pitchEditor.pitchNew
             duration = window.pitchEditor.dursNew
         }
@@ -632,6 +633,7 @@ modalContainer.addEventListener("click", event => {
 
 dialogueInput.addEventListener("keyup", () => {
     localStorage.setItem("dialogueInput", dialogueInput.value)
+    window.pitchEditor.hasChanged = true
 })
 
 const dialogueInputCache = localStorage.getItem("dialogueInput")

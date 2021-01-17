@@ -235,22 +235,12 @@ class FastPitch(nn.Module):
         mel_out = mel_out.permute(0, 2, 1)  # For inference.py
         return mel_out, dec_lens, dur_pred, pitch_pred
 
-    def infer_advanced (self, inputs, speaker_i, pace=1.0, pitch_data=None, max_duration=75):
 
-        speaker = torch.ones(inputs.size(0)).long().to(inputs.device) * speaker_i
-        spk_emb = self.speaker_emb(speaker).unsqueeze(1)
-        spk_emb.mul_(self.speaker_emb_weight)
 
-        # Input FFT
-        enc_out, enc_mask = self.encoder(inputs, conditioning=spk_emb)
-        if pitch_data is not None and pitch_data[0] is not None and len(pitch_data[0]) and pitch_data[1] is not None and len(pitch_data[1]):
-            pitch_pred, dur_pred = pitch_data
-            dur_pred = torch.tensor(dur_pred)
-            dur_pred = dur_pred.view((1, dur_pred.shape[0])).float().to(self.device)
-            pitch_pred = torch.tensor(pitch_pred)
-            pitch_pred = pitch_pred.view((1, pitch_pred.shape[0])).float().to(self.device)
-            pitch_pred_out = pitch_pred
-        else:
+    def infer_using_vals (self, pace, enc_out, max_duration, enc_mask, pitch_pred_out=None, dur_pred=None, pitch_pred=None):
+
+        # Calculate its own pitch and duration vals if these were not already provided
+        if dur_pred is None or pitch_pred is None:
             # Embedded for predictors
             pred_enc_out, pred_enc_mask = enc_out, enc_mask
             # Predict durations
@@ -259,6 +249,7 @@ class FastPitch(nn.Module):
             # Pitch over chars
             pitch_pred = self.pitch_predictor(enc_out, enc_mask)
             pitch_pred_out = pitch_pred
+
         pitch_emb = self.pitch_emb(pitch_pred_out.unsqueeze(1)).transpose(1, 2)
         enc_out = enc_out + pitch_emb
         len_regulated, dec_lens = regulate_len(dur_pred, enc_out, pace, mel_max_len=None)
@@ -267,7 +258,29 @@ class FastPitch(nn.Module):
         mel_out = mel_out.permute(0, 2, 1)  # For inference.py
         return mel_out, dec_lens, dur_pred, pitch_pred
 
+    def infer_advanced (self, inputs, speaker_i, pace=1.0, pitch_data=None, max_duration=75):
 
+        speaker = torch.ones(inputs.size(0)).long().to(inputs.device) * speaker_i
+        spk_emb = self.speaker_emb(speaker).unsqueeze(1)
+        spk_emb.mul_(self.speaker_emb_weight)
 
+        # Input FFT
+        enc_out, enc_mask = self.encoder(inputs, conditioning=spk_emb)
 
+        if pitch_data is not None and pitch_data[0] is not None and len(pitch_data[0]) and pitch_data[1] is not None and len(pitch_data[1]):
+            pitch_pred, dur_pred = pitch_data
+            dur_pred = torch.tensor(dur_pred)
+            dur_pred = dur_pred.view((1, dur_pred.shape[0])).float().to(self.device)
+            pitch_pred = torch.tensor(pitch_pred)
+            pitch_pred = pitch_pred.view((1, pitch_pred.shape[0])).float().to(self.device)
+            pitch_pred_out = pitch_pred
+
+            # Try using the provided pitch/duration data, but fall back to using its own, otherwise
+            try:
+                return self.infer_using_vals(pace, enc_out, max_duration, enc_mask, pitch_pred_out, dur_pred, pitch_pred)
+            except:
+                return self.infer_using_vals(pace, enc_out, max_duration, enc_mask, None, None, None)
+
+        else:
+            return self.infer_using_vals(pace, enc_out, max_duration, enc_mask, None, None, None)
 
