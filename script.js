@@ -54,10 +54,13 @@ try {fs.mkdirSync(`${path}/output`)} catch (e) {/*Do nothing*/}
 try {fs.mkdirSync(`${path}/assets`)} catch (e) {/*Do nothing*/}
 
 // Clean up temp files
-fs.readdir(`${path}/output`, (err, files) => {
+fs.readdir(`${__dirname}/output`, (err, files) => {
+    if (err) {
+        window.appLogger.log(err)
+    }
     if (files && files.length) {
         files.filter(f => f.startsWith("temp-")).forEach(file => {
-            fs.unlink(`output/${file}`, err => err&&console.log(err))
+            fs.unlink(`${__dirname}/output/${file}`, err => err&&console.log(err))
         })
     }
 })
@@ -218,8 +221,9 @@ const changeGame = () => {
 
         // Quick voice set preview, if there is a preview file
         button.addEventListener("contextmenu", () => {
+            window.appLogger.log(`${path}/models/${audioPreviewPath}.wav`)
             const audioPreview = createElem("audio", {autoplay: false}, createElem("source", {
-                src: `${path}/models/${audioPreviewPath}.wav`
+                src: `./models/${audioPreviewPath}.wav`
             }))
         })
 
@@ -319,11 +323,7 @@ const makeSample = (src, newSample) => {
         confirmModal(`Are you sure you'd like to delete this file?<br><br><i>${fileName}</i>`).then(confirmation => {
             if (confirmation) {
                 window.appLogger.log(`Deleting${newSample?"new":" "} file: ${src}`)
-                if (newSample) {
-                    fs.unlinkSync(src)
-                } else {
-                    fs.unlinkSync(`${path}/${src}`)
-                }
+                fs.unlinkSync(src)
                 sample.remove()
             }
         })
@@ -399,7 +399,8 @@ generateVoiceButton.addEventListener("click", () => {
         try {fs.unlinkSync(localStorage.getItem("tempFileLocation"))} catch (e) {/*Do nothing*/}
 
         // For some reason, the samplePlay audio element does not update the source when the file name is the same
-        const tempFileLocation = `${path}/output/temp-${Math.random().toString().split(".")[1]}.wav`
+        const tempFileNum = `${Math.random().toString().split(".")[1]}`
+        const tempFileLocation = `${path}/output/temp-${tempFileNum}.wav`
         let pitch = []
         let duration = []
         let quick_n_dirty = false
@@ -421,7 +422,7 @@ generateVoiceButton.addEventListener("click", () => {
             method: "Post",
             body: JSON.stringify({
                 sequence, pitch, duration, speaker_i,
-                outfile: `${path}/${tempFileLocation.slice(1, tempFileLocation.length)}`,
+                outfile: tempFileLocation,
                 hifi_gan: !!quick_n_dirty
             })
         }).then(r=>r.text()).then(res => {
@@ -449,8 +450,11 @@ generateVoiceButton.addEventListener("click", () => {
             keepSampleButton.disabled = false
             samplePlay.dataset.tempFileLocation = tempFileLocation
             samplePlay.innerHTML = ""
+
+            const finalOutSrc = `./output/temp-${tempFileNum}.wav`.replace("..", ".")
+
             const audio = createElem("audio", {controls: true, style: {width:"150px"}},
-                    createElem("source", {src: samplePlay.dataset.tempFileLocation, type: "audio/wav"}))
+                    createElem("source", {src: finalOutSrc, type: "audio/wav"}))
             samplePlay.appendChild(audio)
             audio.load()
             if (window.userSettings.autoPlayGen) {
