@@ -19,8 +19,8 @@ let mainWindow
 const createWindow = () => {
 
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1200,
+        height: 1000,
         minHeight: 510,
         minWidth: 960,
         frame: false,

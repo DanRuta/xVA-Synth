@@ -10,7 +10,7 @@ const {text_to_sequence, english_cleaners} = require("./text.js")
 const {xVAAppLogger} = require("./appLogger.js")
 
 let themeColour
-window.appVersion = "v1.0.7"
+window.appVersion = "v1.0.8"
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 const oldCError = console.error
 console.error = (data) => {
@@ -76,7 +76,7 @@ const loadAllModels = () => {
 
                 // Initialize the default output directory setting for this game
                 if (!Object.keys(window.userSettings).includes(`outpath_${gameFolder}`)) {
-                    window.userSettings[`outpath_${gameFolder}`] = `${__dirname.replace(/\\/g,"/")}/${path.slice(1,path.length)}/output/${gameFolder}`.replace(/\/\//g, "/")
+                    window.userSettings[`outpath_${gameFolder}`] = `${__dirname.replace(/\\/g,"/")}/output/${gameFolder}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
                     saveUserSettings()
                 }
                 // Create and populate the settings menu entry for this

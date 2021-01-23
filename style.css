@@ -289,7 +289,8 @@
      text-align: center;
  }
  #settingsContainer > .modal {
-     height: 40vh;
+     height: 50vh;
+     width: 40vw;
  }
  #app_version {
      display: flex;
@@ -473,9 +474,11 @@
      justify-content: space-between;
      align-items: center;
      width: 100%;
-     max-width: 400px;
  }
 
+ .flexTable > div > div > input {
+     width: 90%;
+ }
  .flexTable > div > :not(script) {
      display: flex;
      justify-content: center;
