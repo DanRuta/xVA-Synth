@@ -1,6 +1,7 @@
 xVAEnv
 xVAEnvCPU
 node_modules
+*.wav
 output/*.wav
 output/**/*.wav
 output/*.mp3

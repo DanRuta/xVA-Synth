@@ -11,7 +11,7 @@ const {xVAAppLogger} = require("./appLogger.js")
 const {saveUserSettings} = require("./settingsMenu.js")
 
 let themeColour
-window.appVersion = "v1.0.8"
+window.appVersion = "v1.0.9"
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 const oldCError = console.error
 console.error = (data) => {
@@ -451,34 +451,46 @@ const saveFile = (from, to) => {
 
     try {fs.mkdirSync(containerFolderPath)} catch (e) {/*Do nothing*/}
 
-    spinnerModal("Saving the audio file...")
-    const options = {hz: window.userSettings.audio.hz, padStart: window.userSettings.audio.padStart, padEnd: window.userSettings.audio.padEnd}
+    if (window.userSettings.audio.ffmpeg) {
+        spinnerModal("Saving the audio file...")
+        const options = {hz: window.userSettings.audio.hz, padStart: window.userSettings.audio.padStart, padEnd: window.userSettings.audio.padEnd}
 
-    window.appLogger.log(`About to save file from ${from} to ${to} with options: ${JSON.stringify(options)}`)
-    fetch(`http://localhost:8008/outputAudio`, {
-        method: "Post",
-        body: JSON.stringify({
-            input_path: from,
-            output_path: to,
-            options: JSON.stringify(options)
-        })
-    }).then(r=>r.text()).then(res => {
-        closeModal().then(() => {
-            if (res.length) {
-                console.log("res", res)
+        window.appLogger.log(`About to save file from ${from} to ${to} with options: ${JSON.stringify(options)}`)
+        fetch(`http://localhost:8008/outputAudio`, {
+            method: "Post",
+            body: JSON.stringify({
+                input_path: from,
+                output_path: to,
+                options: JSON.stringify(options)
+            })
+        }).then(r=>r.text()).then(res => {
+            closeModal().then(() => {
+                if (res.length) {
+                    console.log("res", res)
+                    window.errorModal(`Something went wrong<br><br>Input: ${from}<br>Output: ${to}<br><br>${res}`)
+                } else {
+                    voiceSamples.appendChild(makeSample(to, true))
+                    keepSampleButton.disabled = true
+                }
+            })
+        }).catch(res => {
+            window.appLogger.log(res)
+            console.log("CATCH res", res)
+            closeModal().then(() => {
                 window.errorModal(`Something went wrong<br><br>Input: ${from}<br>Output: ${to}<br><br>${res}`)
-            } else {
-                voiceSamples.appendChild(makeSample(to, true))
-                keepSampleButton.disabled = true
+            })
+        })
+    } else {
+        fs.copyFile(from, to, err => {
+            if (err) {
+                console.log(err)
+                window.appLogger.log(err)
             }
+            voiceSamples.appendChild(makeSample(to, true))
+            keepSampleButton.disabled = true
         })
-    }).catch(res => {
-        window.appLogger.log(res)
-        console.log("CATCH res", res)
-        closeModal().then(() => {
-            window.errorModal(`Something went wrong<br><br>Input: ${from}<br>Output: ${to}<br><br>${res}`)
-        })
-    })
+    }
+
 }
 keepSampleButton.addEventListener("click", () => {
     if (keepSampleButton.dataset.newFileLocation) {

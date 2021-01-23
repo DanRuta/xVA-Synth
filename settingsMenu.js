@@ -28,6 +28,9 @@ if (!window.userSettings.audio.padStart) { // For backwards compatibility
 if (!window.userSettings.audio.padEnd) { // For backwards compatibility
     window.userSettings.audio.padEnd = 0
 }
+if (!window.userSettings.audio.ffmpeg) { // For backwards compatibility
+    window.userSettings.audio.ffmpeg = false
+}
 
 
 
@@ -38,6 +41,7 @@ setting_audio_format.value = window.userSettings.audio.format
 setting_audio_hz.value = window.userSettings.audio.hz
 setting_audio_pad_start.value = window.userSettings.audio.padStart
 setting_audio_pad_end.value = window.userSettings.audio.padEnd
+setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
 
 const [height, width] = window.userSettings.customWindowSize.split(",").map(v => parseInt(v))
 ipcRenderer.send("resize", {height, width})
@@ -82,18 +86,31 @@ setting_autoplaygenCbx.addEventListener("click", () => {
     window.userSettings.autoPlayGen = setting_autoplaygenCbx.checked
     saveUserSettings()
 })
+
+setting_audio_ffmpeg.addEventListener("click", () => {
+    window.userSettings.audio.ffmpeg = setting_audio_ffmpeg.checked
+    setting_audio_format.disabled = !window.userSettings.audio.ffmpeg
+    setting_audio_hz.disabled = !window.userSettings.audio.ffmpeg
+    setting_audio_pad_start.disabled = !window.userSettings.audio.ffmpeg
+    setting_audio_pad_end.disabled = !window.userSettings.audio.ffmpeg
+    saveUserSettings()
+})
+setting_audio_format.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_format.addEventListener("change", () => {
     window.userSettings.audio.format = setting_audio_format.value
     saveUserSettings()
 })
+setting_audio_hz.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_hz.addEventListener("change", () => {
     window.userSettings.audio.hz = setting_audio_hz.value
     saveUserSettings()
 })
+setting_audio_pad_start.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_pad_start.addEventListener("change", () => {
     window.userSettings.audio.padStart = parseInt(setting_audio_pad_start.value)
     saveUserSettings()
 })
+setting_audio_pad_end.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_pad_end.addEventListener("change", () => {
     window.userSettings.audio.padEnd = parseInt(setting_audio_pad_end.value)
     saveUserSettings()

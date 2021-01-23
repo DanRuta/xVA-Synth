@@ -95,7 +95,7 @@
             <div class="modal">
                 <div id="settingsOptionsContainer" class="flexTable">
                     <div>
-                        <div>Use GPU</div>
+                        <div>Use GPU (requires CUDA)</div>
                         <div>
                             <input id="useGPUCbx" type="checkbox" name="">
                         </div>
@@ -107,6 +107,12 @@
                         </div>
                     </div>
                     <hr style="width:100%">
+                    <div>
+                        <div>Use ffmpeg post-processing (requires ffmpeg >=4.3)</div>
+                        <div>
+                            <input id="setting_audio_ffmpeg" name="" type="checkbox">
+                        </div>
+                    </div>
                     <div>
                         <div>Audio format (wav, mp3, etc)</div>
                         <div>
