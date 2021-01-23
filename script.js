@@ -453,7 +453,12 @@ const saveFile = (from, to) => {
 
     if (window.userSettings.audio.ffmpeg) {
         spinnerModal("Saving the audio file...")
-        const options = {hz: window.userSettings.audio.hz, padStart: window.userSettings.audio.padStart, padEnd: window.userSettings.audio.padEnd}
+        const options = {
+            hz: window.userSettings.audio.hz,
+            padStart: window.userSettings.audio.padStart,
+            padEnd: window.userSettings.audio.padEnd,
+            bit_depth: window.userSettings.audio.bitdepth
+        }
 
         window.appLogger.log(`About to save file from ${from} to ${to} with options: ${JSON.stringify(options)}`)
         fetch(`http://localhost:8008/outputAudio`, {

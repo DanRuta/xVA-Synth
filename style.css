@@ -78,7 +78,7 @@
      font-size: 2rem;
      color: #555;
  }
- select {
+ #gameDropdown {
      width: 150px;
      font-size: 18pt;
      color: white;
@@ -289,8 +289,10 @@
      text-align: center;
  }
  #settingsContainer > .modal {
-     height: 50vh;
+     height: 60vh;
      width: 40vw;
+     min-height: 500px;
+     min-width: 500px;
  }
  #app_version {
      display: flex;

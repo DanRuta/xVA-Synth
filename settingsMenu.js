@@ -31,17 +31,21 @@ if (!window.userSettings.audio.padEnd) { // For backwards compatibility
 if (!window.userSettings.audio.ffmpeg) { // For backwards compatibility
     window.userSettings.audio.ffmpeg = false
 }
+if (!window.userSettings.audio.bitdepth) { // For backwards compatibility
+    window.userSettings.audio.bitdepth = "pcm_s32le"
+}
 
 
 
 useGPUCbx.checked = window.userSettings.useGPU
 autoplay_ckbx.checked = window.userSettings.autoplay
 setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
+setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
 setting_audio_format.value = window.userSettings.audio.format
 setting_audio_hz.value = window.userSettings.audio.hz
 setting_audio_pad_start.value = window.userSettings.audio.padStart
 setting_audio_pad_end.value = window.userSettings.audio.padEnd
-setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
+setting_audio_bitdepth.value = window.userSettings.audio.bitdepth
 
 const [height, width] = window.userSettings.customWindowSize.split(",").map(v => parseInt(v))
 ipcRenderer.send("resize", {height, width})
@@ -115,7 +119,11 @@ setting_audio_pad_end.addEventListener("change", () => {
     window.userSettings.audio.padEnd = parseInt(setting_audio_pad_end.value)
     saveUserSettings()
 })
-
+setting_audio_bitdepth.disabled = !window.userSettings.audio.ffmpeg
+setting_audio_bitdepth.addEventListener("change", () => {
+    window.userSettings.audio.bitdepth = setting_audio_bitdepth.value
+    saveUserSettings()
+})
 
 // Populate the game directories
 fs.readdir(`${path}/models`, (err, gameDirs) => {

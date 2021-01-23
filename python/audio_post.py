@@ -18,6 +18,10 @@ def run_audio_post(logger, input, output, options=None):
 
             ffmpeg_options["af"] = ",".join(ffmpeg_options["af"])
 
+
+        if options["bit_depth"]:
+            ffmpeg_options["acodec"] = options["bit_depth"]
+
         stream = ffmpeg.output(stream, output, **ffmpeg_options)
 
         logger.info("audio options: "+str(options))
