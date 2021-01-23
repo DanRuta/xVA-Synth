@@ -452,7 +452,8 @@ const saveFile = (from, to) => {
     try {fs.mkdirSync(containerFolderPath)} catch (e) {/*Do nothing*/}
 
     spinnerModal("Saving the audio file...")
-    const options = {}
+    const options = {hz: window.userSettings.audio.hz}
+
     window.appLogger.log(`About to save file from ${from} to ${to} with options: ${JSON.stringify(options)}`)
     fetch(`http://localhost:8008/outputAudio`, {
         method: "Post",

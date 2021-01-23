@@ -176,7 +176,7 @@ class Handler(BaseHTTPRequestHandler):
             if self.path == "/outputAudio":
                 input_path = post_data["input_path"]
                 output_path = post_data["output_path"]
-                options = post_data["options"]
+                options = json.loads(post_data["options"])
                 req_response = run_audio_post(logger, input_path, output_path, options)
 
 

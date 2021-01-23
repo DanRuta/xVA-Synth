@@ -9,7 +9,10 @@ def run_audio_post(logger, input, output, options=None):
 
     try:
         stream = ffmpeg.input(input)
-        stream = ffmpeg.output(stream, output)
+        stream = ffmpeg.output(stream, output, **{"ar": options["hz"]})
+
+        logger.info("audio options: "+str(options))
+        logger.info("ffmpeg command: "+ " ".join(stream.compile()))
 
         ffmpeg.run(stream)
     except:

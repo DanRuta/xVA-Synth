@@ -17,7 +17,10 @@ if ((typeof window.userSettings)=="string") {
     window.userSettings = JSON.parse(window.userSettings)
 }
 if (!window.userSettings.audio) { // For backwards compatibility
-    window.userSettings.audio = {format: "wav"}
+    window.userSettings.audio = {format: "wav", hz: 22050}
+}
+if (!window.userSettings.audio.hz) { // For backwards compatibility
+    window.userSettings.audio.hz = 22050
 }
 
 
@@ -26,6 +29,7 @@ useGPUCbx.checked = window.userSettings.useGPU
 autoplay_ckbx.checked = window.userSettings.autoplay
 setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
 setting_audio_format.value = window.userSettings.audio.format
+setting_audio_hz.value = window.userSettings.audio.hz
 
 const [height, width] = window.userSettings.customWindowSize.split(",").map(v => parseInt(v))
 ipcRenderer.send("resize", {height, width})
@@ -71,10 +75,11 @@ setting_autoplaygenCbx.addEventListener("click", () => {
     saveUserSettings()
 })
 setting_audio_format.addEventListener("change", () => {
-    if (!window.userSettings.audio) { // For backwards compatibility
-        window.userSettings.audio = {}
-    }
     window.userSettings.audio.format = setting_audio_format.value
+    saveUserSettings()
+})
+setting_audio_hz.addEventListener("change", () => {
+    window.userSettings.audio.hz = setting_audio_hz.value
     saveUserSettings()
 })
 
