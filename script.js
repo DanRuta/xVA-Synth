@@ -480,13 +480,30 @@ const saveFile = (from, to) => {
 
     try {fs.mkdirSync(containerFolderPath)} catch (e) {/*Do nothing*/}
 
-    fs.copyFile(from, to, err => {
-        if (err) {
-            console.log(err)
-            window.appLogger.log(err)
+    spinnerModal("Saving the audio file...")
+    const options = {}
+    window.appLogger.log(`About to save file from ${from} to ${to} with options: ${JSON.stringify(options)}`)
+    fetch(`http://localhost:8008/outputAudio`, {
+        method: "Post",
+        body: JSON.stringify({
+            input_path: from,
+            output_path: to,
+            options: JSON.stringify(options)
+        })
+    }).then(r=>r.text()).then(res => {
+        closeModal()
+        if (res.length) {
+            console.log("res", res)
+            window.errorModal(`Something went wrong<br><br>${res}`)
+        } else {
+            voiceSamples.appendChild(makeSample(to, true))
+            keepSampleButton.disabled = true
         }
-        voiceSamples.appendChild(makeSample(to, true))
-        keepSampleButton.disabled = true
+    }).catch(res => {
+        window.appLogger.log(res)
+        console.log("res", res)
+        closeModal()
+        window.errorModal(`Something went wrong<br><br>${res}`)
     })
 }
 keepSampleButton.addEventListener("click", () => {

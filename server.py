@@ -23,6 +23,7 @@ try:
     from logging.handlers import RotatingFileHandler
     import json
     from http.server import BaseHTTPRequestHandler, HTTPServer
+    from python.audio_post import run_audio_post
 except:
     with open("./DEBUG_err_imports.txt", "w+") as f:
         f.write(traceback.format_exc())
@@ -135,7 +136,7 @@ class Handler(BaseHTTPRequestHandler):
 
             content_length = int(self.headers['Content-Length'])
             post_data = json.loads(self.rfile.read(content_length).decode('utf-8'))
-            pitch_durations_text = "POST request for {}".format(self.path)
+            req_response = "POST request for {}".format(self.path)
 
             print("POST")
             print(self.path)
@@ -170,12 +171,19 @@ class Handler(BaseHTTPRequestHandler):
                 hifi_gan = post_data["hifi_gan"] if "hifi_gan" in post_data else False
                 pitch_data = [pitch, duration]
 
-                pitch_durations_text = fastpitch.infer(user_settings, text, out_path, fastpitch=fastpitch_model, hifi_gan=hifi_gan, speaker_i=speaker_i, pitch_data=pitch_data)
+                req_response = fastpitch.infer(user_settings, text, out_path, fastpitch=fastpitch_model, hifi_gan=hifi_gan, speaker_i=speaker_i, pitch_data=pitch_data)
+
+            if self.path == "/outputAudio":
+                input_path = post_data["input_path"]
+                output_path = post_data["output_path"]
+                options = post_data["options"]
+                req_response = run_audio_post(logger, input_path, output_path, options)
+
 
             self._set_response()
-            logger.info("pitch_durations_text")
-            logger.info(pitch_durations_text)
-            self.wfile.write(pitch_durations_text.encode("utf-8"))
+            logger.info("req_response")
+            logger.info(req_response)
+            self.wfile.write(req_response.encode("utf-8"))
         except Exception as e:
             with open("./DEBUG_request.txt", "w+") as f:
                 f.write(traceback.format_exc())
