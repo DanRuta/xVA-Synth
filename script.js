@@ -8,6 +8,7 @@ const {shell, ipcRenderer} = require("electron")
 const fetch = require("node-fetch")
 const {text_to_sequence, english_cleaners} = require("./text.js")
 const {xVAAppLogger} = require("./appLogger.js")
+const {saveUserSettings} = require("./settingsMenu.js")
 
 let themeColour
 window.appVersion = "v1.0.8"
@@ -29,24 +30,8 @@ window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, res
 window.currentModel = undefined
 window.currentModelButton = undefined
 
-// Load user settings
-window.userSettings = localStorage.getItem("userSettings") ||
-{useGPU: false, customWindowSize:`${window.innerHeight},${window.innerWidth}`, autoplay: false, autoPlayGen: false}
-if ((typeof window.userSettings)=="string") {
-    window.userSettings = JSON.parse(window.userSettings)
-}
+
 window.appLogger.log(`Settings: ${JSON.stringify(window.userSettings)}`)
-
-useGPUCbx.checked = window.userSettings.useGPU
-autoplay_ckbx.checked = window.userSettings.autoplay
-setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
-
-const [height, width] = window.userSettings.customWindowSize.split(",").map(v => parseInt(v))
-ipcRenderer.send("resize", {height, width})
-
-const saveUserSettings = () => localStorage.setItem("userSettings", JSON.stringify(window.userSettings))
-saveUserSettings()
-
 
 // Set up folders
 try {fs.mkdirSync(`${path}/models`)} catch (e) {/*Do nothing*/}
@@ -73,24 +58,6 @@ const loadAllModels = () => {
     return new Promise(resolve => {
         fs.readdir(`${path}/models`, (err, gameDirs) => {
             gameDirs.filter(name => !name.includes(".")).forEach(gameFolder => {
-
-                // Initialize the default output directory setting for this game
-                if (!Object.keys(window.userSettings).includes(`outpath_${gameFolder}`)) {
-                    window.userSettings[`outpath_${gameFolder}`] = `${__dirname.replace(/\\/g,"/")}/output/${gameFolder}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
-                    saveUserSettings()
-                }
-                // Create and populate the settings menu entry for this
-                const outPathElem = createElem("input", {value: window.userSettings[`outpath_${gameFolder}`]})
-                outPathElem.addEventListener("change", () => {
-                    outPathElem.value = outPathElem.value.replace(/\/\//g, "/").replace(/\\/g,"/")
-                    window.userSettings[`outpath_${gameFolder}`] = outPathElem.value
-                    saveUserSettings()
-                    if (window.currentModelButton) {
-                        window.currentModelButton.click()
-                    }
-                })
-                const gameName = fs.readdirSync(`${path}/assets`).find(f => f.startsWith(gameFolder)).split("-").reverse()[0].split(".")[0]
-                settingsOptionsContainer.appendChild(createElem("div", [createElem("div", `${gameName} output folder`), createElem("div", outPathElem)]))
 
                 const files = fs.readdirSync(`${path}/models/${gameFolder}`).filter(f => f.endsWith(".json"))
 
@@ -274,7 +241,7 @@ const changeGame = () => {
 
                 if (err) return
 
-                files.filter(f => f.endsWith(".wav")).forEach(file => {
+                files.forEach(file => {
                     voiceSamples.appendChild(makeSample(`${window.userSettings[`outpath_${meta[0]}`]}/${button.dataset.modelId}/${file}`))
                 })
             })
@@ -289,11 +256,12 @@ const changeGame = () => {
 
 const makeSample = (src, newSample) => {
     const fileName = src.split("/").reverse()[0].split("%20").join(" ")
-    const sample = createElem("div.sample", createElem("div", fileName.split(".wav")[0]))
+    const fileFormat = fileName.split(".")[1]
+    const sample = createElem("div.sample", createElem("div", fileName))
     const audioControls = createElem("div")
     const audio = createElem("audio", {controls: true}, createElem("source", {
         src: src,
-        type: "audio/wav"
+        type: `audio/${fileFormat}`
     }))
     const openFileLocationButton = createElem("div", "&#10064;")
     openFileLocationButton.addEventListener("click", () => {
@@ -305,15 +273,15 @@ const makeSample = (src, newSample) => {
     renameButton.addEventListener("click", () => {
         createModal("prompt", {
             prompt: "Enter new file name, or submit unchanged to cancel.",
-            value: sample.querySelector("div").innerHTML+".wav"
+            value: sample.querySelector("div").innerHTML+`.${fileFormat}`
         }).then(newFileName => {
             if (newFileName!=fileName) {
                 const oldPath = src.split("/").reverse()
                 const newPath = src.split("/").reverse()
-                oldPath[0] = sample.querySelector("div").innerHTML+".wav"
+                oldPath[0] = sample.querySelector("div").innerHTML+`.${fileFormat}`
                 newPath[0] = newFileName
                 fs.renameSync(oldPath.reverse().join("/"), newPath.reverse().join("/"))
-                sample.querySelector("div").innerHTML = newFileName.split(".wav")[0]
+                sample.querySelector("div").innerHTML = newFileName.split(`.${fileFormat}`)[0]
             }
         })
     })
@@ -362,10 +330,11 @@ generateVoiceButton.addEventListener("click", () => {
             method: "Post",
             body: generateVoiceButton.dataset.modelQuery
         }).then(r=>r.text()).then(res => {
-            closeModal()
-            generateVoiceButton.dataset.modelQuery = null
-            generateVoiceButton.innerHTML = "Generate Voice"
-            generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
+            closeModal().then(() => {
+                generateVoiceButton.dataset.modelQuery = null
+                generateVoiceButton.innerHTML = "Generate Voice"
+                generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
+            })
         }).catch(e => {
             console.log(e)
             if (e.code =="ENOENT") {
@@ -474,6 +443,8 @@ generateVoiceButton.addEventListener("click", () => {
 
 const saveFile = (from, to) => {
     to = to.split("%20").join(" ")
+    to = to.replace(".wav", `.${window.userSettings.audio.format}`)
+
     // Make the containing folder if it does not already exist
     let containerFolderPath = to.split("/")
     containerFolderPath = containerFolderPath.slice(0,containerFolderPath.length-1).join("/")
@@ -491,19 +462,21 @@ const saveFile = (from, to) => {
             options: JSON.stringify(options)
         })
     }).then(r=>r.text()).then(res => {
-        closeModal()
-        if (res.length) {
-            console.log("res", res)
-            window.errorModal(`Something went wrong<br><br>${res}`)
-        } else {
-            voiceSamples.appendChild(makeSample(to, true))
-            keepSampleButton.disabled = true
-        }
+        closeModal().then(() => {
+            if (res.length) {
+                console.log("res", res)
+                window.errorModal(`Something went wrong<br><br>Input: ${from}<br>Output: ${to}<br><br>${res}`)
+            } else {
+                voiceSamples.appendChild(makeSample(to, true))
+                keepSampleButton.disabled = true
+            }
+        })
     }).catch(res => {
         window.appLogger.log(res)
-        console.log("res", res)
-        closeModal()
-        window.errorModal(`Something went wrong<br><br>${res}`)
+        console.log("CATCH res", res)
+        closeModal().then(() => {
+            window.errorModal(`Something went wrong<br><br>Input: ${from}<br>Output: ${to}<br><br>${res}`)
+        })
     })
 }
 keepSampleButton.addEventListener("click", () => {
@@ -517,7 +490,7 @@ keepSampleButton.addEventListener("click", () => {
         toLocation = toLocation.join("/")
 
         // File name conflict
-        if (fs.existsSync(toLocation)) {
+        if (fs.existsSync(`${toLocation}${window.userSettings.audio.format}`)) {
 
             createModal("prompt", {
                 prompt: "File already exists. Adjust the file name here, or submit without changing to overwrite the old file.",
@@ -525,12 +498,12 @@ keepSampleButton.addEventListener("click", () => {
             }).then(newFileName => {
 
                 let toLocationOut = toLocation.split("/").reverse()
-                toLocationOut[0] = newFileName.replace(".wav", "") + ".wav"
+                toLocationOut[0] = newFileName.replace(`.${window.userSettings.audio.format}`, "") + `.${window.userSettings.audio.format}`
                 let outDir = toLocationOut
                 outDir.shift()
 
                 const existingFiles = fs.readdirSync(outDir.reverse().join("/"))
-                newFileName = (newFileName.replace(".wav", "") + ".wav").replace(/[\/\\:\*?<>"|]*/g, "")
+                newFileName = (newFileName.replace(`.${window.userSettings.audio.format}`, "") + `.${window.userSettings.audio.format}`).replace(/[\/\\:\*?<>"|]*/g, "")
                 const existingFileConflict = existingFiles.filter(name => name==newFileName)
 
                 toLocationOut.push(newFileName)
@@ -596,8 +569,9 @@ startingSplashInterval = setInterval(() => {
             loadingStage = 3
         }
     } else {
-        closeModal()
-        clearInterval(startingSplashInterval)
+        closeModal().then(() => {
+            clearInterval(startingSplashInterval)
+        })
     }
 }, 100)
 
@@ -628,12 +602,14 @@ const createModal = (type, message) => {
             modal.appendChild(createElem("div", yesButton, noButton))
 
             yesButton.addEventListener("click", () => {
-                resolve(true)
-                closeModal()
+                closeModal().then(() => {
+                    resolve(true)
+                })
             })
             noButton.addEventListener("click", () => {
-                resolve(false)
-                closeModal()
+                closeModal().then(() => {
+                    resolve(false)
+                })
             })
         } else if (type=="error") {
             const closeButton = createElem("button", {style: {background: `#${themeColour}`}})
@@ -641,8 +617,9 @@ const createModal = (type, message) => {
             modal.appendChild(createElem("div", closeButton))
 
             closeButton.addEventListener("click", () => {
-                resolve(false)
-                closeModal()
+                closeModal().then(() => {
+                    resolve(false)
+                })
             })
         } else if (type=="prompt") {
             const closeButton = createElem("button", {style: {background: `#${themeColour}`}})
@@ -652,8 +629,9 @@ const createModal = (type, message) => {
             modal.appendChild(createElem("div", closeButton))
 
             closeButton.addEventListener("click", () => {
-                resolve(inputElem.value)
-                closeModal()
+                closeModal().then(() => {
+                    resolve(inputElem.value)
+                })
             })
         } else {
             modal.appendChild(createElem("div.spinner", {style: {borderLeftColor: document.querySelector("button").style.background}}))
@@ -667,7 +645,7 @@ const createModal = (type, message) => {
         requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
     })
 }
-const closeModal = (container=modalContainer) => {
+window.closeModal = (container=modalContainer) => {
     return new Promise(resolve => {
         container.style.opacity = 0
         chrome.style.opacity = 0.88
@@ -904,9 +882,10 @@ qnd_ckbx.addEventListener("change", () => {
         method: "Post",
         body: JSON.stringify({hifi_gan: window.userSettings.quick_n_dirty ? "qnd" : "wg"})
     }).then(() => {
-        closeModal()
+        closeModal().then(() => {
+            saveUserSettings()
+        })
     })
-    saveUserSettings()
 })
 
 // Patreon
@@ -929,43 +908,6 @@ patreonIcon.addEventListener("click", () => {
     })
 })
 fetch("http://danruta.co.uk/patreon.txt").then(r=>r.text()).then(data => fs.writeFileSync("patreon.txt", data, "utf8"))
-
-// Settings
-// ========
-settingsCog.addEventListener("click", () => {
-    settingsContainer.style.opacity = 0
-    settingsContainer.style.display = "flex"
-    chrome.style.opacity = 0.88
-    requestAnimationFrame(() => requestAnimationFrame(() => settingsContainer.style.opacity = 1))
-    requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
-})
-settingsContainer.addEventListener("click", event => {
-    if (event.target==settingsContainer) {
-        closeModal(settingsContainer)
-    }
-})
-useGPUCbx.addEventListener("change", () => {
-    spinnerModal("Changing device...")
-    fetch(`http://localhost:8008/setDevice`, {
-        method: "Post",
-        body: JSON.stringify({device: useGPUCbx.checked ? "gpu" : "cpu"})
-    }).then(r=>r.text()).then(res => {
-        closeModal()
-        window.userSettings.useGPU = useGPUCbx.checked
-        saveUserSettings()
-    }).catch(e => {
-        console.log(e)
-        if (e.code =="ENOENT") {
-            closeModal().then(() => {
-                createModal("error", "There was a problem")
-            })
-        }
-    })
-})
-setting_autoplaygenCbx.addEventListener("click", () => {
-    window.userSettings.autoPlayGen = setting_autoplaygenCbx.checked
-    saveUserSettings()
-})
 
 
 // Updates

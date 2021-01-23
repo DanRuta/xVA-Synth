@@ -3,6 +3,10 @@ xVAEnvCPU
 node_modules
 output/*.wav
 output/**/*.wav
+output/*.mp3
+output/**/*.mp3
+output/*.ogg
+output/**/*.ogg
 *.ckpt
 Plan.todo
 __pycache__/
