@@ -436,7 +436,7 @@ generateVoiceButton.addEventListener("click", () => {
             window.pitchEditor.inputSequence = sequence
             window.pitchEditor.sequence = cleanedSequence
 
-            if (pitch.length==0) {
+            if (pitch.length==0 || isFreshRegen) {
                 window.pitchEditor.ampFlatCounter = 0
                 window.pitchEditor.resetPitch = pitchData
                 window.pitchEditor.resetDurs = durationsData
@@ -716,7 +716,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
 
     const set_letter_display = (elem, elem_i, length=null, value=null) => {
 
-        if (length != null) {
+        if (length != null && elem) {
             const elem_length = length/2
             elem.style.width = `${parseInt(elem_length/2)}px`
             elem.children[1].style.height = `${elem_length}px`
@@ -850,12 +850,15 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
     })
     amplify_btn.addEventListener("click", () => {
         window.pitchEditor.ampFlatCounter += 1
-        window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map(p=>p*(1+window.pitchEditor.ampFlatCounter*0.1))
+        window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map(p=> {
+            const newVal = p*(1+window.pitchEditor.ampFlatCounter*0.025)
+            return newVal>0 ? Math.min(3, newVal) : Math.max(-3, newVal)
+        })
         letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
     })
     flatten_btn.addEventListener("click", () => {
         window.pitchEditor.ampFlatCounter -= 1
-        window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map(p=>p*Math.max(0, 1+window.pitchEditor.ampFlatCounter*0.1))
+        window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map(p=>p*Math.max(0, 1+window.pitchEditor.ampFlatCounter*0.025))
         letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
     })
     increase_btn.addEventListener("click", () => {
