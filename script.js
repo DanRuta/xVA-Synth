@@ -700,6 +700,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
 
     if (isFreshRegen || window.pitchEditor.lengthsMult.length==0) {
         window.pitchEditor.lengthsMult = lengthsOrig.map(l => 1)
+        window.pitchEditor.letterFocus = -1
     }
     let pacingMult = lengthsOrig.map(l => 1)
 
