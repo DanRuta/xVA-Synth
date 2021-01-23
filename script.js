@@ -452,7 +452,7 @@ const saveFile = (from, to) => {
     try {fs.mkdirSync(containerFolderPath)} catch (e) {/*Do nothing*/}
 
     spinnerModal("Saving the audio file...")
-    const options = {hz: window.userSettings.audio.hz}
+    const options = {hz: window.userSettings.audio.hz, padStart: window.userSettings.audio.padStart, padEnd: window.userSettings.audio.padEnd}
 
     window.appLogger.log(`About to save file from ${from} to ${to} with options: ${JSON.stringify(options)}`)
     fetch(`http://localhost:8008/outputAudio`, {
@@ -491,7 +491,7 @@ keepSampleButton.addEventListener("click", () => {
         toLocation = toLocation.join("/")
 
         // File name conflict
-        if (fs.existsSync(`${toLocation}${window.userSettings.audio.format}`)) {
+        if (fs.existsSync(toLocation)) {
 
             createModal("prompt", {
                 prompt: "File already exists. Adjust the file name here, or submit without changing to overwrite the old file.",

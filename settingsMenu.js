@@ -17,10 +17,16 @@ if ((typeof window.userSettings)=="string") {
     window.userSettings = JSON.parse(window.userSettings)
 }
 if (!window.userSettings.audio) { // For backwards compatibility
-    window.userSettings.audio = {format: "wav", hz: 22050}
+    window.userSettings.audio = {format: "wav", hz: 22050, padStart: 0, padEnd: 0}
 }
 if (!window.userSettings.audio.hz) { // For backwards compatibility
     window.userSettings.audio.hz = 22050
+}
+if (!window.userSettings.audio.padStart) { // For backwards compatibility
+    window.userSettings.audio.padStart = 0
+}
+if (!window.userSettings.audio.padEnd) { // For backwards compatibility
+    window.userSettings.audio.padEnd = 0
 }
 
 
@@ -30,6 +36,8 @@ autoplay_ckbx.checked = window.userSettings.autoplay
 setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
 setting_audio_format.value = window.userSettings.audio.format
 setting_audio_hz.value = window.userSettings.audio.hz
+setting_audio_pad_start.value = window.userSettings.audio.padStart
+setting_audio_pad_end.value = window.userSettings.audio.padEnd
 
 const [height, width] = window.userSettings.customWindowSize.split(",").map(v => parseInt(v))
 ipcRenderer.send("resize", {height, width})
@@ -80,6 +88,14 @@ setting_audio_format.addEventListener("change", () => {
 })
 setting_audio_hz.addEventListener("change", () => {
     window.userSettings.audio.hz = setting_audio_hz.value
+    saveUserSettings()
+})
+setting_audio_pad_start.addEventListener("change", () => {
+    window.userSettings.audio.padStart = parseInt(setting_audio_pad_start.value)
+    saveUserSettings()
+})
+setting_audio_pad_end.addEventListener("change", () => {
+    window.userSettings.audio.padEnd = parseInt(setting_audio_pad_end.value)
     saveUserSettings()
 })
 
