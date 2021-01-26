@@ -744,6 +744,15 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
     }
 
 
+    const setLetterFocus = l => {
+        if (window.pitchEditor.letterFocus>0) {
+            letterElems[window.pitchEditor.letterFocus].style.color = "black"
+        }
+        window.pitchEditor.letterFocus = l
+        letterElems[l].style.color = "red"
+        letterLength.value = parseInt(window.pitchEditor.lengthsMult[window.pitchEditor.letterFocus])
+    }
+
     letters.forEach((letter, l) => {
 
         const letterDiv = createElem("div.letter", createElem("div", letter))
@@ -757,18 +766,8 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
         })
         letterDiv.appendChild(slider)
 
-        slider.addEventListener("mousedown", () => {
-            if (window.pitchEditor.letterFocus>0) {
-                letterElems[window.pitchEditor.letterFocus].style.color = "black"
-            }
-            window.pitchEditor.letterFocus = l
-            letterElems[l].style.color = "red"
-            letterLength.value = parseInt(window.pitchEditor.lengthsMult[window.pitchEditor.letterFocus])
-        })
-        if (window.pitchEditor.letterFocus == l) {
-            letterDiv.style.color = "red"
-        }
-
+        letterDiv.addEventListener("click", () => setLetterFocus(l))
+        slider.addEventListener("mousedown", () => setLetterFocus(l))
         slider.addEventListener("change", () => {
             window.pitchEditor.pitchNew[l] = parseFloat(slider.value)
             has_been_changed = true
@@ -776,6 +775,10 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
                 generateVoiceButton.click()
             }
         })
+
+        if (window.pitchEditor.letterFocus == l) {
+            letterDiv.style.color = "red"
+        }
 
 
         let length = window.pitchEditor.resetDurs[l] * window.pitchEditor.lengthsMult[l] * pace_slid.value * 10 + 50
