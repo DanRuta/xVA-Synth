@@ -22,6 +22,9 @@ def run_audio_post(logger, input, output, options=None):
         if options["bit_depth"]:
             ffmpeg_options["acodec"] = options["bit_depth"]
 
+        if "mp3" in output:
+            ffmpeg_options["c:a"] = "libmp3lame"
+
         stream = ffmpeg.output(stream, output, **ffmpeg_options)
 
         logger.info("audio options: "+str(options))
