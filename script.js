@@ -256,7 +256,7 @@ const changeGame = () => {
 
 const makeSample = (src, newSample) => {
     const fileName = src.split("/").reverse()[0].split("%20").join(" ")
-    const fileFormat = fileName.split(".")[1]
+    const fileFormat = fileName.split(".").reverse()[0]
     const sample = createElem("div.sample", createElem("div", fileName))
     const audioControls = createElem("div")
     const audio = createElem("audio", {controls: true}, createElem("source", {
