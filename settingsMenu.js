@@ -97,6 +97,7 @@ setting_audio_ffmpeg.addEventListener("click", () => {
     setting_audio_hz.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_pad_start.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_pad_end.disabled = !window.userSettings.audio.ffmpeg
+    setting_audio_bitdepth.disabled = !window.userSettings.audio.ffmpeg
     saveUserSettings()
 })
 setting_audio_format.disabled = !window.userSettings.audio.ffmpeg
