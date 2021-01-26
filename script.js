@@ -475,7 +475,6 @@ const saveFile = (from, to) => {
                     window.errorModal(`Something went wrong<br><br>Input: ${from}<br>Output: ${to}<br><br>${res}`)
                 } else {
                     voiceSamples.appendChild(makeSample(to, true))
-                    keepSampleButton.disabled = true
                 }
             })
         }).catch(res => {
@@ -492,7 +491,6 @@ const saveFile = (from, to) => {
                 window.appLogger.log(err)
             }
             voiceSamples.appendChild(makeSample(to, true))
-            keepSampleButton.disabled = true
         })
     }
 
@@ -512,7 +510,7 @@ keepSampleButton.addEventListener("click", () => {
 
             createModal("prompt", {
                 prompt: "File already exists. Adjust the file name here, or submit without changing to overwrite the old file.",
-                value: toLocation.split("/").reverse()[0]
+                value: toLocation.split("/").reverse()[0].replace(".wav", `.${window.userSettings.audio.format}`)
             }).then(newFileName => {
 
                 let toLocationOut = toLocation.split("/").reverse()
