@@ -86,7 +86,7 @@ def write_settings ():
 use_gpu = user_settings["use_gpu"]=="True"
 print(f'user_settings, {user_settings}')
 try:
-    fastpitch_model = fastpitch.init(PROD, use_gpu=use_gpu, hifi_gan=user_settings["hifi_gan"]=="True")
+    fastpitch_model = fastpitch.init(PROD, use_gpu=use_gpu, hifi_gan=user_settings["hifi_gan"]=="True", logger=logger)
 except:
     print(traceback.format_exc())
     logger.info(traceback.format_exc())
@@ -171,7 +171,7 @@ class Handler(BaseHTTPRequestHandler):
                 hifi_gan = post_data["hifi_gan"] if "hifi_gan" in post_data else False
                 pitch_data = [pitch, duration]
 
-                req_response = fastpitch.infer(user_settings, text, out_path, fastpitch=fastpitch_model, hifi_gan=hifi_gan, speaker_i=speaker_i, pitch_data=pitch_data)
+                req_response = fastpitch.infer(user_settings, text, out_path, fastpitch=fastpitch_model, hifi_gan=hifi_gan, speaker_i=speaker_i, pitch_data=pitch_data, logger=logger)
 
             if self.path == "/outputAudio":
                 input_path = post_data["input_path"]

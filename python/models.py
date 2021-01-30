@@ -65,7 +65,7 @@ def init_bn(module):
         init_bn(child)
 
 
-def get_model(model_name, model_config, device, uniform_initialize_bn_weight=False, forward_is_infer=False, jitable=False):
+def get_model(model_name, model_config, device, logger, uniform_initialize_bn_weight=False, forward_is_infer=False, jitable=False):
     model = None
     model_config["device"] = device
 
@@ -74,9 +74,9 @@ def get_model(model_name, model_config, device, uniform_initialize_bn_weight=Fal
             class WaveGlow__forward_is_infer(WaveGlow):
                 def forward(self, spect, sigma=1.0):
                     return self.infer(spect, sigma)
-            model = WaveGlow__forward_is_infer(**model_config)
+            model = WaveGlow__forward_is_infer(**model_config, logger=logger)
         else:
-            model = WaveGlow(**model_config)
+            model = WaveGlow(**model_config, logger=logger)
 
     elif model_name == 'FastPitch':
 
