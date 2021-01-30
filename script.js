@@ -547,7 +547,8 @@ const saveFile = (from, to) => {
     }
 
 }
-keepSampleButton.addEventListener("click", () => {
+keepSampleButton.addEventListener("click", event => {
+
     if (keepSampleButton.dataset.newFileLocation) {
 
         let fromLocation = samplePlay.dataset.tempFileLocation
@@ -558,10 +559,13 @@ keepSampleButton.addEventListener("click", () => {
         toLocation = toLocation.join("/")
 
         // File name conflict
-        if (fs.existsSync(toLocation)) {
+        const alreadyExists = fs.existsSync(toLocation)
+        if (alreadyExists || event.shiftKey) {
+
+            const promptText = alreadyExists ? `File already exists. Adjust the file name here, or submit without changing to overwrite the old file.` : `Enter file name`
 
             createModal("prompt", {
-                prompt: "File already exists. Adjust the file name here, or submit without changing to overwrite the old file.",
+                prompt: promptText,
                 value: toLocation.split("/").reverse()[0].replace(".wav", `.${window.userSettings.audio.format}`)
             }).then(newFileName => {
 
