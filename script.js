@@ -26,7 +26,7 @@ window.addEventListener('unhandledrejection', function (e) {window.appLogger.log
 
 window.games = {}
 window.models = {}
-window.pitchEditor = {currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null, letterFocus: -1, ampFlatCounter: 0, hasChanged: false, lengthsMult: []}
+window.pitchEditor = {letters: [], currentVoice: null, resetPitch: null, resetDurs: null, resetDursMult: null, letterFocus: -1, ampFlatCounter: 0, hasChanged: false, lengthsMult: []}
 window.currentModel = undefined
 window.currentModelButton = undefined
 
@@ -242,6 +242,9 @@ const changeGame = () => {
                 if (err) return
 
                 files.forEach(file => {
+                    if (file.endsWith(".json")) {
+                        return
+                    }
                     voiceSamples.appendChild(makeSample(`${window.userSettings[`outpath_${meta[0]}`]}/${button.dataset.modelId}/${file}`))
                 })
             })
@@ -269,7 +272,28 @@ const makeSample = (src, newSample) => {
         shell.showItemInFolder(src)
     })
 
-    const renameButton = createElem("div", `<svg class="renameSVG" version="1.0" xmlns="http:\/\/www.w3.org/2000/svg" width="344.000000pt" height="344.000000pt" viewBox="0 0 344.000000 344.000000" preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,344.000000) scale(0.100000,-0.100000)" fill="#555555" stroke="none"><path d="M1489 2353 l-936 -938 -197 -623 c-109 -343 -195 -626 -192 -629 2 -3 284 84 626 193 l621 198 937 938 c889 891 937 940 934 971 -11 108 -86 289 -167 403 -157 219 -395 371 -655 418 l-34 6 -937 -937z m1103 671 c135 -45 253 -135 337 -257 41 -61 96 -178 112 -241 l12 -48 -129 -129 -129 -129 -287 287 -288 288 127 127 c79 79 135 128 148 128 11 0 55 -12 97 -26z m-1798 -1783 c174 -79 354 -248 436 -409 59 -116 72 -104 -213 -196 l-248 -80 -104 104 c-58 58 -105 109 -105 115 0 23 154 495 162 495 5 0 37 -13 72 -29z"/></g></svg>`)
+    if (fs.existsSync(`${src}.json`)) {
+        const editButton = createElem("div", `<svg class="renameSVG" version="1.0" xmlns="http:\/\/www.w3.org/2000/svg" width="344.000000pt" height="344.000000pt" viewBox="0 0 344.000000 344.000000" preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,344.000000) scale(0.100000,-0.100000)" fill="#555555" stroke="none"><path d="M1489 2353 l-936 -938 -197 -623 c-109 -343 -195 -626 -192 -629 2 -3 284 84 626 193 l621 198 937 938 c889 891 937 940 934 971 -11 108 -86 289 -167 403 -157 219 -395 371 -655 418 l-34 6 -937 -937z m1103 671 c135 -45 253 -135 337 -257 41 -61 96 -178 112 -241 l12 -48 -129 -129 -129 -129 -287 287 -288 288 127 127 c79 79 135 128 148 128 11 0 55 -12 97 -26z m-1798 -1783 c174 -79 354 -248 436 -409 59 -116 72 -104 -213 -196 l-248 -80 -104 104 c-58 58 -105 109 -105 115 0 23 154 495 162 495 5 0 37 -13 72 -29z"/></g></svg>`)
+        editButton.addEventListener("click", () => {
+            let editData = fs.readFileSync(`${src}.json`, "utf8")
+            editData = JSON.parse(editData)
+            window.pitchEditor = editData.pitchEditor
+            dialogueInput.value = editData.inputSequence
+            setPitchEditorValues(undefined, undefined, undefined, true)
+
+            if (samplePlay.style.display!="none") {
+                samplePlay.removeChild(samplePlay.children[0])
+                samplePlay.appendChild(createElem("audio", {controls: true}, createElem("source", {
+                    src: src,
+                    type: `audio/${fileFormat}`
+                })))
+            }
+        })
+        audioControls.appendChild(editButton)
+    }
+
+    const renameButton = createElem("div", `<svg class="renameSVG" version="1.0" xmlns="http://www.w3.org/2000/svg" width="166.000000pt" height="336.000000pt" viewBox="0 0 166.000000 336.000000" preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,336.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none"> <path d="M165 3175 c-30 -31 -35 -42 -35 -84 0 -34 6 -56 21 -75 42 -53 58 -56 324 -56 l245 0 0 -1290 0 -1290 -245 0 c-266 0 -282 -3 -324 -56 -15 -19 -21 -41 -21 -75 0 -42 5 -53 35 -84 l36 -35 281 0 280 0 41 40 c30 30 42 38 48 28 5 -7 9 -16 9 -21 0 -4 15 -16 33 -27 30 -19 51 -20 319 -20 l287 0 36 35 c30 31 35 42 35 84 0 34 -6 56 -21 75 -42 53 -58 56 -324 56 l-245 0 0 1290 0 1290 245 0 c266 0 282 3 324 56 15 19 21 41 21 75 0 42 -5 53 -35 84 l-36 35 -287 0 c-268 0 -289 -1 -319 -20 -18 -11 -33 -23 -33 -27 0 -5 -4 -14 -9 -21 -6 -10 -18 -2 -48 28 l-41 40 -280 0 -281 0 -36 -35z"/></g></svg>`)
+
     renameButton.addEventListener("click", () => {
         createModal("prompt", {
             prompt: "Enter new file name, or submit unchanged to cancel.",
@@ -293,6 +317,9 @@ const makeSample = (src, newSample) => {
                 window.appLogger.log(`Deleting${newSample?"new":" "} file: ${src}`)
                 fs.unlinkSync(src)
                 sample.remove()
+                if (fs.existsSync(`${src}.json`)) {
+                    fs.unlinkSync(`${src}.json`)
+                }
             }
         })
     })
@@ -474,6 +501,7 @@ const saveFile = (from, to) => {
                     console.log("res", res)
                     window.errorModal(`Something went wrong<br><br>Input: ${from}<br>Output: ${to}<br><br>${res}`)
                 } else {
+                    fs.writeFileSync(`${to}.json`, JSON.stringify({inputSequence: dialogueInput.value.trim(), pitchEditor: window.pitchEditor}, null, 4))
                     voiceSamples.appendChild(makeSample(to, true))
                 }
             })
@@ -490,6 +518,7 @@ const saveFile = (from, to) => {
                 console.log(err)
                 window.appLogger.log(err)
             }
+            fs.writeFileSync(`${to}.json`, JSON.stringify({inputSequence: dialogueInput.value.trim(), pitchEditor: window.pitchEditor}, null, 4))
             voiceSamples.appendChild(makeSample(to, true))
         })
     }
@@ -708,6 +737,9 @@ window.addEventListener("resize", e => {
 const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => {
 
     editor.innerHTML = ""
+    letters = letters ? letters : window.pitchEditor.letters
+    pitchOrig = pitchOrig ? pitchOrig : window.pitchEditor.pitchNew
+    lengthsOrig = lengthsOrig ? lengthsOrig : window.pitchEditor.dursNew
 
     if (isFreshRegen || window.pitchEditor.lengthsMult.length==0) {
         window.pitchEditor.lengthsMult = lengthsOrig.map(l => 1)
@@ -715,6 +747,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
     }
     let pacingMult = lengthsOrig.map(l => 1)
 
+    window.pitchEditor.letters = letters
     window.pitchEditor.pitchNew = pitchOrig.map(p=>p)
     window.pitchEditor.dursNew = lengthsOrig.map(v=>v)
 

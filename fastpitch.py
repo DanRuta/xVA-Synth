@@ -91,6 +91,7 @@ def init (PROD, use_gpu, hifi_gan):
     fastpitch.hifi_gan = Generator(h).to(device)
     hifigan_ckpt = torch.load(f'{"./resources/app" if PROD else "."}/python/generator_v2', map_location=device)
     fastpitch.hifi_gan.load_state_dict(hifigan_ckpt['generator'])
+    fastpitch.hifi_gan = fastpitch.hifi_gan.to(device)
 
     return fastpitch
 

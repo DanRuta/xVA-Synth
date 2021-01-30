@@ -193,7 +193,7 @@
      display: -webkit-box;
      -webkit-box-orient: vertical;
      -webkit-line-clamp: 3;
-     width: calc(100% - 275px);
+     width: calc(100% - 295px);
  }
  .sample > div {
      display: flex;
@@ -358,8 +358,6 @@
  #editor {
      font-family: monospace;
      width: 7500px;
-     height: 200px;
-     height: 180px;
      display: flex;
      overflow-x: auto;
      overflow-y: hidden;
@@ -368,6 +366,7 @@
 
      min-width: calc(94vw - 300px);
      height: 145px;
+     /*height: 170px;*/
      background: rgba(255,255,255,0.2);
  }
  .letter > div:first-child {

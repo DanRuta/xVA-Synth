@@ -8,6 +8,7 @@ output/*.mp3
 output/**/*.mp3
 output/*.ogg
 output/**/*.ogg
+output/**/*.json
 *.ckpt
 Plan.todo
 __pycache__/
