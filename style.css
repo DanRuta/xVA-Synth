@@ -172,11 +172,11 @@
  }
  #voiceSamples {
      width: calc(95vw - 300px);
-     height: calc(90vh - 185px - 250px);
+     height: calc(90vh - 185px - 290px);
      background: rgba(255,255,255,0.1);
      margin-left: 2.5vw;
      margin-right: 2.5vw;
-     margin-top: 20px;
+     margin-top: 65px;
      overflow-y: auto;
  }
  .sample {
@@ -366,7 +366,7 @@
 
      min-width: calc(94vw - 300px);
      height: 145px;
-     /*height: 170px;*/
+     height: 200px;
      background: rgba(255,255,255,0.2);
  }
  .letter > div:first-child {
@@ -379,7 +379,6 @@
      width: 50px;
      cursor: pointer;
      display: inline-flex;
-     margin-top: -30px;
  }
  #editor > div > div {
      text-align: center;
@@ -429,15 +428,8 @@
  .letter:nth-child(odd) > input {
      background-color: rgba(255,255,255,0.3);
  }
- .slider {
-     width: 100px !important;
-     min-width: 100px !important;
-     max-width: 100px !important;
-     margin-left: -100px;
- }
  .letter {
      text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
-     margin-top: 40px;
      margin-left: 3px;
  }
 

@@ -764,7 +764,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
             const elem_length = length/2
             elem.style.width = `${parseInt(elem_length/2)}px`
             elem.children[1].style.height = `${elem_length}px`
-            elem.children[1].style.marginTop = `${-parseInt(elem_length/2)+65}px`
+            elem.children[1].style.marginTop = `${-parseInt(elem_length/2)+90}px`
             css_hack_items[elem_i].innerHTML = `#slider_${elem_i}::-webkit-slider-thumb {height: ${elem_length}px;}`
             elemsWidths[elem_i] = elem_length
             elem.style.paddingLeft = `${parseInt(elem_length/2)}px`
@@ -819,7 +819,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
         letterDiv.style.width = `${parseInt(length/2)}px`
         slider.style.height = `${length}px`
 
-        slider.style.marginLeft = `${-83}px`
+        slider.style.marginLeft = `${-100}px`
         letterDiv.style.paddingLeft = `${parseInt(length/2)}px`
 
         const css_hack_elem = createElem("style", `#slider_${l}::-webkit-slider-thumb {height: ${length}px;}`)
