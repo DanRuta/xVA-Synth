@@ -545,10 +545,9 @@ const saveFile = (from, to) => {
             voiceSamples.appendChild(makeSample(to, true))
         })
     }
-
 }
-keepSampleButton.addEventListener("click", event => {
 
+const keepSampleFunction = shiftClick => {
     if (keepSampleButton.dataset.newFileLocation) {
 
         let fromLocation = samplePlay.dataset.tempFileLocation
@@ -560,7 +559,7 @@ keepSampleButton.addEventListener("click", event => {
 
         // File name conflict
         const alreadyExists = fs.existsSync(toLocation)
-        if (alreadyExists || event.shiftKey) {
+        if (alreadyExists || shiftClick) {
 
             const promptText = alreadyExists ? `File already exists. Adjust the file name here, or submit without changing to overwrite the old file.` : `Enter file name`
 
@@ -616,7 +615,8 @@ keepSampleButton.addEventListener("click", event => {
             saveFile(fromLocation, toLocation)
         }
     }
-})
+}
+keepSampleButton.addEventListener("click", event => keepSampleFunction(event.shiftKey))
 
 
 gameDropdown.addEventListener("change", changeGame)
@@ -662,6 +662,7 @@ loadAllModels().then(() => {
 
 const createModal = (type, message) => {
     return new Promise(resolve => {
+        modalContainer.innerHTML = ""
         const displayMessage = message.prompt ? message.prompt : message
         const modal = createElem("div.modal#activeModal", {style: {opacity: 0}}, createElem("span", displayMessage))
         modal.dataset.type = type
@@ -719,9 +720,13 @@ const createModal = (type, message) => {
 }
 window.closeModal = (container=modalContainer) => {
     return new Promise(resolve => {
+        updatesContainer.style.opacity = 0
+        settingsContainer.style.opacity = 0
         container.style.opacity = 0
         chrome.style.opacity = 0.88
         setTimeout(() => {
+            updatesContainer.style.display = "none"
+            settingsContainer.style.display = "none"
             container.style.display = "none"
             try {
                 activeModal.remove()
@@ -759,8 +764,58 @@ window.addEventListener("resize", e => {
 })
 
 
+const setLetterFocus = (l, multi) => {
+    if (window.pitchEditor.letterFocus.length && !multi) {
+        window.pitchEditor.letterFocus.forEach(li => letterElems[li].style.color = "black")
+        window.pitchEditor.letterFocus = []
+    }
+    window.pitchEditor.letterFocus.push(l)
+    window.pitchEditor.letterFocus = Array.from(new Set(window.pitchEditor.letterFocus.sort()))
+    window.pitchEditor.letterFocus.forEach(li => letterElems[li].style.color = "red")
 
+    if (window.pitchEditor.letterFocus.length==1) {
+        letterLength.value = parseInt(window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]])
+        letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
+        letterLengthNumb.value = letterLength.value
 
+        letterLength.disabled = false
+        letterPitchNumb.disabled = false
+        letterLengthNumb.disabled = false
+    } else {
+        letterLength.disabled = true
+        letterPitchNumb.disabled = true
+        letterLengthNumb.disabled = true
+    }
+}
+
+let sliders = []
+let letterElems = []
+let autoinfer_timer = null
+let has_been_changed = false
+let css_hack_items = []
+let elemsWidths = []
+const infer = () => {
+    has_been_changed = false
+    if (!isGenerating) {
+        generateVoiceButton.click()
+    }
+}
+const set_letter_display = (elem, elem_i, length=null, value=null) => {
+    if (length != null && elem) {
+        const elem_length = length/2
+        elem.style.width = `${parseInt(elem_length/2)}px`
+        elem.children[1].style.height = `${elem_length}px`
+        elem.children[1].style.marginTop = `${-parseInt(elem_length/2)+90}px`
+        css_hack_items[elem_i].innerHTML = `#slider_${elem_i}::-webkit-slider-thumb {height: ${elem_length}px;}`
+        elemsWidths[elem_i] = elem_length
+        elem.style.paddingLeft = `${parseInt(elem_length/2)}px`
+        editor.style.width = `${parseInt(elemsWidths.reduce((p,c)=>p+c,1)*1.25)}px`
+    }
+
+    if (value != null) {
+        elem.children[1].value = value
+    }
+}
 const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => {
 
     Array.from(editor.children).forEach(child => editor.removeChild(child))
@@ -777,57 +832,13 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
     window.pitchEditor.pitchNew = pitchOrig.map(p=>p)
     window.pitchEditor.dursNew = lengthsOrig.map(v=>v)
 
+    sliders = []
+    letterElems = []
+    autoinfer_timer = null
+    has_been_changed = false
+    css_hack_items = []
+    elemsWidths = []
 
-    const letterElems = []
-    const css_hack_items = []
-    const elemsWidths = []
-    let autoinfer_timer = null
-    let has_been_changed = false
-
-    const set_letter_display = (elem, elem_i, length=null, value=null) => {
-
-        if (length != null && elem) {
-            const elem_length = length/2
-            elem.style.width = `${parseInt(elem_length/2)}px`
-            elem.children[1].style.height = `${elem_length}px`
-            elem.children[1].style.marginTop = `${-parseInt(elem_length/2)+90}px`
-            css_hack_items[elem_i].innerHTML = `#slider_${elem_i}::-webkit-slider-thumb {height: ${elem_length}px;}`
-            elemsWidths[elem_i] = elem_length
-            elem.style.paddingLeft = `${parseInt(elem_length/2)}px`
-            editor.style.width = `${parseInt(elemsWidths.reduce((p,c)=>p+c,1)*1.25)}px`
-        }
-
-        if (value != null) {
-            elem.children[1].value = value
-        }
-    }
-
-
-    const setLetterFocus = (l, multi) => {
-        if (window.pitchEditor.letterFocus.length && !multi) {
-            window.pitchEditor.letterFocus.forEach(li => letterElems[li].style.color = "black")
-            window.pitchEditor.letterFocus = []
-        }
-        window.pitchEditor.letterFocus.push(l)
-        window.pitchEditor.letterFocus = Array.from(new Set(window.pitchEditor.letterFocus.sort()))
-        window.pitchEditor.letterFocus.forEach(li => letterElems[li].style.color = "red")
-
-        if (window.pitchEditor.letterFocus.length==1) {
-            letterLength.value = parseInt(window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]])
-            letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
-            letterLengthNumb.value = letterLength.value
-
-            letterLength.disabled = false
-            letterPitchNumb.disabled = false
-            letterLengthNumb.disabled = false
-        } else {
-            letterLength.disabled = true
-            letterPitchNumb.disabled = true
-            letterLengthNumb.disabled = true
-        }
-    }
-
-    const sliders = []
     letters.forEach((letter, l) => {
 
         const letterLabel = createElem("div", letter)
@@ -938,14 +949,6 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
         }
     })
 
-
-    const infer = () => {
-        has_been_changed = false
-        if (!isGenerating) {
-            generateVoiceButton.click()
-        }
-    }
-
     resetLetter_btn.addEventListener("click", () => {
         if (window.pitchEditor.letterFocus.length==0) {
             return
@@ -1052,6 +1055,9 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
     })
     pace_slid.addEventListener("change", () => {
         editorTooltip.style.display = "none"
+        if (autoplay_ckbx.checked) {
+            generateVoiceButton.click()
+        }
     })
 
     pace_slid.addEventListener("input", () => {
@@ -1087,6 +1093,118 @@ qnd_ckbx.addEventListener("change", () => {
         })
     })
 })
+
+// Keyboard actions
+// ================
+window.addEventListener("keydown", event => {
+    console.log(event.key, event.target, event)
+
+    if (event.target==dialogueInput) {
+        // Enter: Generate sample
+        if (event.key=="Enter") {
+            generateVoiceButton.click()
+            event.preventDefault()
+        }
+        return
+    }
+
+    const key = event.key.toLowerCase()
+
+    // Escape: close modals
+    if (key=="escape") {
+        closeModal()
+    }
+    // Space: bring focus to the input textarea
+    if (key==" ") {
+        setTimeout(() => dialogueInput.focus(), 0)
+    }
+    // CTRL-S: Keep sample
+    if (key=="s" && event.ctrlKey && !event.shiftKey) {
+        keepSampleFunction(false)
+    }
+    // CTRL-SHIFT-S: Keep sample (but with rename prompt)
+    if (key=="s" && event.ctrlKey && event.shiftKey) {
+        keepSampleFunction(true)
+    }
+    // Y/N for prompt modals
+    if (key=="y" || key=="n") {
+        if (document.querySelector("#activeModal")) {
+            const buttons = Array.from(document.querySelector("#activeModal").querySelectorAll("button"))
+            const yesBtn = buttons.find(btn => btn.innerHTML.toLowerCase()=="yes")
+            const noBtn = buttons.find(btn => btn.innerHTML.toLowerCase()=="no")
+            if (key=="y") yesBtn.click()
+            if (key=="n") noBtn.click()
+        }
+    }
+    // Left/Right arrows: Move between letter focused (clears multi-select, picks the min(0,first-1) if left, max($L, last+1) if right)
+    // SHIFT-Left/Right: multi-letter create selection range
+    if ((key=="arrowleft" || key=="arrowright") && !event.ctrlKey) {
+        event.preventDefault()
+        if (window.pitchEditor.letterFocus.length==0) {
+            setLetterFocus(0)
+        } else if (window.pitchEditor.letterFocus.length==1) {
+            const curr_l = window.pitchEditor.letterFocus[0]
+            const newIndex = key=="arrowleft" ? Math.max(0, curr_l-1) : Math.min(curr_l+1, window.pitchEditor.letters.length-1)
+            setLetterFocus(newIndex, event.shiftKey)
+        } else {
+            if (key=="arrowleft") {
+                setLetterFocus(Math.max(0, Math.min(...window.pitchEditor.letterFocus)-1), event.shiftKey)
+            } else {
+                setLetterFocus(Math.min(Math.max(...window.pitchEditor.letterFocus)+1, window.pitchEditor.letters.length-1), event.shiftKey)
+            }
+        }
+    }
+
+    // Up/Down arrows: Move pitch up/down for the letter(s) selected
+    if ((key=="arrowup" || key=="arrowdown") && !event.ctrlKey) {
+        if (window.pitchEditor.letterFocus.length) {
+            window.pitchEditor.letterFocus.forEach(li => {
+                sliders[li].value = parseFloat(sliders[li].value) + (key=="arrowup" ? 0.1 : -0.1)
+                window.pitchEditor.pitchNew[li] = parseFloat(sliders[li].value)
+                has_been_changed = true
+            })
+            if (autoinfer_timer != null) {
+                clearTimeout(autoinfer_timer)
+                autoinfer_timer = null
+            }
+            if (autoplay_ckbx.checked) {
+                autoinfer_timer = setTimeout(infer, 500)
+            }
+        }
+    }
+
+    // CTRL+Left/Right arrows: change the sequence-wide pacing
+    if ((key=="arrowleft" || key=="arrowright") && event.ctrlKey) {
+        pace_slid.value = parseFloat(pace_slid.value) + (key=="arrowleft"? -0.01 : 0.01)
+        const new_lengths = window.pitchEditor.dursNew.map((v,l) => v * pace_slid.value)
+        window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, new_lengths[l]* 10 + 50, null))
+        // if (autoinfer_timer != null) {
+        //     clearTimeout(autoinfer_timer)
+        //     autoinfer_timer = null
+        // }
+        // if (autoplay_ckbx.checked) {
+        //     autoinfer_timer = setTimeout(infer, 500)
+        // }
+    }
+
+    // CTRL+Up/Down arrows: increase/decrease buttons
+    if (key=="arrowup" && event.ctrlKey && !event.shiftKey) {
+        increase_btn.click()
+    }
+    if (key=="arrowdown" && event.ctrlKey && !event.shiftKey) {
+        decrease_btn.click()
+    }
+    // CTRL+SHIFT+Up/Down arrows: increase/decrease buttons
+    if (key=="arrowup" && event.ctrlKey && event.shiftKey) {
+        amplify_btn.click()
+    }
+    if (key=="arrowdown" && event.ctrlKey && event.shiftKey) {
+        flatten_btn.click()
+    }
+
+
+})
+
 
 // Patreon
 // =======
