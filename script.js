@@ -297,15 +297,15 @@ const makeSample = (src, newSample) => {
     renameButton.addEventListener("click", () => {
         createModal("prompt", {
             prompt: "Enter new file name, or submit unchanged to cancel.",
-            value: sample.querySelector("div").innerHTML+`.${fileFormat}`
+            value: sample.querySelector("div").innerHTML
         }).then(newFileName => {
             if (newFileName!=fileName) {
                 const oldPath = src.split("/").reverse()
                 const newPath = src.split("/").reverse()
-                oldPath[0] = sample.querySelector("div").innerHTML+`.${fileFormat}`
+                oldPath[0] = sample.querySelector("div").innerHTML
                 newPath[0] = newFileName
                 fs.renameSync(oldPath.reverse().join("/"), newPath.reverse().join("/"))
-                sample.querySelector("div").innerHTML = newFileName.split(`.${fileFormat}`)[0]
+                sample.querySelector("div").innerHTML = newFileName
             }
         })
     })
