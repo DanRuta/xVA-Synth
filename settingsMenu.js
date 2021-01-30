@@ -19,6 +19,9 @@ if ((typeof window.userSettings)=="string") {
 if (!window.userSettings.audio) { // For backwards compatibility
     window.userSettings.audio = {format: "wav", hz: 22050, padStart: 0, padEnd: 0}
 }
+if (!window.userSettings.sliderTooltip) { // For backwards compatibility
+    window.userSettings.sliderTooltip = true
+}
 if (!window.userSettings.audio.hz) { // For backwards compatibility
     window.userSettings.audio.hz = 22050
 }
@@ -39,6 +42,7 @@ if (!window.userSettings.audio.bitdepth) { // For backwards compatibility
 
 useGPUCbx.checked = window.userSettings.useGPU
 autoplay_ckbx.checked = window.userSettings.autoplay
+setting_slidersTooltip.checked = window.userSettings.sliderTooltip
 setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
 setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
 setting_audio_format.value = window.userSettings.audio.format
@@ -88,6 +92,10 @@ useGPUCbx.addEventListener("change", () => {
 })
 setting_autoplaygenCbx.addEventListener("click", () => {
     window.userSettings.autoPlayGen = setting_autoplaygenCbx.checked
+    saveUserSettings()
+})
+setting_slidersTooltip.addEventListener("click", () => {
+    window.userSettings.sliderTooltip = setting_slidersTooltip.checked
     saveUserSettings()
 })
 

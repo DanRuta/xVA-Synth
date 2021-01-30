@@ -11,7 +11,7 @@ const {xVAAppLogger} = require("./appLogger.js")
 const {saveUserSettings} = require("./settingsMenu.js")
 
 let themeColour
-window.appVersion = "v1.0.9"
+window.appVersion = "v1.1.0"
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 const oldCError = console.error
 console.error = (data) => {
@@ -802,12 +802,16 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
         letterDiv.addEventListener("click", () => setLetterFocus(l))
         slider.addEventListener("mousedown", () => {
             setLetterFocus(l)
-            const sliderRect = slider.getClientRects()[0]
-            editorTooltip.style.display = "flex"
-            const tooltipRect = editorTooltip.getClientRects()[0]
-            editorTooltip.style.left = `${parseInt(sliderRect.left)-parseInt(tooltipRect.width) - 15}px`
-            editorTooltip.style.top = `${parseInt(sliderRect.top)+parseInt(sliderRect.height/2) - parseInt(tooltipRect.height*0.75)}px`
-            editorTooltip.innerHTML = slider.value
+
+            // Tooltip
+            if (window.userSettings.sliderTooltip) {
+                const sliderRect = slider.getClientRects()[0]
+                editorTooltip.style.display = "flex"
+                const tooltipRect = editorTooltip.getClientRects()[0]
+                editorTooltip.style.left = `${parseInt(sliderRect.left)-parseInt(tooltipRect.width) - 15}px`
+                editorTooltip.style.top = `${parseInt(sliderRect.top)+parseInt(sliderRect.height/2) - parseInt(tooltipRect.height*0.75)}px`
+                editorTooltip.innerHTML = slider.value
+            }
         })
         slider.addEventListener("input", () => {
             editorTooltip.innerHTML = slider.value
@@ -888,13 +892,16 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
         const newWidth = window.pitchEditor.resetDurs[window.pitchEditor.letterFocus] * window.pitchEditor.lengthsMult[window.pitchEditor.letterFocus] * pace_slid.value //* 100
         set_letter_display(letterElem, window.pitchEditor.letterFocus, newWidth * 10 + 50)
 
-        const sliderRect = letterLength.getClientRects()[0]
-        editorTooltip.style.display = "flex"
-        const tooltipRect = editorTooltip.getClientRects()[0]
+        // Tooltip
+        if (window.userSettings.sliderTooltip) {
+            const sliderRect = letterLength.getClientRects()[0]
+            editorTooltip.style.display = "flex"
+            const tooltipRect = editorTooltip.getClientRects()[0]
 
-        editorTooltip.style.left = `${parseInt(sliderRect.left)+parseInt(sliderRect.width/2) - parseInt(tooltipRect.width*0.75)}px`
-        editorTooltip.style.top = `${parseInt(sliderRect.top)-parseInt(tooltipRect.height) - 15}px`
-        editorTooltip.innerHTML = letterLength.value
+            editorTooltip.style.left = `${parseInt(sliderRect.left)+parseInt(sliderRect.width/2) - parseInt(tooltipRect.width*0.75)}px`
+            editorTooltip.style.top = `${parseInt(sliderRect.top)-parseInt(tooltipRect.height) - 15}px`
+            editorTooltip.innerHTML = letterLength.value
+        }
     })
     letterLength.addEventListener("mouseup", () => {
         if (has_been_changed) {
