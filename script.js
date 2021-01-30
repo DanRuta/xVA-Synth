@@ -887,6 +887,14 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
         const letterElem = letterElems[window.pitchEditor.letterFocus]
         const newWidth = window.pitchEditor.resetDurs[window.pitchEditor.letterFocus] * window.pitchEditor.lengthsMult[window.pitchEditor.letterFocus] * pace_slid.value //* 100
         set_letter_display(letterElem, window.pitchEditor.letterFocus, newWidth * 10 + 50)
+
+        const sliderRect = letterLength.getClientRects()[0]
+        editorTooltip.style.display = "flex"
+        const tooltipRect = editorTooltip.getClientRects()[0]
+
+        editorTooltip.style.left = `${parseInt(sliderRect.left)+parseInt(sliderRect.width/2) - parseInt(tooltipRect.width*0.75)}px`
+        editorTooltip.style.top = `${parseInt(sliderRect.top)-parseInt(tooltipRect.height) - 15}px`
+        editorTooltip.innerHTML = letterLength.value
     })
     letterLength.addEventListener("mouseup", () => {
         if (has_been_changed) {
@@ -898,6 +906,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
                 autoinfer_timer = setTimeout(infer, 500)
             }
         }
+        editorTooltip.style.display = "none"
     })
 
     // Reset button
