@@ -60,18 +60,6 @@ saveUserSettings()
 
 // Settings Menu
 // =============
-settingsCog.addEventListener("click", () => {
-    settingsContainer.style.opacity = 0
-    settingsContainer.style.display = "flex"
-    chrome.style.opacity = 0.88
-    requestAnimationFrame(() => requestAnimationFrame(() => settingsContainer.style.opacity = 1))
-    requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
-})
-settingsContainer.addEventListener("click", event => {
-    if (event.target==settingsContainer) {
-        window.closeModal(settingsContainer)
-    }
-})
 useGPUCbx.addEventListener("change", () => {
     spinnerModal("Changing device...")
     fetch(`http://localhost:8008/setDevice`, {

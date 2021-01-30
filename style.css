@@ -1,3 +1,6 @@
+a {
+     display: inline;
+}
  button, .voiceType {
      background-color: #92ab20;
      border: none;
@@ -246,7 +249,7 @@
      opacity: 0.5;
  }
 
- #modalContainer, #settingsContainer, #updatesContainer {
+ #modalContainer, #settingsContainer, #updatesContainer, #infoContainer {
      display: flex;
      justify-content: center;
      align-items: center;
@@ -256,6 +259,9 @@
      transition: opacity 300ms;
      background: rgba(0,0,0,0.5);
      z-index: 100;
+ }
+ hr {
+     width: 100%;
  }
  .modal {
      display: flex;
@@ -288,9 +294,9 @@
      width: 25vw;
      text-align: center;
  }
- #settingsContainer > .modal {
-     height: 60vh;
-     width: 40vw;
+ #settingsContainer > .modal, #infoContainer > .modal {
+     height: 65vh;
+     width: 45vw;
      min-height: 500px;
      min-width: 500px;
  }
@@ -301,6 +307,9 @@
  #settingsOptionsContainer {
      flex-grow: 1;
      width: 85%;
+ }
+ #infoContainer > .modal > .flexTable > div > div:last-child {
+     width: 100%;
  }
  /*Chrome*/
  #chrome {
@@ -478,6 +487,7 @@
  .flexTable {
      display: flex;
      flex-direction: column;
+     width: 100%;
  }
 
  .flexTable > div {
@@ -521,7 +531,7 @@
      width: 20px;
  }
 
- #settingsCog, #patreonIcon, #updatesIcon {
+ #settingsCog, #patreonIcon, #updatesIcon, #infoIcon {
      display: flex;
      position: fixed;
      z-index: 1000;
@@ -529,9 +539,13 @@
      top: 35px;
      right: 0px;
  }
+ #infoIcon {
+    right: 77px;
+    top: 35px;
+ }
  #updatesIcon {
-    right: 80px;
-    top: 37px;
+    right: 110px;
+    top: 38px;
  }
  #updatesContainer > div {
      height: 40vh;
@@ -556,11 +570,16 @@
     height: 30px !important;
     width: 30px;
  }
- #settingsCog > svg, #patreonIcon > img, #updatesIcon > svg {
+ #settingsCog > svg, #patreonIcon > img, #updatesIcon > svg, #infoIcon > svg {
      height: 25px;
      cursor: pointer;
      filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7))
  }
+ #infoIcon > svg {
+     height: 30px;
+     top: ;
+ }
  #activeModal > span {
      overflow-y: auto;
+     overflow-x: hidden;
  }

@@ -162,6 +162,7 @@ const changeGame = () => {
     .slider::-webkit-slider-thumb {
         background-color: #${themeColour} !important;
     }
+    a {color: #${themeColour}};
     `
 
     try {fs.mkdirSync(`${path}/output/${meta[0]}`)} catch (e) {/*Do nothing*/}
@@ -721,11 +722,13 @@ const createModal = (type, message) => {
 window.closeModal = (container=modalContainer) => {
     return new Promise(resolve => {
         updatesContainer.style.opacity = 0
+        infoContainer.style.opacity = 0
         settingsContainer.style.opacity = 0
         container.style.opacity = 0
         chrome.style.opacity = 0.88
         setTimeout(() => {
             updatesContainer.style.display = "none"
+            infoContainer.style.display = "none"
             settingsContainer.style.display = "none"
             container.style.display = "none"
             try {
@@ -1097,7 +1100,6 @@ qnd_ckbx.addEventListener("change", () => {
 // Keyboard actions
 // ================
 window.addEventListener("keydown", event => {
-    console.log(event.key, event.target, event)
 
     if (event.target==dialogueInput) {
         // Enter: Generate sample
@@ -1194,17 +1196,29 @@ window.addEventListener("keydown", event => {
     if (key=="arrowdown" && event.ctrlKey && !event.shiftKey) {
         decrease_btn.click()
     }
-    // CTRL+SHIFT+Up/Down arrows: increase/decrease buttons
+    // CTRL+SHIFT+Up/Down arrows: amplify/flatten buttons
     if (key=="arrowup" && event.ctrlKey && event.shiftKey) {
         amplify_btn.click()
     }
     if (key=="arrowdown" && event.ctrlKey && event.shiftKey) {
         flatten_btn.click()
     }
-
-
 })
 
+infoIcon.addEventListener("click", () => {
+    closeModal().then(() => {
+        infoContainer.style.opacity = 0
+        infoContainer.style.display = "flex"
+        chrome.style.opacity = 0.88
+        requestAnimationFrame(() => requestAnimationFrame(() => infoContainer.style.opacity = 1))
+        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
+    })
+})
+infoContainer.addEventListener("click", event => {
+    if (event.target==infoContainer) {
+        closeModal(infoContainer)
+    }
+})
 
 // Patreon
 // =======
@@ -1220,9 +1234,11 @@ patreonIcon.addEventListener("click", () => {
         <br><hr><br>Special thanks:`
     names.forEach(name => content += `<br>${name}`)
 
-    createModal("error", content)
-    patreonLink.addEventListener("click", () => {
-        shell.openExternal("https://patreon.com")
+    closeModal().then(() => {
+        createModal("error", content)
+        patreonLink.addEventListener("click", () => {
+            shell.openExternal("https://patreon.com")
+        })
     })
 })
 fetch("http://danruta.co.uk/patreon.txt").then(r=>r.text()).then(data => fs.writeFileSync("patreon.txt", data, "utf8"))
@@ -1270,11 +1286,13 @@ const showUpdates = () => {
 }
 checkForUpdates()
 updatesIcon.addEventListener("click", () => {
-    updatesContainer.style.opacity = 0
-    updatesContainer.style.display = "flex"
-    chrome.style.opacity = 0.88
-    requestAnimationFrame(() => requestAnimationFrame(() => updatesContainer.style.opacity = 1))
-    requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
+    closeModal().then(() => {
+        updatesContainer.style.opacity = 0
+        updatesContainer.style.display = "flex"
+        chrome.style.opacity = 0.88
+        requestAnimationFrame(() => requestAnimationFrame(() => updatesContainer.style.opacity = 1))
+        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
+    })
 })
 updatesContainer.addEventListener("click", event => {
     if (event.target==updatesContainer) {
@@ -1286,3 +1304,21 @@ checkUpdates.addEventListener("click", () => {
     checkForUpdates()
 })
 showUpdates()
+
+
+// Settings
+// ========
+settingsCog.addEventListener("click", () => {
+    closeModal().then(() => {
+        settingsContainer.style.opacity = 0
+        settingsContainer.style.display = "flex"
+        chrome.style.opacity = 0.88
+        requestAnimationFrame(() => requestAnimationFrame(() => settingsContainer.style.opacity = 1))
+        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
+    })
+})
+settingsContainer.addEventListener("click", event => {
+    if (event.target==settingsContainer) {
+        window.closeModal(settingsContainer)
+    }
+})
