@@ -1008,8 +1008,23 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
         letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
     })
     pace_slid.addEventListener("change", () => {
+        editorTooltip.style.display = "none"
+    })
+
+    pace_slid.addEventListener("input", () => {
         const new_lengths = window.pitchEditor.dursNew.map((v,l) => v * pace_slid.value)
         letters.forEach((_, l) => set_letter_display(letterElems[l], l, new_lengths[l]* 10 + 50, null))
+
+        // Tooltip
+        if (window.userSettings.sliderTooltip) {
+            const sliderRect = pace_slid.getClientRects()[0]
+            editorTooltip.style.display = "flex"
+            const tooltipRect = editorTooltip.getClientRects()[0]
+
+            editorTooltip.style.left = `${parseInt(sliderRect.left)+parseInt(sliderRect.width/2) - parseInt(tooltipRect.width*0.75)}px`
+            editorTooltip.style.top = `${parseInt(sliderRect.top)-parseInt(tooltipRect.height) - 15}px`
+            editorTooltip.innerHTML = pace_slid.value
+        }
     })
 }
 autoplay_ckbx.addEventListener("change", () => {
