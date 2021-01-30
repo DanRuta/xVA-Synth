@@ -196,6 +196,30 @@ const changeGame = () => {
 
         button.addEventListener("click", () => {
 
+            const appVersionRequirement = model.version.toString().split(".").map(v=>parseInt(v))
+            const appVersionInts = appVersion.replace("v", "").split(".").map(v=>parseInt(v))
+            let appVersionOk = true
+            if (appVersionRequirement[0] <= appVersionInts[0] ) {
+                if (appVersionRequirement.length>1 && parseInt(appVersionRequirement[0]) == appVersionInts[0]) {
+                    if (appVersionRequirement[1] <= appVersionInts[1] ) {
+                        if (appVersionRequirement.length>2 && parseInt(appVersionRequirement[1]) == appVersionInts[1]) {
+                            if (appVersionRequirement[2] <= appVersionInts[2] ) {
+                            } else {
+                                appVersionOk = false
+                            }
+                        }
+                    } else {
+                        appVersionOk = false
+                    }
+                }
+            } else {
+                appVersionOk = false
+            }
+            if (!appVersionOk) {
+                window.errorModal(`This model requires app version v${model.version}<br><br>This app version: ${window.appVersion}`)
+                return
+            }
+
             window.currentModel = model
             window.currentModelButton = button
 
