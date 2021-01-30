@@ -760,7 +760,8 @@ window.addEventListener("resize", e => {
 
 const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => {
 
-    editor.innerHTML = ""
+    Array.from(editor.children).forEach(child => editor.removeChild(child))
+
     letters = letters ? letters : window.pitchEditor.letters
     pitchOrig = pitchOrig ? pitchOrig : window.pitchEditor.pitchNew
     lengthsOrig = lengthsOrig ? lengthsOrig : window.pitchEditor.dursNew
