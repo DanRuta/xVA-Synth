@@ -432,6 +432,19 @@
      text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
      margin-left: 3px;
  }
+ #editorTooltip {
+     display: none;
+     justify-content: center;
+     align-items: center;
+     position: fixed;
+     height: 40px;
+     width: 55px;
+     margin: 10px;
+     color: white;
+     background: rgba(0,0,0,0.75);
+     border-radius: 10%;
+ }
+ /*===========================================================================*/
 
  #adv_opts{
      display: flex;

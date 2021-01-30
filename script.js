@@ -778,7 +778,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
 
 
     const setLetterFocus = l => {
-        if (window.pitchEditor.letterFocus>0) {
+        if (window.pitchEditor.letterFocus>=0) {
             letterElems[window.pitchEditor.letterFocus].style.color = "black"
         }
         window.pitchEditor.letterFocus = l
@@ -800,13 +800,25 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
         letterDiv.appendChild(slider)
 
         letterDiv.addEventListener("click", () => setLetterFocus(l))
-        slider.addEventListener("mousedown", () => setLetterFocus(l))
+        slider.addEventListener("mousedown", () => {
+            setLetterFocus(l)
+            const sliderRect = slider.getClientRects()[0]
+            editorTooltip.style.display = "flex"
+            const tooltipRect = editorTooltip.getClientRects()[0]
+            editorTooltip.style.left = `${parseInt(sliderRect.left)-parseInt(tooltipRect.width) - 15}px`
+            editorTooltip.style.top = `${parseInt(sliderRect.top)+parseInt(sliderRect.height/2) - parseInt(tooltipRect.height*0.75)}px`
+            editorTooltip.innerHTML = slider.value
+        })
+        slider.addEventListener("input", () => {
+            editorTooltip.innerHTML = slider.value
+        })
         slider.addEventListener("change", () => {
             window.pitchEditor.pitchNew[l] = parseFloat(slider.value)
             has_been_changed = true
             if (autoplay_ckbx.checked) {
                 generateVoiceButton.click()
             }
+            editorTooltip.style.display = "none"
         })
 
         if (window.pitchEditor.letterFocus == l) {
