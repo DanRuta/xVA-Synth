@@ -128,6 +128,7 @@ def loadModel (fastpitch, ckpt, n_speakers, device):
     fastpitch.load_state_dict(checkpoint_data, strict=False)
 
     fastpitch.eval()
+    del checkpoint_data
     return fastpitch
 
 def infer(user_settings, text, output, fastpitch, hifi_gan, speaker_i, pace=1.0, pitch_data=None):
@@ -164,7 +165,11 @@ def infer(user_settings, text, output, fastpitch, hifi_gan, speaker_i, pace=1.0,
                 audio = audio[:mel_lens[i].item() * stft_hop_length]
                 audio = audio/torch.max(torch.abs(audio))
                 write(output, sampling_rate, audio.cpu().numpy())
+            del audios
+        del mel, mel_lens
 
     [pitch, durations] = [pitch_pred.cpu().detach().numpy()[0], dur_pred.cpu().detach().numpy()[0]]
     pitch_durations_text = ",".join([str(v) for v in pitch])+"\n"+",".join([str(v) for v in durations])
+
+    del pitch_pred, dur_pred, text
     return pitch_durations_text +"\n"+cleaned_text
