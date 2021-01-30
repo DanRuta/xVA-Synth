@@ -808,6 +808,10 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
         letterLength.value = parseInt(window.pitchEditor.dursNew[window.pitchEditor.letterFocus])
         letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus]*1000)/1000
         letterLengthNumb.value = letterLength.value
+
+        letterLength.disabled = false
+        letterPitchNumb.disabled = false
+        letterLengthNumb.disabled = false
     }
 
     const sliders = []
