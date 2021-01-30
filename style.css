@@ -354,6 +354,7 @@
  }
  #letterLength {
      width: 100px;
+     margin-right: 5px;
  }
  #editor {
      font-family: monospace;
@@ -469,6 +470,10 @@
  }
  #adv_opts > div > div > span {
      margin-right: 5px;
+ }
+ #adv_opts > div > div > input[type=number] {
+     height: 20px;
+     width: 50px;
  }
  .flexTable {
      display: flex;
