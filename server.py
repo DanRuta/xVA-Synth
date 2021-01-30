@@ -181,8 +181,6 @@ class Handler(BaseHTTPRequestHandler):
 
 
             self._set_response()
-            logger.info("req_response")
-            logger.info(req_response)
             self.wfile.write(req_response.encode("utf-8"))
         except Exception as e:
             with open("./DEBUG_request.txt", "w+") as f:
