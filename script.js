@@ -1224,7 +1224,7 @@ infoContainer.addEventListener("click", event => {
 // =======
 patreonIcon.addEventListener("click", () => {
 
-    const data = fs.readFileSync("patreon.txt", "utf8")
+    const data = fs.readFileSync(`${path}/patreon.txt`, "utf8")
     const names = new Set()
     data.split("\r\n").forEach(name => names.add(name))
     names.add("minermanb")
@@ -1241,7 +1241,7 @@ patreonIcon.addEventListener("click", () => {
         })
     })
 })
-fetch("http://danruta.co.uk/patreon.txt").then(r=>r.text()).then(data => fs.writeFileSync("patreon.txt", data, "utf8"))
+fetch("http://danruta.co.uk/patreon.txt").then(r=>r.text()).then(data => fs.writeFileSync(`${path}/patreon.txt`, data, "utf8"))
 
 
 // Updates
@@ -1251,7 +1251,7 @@ updatesVersions.innerHTML = `This app version: ${window.appVersion}`
 
 const checkForUpdates = () => {
     fetch("http://danruta.co.uk/xvasynth_updates.txt").then(r=>r.json()).then(data => {
-        fs.writeFileSync("updates.json", JSON.stringify(data), "utf8")
+        fs.writeFileSync(`${path}/updates.json`, JSON.stringify(data), "utf8")
         checkUpdates.innerHTML = "Check for updates now"
         showUpdates()
     }).catch(() => {
@@ -1259,7 +1259,7 @@ const checkForUpdates = () => {
     })
 }
 const showUpdates = () => {
-    window.updatesLog = fs.readFileSync("updates.json", "utf8")
+    window.updatesLog = fs.readFileSync(`${path}/updates.json`, "utf8")
     window.updatesLog = JSON.parse(window.updatesLog)
     const sortedLogVersions = Object.keys(window.updatesLog).map( a => a.split('.').map( n => +n+100000 ).join('.') ).sort()
         .map( a => a.split('.').map( n => +n-100000 ).join('.') )

@@ -69,7 +69,7 @@ def load_and_setup_modelWN(model_name, parser, checkpoint, device, logger, forwa
     model = models.get_model(model_name, model_config, device, logger, forward_is_infer=forward_is_infer, jitable=jitable)
 
     if checkpoint is not None:
-        checkpoint_data = torch.load(checkpoint)
+        checkpoint_data = torch.load(checkpoint, map_location="cpu")
         status = ''
 
         if 'state_dict' in checkpoint_data:

@@ -29,6 +29,13 @@ except:
         f.write(traceback.format_exc())
 
 try:
+    def script_method(fn, _rcb=None):
+        return fn
+    def script(obj, optimize=True, _frames_up=0, _rcb=None):
+        return obj
+    import torch.jit
+    torch.jit.script_method = script_method
+    torch.jit.script = script
     import torch
 except:
     with open("./DEBUG_err_import_torch.txt", "w+") as f:
@@ -190,11 +197,15 @@ class Handler(BaseHTTPRequestHandler):
             print(traceback.format_exc())
             logger.info(traceback.format_exc())
 
-server = HTTPServer(("",8008), Handler)
-with open("./DEBUG_server_up.txt", "w+") as f:
-    f.write("Starting")
-print("Server ready")
-logger.info("Server ready")
+try:
+    server = HTTPServer(("",8008), Handler)
+    with open("./DEBUG_server_up.txt", "w+") as f:
+        f.write("Starting")
+    print("Server ready")
+    logger.info("Server ready")
+except:
+    with open("./DEBUG_server_error.txt", "w+") as f:
+        f.write(traceback.format_exc())
 try:
     os.remove(f'{"./resources/app" if PROD else "."}/SERVER_STARTING')
 except:
