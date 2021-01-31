@@ -648,15 +648,19 @@ startingSplashInterval = setInterval(() => {
     }
 }, 100)
 
-loadAllModels().then(() => {
-    // Load the last selected game
-    const lastGame = localStorage.getItem("lastGame")
+if (fs.existsSync(`${path}/models/nvidia_waveglowpyt_fp32_20190427.pt`)) {
+    loadAllModels().then(() => {
+        // Load the last selected game
+        const lastGame = localStorage.getItem("lastGame")
 
-    if (lastGame) {
-        gameDropdown.value = lastGame
-    }
-    changeGame()
-})
+        if (lastGame) {
+            gameDropdown.value = lastGame
+        }
+        changeGame()
+    })
+} else {
+    errorModal("WaveGlow model not found. Download it also (separate download), and place the .pt file in the models folder.")
+}
 
 
 
