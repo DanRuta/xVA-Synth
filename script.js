@@ -939,21 +939,23 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
 
         set_letter_display(letterDiv, l, length, pitchOrig[l])
     })
-    letterPitchNumb.addEventListener("keyup", () => {
-        if (window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]!=parseFloat(letterPitchNumb.value)) {
+    letterPitchNumb.addEventListener("input", () => {
+        const lpnValue = parseFloat(letterPitchNumb.value) || 0
+        if (window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]!=lpnValue) {
             has_been_changed = true
         }
-        window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]] = parseFloat(letterPitchNumb.value)
+        window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]] = lpnValue
         sliders[window.pitchEditor.letterFocus[0]].value = letterPitchNumb.value
         if (autoplay_ckbx.checked) {
             generateVoiceButton.click()
         }
     })
     letterPitchNumb.addEventListener("change", () => {
-        if (window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]!=parseFloat(letterPitchNumb.value)) {
+        const lpnValue = parseFloat(letterPitchNumb.value) || 0
+        if (window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]!=lpnValue) {
             has_been_changed = true
         }
-        window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]] = parseFloat(letterPitchNumb.value)
+        window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]] = lpnValue
         sliders[window.pitchEditor.letterFocus[0]].value = letterPitchNumb.value
         if (autoplay_ckbx.checked) {
             generateVoiceButton.click()
@@ -1025,7 +1027,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
         }
         editorTooltip.style.display = "none"
     })
-    letterLengthNumb.addEventListener("keyup", () => {
+    letterLengthNumb.addEventListener("input", () => {
         letterLength.value = letterLengthNumb.value
         updateLetterLengthFromInput()
     })
