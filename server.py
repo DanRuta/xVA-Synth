@@ -115,7 +115,6 @@ def setDevice (use_gpu):
     global fastpitch_model
     try:
         fastpitch_model.device = torch.device('cuda' if use_gpu else 'cpu')
-        logger.info(f'setDevice: '+ str(fastpitch_model.device) + "----" + str(use_gpu))
         fastpitch_model = fastpitch_model.to(fastpitch_model.device)
 
         if fastpitch_model.waveglow is not None:

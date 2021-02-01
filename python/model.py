@@ -85,14 +85,15 @@ class Invertible1x1Conv(torch.nn.Module):
             W_inverse = Variable(W_inverse[..., None]).to(self.device)
             if z.type() == 'torch.cuda.HalfTensor' or z.type() == 'torch.HalfTensor':
                 W_inverse = W_inverse.half()
-            self.W_inverse = W_inverse
-        z = F.conv1d(z.to(self.device), self.W_inverse.to(self.device), bias=None, stride=1, padding=0)
+            self.W_inverse = W_inverse.to(self.device)
+        z = F.conv1d(z.to(self.device), self.W_inverse, bias=None, stride=1, padding=0)
         return z
 
     def set_device (self, device):
         self.device = device
         self.conv = self.conv.to(device)
-        self.W_inverse = self.W_inverse.to(self.device)
+        if hasattr(self, 'W_inverse'):
+            self.W_inverse = self.W_inverse.to(self.device)
 
 
 class WN(torch.nn.Module):
