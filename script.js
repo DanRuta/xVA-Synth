@@ -987,70 +987,70 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
     })
 
 
-    const updateLetterLengthFromInput = () => {
-        if (window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]] != letterLength.value) {
-            has_been_changed = true
-        }
-        window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]] = parseFloat(letterLength.value)
-
-        window.pitchEditor.letterFocus.forEach(l => {
-            const letterElem = letterElems[l]
-            const newWidth = window.pitchEditor.dursNew[l] * pace_slid.value //* 100
-            set_letter_display(letterElem, l, newWidth * 10 + 50)
-        })
+}
+const updateLetterLengthFromInput = () => {
+    if (window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]] != letterLength.value) {
+        has_been_changed = true
     }
-    let multiLetterLengthDelta = undefined
-    let multiLetterStartLengthVals = []
-    letterLength.addEventListener("mousedown", () => {
-        if (window.pitchEditor.letterFocus.length>1) {
-            multiLetterLengthDelta = letterLength.value
-            multiLetterStartLengthVals = window.pitchEditor.dursNew.map(v=>v)
-        }
-    })
-    letterLength.addEventListener("input", () => {
-        if (window.pitchEditor.letterFocus.length>1) {
-            window.pitchEditor.letterFocus.forEach(li => {
-                window.pitchEditor.dursNew[li] = multiLetterStartLengthVals[li]+(parseFloat(letterLength.value)-multiLetterLengthDelta)
-            })
-            updateLetterLengthFromInput()
-            return
-        }
+    window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]] = parseFloat(letterLength.value)
 
-        letterLengthNumb.value = letterLength.value
-        updateLetterLengthFromInput()
-
-        // Tooltip
-        if (window.userSettings.sliderTooltip) {
-            const sliderRect = letterLength.getClientRects()[0]
-            editorTooltip.style.display = "flex"
-            const tooltipRect = editorTooltip.getClientRects()[0]
-
-            editorTooltip.style.left = `${parseInt(sliderRect.left)+parseInt(sliderRect.width/2) - parseInt(tooltipRect.width*0.75)}px`
-            editorTooltip.style.top = `${parseInt(sliderRect.top)-parseInt(tooltipRect.height) - 15}px`
-            editorTooltip.innerHTML = letterLength.value
-        }
-    })
-    letterLength.addEventListener("mouseup", () => {
-        if (has_been_changed) {
-            if (autoinfer_timer != null) {
-                clearTimeout(autoinfer_timer)
-                autoinfer_timer = null
-            }
-            if (autoplay_ckbx.checked) {
-                autoinfer_timer = setTimeout(infer, 500)
-            }
-        }
-        editorTooltip.style.display = "none"
-    })
-    letterLengthNumb.addEventListener("input", () => {
-        letterLength.value = letterLengthNumb.value
-        updateLetterLengthFromInput()
-    })
-    letterLengthNumb.addEventListener("change", () => {
-        letterLength.value = letterLengthNumb.value
-        updateLetterLengthFromInput()
+    window.pitchEditor.letterFocus.forEach(l => {
+        const letterElem = letterElems[l]
+        const newWidth = window.pitchEditor.dursNew[l] * pace_slid.value //* 100
+        set_letter_display(letterElem, l, newWidth * 10 + 50)
     })
 }
+let multiLetterLengthDelta = undefined
+let multiLetterStartLengthVals = []
+letterLength.addEventListener("mousedown", () => {
+    if (window.pitchEditor.letterFocus.length>1) {
+        multiLetterLengthDelta = letterLength.value
+        multiLetterStartLengthVals = window.pitchEditor.dursNew.map(v=>v)
+    }
+})
+letterLength.addEventListener("input", () => {
+    if (window.pitchEditor.letterFocus.length>1) {
+        window.pitchEditor.letterFocus.forEach(li => {
+            window.pitchEditor.dursNew[li] = multiLetterStartLengthVals[li]+(parseFloat(letterLength.value)-multiLetterLengthDelta)
+        })
+        updateLetterLengthFromInput()
+        return
+    }
+
+    letterLengthNumb.value = letterLength.value
+    updateLetterLengthFromInput()
+
+    // Tooltip
+    if (window.userSettings.sliderTooltip) {
+        const sliderRect = letterLength.getClientRects()[0]
+        editorTooltip.style.display = "flex"
+        const tooltipRect = editorTooltip.getClientRects()[0]
+
+        editorTooltip.style.left = `${parseInt(sliderRect.left)+parseInt(sliderRect.width/2) - parseInt(tooltipRect.width*0.75)}px`
+        editorTooltip.style.top = `${parseInt(sliderRect.top)-parseInt(tooltipRect.height) - 15}px`
+        editorTooltip.innerHTML = letterLength.value
+    }
+})
+letterLength.addEventListener("mouseup", () => {
+    if (has_been_changed) {
+        if (autoinfer_timer != null) {
+            clearTimeout(autoinfer_timer)
+            autoinfer_timer = null
+        }
+        if (autoplay_ckbx.checked) {
+            autoinfer_timer = setTimeout(infer, 500)
+        }
+    }
+    editorTooltip.style.display = "none"
+})
+letterLengthNumb.addEventListener("input", () => {
+    letterLength.value = letterLengthNumb.value
+    updateLetterLengthFromInput()
+})
+letterLengthNumb.addEventListener("change", () => {
+    letterLength.value = letterLengthNumb.value
+    updateLetterLengthFromInput()
+})
 
 // Reset button
 reset_btn.addEventListener("click", () => {
