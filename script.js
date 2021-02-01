@@ -1261,14 +1261,16 @@ patreonIcon.addEventListener("click", () => {
     names.add("minermanb")
 
     let content = `You can support development on patreon at this link:<br>
-        <a href="https://www.patreon.com/bePatron?u=48461563" data-patreon-widget-type="become-patron-button">Become a Patron!</a><script async src="https://c6.patreon.com/becomePatronButton.bundle.js"></script>
-        <span id="patreonLink" style='color:#${themeColour};text-decoration: underline;cursor:pointer;'>PATREON</span>
+        <span id="patreonButton" href="https://www.patreon.com/bePatron?u=48461563" data-patreon-widget-type="become-patron-button">
+        <svg style="height: 1rem;width: 1rem;" viewBox="0 0 569 546" xmlns="http://www.w3.org/2000/svg"><g><circle cx="362.589996" fill="#ffffff" cy="204.589996" data-fill="1" id="Oval" r="204.589996"></circle><rect fill="#ffffff" data-fill="2" height="545.799988" id="Rectangle" width="100" x="0" y="0"></rect></g></svg>
+        <span style="width:5px"></span>
+        Become a Patron!</span>
         <br><hr><br>Special thanks:`
     names.forEach(name => content += `<br>${name}`)
 
     closeModal().then(() => {
         createModal("error", content)
-        patreonLink.addEventListener("click", () => {
+        patreonButton.addEventListener("click", () => {
             shell.openExternal("https://patreon.com")
         })
     })
