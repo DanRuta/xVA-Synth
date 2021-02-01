@@ -1035,74 +1035,74 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
         letterLength.value = letterLengthNumb.value
         updateLetterLengthFromInput()
     })
-
-    // Reset button
-    reset_btn.addEventListener("click", () => {
-        window.pitchEditor.dursNew = window.pitchEditor.resetDurs
-        window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map(p=>p)
-        letters.forEach((_, l) => set_letter_display(letterElems[l], l, window.pitchEditor.resetDurs[l]*10+50, window.pitchEditor.pitchNew[l]))
-        letterLength.value = parseInt(window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]])
-        if (window.pitchEditor.letterFocus.length==1) {
-            letterLengthNumb.value = parseInt(window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]])
-            letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
-        }
-    })
-    amplify_btn.addEventListener("click", () => {
-        window.pitchEditor.ampFlatCounter += 1
-        window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=> {
-            const newVal = p*(1+window.pitchEditor.ampFlatCounter*0.025)
-            return newVal>0 ? Math.min(3, newVal) : Math.max(-3, newVal)
-        })
-        letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
-        if (window.pitchEditor.letterFocus.length==1) {
-            letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
-        }
-    })
-    flatten_btn.addEventListener("click", () => {
-        window.pitchEditor.ampFlatCounter -= 1
-        window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p*Math.max(0, 1+window.pitchEditor.ampFlatCounter*0.025))
-        letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
-        if (window.pitchEditor.letterFocus.length==1) {
-            letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
-        }
-    })
-    increase_btn.addEventListener("click", () => {
-        window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p+0.1)
-        letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
-        if (window.pitchEditor.letterFocus.length==1) {
-            letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
-        }
-    })
-    decrease_btn.addEventListener("click", () => {
-        window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p-0.1)
-        letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
-        if (window.pitchEditor.letterFocus.length==1) {
-            letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
-        }
-    })
-    pace_slid.addEventListener("change", () => {
-        editorTooltip.style.display = "none"
-        if (autoplay_ckbx.checked) {
-            generateVoiceButton.click()
-        }
-    })
-
-    pace_slid.addEventListener("input", () => {
-        const new_lengths = window.pitchEditor.dursNew.map((v,l) => v * pace_slid.value)
-        letters.forEach((_, l) => set_letter_display(letterElems[l], l, new_lengths[l]* 10 + 50, null))
-
-        // Tooltip
-        if (window.userSettings.sliderTooltip) {
-            const sliderRect = pace_slid.getClientRects()[0]
-            editorTooltip.style.display = "flex"
-            const tooltipRect = editorTooltip.getClientRects()[0]
-
-            editorTooltip.style.left = `${parseInt(sliderRect.left)+parseInt(sliderRect.width/2) - parseInt(tooltipRect.width*0.75)}px`
-            editorTooltip.style.top = `${parseInt(sliderRect.top)-parseInt(tooltipRect.height) - 15}px`
-            editorTooltip.innerHTML = pace_slid.value
-        }
-    })
 }
+
+// Reset button
+reset_btn.addEventListener("click", () => {
+    window.pitchEditor.dursNew = window.pitchEditor.resetDurs
+    window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map(p=>p)
+    window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, window.pitchEditor.resetDurs[l]*10+50, window.pitchEditor.pitchNew[l]))
+    letterLength.value = parseInt(window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]])
+    if (window.pitchEditor.letterFocus.length==1) {
+        letterLengthNumb.value = parseInt(window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]])
+        letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
+    }
+})
+amplify_btn.addEventListener("click", () => {
+    window.pitchEditor.ampFlatCounter += 1
+    window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map(p=> {
+        const newVal = p*(1+window.pitchEditor.ampFlatCounter*0.025)
+        return newVal>0 ? Math.min(3, newVal) : Math.max(-3, newVal)
+    })
+    window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
+    if (window.pitchEditor.letterFocus.length==1) {
+        letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
+    }
+})
+flatten_btn.addEventListener("click", () => {
+    window.pitchEditor.ampFlatCounter -= 1
+    window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map(p=>p*Math.max(0, 1+window.pitchEditor.ampFlatCounter*0.025))
+    window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
+    if (window.pitchEditor.letterFocus.length==1) {
+        letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
+    }
+})
+increase_btn.addEventListener("click", () => {
+    window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p+0.1)
+    window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
+    if (window.pitchEditor.letterFocus.length==1) {
+        letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
+    }
+})
+decrease_btn.addEventListener("click", () => {
+    window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p-0.1)
+    window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
+    if (window.pitchEditor.letterFocus.length==1) {
+        letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
+    }
+})
+pace_slid.addEventListener("change", () => {
+    editorTooltip.style.display = "none"
+    if (autoplay_ckbx.checked) {
+        generateVoiceButton.click()
+    }
+})
+
+pace_slid.addEventListener("input", () => {
+    const new_lengths = window.pitchEditor.dursNew.map((v,l) => v * pace_slid.value)
+    window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, new_lengths[l]* 10 + 50, null))
+
+    // Tooltip
+    if (window.userSettings.sliderTooltip) {
+        const sliderRect = pace_slid.getClientRects()[0]
+        editorTooltip.style.display = "flex"
+        const tooltipRect = editorTooltip.getClientRects()[0]
+
+        editorTooltip.style.left = `${parseInt(sliderRect.left)+parseInt(sliderRect.width/2) - parseInt(tooltipRect.width*0.75)}px`
+        editorTooltip.style.top = `${parseInt(sliderRect.top)-parseInt(tooltipRect.height) - 15}px`
+        editorTooltip.innerHTML = pace_slid.value
+    }
+})
 autoplay_ckbx.addEventListener("change", () => {
     window.userSettings.autoplay = autoplay_ckbx.checked
     saveUserSettings()
@@ -1259,6 +1259,7 @@ patreonIcon.addEventListener("click", () => {
     names.add("minermanb")
 
     let content = `You can support development on patreon at this link:<br>
+        <a href="https://www.patreon.com/bePatron?u=48461563" data-patreon-widget-type="become-patron-button">Become a Patron!</a><script async src="https://c6.patreon.com/becomePatronButton.bundle.js"></script>
         <span id="patreonLink" style='color:#${themeColour};text-decoration: underline;cursor:pointer;'>PATREON</span>
         <br><hr><br>Special thanks:`
     names.forEach(name => content += `<br>${name}`)
