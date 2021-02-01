@@ -305,6 +305,7 @@ const makeSample = (src, newSample) => {
             window.pitchEditor = editData.pitchEditor
             dialogueInput.value = editData.inputSequence
             setPitchEditorValues(undefined, undefined, undefined, true)
+            pace_slid.value = editData.pacing
 
             if (samplePlay.style.display!="none") {
                 samplePlay.removeChild(samplePlay.children[0])
@@ -525,7 +526,7 @@ const saveFile = (from, to) => {
                     console.log("res", res)
                     window.errorModal(`Something went wrong<br><br>Input: ${from}<br>Output: ${to}<br><br>${res}`)
                 } else {
-                    fs.writeFileSync(`${to}.json`, JSON.stringify({inputSequence: dialogueInput.value.trim(), pitchEditor: window.pitchEditor}, null, 4))
+                    fs.writeFileSync(`${to}.json`, JSON.stringify({inputSequence: dialogueInput.value.trim(), pitchEditor: window.pitchEditor, pacing: parseFloat(pace_slid.value)}, null, 4))
                     voiceSamples.appendChild(makeSample(to, true))
                 }
             })
@@ -542,7 +543,7 @@ const saveFile = (from, to) => {
                 console.log(err)
                 window.appLogger.log(err)
             }
-            fs.writeFileSync(`${to}.json`, JSON.stringify({inputSequence: dialogueInput.value.trim(), pitchEditor: window.pitchEditor}, null, 4))
+            fs.writeFileSync(`${to}.json`, JSON.stringify({inputSequence: dialogueInput.value.trim(), pitchEditor: window.pitchEditor, pacing: parseFloat(pace_slid.value)}, null, 4))
             voiceSamples.appendChild(makeSample(to, true))
         })
     }
@@ -835,6 +836,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
 
     if (isFreshRegen) {
         window.pitchEditor.letterFocus = []
+        pace_slid.value = 1
     }
 
     window.pitchEditor.letters = letters
