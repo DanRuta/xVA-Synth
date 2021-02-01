@@ -294,7 +294,7 @@ a {
      width: 25vw;
      text-align: center;
  }
- #settingsContainer > .modal, #infoContainer > .modal {
+ #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal {
      height: 65vh;
      width: 45vw;
      min-height: 500px;
@@ -552,7 +552,7 @@ a {
  }
  #updatesLogList {
      width: 100%;
-     max-height: 150px;
+     max-height: 50vh;
      overflow-y: auto;
  }
  /*#updatesLogList > div {

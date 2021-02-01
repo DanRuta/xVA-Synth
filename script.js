@@ -1343,10 +1343,13 @@ const showUpdates = () => {
     }
 
     updatesLogList.innerHTML = ""
-    sortedLogVersions.forEach(version => {
-        const versionLabel = createElem("div", version)
-        const versionText = createElem("div", window.updatesLog[version])
-        updatesLogList.appendChild(createElem("div", versionLabel, versionText))
+    sortedLogVersions.reverse().forEach(version => {
+        const versionLabel = createElem("h2", version)
+        const logItem = createElem("div", versionLabel)
+        window.updatesLog[version].split("\n").forEach(line => {
+            logItem.appendChild(createElem("div", line))
+        })
+        updatesLogList.appendChild(logItem)
     })
 }
 checkForUpdates()
