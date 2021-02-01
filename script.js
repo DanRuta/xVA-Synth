@@ -11,7 +11,7 @@ const {xVAAppLogger} = require("./appLogger.js")
 const {saveUserSettings} = require("./settingsMenu.js")
 
 let themeColour
-window.appVersion = "v1.1.0"
+window.appVersion = "v1.1.1"
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 const oldCError = console.error
 console.error = (data) => {
@@ -790,7 +790,6 @@ const setLetterFocus = (l, multi) => {
         letterPitchNumb.disabled = false
         letterLengthNumb.disabled = false
     } else {
-        letterLength.disabled = true
         letterPitchNumb.disabled = true
         letterPitchNumb.value = ""
         letterLengthNumb.disabled = true
@@ -866,16 +865,16 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
         letterDiv.appendChild(slider)
 
         letterLabel.addEventListener("click", event => setLetterFocus(l, event.ctrlKey))
-        let multiLetterDelta = undefined
-        let multiLetterStartVals = []
+        let multiLetterPitchDelta = undefined
+        let multiLetterStartPitchVals = []
         slider.addEventListener("mousedown", () => {
             if (window.pitchEditor.letterFocus.length <= 1) {
                 setLetterFocus(l)
             }
 
             if (window.pitchEditor.letterFocus.length>1) {
-                multiLetterDelta = slider.value
-                multiLetterStartVals = sliders.map(slider => parseFloat(slider.value))
+                multiLetterPitchDelta = slider.value
+                multiLetterStartPitchVals = sliders.map(slider => parseFloat(slider.value))
             }
 
             // Tooltip
@@ -895,7 +894,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
             if (window.pitchEditor.letterFocus.length>1) {
                 window.pitchEditor.letterFocus.forEach(li => {
                     if (li!=l) {
-                        sliders[li].value = multiLetterStartVals[li]+(slider.value-multiLetterDelta)
+                        sliders[li].value = multiLetterStartPitchVals[li]+(slider.value-multiLetterPitchDelta)
                     }
                     window.pitchEditor.pitchNew[li] = parseFloat(sliders[li].value)
                 })
@@ -994,12 +993,26 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
         }
         window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]] = parseFloat(letterLength.value)
 
-        const letterElem = letterElems[window.pitchEditor.letterFocus[0]]
-        const newWidth = window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]] * pace_slid.value //* 100
-        set_letter_display(letterElem, window.pitchEditor.letterFocus[0], newWidth * 10 + 50)
+        window.pitchEditor.letterFocus.forEach(l => {
+            const letterElem = letterElems[l]
+            const newWidth = window.pitchEditor.dursNew[l] * pace_slid.value //* 100
+            set_letter_display(letterElem, l, newWidth * 10 + 50)
+        })
     }
+    let multiLetterLengthDelta = undefined
+    let multiLetterStartLengthVals = []
+    letterLength.addEventListener("mousedown", () => {
+        if (window.pitchEditor.letterFocus.length>1) {
+            multiLetterLengthDelta = letterLength.value
+            multiLetterStartLengthVals = window.pitchEditor.dursNew.map(v=>v)
+        }
+    })
     letterLength.addEventListener("input", () => {
-        if (window.pitchEditor.letterFocus.length!=1) {
+        if (window.pitchEditor.letterFocus.length>1) {
+            window.pitchEditor.letterFocus.forEach(li => {
+                window.pitchEditor.dursNew[li] = multiLetterStartLengthVals[li]+(parseFloat(letterLength.value)-multiLetterLengthDelta)
+            })
+            updateLetterLengthFromInput()
             return
         }
 
