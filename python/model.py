@@ -86,11 +86,13 @@ class Invertible1x1Conv(torch.nn.Module):
             if z.type() == 'torch.cuda.HalfTensor' or z.type() == 'torch.HalfTensor':
                 W_inverse = W_inverse.half()
             self.W_inverse = W_inverse
-        z = F.conv1d(z.to(self.device), self.W_inverse, bias=None, stride=1, padding=0)
+        z = F.conv1d(z.to(self.device), self.W_inverse.to(self.device), bias=None, stride=1, padding=0)
         return z
 
     def set_device (self, device):
+        self.device = device
         self.conv = self.conv.to(device)
+        self.W_inverse = self.W_inverse.to(self.device)
 
 
 class WN(torch.nn.Module):
@@ -178,6 +180,14 @@ class WN(torch.nn.Module):
                 output = skip_acts + output
         return self.end(output)
 
+    def set_device (self, device):
+        self.device = device
+        self.end = self.end.to(device)
+        self.start = self.start.to(device)
+        self.in_layers = self.in_layers.to(device)
+        self.cond_layers = self.cond_layers.to(device)
+        self.res_skip_layers = self.res_skip_layers.to(device)
+
 
 class WaveGlow(torch.nn.Module):
     def __init__(self, n_mel_channels, n_flows, n_group, n_early_every, n_early_size, WN_config, logger=None, device=None):
@@ -210,11 +220,15 @@ class WaveGlow(torch.nn.Module):
         self.set_device(self.device)
 
     def set_device (self, device):
+        self.logger.info(f'WaveGlow set_device to ' + str(device))
         self.device = device
         self = self.to(self.device)
-        self.WN = self.WN.to(self.device)
+        self.upsample = self.upsample.to(self.device)
         self.convinv = self.convinv.to(self.device)
+        self.WN = self.WN.to(self.device)
         for child in self.convinv.children():
+            child.set_device(device)
+        for child in self.WN.children():
             child.set_device(device)
 
     def forward(self, forward_input):

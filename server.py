@@ -77,7 +77,7 @@ try:
         head = data[0].split(",")
         values = data[1].split(",")
         for h, hv in enumerate(head):
-            user_settings[hv] = values[h]
+            user_settings[hv] = values[h]=="True"
     if CPU_ONLY:
         user_settings["use_gpu"] = False
     logger.info(str(user_settings))
@@ -90,10 +90,10 @@ def write_settings ():
         vals = ",".join([str(user_settings[h]) for h in head])
         f.write("\n".join([",".join(head), vals]))
 
-use_gpu = user_settings["use_gpu"]=="True"
+use_gpu = user_settings["use_gpu"]
 print(f'user_settings, {user_settings}')
 try:
-    fastpitch_model = fastpitch.init(PROD, use_gpu=use_gpu, hifi_gan=user_settings["hifi_gan"]=="True", logger=logger)
+    fastpitch_model = fastpitch.init(PROD, use_gpu=use_gpu, hifi_gan=user_settings["hifi_gan"], logger=logger)
 except:
     print(traceback.format_exc())
     logger.info(traceback.format_exc())
@@ -113,13 +113,17 @@ except:
 
 def setDevice (use_gpu):
     global fastpitch_model
-    fastpitch_model.device = torch.device('cuda' if use_gpu else 'cpu')
-    fastpitch_model = fastpitch_model.to(fastpitch_model.device)
+    try:
+        fastpitch_model.device = torch.device('cuda' if use_gpu else 'cpu')
+        logger.info(f'setDevice: '+ str(fastpitch_model.device) + "----" + str(use_gpu))
+        fastpitch_model = fastpitch_model.to(fastpitch_model.device)
 
-    if fastpitch_model.waveglow is not None:
-        fastpitch_model.waveglow.set_device(fastpitch_model.device)
-        fastpitch_model.denoiser.set_device(fastpitch_model.device)
-    fastpitch_model.hifi_gan.to(fastpitch_model.device)
+        if fastpitch_model.waveglow is not None:
+            fastpitch_model.waveglow.set_device(fastpitch_model.device)
+            fastpitch_model.denoiser.set_device(fastpitch_model.device)
+        fastpitch_model.hifi_gan.to(fastpitch_model.device)
+    except:
+        logger.info(traceback.format_exc())
 setDevice(user_settings["use_gpu"])
 
 
@@ -155,8 +159,8 @@ class Handler(BaseHTTPRequestHandler):
                 write_settings()
 
                 if not hifi_gan and fastpitch_model.waveglow is None:
-                    use_gpu = user_settings["use_gpu"]=="True"
-                    fastpitch_model = fastpitch.init_waveglow(use_gpu, fastpitch_model)
+                    use_gpu = user_settings["use_gpu"]
+                    fastpitch_model = fastpitch.init_waveglow(use_gpu, fastpitch_model, logger)
 
             if self.path == "/setDevice":
                 use_gpu = post_data["device"]=="gpu"
