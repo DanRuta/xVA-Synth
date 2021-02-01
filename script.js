@@ -1181,6 +1181,10 @@ window.addEventListener("keydown", event => {
             if (autoplay_ckbx.checked) {
                 autoinfer_timer = setTimeout(infer, 500)
             }
+
+            if (window.pitchEditor.letterFocus.length==1) {
+                letterPitchNumb.value = sliders[window.pitchEditor.letterFocus[0]].value
+            }
         }
     }
 
