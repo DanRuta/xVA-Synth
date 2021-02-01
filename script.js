@@ -1163,6 +1163,7 @@ window.addEventListener("keydown", event => {
 
     // Up/Down arrows: Move pitch up/down for the letter(s) selected
     if ((key=="arrowup" || key=="arrowdown") && !event.ctrlKey) {
+        event.preventDefault()
         if (window.pitchEditor.letterFocus.length) {
             window.pitchEditor.letterFocus.forEach(li => {
                 sliders[li].value = parseFloat(sliders[li].value) + (key=="arrowup" ? 0.1 : -0.1)
