@@ -1052,7 +1052,10 @@ reset_btn.addEventListener("click", () => {
 })
 amplify_btn.addEventListener("click", () => {
     window.pitchEditor.ampFlatCounter += 1
-    window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map(p=> {
+    window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map((p, pi) => {
+        if (window.pitchEditor.letterFocus.length>1 && window.pitchEditor.letterFocus.indexOf(pi)==-1) {
+            return p
+        }
         const newVal = p*(1+window.pitchEditor.ampFlatCounter*0.025)
         return newVal>0 ? Math.min(3, newVal) : Math.max(-3, newVal)
     })
@@ -1063,21 +1066,36 @@ amplify_btn.addEventListener("click", () => {
 })
 flatten_btn.addEventListener("click", () => {
     window.pitchEditor.ampFlatCounter -= 1
-    window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map(p=>p*Math.max(0, 1+window.pitchEditor.ampFlatCounter*0.025))
+    window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map((p,pi) => {
+        if (window.pitchEditor.letterFocus.length>1 && window.pitchEditor.letterFocus.indexOf(pi)==-1) {
+            return p
+        }
+        return p*Math.max(0, 1+window.pitchEditor.ampFlatCounter*0.025)
+    })
     window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
     if (window.pitchEditor.letterFocus.length==1) {
         letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
     }
 })
 increase_btn.addEventListener("click", () => {
-    window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p+0.1)
+    window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map((p,pi) => {
+        if (window.pitchEditor.letterFocus.length>1 && window.pitchEditor.letterFocus.indexOf(pi)==-1) {
+            return p
+        }
+        return p+0.1
+    })
     window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
     if (window.pitchEditor.letterFocus.length==1) {
         letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
     }
 })
 decrease_btn.addEventListener("click", () => {
-    window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map(p=>p-0.1)
+    window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map((p,pi) => {
+        if (window.pitchEditor.letterFocus.length>1 && window.pitchEditor.letterFocus.indexOf(pi)==-1) {
+            return p
+        }
+        return p-0.1
+    })
     window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
     if (window.pitchEditor.letterFocus.length==1) {
         letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
