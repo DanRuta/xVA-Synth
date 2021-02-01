@@ -894,6 +894,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
                     if (li!=l) {
                         sliders[li].value = multiLetterStartVals[li]+(slider.value-multiLetterDelta)
                     }
+                    window.pitchEditor.pitchNew[li] = parseFloat(sliders[li].value)
                 })
             }
         })
