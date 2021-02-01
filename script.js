@@ -624,48 +624,9 @@ keepSampleButton.addEventListener("click", event => keepSampleFunction(event.shi
 gameDropdown.addEventListener("change", changeGame)
 
 
-let startingSplashInterval
-let loadingStage = 0
-startingSplashInterval = setInterval(() => {
-    if (fs.existsSync(`${path}/FASTPITCH_LOADING`)) {
-        if (loadingStage==0) {
-            spinnerModal("Loading...<br>May take a minute<br><br>Building FastPitch model...")
-            loadingStage = 1
-        }
-    } else if (fs.existsSync(`${path}/WAVEGLOW_LOADING`)) {
-        if (loadingStage==1) {
-            activeModal.children[0].innerHTML = "Loading...<br>May take a minute<br><br>Loading WaveGlow model..."
-            loadingStage = 2
-        }
-    } else if (fs.existsSync(`${path}/SERVER_STARTING`)) {
-        if (loadingStage==2) {
-            activeModal.children[0].innerHTML = "Loading...<br>May take a minute<br><br>Starting up the python backend..."
-            loadingStage = 3
-        }
-    } else {
-        closeModal().then(() => {
-            clearInterval(startingSplashInterval)
-        })
-    }
-}, 100)
-
-if (fs.existsSync(`${path}/models/nvidia_waveglowpyt_fp32_20190427.pt`)) {
-    loadAllModels().then(() => {
-        // Load the last selected game
-        const lastGame = localStorage.getItem("lastGame")
-
-        if (lastGame) {
-            gameDropdown.value = lastGame
-        }
-        changeGame()
-    })
-} else {
-    errorModal("WaveGlow model not found. Download it also (separate download), and place the .pt file in the models folder.")
-}
-
-
-
-
+window.confirmModal = message => new Promise(resolve => resolve(createModal("confirm", message)))
+window.spinnerModal = message => new Promise(resolve => resolve(createModal("spinner", message)))
+window.errorModal = message => new Promise(resolve => resolve(createModal("error", message)))
 const createModal = (type, message) => {
     return new Promise(resolve => {
         modalContainer.innerHTML = ""
@@ -744,9 +705,32 @@ window.closeModal = (container=modalContainer) => {
     })
 }
 
-window.confirmModal = message => new Promise(resolve => resolve(createModal("confirm", message)))
-window.spinnerModal = message => new Promise(resolve => resolve(createModal("spinner", message)))
-window.errorModal = message => new Promise(resolve => resolve(createModal("error", message)))
+let startingSplashInterval
+let loadingStage = 0
+startingSplashInterval = setInterval(() => {
+    if (fs.existsSync(`${path}/FASTPITCH_LOADING`)) {
+        if (loadingStage==0) {
+            spinnerModal("Loading...<br>May take a minute<br><br>Building FastPitch model...")
+            loadingStage = 1
+        }
+    } else if (fs.existsSync(`${path}/WAVEGLOW_LOADING`)) {
+        if (loadingStage==1) {
+            activeModal.children[0].innerHTML = "Loading...<br>May take a minute<br><br>Loading WaveGlow model..."
+            loadingStage = 2
+        }
+    } else if (fs.existsSync(`${path}/SERVER_STARTING`)) {
+        if (loadingStage==2) {
+            activeModal.children[0].innerHTML = "Loading...<br>May take a minute<br><br>Starting up the python backend..."
+            loadingStage = 3
+        }
+    } else {
+        closeModal().then(() => {
+            clearInterval(startingSplashInterval)
+        })
+    }
+}, 100)
+
+
 
 
 modalContainer.addEventListener("click", event => {
@@ -1390,3 +1374,22 @@ settingsContainer.addEventListener("click", event => {
         window.closeModal(settingsContainer)
     }
 })
+
+
+
+if (fs.existsSync(`${path}/models/nvidia_waveglowpyt_fp32_20190427.pt`)) {
+    loadAllModels().then(() => {
+        // Load the last selected game
+        const lastGame = localStorage.getItem("lastGame")
+
+        if (lastGame) {
+            gameDropdown.value = lastGame
+        }
+        changeGame()
+    })
+} else {
+    console.log("No Waveglow")
+    setTimeout(() => {
+        window.errorModal("WaveGlow model not found. Download it also (separate download), and place the .pt file in the models folder.")
+    }, 1500)
+}
