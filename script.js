@@ -791,7 +791,9 @@ const setLetterFocus = (l, multi) => {
     } else {
         letterLength.disabled = true
         letterPitchNumb.disabled = true
+        letterPitchNumb.value = ""
         letterLengthNumb.disabled = true
+        letterLengthNumb.value = ""
     }
 }
 
@@ -887,7 +889,6 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
         slider.addEventListener("mouseup", () => editorTooltip.style.display = "none")
         slider.addEventListener("input", () => {
             editorTooltip.innerHTML = slider.value
-            letterPitchNumb.value = slider.value
 
             if (window.pitchEditor.letterFocus.length>1) {
                 window.pitchEditor.letterFocus.forEach(li => {
@@ -896,6 +897,8 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
                     }
                     window.pitchEditor.pitchNew[li] = parseFloat(sliders[li].value)
                 })
+            } else if (window.pitchEditor.letterFocus.length==1) {
+                letterPitchNumb.value = slider.value
             }
         })
 
