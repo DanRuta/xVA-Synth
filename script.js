@@ -1109,7 +1109,7 @@ qnd_ckbx.addEventListener("change", () => {
 // ================
 window.addEventListener("keydown", event => {
 
-    if (event.target==dialogueInput) {
+    if (event.target==dialogueInput || event.target==letterPitchNumb || event.target==letterLengthNumb) {
         // Enter: Generate sample
         if (event.key=="Enter") {
             generateVoiceButton.click()
