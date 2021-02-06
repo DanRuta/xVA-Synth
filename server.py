@@ -6,8 +6,6 @@ PROD = (not (os.getcwd() == "F:\\Speech\\xVA-Synth") and "Plan.todo" in os.getcw
 CPU_ONLY = False
 CPU_ONLY = True
 
-with open("./DEBUG.txt", "w+") as f:
-    f.write(os.getcwd())
 with open(f'{"./resources/app" if PROD else "."}/FASTPITCH_LOADING', "w+") as f:
     f.write("")
 with open(f'{"./resources/app" if PROD else "."}/WAVEGLOW_LOADING', "w+") as f:
@@ -152,11 +150,15 @@ class Handler(BaseHTTPRequestHandler):
             print(self.path)
             logger.info(post_data)
 
-            if self.path == "/setMode":
+            if self.path == "/setVocoder":
                 vocoder = post_data["vocoder"]
                 user_settings["vocoder"] = vocoder
-                hifi_gan = vocoder=="qnd"
+                hifi_gan = "waveglow" not in vocoder
                 write_settings()
+
+                if vocoder not in ["qnd", "256_waveglow", "big_waveglow"]:
+                    use_gpu = user_settings["use_gpu"]
+                    fastpitch_model = fastpitch.init_hifigan(PROD, fastpitch_model, use_gpu, vocoder)
 
                 if not hifi_gan:
                     use_gpu = user_settings["use_gpu"]
@@ -182,7 +184,7 @@ class Handler(BaseHTTPRequestHandler):
                 vocoder = post_data["vocoder"]
                 pitch_data = [pitch, duration]
 
-                req_response = fastpitch.infer(user_settings, text, out_path, fastpitch=fastpitch_model, vocoder=vocoder, speaker_i=speaker_i, pitch_data=pitch_data, logger=logger)
+                req_response = fastpitch.infer(PROD, user_settings, text, out_path, fastpitch=fastpitch_model, vocoder=vocoder, speaker_i=speaker_i, pitch_data=pitch_data, logger=logger)
 
             if self.path == "/outputAudio":
                 input_path = post_data["input_path"]

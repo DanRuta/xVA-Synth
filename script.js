@@ -103,13 +103,20 @@ const loadAllModels = () => {
                                     existingDuplicates.push([item, i])
                                 }
                             })
+
+                            const modelData = {model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, gender, modelVersion: model.modelVersion, hifi: undefined}
+                            const potentialHiFiPath = `models/${audioPreviewPath}.hg.pt`
+                            if (fs.existsSync(potentialHiFiPath)) {
+                                modelData.hifi = potentialHiFiPath
+                            }
+
                             if (existingDuplicates.length) {
                                 if (existingDuplicates[0][0].modelVersion<model.modelVersion) {
                                     games[gameId].models.splice(existingDuplicates[0][1], 1)
-                                    games[gameId].models.push({model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, gender, modelVersion: model.modelVersion})
+                                    games[gameId].models.push(modelData)
                                 }
                             } else {
-                                games[gameId].models.push({model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, gender, modelVersion: model.modelVersion})
+                                games[gameId].models.push(modelData)
                             }
                         })
                     }
@@ -181,7 +188,7 @@ const changeGame = () => {
 
     const buttons = []
 
-    games[meta[0]].models.forEach(({model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription}) => {
+    games[meta[0]].models.forEach(({model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, hifi}) => {
 
         const button = createElem("div.voiceType", voiceName)
         button.style.background = `#${themeColour}`
@@ -196,6 +203,23 @@ const changeGame = () => {
         })
 
         button.addEventListener("click", () => {
+
+            if (hifi) {
+                bespoke_hifi_bolt.style.opacity = 1
+                const option = createElem("option", "Bespoke HiFi GAN")
+                option.value = `${gameId}/${voiceId}.hg.pt`
+                vocoder_select.appendChild(option)
+            } else {
+                bespoke_hifi_bolt.style.opacity = 0
+                // Remove the bespoke hifi option if there was one already there
+                Array.from(vocoder_select.children).forEach(opt => {
+                    if (opt.innerHTML=="Bespoke HiFi GAN") {
+                        vocoder_select.removeChild(opt)
+                    }
+                })
+                vocoder_select.value = "qnd"
+                changeVocoder("qnd")
+            }
 
             const appVersionRequirement = model.version.toString().split(".").map(v=>parseInt(v))
             const appVersionInts = appVersion.replace("v", "").split(".").map(v=>parseInt(v))
@@ -393,7 +417,7 @@ generateVoiceButton.addEventListener("click", () => {
 
         window.appLogger.log(`Loading voice set: ${JSON.parse(generateVoiceButton.dataset.modelQuery).model}`)
 
-        spinnerModal("Loading voice set<br>(may take a minute... (but not much more))")
+        spinnerModal("Loading voice set<br>(may take a minute... but not much more!)")
         fetch(`http://localhost:8008/loadModel`, {
             method: "Post",
             body: generateVoiceButton.dataset.modelQuery
@@ -1144,18 +1168,19 @@ autoplay_ckbx.addEventListener("change", () => {
 })
 
 vocoder_select.value = window.userSettings.vocoder
-vocoder_select.addEventListener("change", () => {
-    window.userSettings.vocoder = vocoder_select.value
+const changeVocoder = vocoder => {
+    window.userSettings.vocoder = vocoder
     spinnerModal("Changing models...")
-    fetch(`http://localhost:8008/setMode`, {
+    fetch(`http://localhost:8008/setVocoder`, {
         method: "Post",
-        body: JSON.stringify({vocoder: vocoder_select.value})
+        body: JSON.stringify({vocoder})
     }).then(() => {
         closeModal().then(() => {
             saveUserSettings()
         })
     })
-})
+}
+vocoder_select.addEventListener("change", () => changeVocoder(vocoder_select.value))
 
 // Keyboard actions
 // ================

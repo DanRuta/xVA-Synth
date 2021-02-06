@@ -114,6 +114,24 @@ def init (PROD, use_gpu, vocoder, logger):
     else:
         fastpitch = init_waveglow(use_gpu, fastpitch, vocoder, logger)
 
+    fastpitch = init_hifigan(PROD, fastpitch, use_gpu, vocoder)
+
+    return fastpitch
+
+
+def init_hifigan (PROD, fastpitch, use_gpu, vocoder):
+
+    device = torch.device('cuda' if use_gpu else 'cpu')
+
+    if "waveglow" in vocoder:
+        vocoder = "qnd"
+
+    if vocoder == "qnd":
+        model_path = f'{"./resources/app" if PROD else "."}/python/hifi.pt'
+    else:
+        model_path = f'{"./resources/app" if PROD else "."}/models/{vocoder}'
+
+
     # Hi-Fi GAN
     config_file = os.path.join(f'{"./resources/app" if PROD else "."}/python/config.json')
     with open(config_file) as f:
@@ -122,11 +140,11 @@ def init (PROD, use_gpu, vocoder, logger):
     json_config = json.loads(data)
     h = AttrDict(json_config)
     fastpitch.hifi_gan = Generator(h).to(device)
-    hifigan_ckpt = torch.load(f'{"./resources/app" if PROD else "."}/python/generator_v2', map_location=device)
+    hifigan_ckpt = torch.load(model_path, map_location=device)
     fastpitch.hifi_gan.load_state_dict(hifigan_ckpt['generator'])
     fastpitch.hifi_gan = fastpitch.hifi_gan.to(device)
-
     return fastpitch
+
 
 def init_waveglow (use_gpu, fastpitch, wg_type, logger):
 
@@ -147,6 +165,8 @@ def init_waveglow (use_gpu, fastpitch, wg_type, logger):
         elif wg_type=="256_waveglow":
             sys.modules['glow'] = small_glow
             waveglow = load_and_setup_model('WaveGlow', parser, wg_ckpt_path, device, logger, forward_is_infer=True).to(device)
+        else:
+            return fastpitch
         denoiser = Denoiser(waveglow, device).to(device)
 
     fastpitch.waveglow = waveglow
@@ -170,7 +190,7 @@ def loadModel (fastpitch, ckpt, n_speakers, device):
     del checkpoint_data
     return fastpitch
 
-def infer(user_settings, text, output, fastpitch, vocoder, speaker_i, pace=1.0, pitch_data=None, logger=None):
+def infer(PROD, user_settings, text, output, fastpitch, vocoder, speaker_i, pace=1.0, pitch_data=None, logger=None):
 
     print(f'Inferring: "{text}" ({len(text)})')
 
@@ -188,13 +208,7 @@ def infer(user_settings, text, output, fastpitch, vocoder, speaker_i, pace=1.0, 
 
         mel, mel_lens, dur_pred, pitch_pred = fastpitch.infer_advanced(text, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data)
 
-        if vocoder=="qnd":
-            y_g_hat = fastpitch.hifi_gan(mel)
-            audio = y_g_hat.squeeze()
-            audio = audio * 32768.0
-            audio = audio.cpu().numpy().astype('int16')
-            write(output, sampling_rate, audio)
-        else:
+        if "waveglow" in vocoder:
             init_waveglow(user_settings["use_gpu"], fastpitch, vocoder, logger=logger)
 
             audios = fastpitch.waveglow.infer(mel, sigma=sigma_infer)
@@ -205,6 +219,15 @@ def infer(user_settings, text, output, fastpitch, vocoder, speaker_i, pace=1.0, 
                 audio = audio/torch.max(torch.abs(audio))
                 write(output, sampling_rate, audio.cpu().numpy())
             del audios
+        else:
+            init_hifigan(PROD, fastpitch, user_settings["use_gpu"], vocoder)
+            y_g_hat = fastpitch.hifi_gan(mel)
+            audio = y_g_hat.squeeze()
+            audio = audio * 32768.0
+            # audio = audio * 2.3026  # This brings it to the same volume, but makes it clip in places
+            audio = audio.cpu().numpy().astype('int16')
+            write(output, sampling_rate, audio)
+
         del mel, mel_lens
 
     [pitch, durations] = [pitch_pred.cpu().detach().numpy()[0], dur_pred.cpu().detach().numpy()[0]]
