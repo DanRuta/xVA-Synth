@@ -1141,6 +1141,11 @@ vocoder_select.addEventListener("change", () => {
 // ================
 window.addEventListener("keydown", event => {
 
+    // Disable keyboard controls while in a text input
+    if (event.target.tagName=="INPUT" && event.target.tagName!=dialogueInput) {
+        return
+    }
+
     if (event.target==dialogueInput || event.target==letterPitchNumb || event.target==letterLengthNumb) {
         // Enter: Generate sample
         if (event.key=="Enter") {
