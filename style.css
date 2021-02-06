@@ -268,12 +268,12 @@ a {
      justify-content: center;
      align-items: center;
      flex-direction: column;
-     height: 30vh;
-     width: 30vw;
+     height: 35vh;
+     width: 35vw;
      padding: 10px;
-     min-height: 100px;
+     min-height: 250px;
      max-height: 100vh;
-     min-width: 200px;
+     min-width: 400px;
      max-width: 100vw;
      text-align: center;
      background-color: #333;

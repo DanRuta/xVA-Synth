@@ -21,8 +21,8 @@ const createWindow = () => {
     mainWindow = new BrowserWindow({
         width: 1200,
         height: 1000,
-        minHeight: 510,
-        minWidth: 960,
+        minHeight: 600,
+        minWidth: 1200,
         frame: false,
         icon: `${__dirname}/assets/x-icon.png`
     })
