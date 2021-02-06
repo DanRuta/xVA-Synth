@@ -1161,6 +1161,11 @@ vocoder_select.addEventListener("change", () => {
 // ================
 window.addEventListener("keydown", event => {
 
+    // The Enter key to submit text input prompts in modals
+    if (event.key=="Enter" && modalContainer.style.display!="none" && event.target.tagName=="INPUT") {
+        activeModal.querySelector("button").click()
+    }
+
     // Disable keyboard controls while in a text input
     if (event.target.tagName=="INPUT" && event.target.tagName!=dialogueInput) {
         return
