@@ -330,8 +330,23 @@ const makeSample = (src, newSample) => {
                 const newPath = src.split("/").reverse()
                 oldPath[0] = sample.querySelector("div").innerHTML
                 newPath[0] = newFileName
-                fs.renameSync(oldPath.reverse().join("/"), newPath.reverse().join("/"))
+
+                const oldPathComposed = oldPath.reverse().join("/")
+                const newPathComposed = newPath.reverse().join("/")
+                fs.renameSync(oldPathComposed, newPathComposed)
+
+                if (fs.existsSync(`${oldPathComposed}.json`)) {
+                    fs.renameSync(oldPathComposed+".json", newPathComposed+".json")
+                }
+
                 sample.querySelector("div").innerHTML = newFileName
+                if (samplePlay.style.display!="none") {
+                    samplePlay.removeChild(samplePlay.children[0])
+                    samplePlay.appendChild(createElem("audio", {controls: true}, createElem("source", {
+                        src: newPathComposed,
+                        type: `audio/${fileFormat}`
+                    })))
+                }
             }
         })
     })
