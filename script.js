@@ -557,6 +557,11 @@ const keepSampleFunction = shiftClick => {
         toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/[\/\\:\*?<>"|]*/g, "")
         toLocation = toLocation.join("/")
 
+        const outFolder = toLocation.split("/").reverse().slice(1, 100).reverse().join("/")
+        if (!fs.existsSync(outFolder)) {
+            return void window.errorModal(`The output directory does not exist:<br><br><i>${outFolder}</i><br><br>You can change this in the settings.`)
+        }
+
         // File name conflict
         const alreadyExists = fs.existsSync(toLocation)
         if (alreadyExists || shiftClick) {
