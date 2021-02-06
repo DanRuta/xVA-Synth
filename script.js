@@ -393,7 +393,7 @@ generateVoiceButton.addEventListener("click", () => {
 
         window.appLogger.log(`Loading voice set: ${JSON.parse(generateVoiceButton.dataset.modelQuery).model}`)
 
-        spinnerModal("Loading voice set<br>(may take a minute...)")
+        spinnerModal("Loading voice set<br>(may take a minute... (but not much more))")
         fetch(`http://localhost:8008/loadModel`, {
             method: "Post",
             body: generateVoiceButton.dataset.modelQuery
@@ -728,17 +728,17 @@ let loadingStage = 0
 startingSplashInterval = setInterval(() => {
     if (fs.existsSync(`${path}/FASTPITCH_LOADING`)) {
         if (loadingStage==0) {
-            spinnerModal("Loading...<br>May take a minute<br><br>Building FastPitch model...")
+            spinnerModal("Loading...<br>May take a minute (but not much more)<br><br>Building FastPitch model...")
             loadingStage = 1
         }
     } else if (fs.existsSync(`${path}/WAVEGLOW_LOADING`)) {
         if (loadingStage==1) {
-            activeModal.children[0].innerHTML = "Loading...<br>May take a minute<br><br>Loading WaveGlow model..."
+            activeModal.children[0].innerHTML = "Loading...<br>May take a minute (but not much more)<br><br>Loading WaveGlow model..."
             loadingStage = 2
         }
     } else if (fs.existsSync(`${path}/SERVER_STARTING`)) {
         if (loadingStage==2) {
-            activeModal.children[0].innerHTML = "Loading...<br>May take a minute<br><br>Starting up the python backend..."
+            activeModal.children[0].innerHTML = "Loading...<br>May take a minute (but not much more)<br><br>Starting up the python backend..."
             loadingStage = 3
         }
     } else {
