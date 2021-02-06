@@ -37,6 +37,9 @@ if (!window.userSettings.audio.ffmpeg) { // For backwards compatibility
 if (!window.userSettings.audio.bitdepth) { // For backwards compatibility
     window.userSettings.audio.bitdepth = "pcm_s32le"
 }
+if (!window.userSettings.vocoder) { // For backwards compatibility
+    window.userSettings.vocoder = "256_waveglow"
+}
 
 
 

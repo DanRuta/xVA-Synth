@@ -70,14 +70,14 @@ except:
 
 
 # User settings
-user_settings = {"use_gpu": not CPU_ONLY, "hifi_gan": False}
+user_settings = {"use_gpu": not CPU_ONLY, "vocoder": "256_waveglow"}
 try:
     with open(f'{"./resources/app" if PROD else "."}/usersettings.csv', "r") as f:
         data = f.read().split("\n")
         head = data[0].split(",")
         values = data[1].split(",")
         for h, hv in enumerate(head):
-            user_settings[hv] = values[h]=="True"
+            user_settings[hv] = values[h]=="True" if values[h] in ["True", "False"] else values[h]
     if CPU_ONLY:
         user_settings["use_gpu"] = False
     logger.info(str(user_settings))
@@ -93,7 +93,7 @@ def write_settings ():
 use_gpu = user_settings["use_gpu"]
 print(f'user_settings, {user_settings}')
 try:
-    fastpitch_model = fastpitch.init(PROD, use_gpu=use_gpu, hifi_gan=user_settings["hifi_gan"], logger=logger)
+    fastpitch_model = fastpitch.init(PROD, use_gpu=use_gpu, vocoder=user_settings["vocoder"], logger=logger)
 except:
     print(traceback.format_exc())
     logger.info(traceback.format_exc())
@@ -153,13 +153,14 @@ class Handler(BaseHTTPRequestHandler):
             logger.info(post_data)
 
             if self.path == "/setMode":
-                hifi_gan = post_data["hifi_gan"]=="qnd"
-                user_settings["hifi_gan"] = hifi_gan
+                vocoder = post_data["vocoder"]
+                user_settings["vocoder"] = vocoder
+                hifi_gan = vocoder=="qnd"
                 write_settings()
 
-                if not hifi_gan and fastpitch_model.waveglow is None:
+                if not hifi_gan:
                     use_gpu = user_settings["use_gpu"]
-                    fastpitch_model = fastpitch.init_waveglow(use_gpu, fastpitch_model, logger)
+                    fastpitch_model = fastpitch.init_waveglow(use_gpu, fastpitch_model, vocoder, logger)
 
             if self.path == "/setDevice":
                 use_gpu = post_data["device"]=="gpu"
@@ -178,10 +179,10 @@ class Handler(BaseHTTPRequestHandler):
                 pitch = post_data["pitch"] if "pitch" in post_data else None
                 duration = post_data["duration"] if "duration" in post_data else None
                 speaker_i = post_data["speaker_i"]
-                hifi_gan = post_data["hifi_gan"] if "hifi_gan" in post_data else False
+                vocoder = post_data["vocoder"]
                 pitch_data = [pitch, duration]
 
-                req_response = fastpitch.infer(user_settings, text, out_path, fastpitch=fastpitch_model, hifi_gan=hifi_gan, speaker_i=speaker_i, pitch_data=pitch_data, logger=logger)
+                req_response = fastpitch.infer(user_settings, text, out_path, fastpitch=fastpitch_model, vocoder=vocoder, speaker_i=speaker_i, pitch_data=pitch_data, logger=logger)
 
             if self.path == "/outputAudio":
                 input_path = post_data["input_path"]

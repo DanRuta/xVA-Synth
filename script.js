@@ -425,7 +425,6 @@ generateVoiceButton.addEventListener("click", () => {
         const tempFileLocation = `${path}/output/temp-${tempFileNum}.wav`
         let pitch = []
         let duration = []
-        let quick_n_dirty = false
         let isFreshRegen = true
 
         if (editor.innerHTML && editor.innerHTML.length && window.pitchEditor.sequence && sequence==window.pitchEditor.inputSequence
@@ -434,7 +433,6 @@ generateVoiceButton.addEventListener("click", () => {
             duration = window.pitchEditor.dursNew.map(v => v*pace_slid.value)
             isFreshRegen = false
         }
-        quick_n_dirty = window.userSettings.quick_n_dirty
         window.pitchEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
 
         const speaker_i = window.currentModel.games[0].emb_i
@@ -445,7 +443,7 @@ generateVoiceButton.addEventListener("click", () => {
             body: JSON.stringify({
                 sequence, pitch, duration, speaker_i,
                 outfile: tempFileLocation,
-                hifi_gan: !!quick_n_dirty
+                vocoder: window.userSettings.vocoder
             })
         }).then(r=>r.text()).then(res => {
             isGenerating = false
@@ -1124,13 +1122,14 @@ autoplay_ckbx.addEventListener("change", () => {
     window.userSettings.autoplay = autoplay_ckbx.checked
     saveUserSettings()
 })
-qnd_ckbx.checked = window.userSettings.quick_n_dirty
-qnd_ckbx.addEventListener("change", () => {
-    window.userSettings.quick_n_dirty = qnd_ckbx.checked
+
+vocoder_select.value = window.userSettings.vocoder
+vocoder_select.addEventListener("change", () => {
+    window.userSettings.vocoder = vocoder_select.value
     spinnerModal("Changing models...")
     fetch(`http://localhost:8008/setMode`, {
         method: "Post",
-        body: JSON.stringify({hifi_gan: window.userSettings.quick_n_dirty ? "qnd" : "wg"})
+        body: JSON.stringify({vocoder: vocoder_select.value})
     }).then(() => {
         closeModal().then(() => {
             saveUserSettings()
