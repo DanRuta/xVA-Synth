@@ -1448,3 +1448,19 @@ if (fs.existsSync(`${path}/models/nvidia_waveglowpyt_fp32_20190427.pt`)) {
         window.errorModal("WaveGlow model not found. Download it also (separate download), and place the .pt file in the models folder.")
     }, 1500)
 }
+
+voiceSearchInput.addEventListener("keyup", () => {
+    const voiceElems = Array.from(voiceTypeContainer.children)
+    if (voiceSearchInput.value.length) {
+        voiceElems.forEach(elem => {
+            if (elem.innerHTML.toLowerCase().includes(voiceSearchInput.value)) {
+                elem.style.display="block"
+            } else {
+                elem.style.display="none"
+            }
+        })
+
+    } else {
+        voiceElems.forEach(elem => elem.style.display="block")
+    }
+})

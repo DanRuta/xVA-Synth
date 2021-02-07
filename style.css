@@ -68,7 +68,7 @@ a {
  }
  #topLeft {
      align-items: baseline;
-     padding-bottom: 5px;
+     padding-bottom: 0;
      margin-top: -10px;
  }
  #game-label {
@@ -93,12 +93,28 @@ a {
      color: black;
      background-color: rgba(0,0,0,0);
  }
+ #searchContainer {
+    display: flex;
+    justify-content: center;
+    height: 20px;
+}
+ #voiceSearchInput {
+    width: calc(100% - 25px);
+    text-align: center;
+    background: none;
+    color: white;
+    border: none;
+    border-bottom: 1px solid white;
+ }
+ #voiceSearchInput:focus, #voiceSearchInput:active {
+    outline: none;
+ }
  .content {
      height: 95vh;
  }
  #voiceTypeContainer {
      margin: 10px;
-     height: calc(95vh - 50px);
+     height: calc(95vh - 67px);
      padding-top: 1px;
      overflow-y: auto;
      background: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.05) 35px, rgba(255,255,255,.05) 70px), linear-gradient(0deg, #444 0, rgba(0,0,0,0)), gray;
