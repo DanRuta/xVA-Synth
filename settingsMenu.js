@@ -40,6 +40,9 @@ if (!window.userSettings.audio.bitdepth) { // For backwards compatibility
 if (!window.userSettings.vocoder) { // For backwards compatibility
     window.userSettings.vocoder = "256_waveglow"
 }
+if (!window.userSettings.audio.amplitude) { // For backwards compatibility
+    window.userSettings.audio.amplitude = 1
+}
 
 
 
@@ -53,6 +56,7 @@ setting_audio_hz.value = window.userSettings.audio.hz
 setting_audio_pad_start.value = window.userSettings.audio.padStart
 setting_audio_pad_end.value = window.userSettings.audio.padEnd
 setting_audio_bitdepth.value = window.userSettings.audio.bitdepth
+setting_audio_amplitude.value = window.userSettings.audio.amplitude
 
 const [height, width] = window.userSettings.customWindowSize.split(",").map(v => parseInt(v))
 ipcRenderer.send("resize", {height, width})
@@ -122,6 +126,11 @@ setting_audio_pad_end.addEventListener("change", () => {
 setting_audio_bitdepth.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_bitdepth.addEventListener("change", () => {
     window.userSettings.audio.bitdepth = setting_audio_bitdepth.value
+    saveUserSettings()
+})
+setting_audio_amplitude.disabled = !window.userSettings.audio.ffmpeg
+setting_audio_amplitude.addEventListener("change", () => {
+    window.userSettings.audio.amplitude = setting_audio_amplitude.value
     saveUserSettings()
 })
 

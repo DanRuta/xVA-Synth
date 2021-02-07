@@ -25,6 +25,8 @@ def run_audio_post(logger, input, output, options=None):
         if "mp3" in output:
             ffmpeg_options["c:a"] = "libmp3lame"
 
+        ffmpeg_options["filter:a"] = f'volume={options["amplitude"]}'
+
         stream = ffmpeg.output(stream, output, **ffmpeg_options)
 
         logger.info("audio options: "+str(options))

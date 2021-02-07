@@ -11,7 +11,7 @@ const {xVAAppLogger} = require("./appLogger.js")
 const {saveUserSettings} = require("./settingsMenu.js")
 
 let themeColour
-window.appVersion = "v1.1.1"
+window.appVersion = "v1.2.0"
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 const oldCError = console.error
 console.error = (data) => {
@@ -546,7 +546,8 @@ const saveFile = (from, to) => {
             hz: window.userSettings.audio.hz,
             padStart: window.userSettings.audio.padStart,
             padEnd: window.userSettings.audio.padEnd,
-            bit_depth: window.userSettings.audio.bitdepth
+            bit_depth: window.userSettings.audio.bitdepth,
+            amplitude: window.userSettings.audio.amplitude
         }
 
         window.appLogger.log(`About to save file from ${from} to ${to} with options: ${JSON.stringify(options)}`)
