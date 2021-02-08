@@ -597,7 +597,7 @@ const keepSampleFunction = shiftClick => {
         toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/[\/\\:\*?<>"|]*/g, "")
         toLocation = toLocation.join("/")
 
-        const outFolder = toLocation.split("/").reverse().slice(1, 100).reverse().join("/")
+        const outFolder = toLocation.split("/").reverse().slice(2, 100).reverse().join("/")
         if (!fs.existsSync(outFolder)) {
             return void window.errorModal(`The output directory does not exist:<br><br><i>${outFolder}</i><br><br>You can change this in the settings.`)
         }
@@ -618,45 +618,49 @@ const keepSampleFunction = shiftClick => {
                 let outDir = toLocationOut
                 outDir.shift()
 
-                const existingFiles = fs.readdirSync(outDir.reverse().join("/"))
                 newFileName = (newFileName.replace(`.${window.userSettings.audio.format}`, "") + `.${window.userSettings.audio.format}`).replace(/[\/\\:\*?<>"|]*/g, "")
-                const existingFileConflict = existingFiles.filter(name => name==newFileName)
-
+                toLocationOut.reverse()
                 toLocationOut.push(newFileName)
 
-                const finalOutLocation = toLocationOut.join("/")
+                if (fs.existsSync(outDir)) {
+                    const existingFiles = fs.readdirSync(outDir.reverse().join("/"))
+                    const existingFileConflict = existingFiles.filter(name => name==newFileName)
 
-                if (existingFileConflict.length) {
-                    // Remove the entry from the output files' preview
-                    Array.from(voiceSamples.querySelectorAll("div.sample")).forEach(sampleElem => {
-                        const source = sampleElem.querySelector("source")
-                        let sourceSrc = source.src.split("%20").join(" ").replace("file:///", "")
-                        sourceSrc = sourceSrc.split("/").reverse()
-                        const finalFileName = finalOutLocation.split("/").reverse()
 
-                        if (sourceSrc[0] == finalFileName[0]) {
-                            sampleElem.parentNode.removeChild(sampleElem)
-                        }
-                    })
+                    const finalOutLocation = toLocationOut.join("/")
 
-                    // Remove the old file and write the new one in
-                    fs.unlink(finalOutLocation, err => {
-                        if (err) {
-                            console.log(err)
-                            window.appLogger.log(err)
-                        }
-                        console.log(fromLocation, "finalOutLocation", finalOutLocation)
-                        saveFile(fromLocation, finalOutLocation)
-                    })
+                    if (existingFileConflict.length) {
+                        // Remove the entry from the output files' preview
+                        Array.from(voiceSamples.querySelectorAll("div.sample")).forEach(sampleElem => {
+                            const source = sampleElem.querySelector("source")
+                            let sourceSrc = source.src.split("%20").join(" ").replace("file:///", "")
+                            sourceSrc = sourceSrc.split("/").reverse()
+                            const finalFileName = finalOutLocation.split("/").reverse()
 
-                } else {
-                    saveFile(fromLocation, toLocationOut.join("/"))
+                            if (sourceSrc[0] == finalFileName[0]) {
+                                sampleElem.parentNode.removeChild(sampleElem)
+                            }
+                        })
+
+                        // Remove the old file and write the new one in
+                        fs.unlink(finalOutLocation, err => {
+                            if (err) {
+                                console.log(err)
+                                window.appLogger.log(err)
+                            }
+                            console.log(fromLocation, "finalOutLocation", finalOutLocation)
+                            saveFile(fromLocation, finalOutLocation)
+                        })
+                        return
+                    } else {
+                        saveFile(fromLocation, toLocationOut.join("/"))
+                        return
+                    }
                 }
+                saveFile(fromLocation, toLocationOut.join("/"))
             })
 
         } else {
-            console.log("fromLocation", fromLocation)
-            console.log("toLocation", toLocation)
             saveFile(fromLocation, toLocation)
         }
     }
