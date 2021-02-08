@@ -971,54 +971,52 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
 
         set_letter_display(letterDiv, l, length, pitchOrig[l])
     })
-    letterPitchNumb.addEventListener("input", () => {
-        const lpnValue = parseFloat(letterPitchNumb.value) || 0
-        if (window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]!=lpnValue) {
-            has_been_changed = true
-        }
-        window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]] = lpnValue
-        sliders[window.pitchEditor.letterFocus[0]].value = letterPitchNumb.value
-        if (autoplay_ckbx.checked) {
-            generateVoiceButton.click()
-        }
-    })
-    letterPitchNumb.addEventListener("change", () => {
-        const lpnValue = parseFloat(letterPitchNumb.value) || 0
-        if (window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]!=lpnValue) {
-            has_been_changed = true
-        }
-        window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]] = lpnValue
-        sliders[window.pitchEditor.letterFocus[0]].value = letterPitchNumb.value
-        if (autoplay_ckbx.checked) {
-            generateVoiceButton.click()
-        }
-    })
-
-    resetLetter_btn.addEventListener("click", () => {
-        if (window.pitchEditor.letterFocus.length==0) {
-            return
-        }
-
-        window.pitchEditor.letterFocus.forEach(l => {
-            if (window.pitchEditor.dursNew[l] != window.pitchEditor.resetDurs[l]) {
-                has_been_changed = true
-            }
-            window.pitchEditor.dursNew[l] = window.pitchEditor.resetDurs[l]
-            window.pitchEditor.pitchNew[l] = window.pitchEditor.resetPitch[l]
-            set_letter_display(letterElems[l], l, window.pitchEditor.resetDurs[l]*10+50, window.pitchEditor.pitchNew[l])
-        })
-
-        if (window.pitchEditor.letterFocus.length==1) {
-            letterLength.value = parseInt(window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]])
-            letterLengthNumb.value = parseInt(window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]])
-            letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
-        }
-
-        pace_slid.value = 1
-    })
-
-
 }
+
+
+letterPitchNumb.addEventListener("input", () => {
+    const lpnValue = parseFloat(letterPitchNumb.value) || 0
+    if (window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]!=lpnValue) {
+        has_been_changed = true
+    }
+    window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]] = lpnValue
+    sliders[window.pitchEditor.letterFocus[0]].value = letterPitchNumb.value
+    if (autoplay_ckbx.checked) {
+        generateVoiceButton.click()
+    }
+})
+letterPitchNumb.addEventListener("change", () => {
+    const lpnValue = parseFloat(letterPitchNumb.value) || 0
+    if (window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]!=lpnValue) {
+        has_been_changed = true
+    }
+    window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]] = lpnValue
+    sliders[window.pitchEditor.letterFocus[0]].value = letterPitchNumb.value
+    if (autoplay_ckbx.checked) {
+        generateVoiceButton.click()
+    }
+})
+
+resetLetter_btn.addEventListener("click", () => {
+    if (window.pitchEditor.letterFocus.length==0) {
+        return
+    }
+
+    window.pitchEditor.letterFocus.forEach(l => {
+        if (window.pitchEditor.dursNew[l] != window.pitchEditor.resetDurs[l]) {
+            has_been_changed = true
+        }
+        window.pitchEditor.dursNew[l] = window.pitchEditor.resetDurs[l]
+        window.pitchEditor.pitchNew[l] = window.pitchEditor.resetPitch[l]
+        set_letter_display(letterElems[l], l, window.pitchEditor.resetDurs[l]*10+50, window.pitchEditor.pitchNew[l])
+    })
+
+    if (window.pitchEditor.letterFocus.length==1) {
+        letterLength.value = parseInt(window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]])
+        letterLengthNumb.value = parseInt(window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]])
+        letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
+    }
+})
 const updateLetterLengthFromInput = () => {
     if (window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]] != letterLength.value) {
         has_been_changed = true
@@ -1093,6 +1091,7 @@ reset_btn.addEventListener("click", () => {
         letterLengthNumb.value = parseInt(window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]])
         letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*1000)/1000
     }
+    pace_slid.value = 1
 })
 amplify_btn.addEventListener("click", () => {
     window.pitchEditor.ampFlatCounter += 1
