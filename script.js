@@ -211,14 +211,17 @@ const changeGame = () => {
                 vocoder_select.appendChild(option)
             } else {
                 bespoke_hifi_bolt.style.opacity = 0
+                // Set the vocoder select to quick-and-dirty if bespoke hifi-gan was selected
+                if (vocoder_select.value.includes(".hg.")) {
+                    vocoder_select.value = "qnd"
+                    changeVocoder("qnd")
+                }
                 // Remove the bespoke hifi option if there was one already there
                 Array.from(vocoder_select.children).forEach(opt => {
                     if (opt.innerHTML=="Bespoke HiFi GAN") {
                         vocoder_select.removeChild(opt)
                     }
                 })
-                vocoder_select.value = "qnd"
-                changeVocoder("qnd")
             }
 
             const appVersionRequirement = model.version.toString().split(".").map(v=>parseInt(v))
@@ -1171,7 +1174,7 @@ autoplay_ckbx.addEventListener("change", () => {
     saveUserSettings()
 })
 
-vocoder_select.value = window.userSettings.vocoder
+vocoder_select.value = window.userSettings.vocoder.includes(".hg.") ? "qnd" : window.userSettings.vocoder
 const changeVocoder = vocoder => {
     window.userSettings.vocoder = vocoder
     spinnerModal("Changing models...")
