@@ -11,7 +11,7 @@ const {xVAAppLogger} = require("./appLogger.js")
 const {saveUserSettings} = require("./settingsMenu.js")
 
 let themeColour
-window.appVersion = "v1.2.0"
+window.appVersion = "v1.2.1"
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 const oldCError = console.error
 console.error = (data) => {
@@ -105,7 +105,7 @@ const loadAllModels = () => {
                             })
 
                             const modelData = {model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, gender, modelVersion: model.modelVersion, hifi: undefined}
-                            const potentialHiFiPath = `models/${audioPreviewPath}.hg.pt`
+                            const potentialHiFiPath = `${path}/models/${audioPreviewPath}.hg.pt`
                             if (fs.existsSync(potentialHiFiPath)) {
                                 modelData.hifi = potentialHiFiPath
                             }
@@ -205,6 +205,12 @@ const changeGame = () => {
         button.addEventListener("click", () => {
 
             if (hifi) {
+                // Remove the bespoke hifi option if there was one already there
+                Array.from(vocoder_select.children).forEach(opt => {
+                    if (opt.innerHTML=="Bespoke HiFi GAN") {
+                        vocoder_select.removeChild(opt)
+                    }
+                })
                 bespoke_hifi_bolt.style.opacity = 1
                 const option = createElem("option", "Bespoke HiFi GAN")
                 option.value = `${gameId}/${voiceId}.hg.pt`
