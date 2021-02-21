@@ -11,7 +11,7 @@ const {xVAAppLogger} = require("./appLogger.js")
 const {saveUserSettings} = require("./settingsMenu.js")
 
 let themeColour
-window.appVersion = "v1.2.1"
+window.appVersion = "v1.2.2"
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 const oldCError = console.error
 console.error = (data) => {
@@ -1001,7 +1001,6 @@ right.addEventListener("click", event => {
     letterElems.forEach((letterDiv, l) => {
         letterDiv.style.color = "black"
     })
-    console.log(event.target.nodeName, event.target.className)
 })
 
 letterPitchNumb.addEventListener("input", () => {
