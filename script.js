@@ -899,7 +899,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
 
     letters.forEach((letter, l) => {
 
-        const letterLabel = createElem("div", letter)
+        const letterLabel = createElem("div.letterElem", letter)
         const letterDiv = createElem("div.letter", letterLabel)
         const slider = createElem(`input.slider#slider_${l}`, {
             type: "range",
@@ -990,6 +990,17 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
     })
 }
 
+// Un-select letters when clicking anywhere else
+window.addEventListener("click", event => {
+    if (event.target.nodeName=="BUTTON" || event.target.nodeName=="INPUT" || event.target.className=="letterElem") {
+        return
+    }
+
+    window.pitchEditor.letterFocus = []
+    letterElems.forEach((letterDiv, l) => {
+        letterDiv.style.color = "black"
+    })
+})
 
 letterPitchNumb.addEventListener("input", () => {
     const lpnValue = parseFloat(letterPitchNumb.value) || 0
@@ -1202,6 +1213,8 @@ const changeVocoder = vocoder => {
     })
 }
 vocoder_select.addEventListener("change", () => changeVocoder(vocoder_select.value))
+
+
 
 // Keyboard actions
 // ================
