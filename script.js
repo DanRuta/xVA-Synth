@@ -916,7 +916,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
         let multiLetterPitchDelta = undefined
         let multiLetterStartPitchVals = []
         slider.addEventListener("mousedown", () => {
-            if (window.pitchEditor.letterFocus.length <= 1) {
+            if (window.pitchEditor.letterFocus.length <= 1 || (!event.ctrlKey && !window.pitchEditor.letterFocus.includes(l))) {
                 setLetterFocus(l)
             }
 
