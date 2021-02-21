@@ -132,6 +132,7 @@ const loadAllModels = () => {
 const changeGame = () => {
 
     const meta = gameDropdown.value.split("-")
+    window.currentGame = meta
     themeColour = meta[1]
     generateVoiceButton.disabled = true
     generateVoiceButton.innerHTML = "Generate Voice"
@@ -144,6 +145,13 @@ const changeGame = () => {
         document.title = `xVA Synth`
         dragBar.innerHTML = `xVA Synth`
     }
+
+    const gameFolder = meta[0]
+    const gameName = meta[meta.length-1].split(".")[0]
+
+    setting_out_path_container.style.display = "flex"
+    setting_out_path_label.innerHTML = `${gameName} output path`
+    setting_out_path_input.value = window.userSettings[`outpath_${gameFolder}`]
 
     if (meta) {
         const background = `linear-gradient(0deg, grey 0px, rgba(0,0,0,0)), url("assets/${meta.join("-")}")`

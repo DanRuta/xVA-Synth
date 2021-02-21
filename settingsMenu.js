@@ -142,19 +142,17 @@ fs.readdir(`${path}/models`, (err, gameDirs) => {
             window.userSettings[`outpath_${gameFolder}`] = `${__dirname.replace(/\\/g,"/")}/output/${gameFolder}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
             saveUserSettings()
         }
-        // Create and populate the settings menu entry for this
-        const outPathElem = createElem("input", {value: window.userSettings[`outpath_${gameFolder}`]})
-        outPathElem.addEventListener("change", () => {
-            outPathElem.value = outPathElem.value.replace(/\/\//g, "/").replace(/\\/g,"/")
-            window.userSettings[`outpath_${gameFolder}`] = outPathElem.value
-            saveUserSettings()
-            if (window.currentModelButton) {
-                window.currentModelButton.click()
-            }
-        })
-        const gameName = fs.readdirSync(`${path}/assets`).find(f => f.startsWith(gameFolder)).split("-").reverse()[0].split(".")[0]
-        settingsOptionsContainer.appendChild(createElem("div", [createElem("div", `${gameName} output folder`), createElem("div", outPathElem)]))
     })
+})
+setting_out_path_input.addEventListener("change", () => {
+    const gameFolder = window.currentGame[0]
+
+    setting_out_path_input.value = setting_out_path_input.value.replace(/\/\//g, "/").replace(/\\/g,"/")
+    window.userSettings[`outpath_${gameFolder}`] = setting_out_path_input.value
+    saveUserSettings()
+    if (window.currentModelButton) {
+        window.currentModelButton.click()
+    }
 })
 
 
