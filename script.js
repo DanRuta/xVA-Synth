@@ -991,8 +991,9 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
 }
 
 // Un-select letters when clicking anywhere else
-window.addEventListener("click", event => {
-    if (event.target.nodeName=="BUTTON" || event.target.nodeName=="INPUT" || event.target.className=="letterElem") {
+right.addEventListener("click", event => {
+    if (event.target.nodeName=="BUTTON" || event.target.nodeName=="INPUT" || event.target.nodeName=="SVG" || event.target.nodeName=="IMG" || event.target.nodeName=="path" ||
+        ["letterElem", "infoContainer"].includes(event.target.className)) {
         return
     }
 
@@ -1000,6 +1001,7 @@ window.addEventListener("click", event => {
     letterElems.forEach((letterDiv, l) => {
         letterDiv.style.color = "black"
     })
+    console.log(event.target.nodeName, event.target.className)
 })
 
 letterPitchNumb.addEventListener("input", () => {
