@@ -22,6 +22,9 @@ if (!window.userSettings.audio) { // For backwards compatibility
 if (!window.userSettings.sliderTooltip) { // For backwards compatibility
     window.userSettings.sliderTooltip = true
 }
+if (!window.userSettings.darkPrompt) { // For backwards compatibility
+    window.userSettings.darkPrompt = false
+}
 if (!window.userSettings.audio.hz) { // For backwards compatibility
     window.userSettings.audio.hz = 22050
 }
@@ -93,6 +96,22 @@ setting_slidersTooltip.addEventListener("click", () => {
     window.userSettings.sliderTooltip = setting_slidersTooltip.checked
     saveUserSettings()
 })
+
+const setTheme = () => {
+    if (window.userSettings.darkPrompt) {
+        dialogueInput.style.backgroundColor = "rgba(25,25,25,0.9)"
+        dialogueInput.style.color = "white"
+    } else {
+        dialogueInput.style.backgroundColor = "rgba(255,255,255,0.9)"
+        dialogueInput.style.color = "black"
+    }
+}
+setting_darkprompt.addEventListener("click", () => {
+    window.userSettings.darkPrompt = setting_darkprompt.checked
+    setTheme()
+    saveUserSettings()
+})
+setTheme()
 
 setting_audio_ffmpeg.addEventListener("click", () => {
     window.userSettings.audio.ffmpeg = setting_audio_ffmpeg.checked
