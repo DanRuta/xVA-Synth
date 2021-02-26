@@ -32,7 +32,7 @@ def run_audio_post(logger, input, output, options=None):
         logger.info("audio options: "+str(options))
         logger.info("ffmpeg command: "+ " ".join(stream.compile()))
 
-        out, err = (ffmpeg.run(stream, capture_stdout=True, capture_stderr=True))
+        out, err = (ffmpeg.run(stream, capture_stdout=True, capture_stderr=True, overwrite_output=True))
 
     except ffmpeg.Error as e:
         logger.info("ffmpeg err: "+ e.stderr.decode('utf8'))
