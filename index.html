@@ -29,11 +29,11 @@
     <div id="appcontent">
         <div id="left">
             <div class="top" id="topLeft">
-                <span id="game-label">Game</span>
-                <select id="gameDropdown"></select>
+                <div id="selectedGameDisplay"></div>
+                <button id="changeGameButton">&#8644;</button>
             </div>
             <div id="searchContainer">
-                <input type="text" id="voiceSearchInput" name="">
+                <input type="text" id="voiceSearchInput" name="" placeholder="Search voices...">
             </div>
             <div class="content">
                 <div id="voiceTypeContainer"></div>
@@ -266,6 +266,14 @@
                 </div>
 
 
+            </div>
+        </div>
+        <div id="gameSelectionContainer" style="display:none">
+            <div class="modal">
+                <div>
+                    <input id="searchGameInput" placeholder="Search games...">
+                </div>
+                <div id="gameSelectionListContainer"></div>
             </div>
         </div>
         <div id="modalContainer" style="display:none"></div>

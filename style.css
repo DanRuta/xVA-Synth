@@ -26,6 +26,9 @@ a {
      margin: 0;
      overflow: hidden;
  }
+ ::-webkit-input-placeholder {
+    font-style: italic;
+ }
  #appcontent {
      background-color: #383838;
      height: 100vh;
@@ -67,9 +70,13 @@ a {
      font-size: 18pt;
  }
  #topLeft {
-     align-items: baseline;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     color: white;
      padding-bottom: 0;
      margin-top: -10px;
+     max-width: 300px;
  }
  #game-label {
      font-weight: bold;
@@ -81,13 +88,12 @@ a {
      font-size: 2rem;
      color: #555;
  }
- #gameDropdown {
-     width: 150px;
-     font-size: 18pt;
-     color: white;
-     background: rgba(0,0,0,0);
-     border: none;
-     cursor: pointer;
+ #selectedGameDisplay {
+    text-align: center;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
  }
  option {
      color: black;
@@ -98,7 +104,7 @@ a {
     justify-content: center;
     height: 20px;
 }
- #voiceSearchInput {
+ #voiceSearchInput, #searchGameInput {
     width: calc(100% - 25px);
     text-align: center;
     background: none;
@@ -106,7 +112,11 @@ a {
     border: none;
     border-bottom: 1px solid white;
  }
- #voiceSearchInput:focus, #voiceSearchInput:active {
+ #searchGameInput {
+    width: 50vw;
+    font-size: 16pt;
+ }
+ #voiceSearchInput:focus, #voiceSearchInput:active, #searchGameInput:focus, #searchGameInput:active {
     outline: none;
  }
  .content {
@@ -265,7 +275,7 @@ a {
      opacity: 0.5;
  }
 
- #modalContainer, #settingsContainer, #updatesContainer, #infoContainer {
+ #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer {
      display: flex;
      justify-content: center;
      align-items: center;
@@ -315,6 +325,54 @@ a {
      width: 45vw;
      min-height: 500px;
      min-width: 500px;
+ }
+ #gameSelectionContainer > .modal {
+    height: 75vh;
+    width: 85vw;
+    min-height: 500px;
+    min-width: 500px;
+ }
+ .gameSelection {
+    cursor: pointer;
+    background-repeat: no-repeat !important;
+    background-position-x: 100% !important;
+    background-size: cover !important;
+    margin: 10px;
+
+    height: 200px;
+    width: 30%;
+    min-width: 400px;
+    max-width: 450px;
+ }
+ .gameSelectionContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(0deg, rgba(0,0,0,0.6) 0px, rgba(0,0,0,0));
+ }
+ .gameSelectionContentToHover:hover {
+    background: linear-gradient(0deg, rgba(0,0,0,0.2) 0px, rgba(0,0,0,0));
+ }
+ #gameSelectionListContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: flex-start;
+    width: 95%;
+    height: 90%;
+    background: rgb(75,75,75);
+    padding: 20px;
+    overflow-y: auto;
+ }
+ .gameSelectionContent > div {
+    text-align: left;
+    padding: 5px;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+ }
+ .gameSelectionContent > div:last-child {
+    font-size: 20pt;
  }
  #app_version {
      display: flex;

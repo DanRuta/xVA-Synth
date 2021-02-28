@@ -2,6 +2,8 @@
 
 xVASynth is a machine learning based speech synthesis app, using voices from characters/voice sets from Bethesda games.
 
+Patreon: https://www.patreon.com/xvasynth
+
 ## See it in action (YouTube link)
 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=xqJ-ujWvu7s

@@ -86,16 +86,6 @@ const loadAllModels = () => {
                                             models: [],
                                             gameAsset
                                         }
-
-                                        // Insert the dropdown option, in alphabetical order, except for Other
-                                        const existingOptions = Array.from(gameDropdown.childNodes)
-
-                                        if (existingOptions.length && option.innerHTML!="Other") {
-                                            const afterElement = existingOptions.find(el => el.text>option.innerHTML || el.text=="Other")
-                                            gameDropdown.insertBefore(option, afterElement)
-                                        } else {
-                                            gameDropdown.appendChild(option)
-                                        }
                                     }
 
                                     const audioPreviewPath = `${gameFolder}/${model.games.find(({gameId}) => gameId==gameFolder).voiceId}`
@@ -139,13 +129,14 @@ const loadAllModels = () => {
 }
 
 // Change game
-const changeGame = () => {
+const changeGame = (meta) => {
 
-    const meta = gameDropdown.value.split("-")
+    meta = meta.split("-")
     window.currentGame = meta
     themeColour = meta[1]
     generateVoiceButton.disabled = true
     generateVoiceButton.innerHTML = "Generate Voice"
+    selectedGameDisplay.innerHTML = meta[3].split(".")[0]
 
     // Change the app title
     if (meta[2]) {
@@ -191,7 +182,7 @@ const changeGame = () => {
     `
 
     try {fs.mkdirSync(`${path}/output/${meta[0]}`)} catch (e) {/*Do nothing*/}
-    localStorage.setItem("lastGame", gameDropdown.value)
+    localStorage.setItem("lastGame", window.currentGame.join("-"))
 
     // Populate models
     voiceTypeContainer.innerHTML = ""
@@ -434,7 +425,7 @@ window.toggleSpinnerButtons = () => {
 
 generateVoiceButton.addEventListener("click", () => {
 
-    const game = gameDropdown.value.split("-")[0]
+    const game = window.currentGame[0]
 
     try {fs.mkdirSync(window.userSettings[`outpath_${game}`])} catch (e) {/*Do nothing*/}
     try {fs.mkdirSync(`${window.userSettings[`outpath_${game}`]}/${voiceId}`)} catch (e) {/*Do nothing*/}
@@ -695,8 +686,6 @@ const keepSampleFunction = shiftClick => {
 keepSampleButton.addEventListener("click", event => keepSampleFunction(event.shiftKey))
 
 
-gameDropdown.addEventListener("change", changeGame)
-
 
 window.confirmModal = message => new Promise(resolve => resolve(createModal("confirm", message)))
 window.spinnerModal = message => new Promise(resolve => resolve(createModal("spinner", message)))
@@ -761,12 +750,14 @@ const createModal = (type, message) => {
 }
 window.closeModal = (container=modalContainer) => {
     return new Promise(resolve => {
+        gameSelectionContainer.style.opacity = 0
         updatesContainer.style.opacity = 0
         infoContainer.style.opacity = 0
         settingsContainer.style.opacity = 0
         container.style.opacity = 0
         chrome.style.opacity = 0.88
         setTimeout(() => {
+            gameSelectionContainer.style.display = "none"
             updatesContainer.style.display = "none"
             infoContainer.style.display = "none"
             settingsContainer.style.display = "none"
@@ -1475,16 +1466,98 @@ settingsContainer.addEventListener("click", event => {
 })
 
 
+// Change Game
+// ===========
+changeGameButton.addEventListener("click", () => {
+    closeModal().then(() => {
+        gameSelectionContainer.style.opacity = 0
+        gameSelectionContainer.style.display = "flex"
+        chrome.style.opacity = 0.88
+        requestAnimationFrame(() => requestAnimationFrame(() => gameSelectionContainer.style.opacity = 1))
+        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
+    })
+})
+gameSelectionContainer.addEventListener("click", event => {
+    if (event.target==gameSelectionContainer) {
+        window.closeModal(gameSelectionContainer)
+    }
+})
+fs.readdir(`${path}/assets`, (err, fileNames) => {
 
+    const itemsToSort = []
+
+    fileNames.filter(fn=>(fn.endsWith(".jpg")||fn.endsWith(".png"))&&fn.split("-").length==4).forEach(fileName => {
+        const gameSelection = createElem("div.gameSelection")
+        gameSelection.style.background = `url("assets/${fileName}")`
+
+        const gameId = fileName.split("-")[0]
+        const gameName = fileName.split("-").reverse()[0].split(".")[0]
+        const gameSelectionContent = createElem("div.gameSelectionContent")
+
+        let numVoices = 0
+        if (fs.existsSync(`${path}/models/${gameId}`)) {
+            const files = fs.readdirSync(`${path}/models/${gameId}`)
+            numVoices = files.filter(fn => fn.includes(".json")).length
+        }
+        if (numVoices==0) {
+            gameSelection.style.cursor = "not-allowed"
+            gameSelectionContent.style.background = "rgba(150,150,150,0.7)"
+        } else {
+            gameSelectionContent.classList.add("gameSelectionContentToHover")
+        }
+
+
+        gameSelectionContent.appendChild(createElem("div", `${numVoices} voice${(numVoices>1||numVoices==0)?"s":""}`))
+        gameSelectionContent.appendChild(createElem("div", gameName))
+
+        gameSelection.appendChild(gameSelectionContent)
+
+        gameSelectionContent.addEventListener("click", () => {
+            if (numVoices) {
+                changeGame(fileName)
+                closeModal()
+            }
+        })
+
+        itemsToSort.push([numVoices, gameSelection])
+    })
+
+    console.log("itemsToSort", itemsToSort)
+    itemsToSort.sort((a,b) => a[0]<b[0]?1:-1).forEach(([numVoices, elem]) => {
+        console.log(numVoices, elem)
+        gameSelectionListContainer.appendChild(elem)
+    })
+    console.log("itemsToSort", itemsToSort)
+
+    searchGameInput.addEventListener("keyup", () => {
+        const voiceElems = Array.from(gameSelectionListContainer.children)
+        if (searchGameInput.value.length) {
+            voiceElems.forEach(elem => {
+                if (elem.children[0].children[1].innerHTML.toLowerCase().includes(searchGameInput.value)) {
+                    elem.style.display="flex"
+                } else {
+                    elem.style.display="none"
+                }
+            })
+
+        } else {
+            voiceElems.forEach(elem => elem.style.display="block")
+        }
+    })
+})
+
+
+
+// Other
+// =====
 if (fs.existsSync(`${path}/models/nvidia_waveglowpyt_fp32_20190427.pt`)) {
     loadAllModels().then(() => {
         // Load the last selected game
         const lastGame = localStorage.getItem("lastGame")
 
         if (lastGame) {
-            gameDropdown.value = lastGame
+            changeGame(lastGame)
         }
-        changeGame()
     })
 } else {
     console.log("No Waveglow")
