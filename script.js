@@ -1522,12 +1522,9 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
         itemsToSort.push([numVoices, gameSelection])
     })
 
-    console.log("itemsToSort", itemsToSort)
     itemsToSort.sort((a,b) => a[0]<b[0]?1:-1).forEach(([numVoices, elem]) => {
-        console.log(numVoices, elem)
         gameSelectionListContainer.appendChild(elem)
     })
-    console.log("itemsToSort", itemsToSort)
 
     searchGameInput.addEventListener("keyup", () => {
         const voiceElems = Array.from(gameSelectionListContainer.children)
