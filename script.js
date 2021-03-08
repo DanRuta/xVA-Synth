@@ -568,6 +568,7 @@ const saveFile = (from, to) => {
             amplitude: window.userSettings.audio.amplitude
         }
 
+        console.log(`About to save file from ${from} to ${to} with options: ${JSON.stringify(options)}`)
         window.appLogger.log(`About to save file from ${from} to ${to} with options: ${JSON.stringify(options)}`)
         fetch(`http://localhost:8008/outputAudio`, {
             method: "Post",
@@ -640,8 +641,8 @@ const keepSampleFunction = shiftClick => {
                 toLocationOut.reverse()
                 toLocationOut.push(newFileName)
 
-                if (fs.existsSync(outDir)) {
-                    const existingFiles = fs.readdirSync(outDir.reverse().join("/"))
+                if (fs.existsSync(outDir.slice(0, outDir.length-1).join("/"))) {
+                    const existingFiles = fs.readdirSync(outDir.slice(0, outDir.length-1).join("/"))
                     const existingFileConflict = existingFiles.filter(name => name==newFileName)
 
 
