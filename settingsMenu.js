@@ -46,12 +46,16 @@ if (!window.userSettings.vocoder) { // For backwards compatibility
 if (!window.userSettings.audio.amplitude) { // For backwards compatibility
     window.userSettings.audio.amplitude = 1
 }
+if (!window.userSettings.keepPaceOnNew) { // For backwards compatibility
+    window.userSettings.keepPaceOnNew = false
+}
 
 
 
 useGPUCbx.checked = window.userSettings.useGPU
 autoplay_ckbx.checked = window.userSettings.autoplay
 setting_slidersTooltip.checked = window.userSettings.sliderTooltip
+setting_keepPaceOnNew.checked = window.userSettings.keepPaceOnNew
 setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
 setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
 setting_audio_format.value = window.userSettings.audio.format
@@ -94,6 +98,10 @@ setting_autoplaygenCbx.addEventListener("click", () => {
 })
 setting_slidersTooltip.addEventListener("click", () => {
     window.userSettings.sliderTooltip = setting_slidersTooltip.checked
+    saveUserSettings()
+})
+setting_keepPaceOnNew.addEventListener("click", () => {
+    window.userSettings.keepPaceOnNew = setting_keepPaceOnNew.checked
     saveUserSettings()
 })
 

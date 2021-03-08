@@ -177,6 +177,7 @@ class Handler(BaseHTTPRequestHandler):
 
             if self.path == "/synthesize":
                 text = post_data["sequence"]
+                pace = float(post_data["pace"])
                 out_path = post_data["outfile"]
                 pitch = post_data["pitch"] if "pitch" in post_data else None
                 duration = post_data["duration"] if "duration" in post_data else None
@@ -184,7 +185,7 @@ class Handler(BaseHTTPRequestHandler):
                 vocoder = post_data["vocoder"]
                 pitch_data = [pitch, duration]
 
-                req_response = fastpitch.infer(PROD, user_settings, text, out_path, fastpitch=fastpitch_model, vocoder=vocoder, speaker_i=speaker_i, pitch_data=pitch_data, logger=logger)
+                req_response = fastpitch.infer(PROD, user_settings, text, out_path, fastpitch=fastpitch_model, vocoder=vocoder, speaker_i=speaker_i, pitch_data=pitch_data, logger=logger, pace=pace)
 
             if self.path == "/outputAudio":
                 input_path = post_data["input_path"]

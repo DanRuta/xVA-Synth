@@ -493,12 +493,13 @@ generateVoiceButton.addEventListener("click", () => {
         window.pitchEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
 
         const speaker_i = window.currentModel.games[0].emb_i
+        const pace = (window.userSettings.keepPaceOnNew && isFreshRegen)?pace_slid.value:1
 
         window.appLogger.log(`Synthesising audio: ${sequence}`)
         fetch(`http://localhost:8008/synthesize`, {
             method: "Post",
             body: JSON.stringify({
-                sequence, pitch, duration, speaker_i,
+                sequence, pitch, duration, speaker_i, pace,
                 outfile: tempFileLocation,
                 vocoder: window.userSettings.vocoder
             })
@@ -509,7 +510,7 @@ generateVoiceButton.addEventListener("click", () => {
             let durationsData = res[1]
             let cleanedSequence = res[2]
             pitchData = pitchData.split(",").map(v => parseFloat(v))
-            durationsData = durationsData.split(",").map(v => parseFloat(v)/pace_slid.value)
+            durationsData = durationsData.split(",").map(v => isFreshRegen ? parseFloat(v) : parseFloat(v)/pace_slid.value)
             window.pitchEditor.inputSequence = sequence
             window.pitchEditor.sequence = cleanedSequence
 
@@ -519,7 +520,7 @@ generateVoiceButton.addEventListener("click", () => {
                 window.pitchEditor.resetDurs = durationsData
             }
 
-            setPitchEditorValues(cleanedSequence.replace(/\s/g, "_").split(""), pitchData, durationsData, isFreshRegen)
+            setPitchEditorValues(cleanedSequence.replace(/\s/g, "_").split(""), pitchData, durationsData, isFreshRegen, pace)
 
             toggleSpinnerButtons()
             keepSampleButton.dataset.newFileLocation = `${window.userSettings[`outpath_${game}`]}/${voiceType}/${outputFileName}.wav`
@@ -875,7 +876,7 @@ const set_letter_display = (elem, elem_i, length=null, value=null) => {
         elem.children[1].value = value
     }
 }
-const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => {
+const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen, pace=1) => {
 
     Array.from(editor.children).forEach(child => editor.removeChild(child))
 
@@ -885,7 +886,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen) => 
 
     if (isFreshRegen) {
         window.pitchEditor.letterFocus = []
-        pace_slid.value = 1
+        pace_slid.value = pace
     }
 
     window.pitchEditor.letters = letters

@@ -36,7 +36,7 @@ from python.fastpitch.transformer import FFTransformer
 
 def regulate_len(durations, enc_out, pace=1.0, mel_max_len=None):
     """If target=None, then predicted durations are applied"""
-    reps = torch.round(durations.float() / pace).long()
+    reps = torch.round(durations.float() * pace).long()
     dec_lens = reps.sum(dim=1)
 
     enc_rep = pad_sequence([torch.repeat_interleave(o, r, dim=0)
