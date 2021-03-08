@@ -16,6 +16,7 @@ def run_audio_post(logger, input, output, options=None):
             if options["padEnd"]:
                 ffmpeg_options["af"].append(f'apad=pad_dur={options["padEnd"]}ms')
 
+            ffmpeg_options["af"].append(f'volume={options["amplitude"]}')
             ffmpeg_options["af"] = ",".join(ffmpeg_options["af"])
 
 
@@ -25,7 +26,6 @@ def run_audio_post(logger, input, output, options=None):
         if "mp3" in output:
             ffmpeg_options["c:a"] = "libmp3lame"
 
-        ffmpeg_options["filter:a"] = f'volume={options["amplitude"]}'
 
         if os.path.exists(output):
             os.remove(output)
