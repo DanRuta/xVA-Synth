@@ -750,25 +750,28 @@ const createModal = (type, message) => {
         requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
     })
 }
-window.closeModal = (container=modalContainer) => {
+window.closeModal = (container=modalContainer, notThisOne=undefined) => {
     return new Promise(resolve => {
-        gameSelectionContainer.style.opacity = 0
-        updatesContainer.style.opacity = 0
-        infoContainer.style.opacity = 0
-        settingsContainer.style.opacity = 0
-        container.style.opacity = 0
+        const containers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, container]
+        containers.forEach(cont => {
+            if (notThisOne!=cont && (notThisOne==undefined || notThisOne!=cont)) {
+                cont.style.opacity = 0
+            }
+        })
+
         chrome.style.opacity = 0.88
         setTimeout(() => {
-            gameSelectionContainer.style.display = "none"
-            updatesContainer.style.display = "none"
-            infoContainer.style.display = "none"
-            settingsContainer.style.display = "none"
-            container.style.display = "none"
+            containers.forEach(cont => {
+                if (notThisOne==undefined || notThisOne!=cont) {
+                    cont.style.display = "none"
+                }
+            })
+
             try {
                 activeModal.remove()
             } catch (e) {}
             resolve()
-        }, 300)
+        }, notThisOne==undefined?200:100)
     })
 }
 
@@ -1343,8 +1346,11 @@ window.addEventListener("keydown", event => {
     }
 })
 
+
+// Info
+// ====
 infoIcon.addEventListener("click", () => {
-    closeModal().then(() => {
+    closeModal(undefined, infoContainer).then(() => {
         infoContainer.style.opacity = 0
         infoContainer.style.display = "flex"
         chrome.style.opacity = 0.88
@@ -1430,7 +1436,7 @@ const showUpdates = () => {
 }
 checkForUpdates()
 updatesIcon.addEventListener("click", () => {
-    closeModal().then(() => {
+    closeModal(undefined, updatesContainer).then(() => {
         updatesContainer.style.opacity = 0
         updatesContainer.style.display = "flex"
         chrome.style.opacity = 0.88
@@ -1453,7 +1459,7 @@ showUpdates()
 // Settings
 // ========
 settingsCog.addEventListener("click", () => {
-    closeModal().then(() => {
+    closeModal(undefined, settingsContainer).then(() => {
         settingsContainer.style.opacity = 0
         settingsContainer.style.display = "flex"
         chrome.style.opacity = 0.88
@@ -1471,7 +1477,7 @@ settingsContainer.addEventListener("click", event => {
 // Change Game
 // ===========
 changeGameButton.addEventListener("click", () => {
-    closeModal().then(() => {
+    closeModal(undefined, gameSelectionContainer).then(() => {
         gameSelectionContainer.style.opacity = 0
         gameSelectionContainer.style.display = "flex"
         chrome.style.opacity = 0.88
