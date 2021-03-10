@@ -47,7 +47,7 @@ if (!window.userSettings.audio.amplitude) { // For backwards compatibility
     window.userSettings.audio.amplitude = 1
 }
 if (!window.userSettings.keepPaceOnNew) { // For backwards compatibility
-    window.userSettings.keepPaceOnNew = false
+    window.userSettings.keepPaceOnNew = true
 }
 
 
