@@ -260,9 +260,12 @@ class FastPitch(nn.Module):
 
     def infer_advanced (self, inputs, speaker_i, pace=1.0, pitch_data=None, max_duration=75):
 
-        speaker = torch.ones(inputs.size(0)).long().to(inputs.device) * speaker_i
-        spk_emb = self.speaker_emb(speaker).unsqueeze(1)
-        spk_emb.mul_(self.speaker_emb_weight)
+        if speaker_i is not None:
+            speaker = torch.ones(inputs.size(0)).long().to(inputs.device) * speaker_i
+            spk_emb = self.speaker_emb(speaker).unsqueeze(1)
+            spk_emb.mul_(self.speaker_emb_weight)
+        else:
+            spk_emb = 0
 
         # Input FFT
         enc_out, enc_mask = self.encoder(inputs, conditioning=spk_emb)

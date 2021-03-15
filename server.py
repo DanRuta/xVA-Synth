@@ -173,7 +173,8 @@ class Handler(BaseHTTPRequestHandler):
 
             if self.path == "/loadModel":
                 ckpt = post_data["model"]
-                fastpitch_model = fastpitch.loadModel(fastpitch_model, ckpt=ckpt, n_speakers=post_data["model_speakers"], device=fastpitch_model.device)
+                n_speakers = post_data["model_speakers"] if "model_speakers" in post_data else None
+                fastpitch_model = fastpitch.loadModel(fastpitch_model, ckpt=ckpt, n_speakers=n_speakers, device=fastpitch_model.device)
 
             if self.path == "/synthesize":
                 text = post_data["sequence"]
@@ -181,7 +182,7 @@ class Handler(BaseHTTPRequestHandler):
                 out_path = post_data["outfile"]
                 pitch = post_data["pitch"] if "pitch" in post_data else None
                 duration = post_data["duration"] if "duration" in post_data else None
-                speaker_i = post_data["speaker_i"]
+                speaker_i = post_data["speaker_i"] if "speaker_i" in post_data else None
                 vocoder = post_data["vocoder"]
                 pitch_data = [pitch, duration]
 
