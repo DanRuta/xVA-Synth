@@ -752,7 +752,9 @@ const createModal = (type, message) => {
 }
 window.closeModal = (container=modalContainer, notThisOne=undefined) => {
     return new Promise(resolve => {
-        const containers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, container]
+        const containers = container==undefined
+            ? [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, container]
+            : [container]
         containers.forEach(cont => {
             if (notThisOne!=cont && (notThisOne==undefined || notThisOne!=cont)) {
                 cont.style.opacity = 0
@@ -1523,7 +1525,7 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
         gameSelectionContent.addEventListener("click", () => {
             if (numVoices) {
                 changeGame(fileName)
-                closeModal()
+                closeModal(gameSelectionContainer)
             }
         })
 
