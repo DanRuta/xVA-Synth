@@ -275,7 +275,7 @@ a {
      opacity: 0.5;
  }
 
- #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer {
+ #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer {
      display: flex;
      justify-content: center;
      align-items: center;
@@ -326,7 +326,7 @@ a {
      min-height: 500px;
      min-width: 500px;
  }
- #gameSelectionContainer > .modal {
+ #gameSelectionContainer > .modal, #batchGenerationContainer > .modal {
     height: 75vh;
     width: 85vw;
     min-height: 500px;
@@ -615,7 +615,7 @@ a {
      width: 20px;
  }
 
- #settingsCog, #patreonIcon, #updatesIcon, #infoIcon {
+ #settingsCog, #patreonIcon, #updatesIcon, #infoIcon, #batchIcon {
      display: flex;
      position: fixed;
      z-index: 1000;
@@ -628,7 +628,11 @@ a {
     top: 35px;
  }
  #updatesIcon {
-    right: 110px;
+    right: 100px;
+    top: 38px;
+ }
+ #batchIcon {
+    right: 125px;
     top: 38px;
  }
  #updatesContainer > div {
@@ -654,7 +658,7 @@ a {
     height: 30px !important;
     width: 30px;
  }
- #settingsCog > svg, #patreonIcon > img, #updatesIcon > svg, #infoIcon > svg {
+ #settingsCog > svg, #patreonIcon > img, #updatesIcon > svg, #infoIcon > svg, #batchIcon > svg {
      height: 25px;
      cursor: pointer;
      filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7))
@@ -697,3 +701,135 @@ a {
     color: rgb(255, 255, 255) !important;
     font-size: 0.875rem !important;
  }
+
+
+
+
+
+
+
+
+/* Batch stuff */
+#batch_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#batch_main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    width: 80vw;
+    background: rgb(75,75,75);
+    color: gray;
+    overflow: auto;
+}
+#batchDropZoneNote {
+    font-size: 30pt;
+}
+#batch_footer {
+    padding: 20px;
+}
+#batch_intro {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+}
+#batch_intro > div:first-child {
+    width: 85%;
+}
+#batch_outputFolderInput, #batch_progressBar {
+    width: 400px;
+    height: 20px;
+    margin: 2px;
+    padding: 4px;
+    /*min-height: 35px;*/
+    max-height: 35px;
+}
+#batch_progressBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    margin: 4px;
+    background: white;
+    text-shadow: 0 0 2px black;
+    border: 1px solid white;
+}
+#batch_out_opts {
+    min-height: 45px;
+}
+#batch_out_opts, #batch_out_opts>span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+}
+#batchRecordsHeader {
+    position: sticky;
+    top: 0;
+}
+#batchRecordsHeader > div {
+    background-color: rgb(75,75,75);
+    box-shadow: 0 1px 5px 1px rgba(0,0,0,0.3);
+    text-shadow: 0 0 2px black;
+    font-weight: bold;
+}
+#batchRecordsHeader, #batchRecordsContainer > div {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+#batchRecordsHeader > div, #batchRecordsContainer > div > div {
+    padding: 2px;
+    border: 1px solid;
+    color: white;
+    flex-grow: 1;
+    height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+/*Index*/
+#batchRecordsHeader > div:first-child, #batchRecordsContainer > div > div:first-child {
+    min-width: 50px;
+    max-width: 50px;
+}
+/*Status*/
+#batchRecordsHeader > div:nth-child(2), #batchRecordsContainer > div > div:nth-child(2) {
+    min-width: 100px;
+    max-width: 100px;
+}
+/*Game*/
+#batchRecordsHeader > div:nth-child(3), #batchRecordsContainer > div > div:nth-child(3) {
+    min-width: 150px;
+    max-width: 150px;
+}
+/*Voice*/
+#batchRecordsHeader > div:nth-child(4), #batchRecordsContainer > div > div:nth-child(4) {
+    min-width: 250px;
+    max-width: 250px;
+}
+/*Text*/
+#batchRecordsHeader > div:nth-child(5), #batchRecordsContainer > div > div:nth-child(5) {
+    min-width: 500px;
+    max-width: 500px;
+}
+/*Vocoder*/
+#batchRecordsHeader > div:nth-child(6), #batchRecordsContainer > div > div:nth-child(6) {
+    min-width: 100px;
+    max-width: 100px;
+}
+/*Out path*/
+#batchRecordsHeader > div:nth-child(7), #batchRecordsContainer > div > div:nth-child(7) {
+    min-width: 200px;
+    max-width: 200px;
+}
+/*Pacing*/
+#batchRecordsHeader > div:nth-child(8), #batchRecordsContainer > div > div:nth-child(8) {
+    min-width: 50px;
+    /*max-width: 50px;*/
+}

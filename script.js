@@ -2,6 +2,7 @@
 
 const PRODUCTION = process.mainModule.filename.includes("resources")
 const path = PRODUCTION ? "./resources/app" : "."
+window.path = path
 
 const fs = require("fs")
 const {shell, ipcRenderer} = require("electron")
@@ -9,9 +10,11 @@ const fetch = require("node-fetch")
 const {text_to_sequence, english_cleaners} = require("./text.js")
 const {xVAAppLogger} = require("./appLogger.js")
 const {saveUserSettings} = require("./settingsMenu.js")
+const {startBatch} = require("./batch.js")
 
 let themeColour
-window.appVersion = "v1.2.3"
+window.electronBrowserWindow = require("electron").remote.getCurrentWindow()
+window.appVersion = "v1.3.0"
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 const oldCError = console.error
 console.error = (data) => {
@@ -179,6 +182,7 @@ const changeGame = (meta) => {
         background-color: #${themeColour} !important;
     }
     a {color: #${themeColour}};
+    #batchRecordsHeader > div {background-color: #${themeColour} !important;}
     `
 
     try {fs.mkdirSync(`${path}/output/${meta[0]}`)} catch (e) {/*Do nothing*/}
@@ -264,6 +268,7 @@ const changeGame = (meta) => {
             }
 
             window.currentModel = model
+            window.currentModel.audioPreviewPath = audioPreviewPath
             window.currentModelButton = button
 
             if (voiceDescription) {
@@ -434,6 +439,7 @@ generateVoiceButton.addEventListener("click", () => {
     if (generateVoiceButton.dataset.modelQuery && generateVoiceButton.dataset.modelQuery!="null") {
 
         window.appLogger.log(`Loading voice set: ${JSON.parse(generateVoiceButton.dataset.modelQuery).model}`)
+        window.batch_state.lastModel = JSON.parse(generateVoiceButton.dataset.modelQuery).model.split("/").reverse()[0]
 
         spinnerModal("Loading voice set<br>(may take a minute... but not much more!)")
         fetch(`http://localhost:8008/loadModel`, {
@@ -734,7 +740,7 @@ const createModal = (type, message) => {
             modal.appendChild(createElem("div", closeButton))
 
             closeButton.addEventListener("click", () => {
-                closeModal().then(() => {
+                closeModal(modalContainer).then(() => {
                     resolve(inputElem.value)
                 })
             })
@@ -1211,6 +1217,7 @@ autoplay_ckbx.addEventListener("change", () => {
 vocoder_select.value = window.userSettings.vocoder.includes(".hg.") ? "qnd" : window.userSettings.vocoder
 const changeVocoder = vocoder => {
     window.userSettings.vocoder = vocoder
+    window.batch_state.lastVocoder = vocoder
     spinnerModal("Changing models...")
     fetch(`http://localhost:8008/setVocoder`, {
         method: "Post",
@@ -1457,6 +1464,23 @@ checkUpdates.addEventListener("click", () => {
 })
 showUpdates()
 
+
+// Batch generation
+// ========
+batchIcon.addEventListener("click", () => {
+    closeModal(undefined, batchGenerationContainer).then(() => {
+        batchGenerationContainer.style.opacity = 0
+        batchGenerationContainer.style.display = "flex"
+        chrome.style.opacity = 0.88
+        requestAnimationFrame(() => requestAnimationFrame(() => batchGenerationContainer.style.opacity = 1))
+        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
+    })
+})
+batchGenerationContainer.addEventListener("click", event => {
+    if (event.target==batchGenerationContainer) {
+        window.closeModal(batchGenerationContainer)
+    }
+})
 
 // Settings
 // ========

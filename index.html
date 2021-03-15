@@ -283,12 +283,65 @@
                 <div id="gameSelectionListContainer"></div>
             </div>
         </div>
+        <div id="batchGenerationContainer" style="display:none">
+            <div class="modal">
+                <h2>Batch synthesis</h2>
+                <div id="batch_container">
+                    <div id="batch_intro">
+                        <div>Place the .csv batch file(s) into the box below. Click the "Generate sample" button to generate an example .csv file. The mandatory columns are "game_id", "voice_id", and "text". The rest are optional.</div>
+                        <button id="batch_generateSample">Generate Sample</button>
+                    </div>
+                    <div id="batch_main">
+                        <span id="batchDropZoneNote">Drag and drop .csv files here</span>
+                        <div id="batchRecordsHeader" style="display: none;">
+                            <div>#</div>
+                            <div>Status</div>
+                            <div>Game</div>
+                            <div>Voice</div>
+                            <div>Text</div>
+                            <div>Vocoder</div>
+                            <div>Out Path</div>
+                            <div>Pacing</div>
+                        </div>
+                        <div id="batchRecordsContainer">
+
+                        </div>
+                    </div>
+                    <div id="batch_footer">
+                        <div style="max-height: 35px;display: flex;justify-content: center;">
+                            <input type="text" id="batch_outputFolderInput">
+                            <div style="display: none;" id="batch_progressBar"></div>
+                        </div>
+                        <div id="batch_out_opts">
+                            <span></span>
+                            <span id="batch_clearDirOpts">
+                                <input type="checkbox" id="batch_clearDirFirstCkbx">
+                                <span>Clear out the directory first</span>
+                            </span>
+                            <span style="display:none" id="batch_progressItems">
+                                <span id="batch_progressNotes">currently doing...</span>
+                            </span>
+                        </div>
+                        <div>
+                            <button style="display: none;" id="batch_synthesizeBtn">Synthesize Batch</button>
+                            <button style="display: none;" id="batch_pauseBtn">Pause</button>
+                            <button style="display: none;" id="batch_stopBtn">Stop</button>
+                            <button style="display: none;" id="batch_clearBtn">Clear</button>
+                            <button id="batch_openDirBtn">Open Output</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="modalContainer" style="display:none"></div>
     </div>
 </div>
+<div id="batchIcon">
+    <svg id="batchSVGIcon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewBox="0, 0, 400,310.24930747922434"><g id="svgg"><path id="path0" d="M5.549 99.446 C 5.515 149.266,5.829 215.831,6.246 247.368 L 7.004 304.709 198.516 304.709 L 390.028 304.709 390.028 157.523 L 390.028 10.338 282.825 9.602 C 223.864 9.197,137.371 8.865,90.617 8.865 L 5.611 8.864 5.549 99.446 M107.479 67.590 L 107.479 97.507 70.914 97.507 L 34.349 97.507 34.349 67.590 L 34.349 37.673 70.914 37.673 L 107.479 37.673 107.479 67.590 M362.327 67.590 L 362.327 97.507 249.307 97.507 L 136.288 97.507 136.288 67.590 L 136.288 37.673 249.307 37.673 L 362.327 37.673 362.327 67.590 M107.479 157.341 L 107.479 187.258 70.914 187.258 L 34.349 187.258 34.349 157.341 L 34.349 127.424 70.914 127.424 L 107.479 127.424 107.479 157.341 M362.327 157.341 L 362.327 187.258 249.307 187.258 L 136.288 187.258 136.288 157.341 L 136.288 127.424 249.307 127.424 L 362.327 127.424 362.327 157.341 M107.479 247.091 L 107.479 277.008 70.914 277.008 L 34.349 277.008 34.349 247.091 L 34.349 217.175 70.914 217.175 L 107.479 217.175 107.479 247.091 M362.327 247.091 L 362.327 277.008 249.307 277.008 L 136.288 277.008 136.294 257.895 C 136.297 247.382,136.621 233.920,137.015 227.978 L 137.730 217.175 250.029 217.175 L 362.327 217.175 362.327 247.091 " stroke="none" fill="#ffffff" fill-rule="evenodd"></path></g></svg>
+</div>
 <div id="updatesIcon">
     <svg id="update_nothing" version="1.0" xmlns="http://www.w3.org/2000/svg"
-     width="50.000000pt" height="25.000000pt" viewBox="0 0 250.000000 344.000000"
+     width="25.000000pt" height="25.000000pt" viewBox="0 0 250.000000 344.000000"
      preserveAspectRatio="xMidYMid meet"><g transform="translate(300.000000,344.000000) scale(0.100000,-0.100000) rotate(90 0 0)"
     fill="#ffffff" stroke="none"><path d="M2150 2507 l0 -357 -875 0 c-950 0 -901 3 -955 -55 l-25 -27 0 -348
     0 -348 25 -27 c54 -58 5 -55 955 -55 l875 0 0 -357 0 -358 572 573 573 572

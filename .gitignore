@@ -28,3 +28,4 @@ models
 release-builds
 package-lock.json
 app.log
+batch

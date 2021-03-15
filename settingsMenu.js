@@ -49,7 +49,12 @@ if (!window.userSettings.audio.amplitude) { // For backwards compatibility
 if (!window.userSettings.keepPaceOnNew) { // For backwards compatibility
     window.userSettings.keepPaceOnNew = true
 }
-
+if (!window.userSettings.batchOutFolder) { // For backwards compatibility
+    window.userSettings.batchOutFolder = `${__dirname.replace(/\\/g,"/")}/batch`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
+}
+if (!window.userSettings.batch_clearDirFirst) { // For backwards compatibility
+    window.userSettings.batch_clearDirFirst = false
+}
 
 
 useGPUCbx.checked = window.userSettings.useGPU
@@ -181,6 +186,15 @@ setting_out_path_input.addEventListener("change", () => {
         window.currentModelButton.click()
     }
 })
-
+batch_outputFolderInput.addEventListener("change", () => {
+    window.userSettings.batchOutFolder = batch_outputFolderInput.value
+    saveUserSettings()
+})
+batch_outputFolderInput.value = window.userSettings.batchOutFolder
+batch_clearDirFirstCkbx.addEventListener("change", () => {
+    window.userSettings.batch_clearDirFirst = batch_clearDirFirstCkbx.checked
+    saveUserSettings()
+})
+batch_clearDirFirstCkbx.checked = window.userSettings.batch_clearDirFirst
 
 exports.saveUserSettings = saveUserSettings
