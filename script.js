@@ -1550,6 +1550,9 @@ gameSelectionContainer.addEventListener("click", event => {
 })
 fs.readdir(`${path}/assets`, (err, fileNames) => {
 
+    let totalVoices = 0
+    let totalGames = new Set()
+
     const itemsToSort = []
 
     fileNames.filter(fn=>(fn.endsWith(".jpg")||fn.endsWith(".png"))&&fn.split("-").length==4).forEach(fileName => {
@@ -1564,14 +1567,15 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
         if (fs.existsSync(`${path}/models/${gameId}`)) {
             const files = fs.readdirSync(`${path}/models/${gameId}`)
             numVoices = files.filter(fn => fn.includes(".json")).length
+            totalVoices += numVoices
         }
         if (numVoices==0) {
             gameSelection.style.cursor = "not-allowed"
             gameSelectionContent.style.background = "rgba(150,150,150,0.7)"
         } else {
             gameSelectionContent.classList.add("gameSelectionContentToHover")
+            totalGames.add(gameId)
         }
-
 
         gameSelectionContent.appendChild(createElem("div", `${numVoices} voice${(numVoices>1||numVoices==0)?"s":""}`))
         gameSelectionContent.appendChild(createElem("div", gameName))
@@ -1607,6 +1611,8 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
             voiceElems.forEach(elem => elem.style.display="block")
         }
     })
+
+    searchGameInput.placeholder = `Search ${Array.from(totalGames).length} games with ${totalVoices} voices...`
 })
 
 
