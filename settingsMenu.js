@@ -16,43 +16,43 @@ window.userSettings = localStorage.getItem("userSettings") ||
 if ((typeof window.userSettings)=="string") {
     window.userSettings = JSON.parse(window.userSettings)
 }
-if (!window.userSettings.audio) { // For backwards compatibility
+if (!Object.keys(window.userSettings).includes("audio")) { // For backwards compatibility
     window.userSettings.audio = {format: "wav", hz: 22050, padStart: 0, padEnd: 0}
 }
-if (!window.userSettings.sliderTooltip) { // For backwards compatibility
+if (!Object.keys(window.userSettings).includes("sliderTooltip")) { // For backwards compatibility
     window.userSettings.sliderTooltip = true
 }
-if (!window.userSettings.darkPrompt) { // For backwards compatibility
+if (!Object.keys(window.userSettings).includes("darkPrompt")) { // For backwards compatibility
     window.userSettings.darkPrompt = false
 }
-if (!window.userSettings.audio.hz) { // For backwards compatibility
+if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("hz")) { // For backwards compatibility
     window.userSettings.audio.hz = 22050
 }
-if (!window.userSettings.audio.padStart) { // For backwards compatibility
+if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("padStart")) { // For backwards compatibility
     window.userSettings.audio.padStart = 0
 }
-if (!window.userSettings.audio.padEnd) { // For backwards compatibility
+if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("padEnd")) { // For backwards compatibility
     window.userSettings.audio.padEnd = 0
 }
-if (!window.userSettings.audio.ffmpeg) { // For backwards compatibility
+if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("ffmpeg")) { // For backwards compatibility
     window.userSettings.audio.ffmpeg = false
 }
-if (!window.userSettings.audio.bitdepth) { // For backwards compatibility
+if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("bitdepth")) { // For backwards compatibility
     window.userSettings.audio.bitdepth = "pcm_s32le"
 }
-if (!window.userSettings.vocoder) { // For backwards compatibility
+if (!Object.keys(window.userSettings).includes("vocoder")) { // For backwards compatibility
     window.userSettings.vocoder = "256_waveglow"
 }
-if (!window.userSettings.audio.amplitude) { // For backwards compatibility
+if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("amplitude")) { // For backwards compatibility
     window.userSettings.audio.amplitude = 1
 }
-if (!window.userSettings.keepPaceOnNew) { // For backwards compatibility
+if (!Object.keys(window.userSettings).includes("keepPaceOnNew")) { // For backwards compatibility
     window.userSettings.keepPaceOnNew = true
 }
-if (!window.userSettings.batchOutFolder) { // For backwards compatibility
+if (!Object.keys(window.userSettings).includes("batchOutFolder")) { // For backwards compatibility
     window.userSettings.batchOutFolder = `${__dirname.replace(/\\/g,"/")}/batch`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
 }
-if (!window.userSettings.batch_clearDirFirst) { // For backwards compatibility
+if (!Object.keys(window.userSettings).includes("batch_clearDirFirst")) { // For backwards compatibility
     window.userSettings.batch_clearDirFirst = false
 }
 
@@ -60,6 +60,7 @@ if (!window.userSettings.batch_clearDirFirst) { // For backwards compatibility
 useGPUCbx.checked = window.userSettings.useGPU
 autoplay_ckbx.checked = window.userSettings.autoplay
 setting_slidersTooltip.checked = window.userSettings.sliderTooltip
+setting_defaultToHiFi.checked = window.userSettings.defaultToHiFi
 setting_keepPaceOnNew.checked = window.userSettings.keepPaceOnNew
 setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
 setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
