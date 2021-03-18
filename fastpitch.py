@@ -186,7 +186,10 @@ def loadModel (fastpitch, ckpt, n_speakers, device):
     if n_speakers is not None:
         fastpitch.speaker_emb = nn.Embedding(n_speakers, symbols_embedding_dim).to(device)
     else:
-        del fastpitch.speaker_emb
+        try:
+            del fastpitch.speaker_emb
+        except:
+            pass
     fastpitch.load_state_dict(checkpoint_data, strict=False)
 
     fastpitch.eval()
