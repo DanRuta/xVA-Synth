@@ -309,6 +309,7 @@ const preProcessCSVData = data => {
             }
         } catch (e) {
             console.log(e)
+            window.appLogger.log(e)
             console.log(data[di])
             console.log(window.games[data[di].game_id])
             console.log(window.games[data[di].game_id].models.find(rec => rec.voiceId==data[di].voice_id))
@@ -479,6 +480,7 @@ const batchChangeVoice = (game, voice) => {
             resolve()
         }).catch(e => {
             console.log(e)
+            window.appLogger.log(e)
             batch_pauseBtn.click()
             if (e.code =="ENOENT") {
                 closeModal().then(() => {
@@ -504,6 +506,7 @@ const batchChangeVocoder = (vocoder, game, voice) => {
             resolve()
         }).catch(e => {
             console.log(e)
+            window.appLogger.log(e)
             batch_pauseBtn.click()
         })
     })
@@ -562,6 +565,7 @@ const batchKickOffGeneration = () => {
                 }).then(r=>r.text()).then(res => {
                     if (res.length) {
                         console.log("res", res)
+                        window.appLogger.log("res", res)
                         batch_pauseBtn.click()
                     } else {
                         record[1].children[1].innerHTML = "Done"
@@ -573,6 +577,7 @@ const batchKickOffGeneration = () => {
                 fs.copyFile(tempFileLocation, outFolder, err => {
                     if (err) {
                         console.log(err)
+                        window.appLogger.log(err)
                         window.appLogger.log(err)
                         batch_pauseBtn.click()
                     } else {
