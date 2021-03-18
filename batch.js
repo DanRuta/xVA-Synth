@@ -153,6 +153,27 @@ batch_generateSample.addEventListener("click", () => {
     shell.showItemInFolder(`${out_directory}/sample.csv`)
 })
 
+const readFileTxt = (file) => {
+    return new Promise((resolve, reject) => {
+        const dataLines = []
+        const reader = new FileReader()
+        reader.readAsText(file)
+        reader.onloadend = () => {
+            const lines = reader.result.replace(/\r\n/g, "\n").split("\n")
+            lines.forEach(line => {
+                if (line.trim().length) {
+                    const record = {}
+                    record.game_id = window.currentModel.games[0].gameId
+                    record.voice_id = window.currentModel.games[0].voiceId
+                    record.text = line
+                    dataLines.push(record)
+                }
+            })
+            resolve(dataLines)
+        }
+    })
+}
+
 const readFile = (file) => {
     return new Promise((resolve, reject) => {
         const dataLines = []
@@ -163,11 +184,13 @@ const readFile = (file) => {
             const header = lines.shift().split(",")
             lines.forEach(line => {
                 const record = {}
-                const parts = CSVToArray(line)[0]
-                parts.forEach((val, vi) => {
-                    record[header[vi]] = val//?val.replace(/^"/, "").replace(/"$/, ""):val
-                })
-                dataLines.push(record)
+                if (line.trim().length) {
+                    const parts = CSVToArray(line)[0]
+                    parts.forEach((val, vi) => {
+                        record[header[vi]] = val//?val.replace(/^"/, "").replace(/"$/, ""):val
+                    })
+                    dataLines.push(record)
+                }
             })
             resolve(dataLines)
         }
@@ -195,6 +218,17 @@ const uploadBatchCSVs = async (eType, event) => {
         const files = Array.from(dataTransfer.files)
         for (let fi=0; fi<files.length; fi++) {
             const file = files[fi]
+            if (!file.name.endsWith(".csv")) {
+                if (file.name.endsWith(".txt")) {
+                    if (window.currentModel) {
+                        const records = await readFileTxt(file)
+                        records.forEach(item => dataLines.push(item))
+                    }
+                    continue
+                } else {
+                    continue
+                }
+            }
 
             const records = await readFile(file)
             records.forEach(item => dataLines.push(item))
@@ -595,8 +629,6 @@ const performSynthesis = async () => {
     }
 }
 
-
-
 const pauseResumeBatch = () => {
 
     batch_progressNotes.innerHTML = `Paused`
@@ -609,7 +641,6 @@ const pauseResumeBatch = () => {
         performSynthesis()
     }
 }
-
 
 const stopBatch = () => {
     window.electronBrowserWindow.setProgressBar(0)
