@@ -185,8 +185,10 @@ class Handler(BaseHTTPRequestHandler):
                 speaker_i = post_data["speaker_i"] if "speaker_i" in post_data else None
                 vocoder = post_data["vocoder"]
                 pitch_data = [pitch, duration]
+                old_sequence = post_data["old_sequence"] if "old_sequence" in post_data else None
 
-                req_response = fastpitch.infer(PROD, user_settings, text, out_path, fastpitch=fastpitch_model, vocoder=vocoder, speaker_i=speaker_i, pitch_data=pitch_data, logger=logger, pace=pace)
+                req_response = fastpitch.infer(PROD, user_settings, text, out_path, fastpitch=fastpitch_model, vocoder=vocoder, \
+                    speaker_i=speaker_i, pitch_data=pitch_data, logger=logger, pace=pace, old_sequence=old_sequence)
 
             if self.path == "/outputAudio":
                 input_path = post_data["input_path"]

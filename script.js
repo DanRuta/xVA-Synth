@@ -489,9 +489,16 @@ generateVoiceButton.addEventListener("click", () => {
         let pitch = []
         let duration = []
         let isFreshRegen = true
+        let old_sequence = undefined
 
-        if (editor.innerHTML && editor.innerHTML.length && window.pitchEditor.sequence && sequence==window.pitchEditor.inputSequence
-            && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
+
+        if (editor.innerHTML && editor.innerHTML.length && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
+            if (window.pitchEditor.sequence && sequence!=window.pitchEditor.inputSequence) {
+                old_sequence = window.pitchEditor.inputSequence
+            }
+        }
+
+        if (editor.innerHTML && editor.innerHTML.length && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
             pitch = window.pitchEditor.pitchNew
             duration = window.pitchEditor.dursNew.map(v => v*pace_slid.value)
             isFreshRegen = false
@@ -501,11 +508,14 @@ generateVoiceButton.addEventListener("click", () => {
         const speaker_i = window.currentModel.games[0].emb_i
         const pace = (window.userSettings.keepPaceOnNew && isFreshRegen)?pace_slid.value:1
 
+
         window.appLogger.log(`Synthesising audio: ${sequence}`)
+
         fetch(`http://localhost:8008/synthesize`, {
             method: "Post",
             body: JSON.stringify({
                 sequence, pitch, duration, speaker_i, pace,
+                old_sequence, // For partial re-generation
                 outfile: tempFileLocation,
                 vocoder: window.userSettings.vocoder
             })

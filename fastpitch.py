@@ -196,7 +196,7 @@ def loadModel (fastpitch, ckpt, n_speakers, device):
     del checkpoint_data
     return fastpitch
 
-def infer(PROD, user_settings, text, output, fastpitch, vocoder, speaker_i, pace=1.0, pitch_data=None, logger=None):
+def infer(PROD, user_settings, text, output, fastpitch, vocoder, speaker_i, pace=1.0, pitch_data=None, logger=None, old_sequence=None):
 
     print(f'Inferring: "{text}" ({len(text)})')
 
@@ -212,7 +212,12 @@ def infer(PROD, user_settings, text, output, fastpitch, vocoder, speaker_i, pace
 
     with torch.no_grad():
 
-        mel, mel_lens, dur_pred, pitch_pred = fastpitch.infer_advanced(text, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data)
+        if old_sequence is not None:
+            old_sequence = text_to_sequence(old_sequence, ['english_cleaners'])
+            old_sequence = torch.LongTensor(old_sequence)
+            old_sequence = pad_sequence([old_sequence], batch_first=True).to(fastpitch.device)
+
+        mel, mel_lens, dur_pred, pitch_pred = fastpitch.infer_advanced(text, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=old_sequence)
 
         if "waveglow" in vocoder:
             init_waveglow(user_settings["use_gpu"], fastpitch, vocoder, logger=logger)
@@ -238,6 +243,7 @@ def infer(PROD, user_settings, text, output, fastpitch, vocoder, speaker_i, pace
 
     [pitch, durations] = [pitch_pred.cpu().detach().numpy()[0], dur_pred.cpu().detach().numpy()[0]]
     pitch_durations_text = ",".join([str(v) for v in pitch])+"\n"+",".join([str(v) for v in durations])
+
 
     del pitch_pred, dur_pred, text
     return pitch_durations_text +"\n"+cleaned_text
