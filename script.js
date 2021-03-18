@@ -268,6 +268,7 @@ const changeGame = (meta) => {
             }
 
             window.currentModel = model
+            window.currentModel.hifi = hifi
             window.currentModel.audioPreviewPath = audioPreviewPath
             window.currentModelButton = button
 
@@ -450,6 +451,11 @@ generateVoiceButton.addEventListener("click", () => {
                 generateVoiceButton.dataset.modelQuery = null
                 generateVoiceButton.innerHTML = "Generate Voice"
                 generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
+
+                if (window.userSettings.defaultToHiFi && window.currentModel.hifi) {
+                    vocoder_select.value = Array.from(vocoder_select.children).find(opt => opt.innerHTML=="Bespoke HiFi GAN").value
+                    changeVocoder(vocoder_select.value)
+                }
             })
         }).catch(e => {
             console.log(e)

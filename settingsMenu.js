@@ -55,6 +55,9 @@ if (!Object.keys(window.userSettings).includes("batchOutFolder")) { // For backw
 if (!Object.keys(window.userSettings).includes("batch_clearDirFirst")) { // For backwards compatibility
     window.userSettings.batch_clearDirFirst = false
 }
+if (!Object.keys(window.userSettings).includes("defaultToHiFi")) { // For backwards compatibility
+    window.userSettings.defaultToHiFi = true
+}
 
 
 useGPUCbx.checked = window.userSettings.useGPU
@@ -104,6 +107,10 @@ setting_autoplaygenCbx.addEventListener("click", () => {
 })
 setting_slidersTooltip.addEventListener("click", () => {
     window.userSettings.sliderTooltip = setting_slidersTooltip.checked
+    saveUserSettings()
+})
+setting_defaultToHiFi.addEventListener("click", () => {
+    window.userSettings.defaultToHiFi = setting_defaultToHiFi.checked
     saveUserSettings()
 })
 setting_keepPaceOnNew.addEventListener("click", () => {
