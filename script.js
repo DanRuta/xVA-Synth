@@ -1067,7 +1067,7 @@ resetLetter_btn.addEventListener("click", () => {
         }
         window.pitchEditor.dursNew[l] = window.pitchEditor.resetDurs[l]
         window.pitchEditor.pitchNew[l] = window.pitchEditor.resetPitch[l]
-        set_letter_display(letterElems[l], l, window.pitchEditor.resetDurs[l]*10+50, window.pitchEditor.pitchNew[l])
+        set_letter_display(letterElems[l], l, window.pitchEditor.resetDurs[l]* pace_slid.value*10+50, window.pitchEditor.pitchNew[l])
     })
 
     if (window.pitchEditor.letterFocus.length==1) {
