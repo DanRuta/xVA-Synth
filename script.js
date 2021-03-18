@@ -5,11 +5,12 @@ const path = PRODUCTION ? "./resources/app" : "."
 window.path = path
 
 const fs = require("fs")
+const zipdir = require('zip-dir')
 const {shell, ipcRenderer} = require("electron")
 const fetch = require("node-fetch")
 const {text_to_sequence, english_cleaners} = require("./text.js")
 const {xVAAppLogger} = require("./appLogger.js")
-const {saveUserSettings} = require("./settingsMenu.js")
+const {saveUserSettings, deleteFolderRecursive} = require("./settingsMenu.js")
 const {startBatch} = require("./batch.js")
 
 let themeColour
@@ -228,8 +229,9 @@ const changeGame = (meta) => {
                 fs.copyFileSync(`./models/${gameId}/${voiceId}.wav`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.wav`)
                 fs.copyFileSync(`./models/${gameId}/${voiceId}.pt`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.pt`)
                 if (hifi) {
-                    fs.copyFileSync(`./models/${gameId}/${voiceId}.hg.pt`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.hg.pt`)
+                    fs.copyFileSync(`./models/${gameId}/${voiceId}.hg.pt`, `./build/resources/app/models/${gameId}/${voiceId}.hg.pt`)
                 }
+                zipdir(`./build/${voiceId}`, {saveTo: `./build/${voiceId}.zip`}, (err, buffer) => deleteFolderRecursive(`./build/${voiceId}`))
                 return
             }
 

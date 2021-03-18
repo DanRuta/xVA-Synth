@@ -2,6 +2,22 @@
 
 const saveUserSettings = () => localStorage.setItem("userSettings", JSON.stringify(window.userSettings))
 
+const deleteFolderRecursive = function (directoryPath) {
+    if (fs.existsSync(directoryPath)) {
+        fs.readdirSync(directoryPath).forEach((file, index) => {
+          const curPath = `${directoryPath}/${file}`;
+          if (fs.lstatSync(curPath).isDirectory()) {
+           // recurse
+            deleteFolderRecursive(curPath);
+          } else {
+            // delete file
+            fs.unlinkSync(curPath);
+          }
+        });
+        fs.rmdirSync(directoryPath);
+      }
+    };
+
 // Load user settings
 window.userSettings = localStorage.getItem("userSettings") ||
     {
@@ -206,3 +222,4 @@ batch_clearDirFirstCkbx.addEventListener("change", () => {
 batch_clearDirFirstCkbx.checked = window.userSettings.batch_clearDirFirst
 
 exports.saveUserSettings = saveUserSettings
+exports.deleteFolderRecursive = deleteFolderRecursive
