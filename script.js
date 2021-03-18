@@ -215,7 +215,23 @@ const changeGame = (meta) => {
             }))
         })
 
-        button.addEventListener("click", () => {
+        button.addEventListener("click", event => {
+
+            // Just for easier packaging of the voice models for publishing - yes, lazy
+            if (event.ctrlKey && event.shiftKey) {
+                fs.mkdirSync(`./build/${voiceId}`)
+                fs.mkdirSync(`./build/${voiceId}/resources`)
+                fs.mkdirSync(`./build/${voiceId}/resources/app`)
+                fs.mkdirSync(`./build/${voiceId}/resources/app/models`)
+                fs.mkdirSync(`./build/${voiceId}/resources/app/models/${gameId}`)
+                fs.copyFileSync(`./models/${gameId}/${voiceId}.json`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.json`)
+                fs.copyFileSync(`./models/${gameId}/${voiceId}.wav`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.wav`)
+                fs.copyFileSync(`./models/${gameId}/${voiceId}.pt`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.pt`)
+                if (hifi) {
+                    fs.copyFileSync(`./models/${gameId}/${voiceId}.hg.pt`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.hg.pt`)
+                }
+                return
+            }
 
             if (hifi) {
                 // Remove the bespoke hifi option if there was one already there
