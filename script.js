@@ -220,18 +220,44 @@ const changeGame = (meta) => {
 
             // Just for easier packaging of the voice models for publishing - yes, lazy
             if (event.ctrlKey && event.shiftKey) {
-                fs.mkdirSync(`./build/${voiceId}`)
-                fs.mkdirSync(`./build/${voiceId}/resources`)
-                fs.mkdirSync(`./build/${voiceId}/resources/app`)
-                fs.mkdirSync(`./build/${voiceId}/resources/app/models`)
-                fs.mkdirSync(`./build/${voiceId}/resources/app/models/${gameId}`)
-                fs.copyFileSync(`./models/${gameId}/${voiceId}.json`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.json`)
-                fs.copyFileSync(`./models/${gameId}/${voiceId}.wav`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.wav`)
-                fs.copyFileSync(`./models/${gameId}/${voiceId}.pt`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.pt`)
-                if (hifi) {
-                    fs.copyFileSync(`./models/${gameId}/${voiceId}.hg.pt`, `./build/resources/app/models/${gameId}/${voiceId}.hg.pt`)
+                if (event.altKey) {
+                    const files = fs.readdirSync(`./output`).filter(fname => fname.includes("temp-") && fname.includes(".wav"))
+                    console.log("files", files)
+                    if (files.length) {
+                        const options = {
+                            hz: window.userSettings.audio.hz,
+                            padStart: window.userSettings.audio.padStart,
+                            padEnd: window.userSettings.audio.padEnd,
+                            bit_depth: window.userSettings.audio.bitdepth,
+                            amplitude: window.userSettings.audio.amplitude
+                        }
+
+                        // console.log(`About to save file from ${from} to ${to} with options: ${JSON.stringify(options)}`)
+                        // window.appLogger.log(`About to save file from ${from} to ${to} with options: ${JSON.stringify(options)}`)
+                        fetch(`http://localhost:8008/outputAudio`, {
+                            method: "Post",
+                            body: JSON.stringify({
+                                input_path: `./output/${files[0]}`,
+                                output_path: `./models/${gameId}/${voiceId}.wav`,
+                                options: JSON.stringify(options)
+                            })
+                        }).then(r=>r.text()).then(console.log)
+                    }
+
+                } else {
+                    fs.mkdirSync(`./build/${voiceId}`)
+                    fs.mkdirSync(`./build/${voiceId}/resources`)
+                    fs.mkdirSync(`./build/${voiceId}/resources/app`)
+                    fs.mkdirSync(`./build/${voiceId}/resources/app/models`)
+                    fs.mkdirSync(`./build/${voiceId}/resources/app/models/${gameId}`)
+                    fs.copyFileSync(`./models/${gameId}/${voiceId}.json`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.json`)
+                    fs.copyFileSync(`./models/${gameId}/${voiceId}.wav`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.wav`)
+                    fs.copyFileSync(`./models/${gameId}/${voiceId}.pt`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.pt`)
+                    if (hifi) {
+                        fs.copyFileSync(`./models/${gameId}/${voiceId}.hg.pt`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.hg.pt`)
+                    }
+                    zipdir(`./build/${voiceId}`, {saveTo: `./build/${voiceId}.zip`}, (err, buffer) => deleteFolderRecursive(`./build/${voiceId}`))
                 }
-                zipdir(`./build/${voiceId}`, {saveTo: `./build/${voiceId}.zip`}, (err, buffer) => deleteFolderRecursive(`./build/${voiceId}`))
                 return
             }
 
