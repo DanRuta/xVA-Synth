@@ -436,7 +436,7 @@ a {
      margin-right: 2.5vw;
  }
  #letterLength {
-     width: 100px;
+     width: 150px;
      margin-right: 5px;
  }
  #editor {
@@ -565,7 +565,7 @@ a {
      margin-right: 5px;
  }
  #adv_opts > div > div > input[type=number] {
-     height: 20px;
+     height: 25px;
      width: 50px;
  }
  .flexTable {
