@@ -202,6 +202,9 @@ const changeGame = (meta) => {
 
     const buttons = []
 
+    voiceSearchInput.placeholder = `Search ${games[meta[0]].models.length} voices...`
+    voiceSearchInput.value = ""
+
     games[meta[0]].models.forEach(({model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, hifi}) => {
 
         const button = createElem("div.voiceType", voiceName)
