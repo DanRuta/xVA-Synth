@@ -529,7 +529,7 @@ const batchKickOffGeneration = () => {
         const tempFileLocation = `${window.path}/output/temp-${tempFileNum}.wav`
 
         if (window.batch_state.state) {
-            batch_progressNotes.innerHTML = `Synthesizing line: ${record[0].text}`
+            batch_progressNotes.innerHTML = `Synthesizing line: <i>${record[0].text}</i>`
         }
         fetch(`http://localhost:8008/synthesize`, {
             method: "Post",
