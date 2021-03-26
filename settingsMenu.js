@@ -190,7 +190,7 @@ setting_audio_amplitude.addEventListener("change", () => {
     saveUserSettings()
 })
 
-// Populate the game directories
+// Output path
 fs.readdir(`${path}/models`, (err, gameDirs) => {
     gameDirs.filter(name => !name.includes(".")).forEach(gameFolder => {
         // Initialize the default output directory setting for this game
@@ -210,6 +210,21 @@ setting_out_path_input.addEventListener("change", () => {
         window.currentModelButton.click()
     }
 })
+// Models path
+fs.readdir(`${path}/assets`, (err, assetFiles) => {
+    assetFiles.filter(fn=>(fn.endsWith(".jpg")||fn.endsWith(".png"))&&fn.split("-").length==4).forEach(assetFileName => {
+        const gameId = assetFileName.split("-")[0]
+        const gameName = assetFileName.split("-").reverse()[0].split(".")[0]
+        // Initialize the default models directory setting for this game
+        if (!Object.keys(window.userSettings).includes(`modelspath_${gameId}`)) {
+            window.userSettings[`modelspath_${gameId}`] = `${__dirname.replace(/\\/g,"/")}/models/${gameId}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
+            saveUserSettings()
+        }
+    })
+})
+
+
+// Batch stuff
 batch_outputFolderInput.addEventListener("change", () => {
     window.userSettings.batchOutFolder = batch_outputFolderInput.value
     saveUserSettings()

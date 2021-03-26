@@ -15,7 +15,7 @@ const {startBatch} = require("./batch.js")
 
 let themeColour
 window.electronBrowserWindow = require("electron").remote.getCurrentWindow()
-window.appVersion = "v1.3.0"
+window.appVersion = "v1.3.1"
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 const oldCError = console.error
 console.error = (data) => {
@@ -60,69 +60,74 @@ let isGenerating = false
 
 const loadAllModels = () => {
     return new Promise(resolve => {
-        fs.readdir(`${path}/models`, (err, gameDirs) => {
+
+        let modelPaths = Object.keys(window.userSettings).filter(key => key.includes("modelspath_")).map(key => window.userSettings[key])
+        window.games = {}
+
+        modelPaths.forEach(modelsPath => {
             try {
-                gameDirs.filter(name => !name.includes(".")).forEach(gameFolder => {
+                const files = fs.readdirSync(modelsPath).filter(f => f.endsWith(".json"))
 
-                    const files = fs.readdirSync(`${path}/models/${gameFolder}`).filter(f => f.endsWith(".json"))
+                if (!files.length) {
+                    return
+                }
 
-                    if (!files.length) {
-                        return
-                    }
+                files.forEach(fileName => {
 
-                    files.forEach(fileName => {
+                    const gameFolder = modelsPath.split("/").reverse()[0]
 
-                        try {
-                            if (!models.hasOwnProperty(`${gameFolder}/${fileName}`)) {
-
-                                models[`${gameFolder}/${fileName}`] = null
-
-                                const model = JSON.parse(fs.readFileSync(`${path}/models/${gameFolder}/${fileName}`, "utf8"))
-                                model.games.forEach(({gameId, voiceId, voiceName, voiceDescription, gender}) => {
-
-                                    if (!games.hasOwnProperty(gameId)) {
-
-                                        const gameAsset = fs.readdirSync(`${path}/assets`).find(f => f.startsWith(gameId))
-                                        const option = document.createElement("option")
-                                        option.value = gameAsset
-                                        option.innerHTML = gameAsset.split("-").reverse()[0].split(".")[0]
-                                        games[gameId] = {
-                                            models: [],
-                                            gameAsset
-                                        }
-                                    }
-
-                                    const audioPreviewPath = `${gameFolder}/${model.games.find(({gameId}) => gameId==gameFolder).voiceId}`
-                                    const existingDuplicates = []
-                                    games[gameId].models.forEach((item,i) => {
-                                        if (item.voiceId==voiceId) {
-                                            existingDuplicates.push([item, i])
-                                        }
-                                    })
-
-                                    const modelData = {model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, gender, modelVersion: model.modelVersion, hifi: undefined}
-                                    const potentialHiFiPath = `${path}/models/${audioPreviewPath}.hg.pt`
-                                    if (fs.existsSync(potentialHiFiPath)) {
-                                        modelData.hifi = potentialHiFiPath
-                                    }
-
-                                    if (existingDuplicates.length) {
-                                        if (existingDuplicates[0][0].modelVersion<model.modelVersion) {
-                                            games[gameId].models.splice(existingDuplicates[0][1], 1)
-                                            games[gameId].models.push(modelData)
-                                        }
-                                    } else {
-                                        games[gameId].models.push(modelData)
-                                    }
-                                })
-                            }
-                        } catch (e) {
-                            window.appLogger.log("ERROR loading models for game: "+ path  + " with fileName: "+fileName)
-                            window.appLogger.log(e)
+                    try {
+                        if (!models.hasOwnProperty(`${gameFolder}/${fileName}`)) {
+                            models[`${gameFolder}/${fileName}`] = null
                         }
-                    })
+
+                        const model = JSON.parse(fs.readFileSync(`${modelsPath}/${fileName}`, "utf8"))
+                        model.games.forEach(({gameId, voiceId, voiceName, voiceDescription, gender}) => {
+
+                            if (!window.games.hasOwnProperty(gameId)) {
+
+                                const gameAsset = fs.readdirSync(`${path}/assets`).find(f => f.startsWith(gameId))
+                                const option = document.createElement("option")
+                                option.value = gameAsset
+                                option.innerHTML = gameAsset.split("-").reverse()[0].split(".")[0]
+                                window.games[gameId] = {
+                                    models: [],
+                                    gameAsset
+                                }
+                            }
+
+                            const audioPreviewPath = `${modelsPath}/${model.games.find(({gameId}) => gameId==gameFolder).voiceId}`
+                            const existingDuplicates = []
+                            window.games[gameId].models.forEach((item,i) => {
+                                if (item.voiceId==voiceId) {
+                                    existingDuplicates.push([item, i])
+                                }
+                            })
+
+                            const modelData = {model, modelsPath, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, gender, modelVersion: model.modelVersion, hifi: undefined}
+                            const potentialHiFiPath = `${modelsPath}/${voiceId}.hg.pt`
+                            if (fs.existsSync(potentialHiFiPath)) {
+                                modelData.hifi = potentialHiFiPath
+                            }
+
+                            if (existingDuplicates.length) {
+                                if (existingDuplicates[0][0].modelVersion<model.modelVersion) {
+                                    window.games[gameId].models.splice(existingDuplicates[0][1], 1)
+                                    window.games[gameId].models.push(modelData)
+                                }
+                            } else {
+                                window.games[gameId].models.push(modelData)
+                            }
+                        })
+                    } catch (e) {
+                        console.log(e)
+                        window.appLogger.log("ERROR loading models for game: "+ path  + " with fileName: "+fileName)
+                        window.appLogger.log(e)
+                    }
                 })
+                // })
             } catch (e) {
+                console.log(e)
                 window.appLogger.log("ERROR loading models for game: "+ path)
                 window.appLogger.log(e)
             }
@@ -131,6 +136,15 @@ const loadAllModels = () => {
         })
     })
 }
+setting_models_path_input.addEventListener("change", () => {
+    const gameFolder = window.currentGame[0]
+
+    setting_models_path_input.value = setting_models_path_input.value.replace(/\/\//g, "/").replace(/\\/g,"/")
+    window.userSettings[`modelspath_${gameFolder}`] = setting_models_path_input.value
+    saveUserSettings()
+    loadAllModels()
+    changeGame(window.currentGame.join("-"))
+})
 
 // Change game
 const changeGame = (meta) => {
@@ -155,7 +169,9 @@ const changeGame = (meta) => {
     const gameName = meta[meta.length-1].split(".")[0]
 
     setting_out_path_container.style.display = "flex"
-    setting_out_path_label.innerHTML = `${gameName} output path`
+    setting_models_path_label.innerHTML = `<i style="display:inline">${gameName}</i><span>models path</span>`
+    setting_models_path_input.value = window.userSettings[`modelspath_${gameFolder}`]
+    setting_out_path_label.innerHTML = `<i style="display:inline">${gameName}</i> output path`
     setting_out_path_input.value = window.userSettings[`outpath_${gameFolder}`]
 
     if (meta) {
@@ -195,17 +211,21 @@ const changeGame = (meta) => {
     title.innerHTML = "Select Voice Type"
 
     // No models found
-    if (!Object.keys(games).length) {
+    if (!Object.keys(window.games).length) {
         title.innerHTML = "No models found"
         return
     }
 
     const buttons = []
 
-    voiceSearchInput.placeholder = `Search ${games[meta[0]].models.length} voices...`
+    voiceSearchInput.placeholder = `Search ${window.games[meta[0]] ? window.games[meta[0]].models.length : "0"} voices...`
     voiceSearchInput.value = ""
 
-    games[meta[0]].models.forEach(({model, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, hifi}) => {
+    if (!window.games[meta[0]]) {
+        return
+    }
+
+    window.games[meta[0]].models.forEach(({model, modelsPath, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, hifi}) => {
 
         const button = createElem("div.voiceType", voiceName)
         button.style.background = `#${themeColour}`
@@ -213,9 +233,9 @@ const changeGame = (meta) => {
 
         // Quick voice set preview, if there is a preview file
         button.addEventListener("contextmenu", () => {
-            window.appLogger.log(`${path}/models/${audioPreviewPath}.wav`)
+            window.appLogger.log(`${audioPreviewPath}.wav`)
             const audioPreview = createElem("audio", {autoplay: false}, createElem("source", {
-                src: `./models/${audioPreviewPath}.wav`
+                src: `${audioPreviewPath}.wav`
             }))
         })
 
@@ -241,7 +261,7 @@ const changeGame = (meta) => {
                             method: "Post",
                             body: JSON.stringify({
                                 input_path: `./output/${files[0]}`,
-                                output_path: `./models/${gameId}/${voiceId}.wav`,
+                                output_path: `${modelsPath}/${voiceId}.wav`,
                                 options: JSON.stringify(options)
                             })
                         }).then(r=>r.text()).then(console.log)
@@ -253,11 +273,11 @@ const changeGame = (meta) => {
                     fs.mkdirSync(`./build/${voiceId}/resources/app`)
                     fs.mkdirSync(`./build/${voiceId}/resources/app/models`)
                     fs.mkdirSync(`./build/${voiceId}/resources/app/models/${gameId}`)
-                    fs.copyFileSync(`./models/${gameId}/${voiceId}.json`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.json`)
-                    fs.copyFileSync(`./models/${gameId}/${voiceId}.wav`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.wav`)
-                    fs.copyFileSync(`./models/${gameId}/${voiceId}.pt`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.pt`)
+                    fs.copyFileSync(`${modelsPath}/${voiceId}.json`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.json`)
+                    fs.copyFileSync(`${modelsPath}/${voiceId}.wav`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.wav`)
+                    fs.copyFileSync(`${modelsPath}/${voiceId}.pt`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.pt`)
                     if (hifi) {
-                        fs.copyFileSync(`./models/${gameId}/${voiceId}.hg.pt`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.hg.pt`)
+                        fs.copyFileSync(`${modelsPath}/${voiceId}.hg.pt`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.hg.pt`)
                     }
                     zipdir(`./build/${voiceId}`, {saveTo: `./build/${voiceId}.zip`}, (err, buffer) => deleteFolderRecursive(`./build/${voiceId}`))
                 }
@@ -338,11 +358,10 @@ const changeGame = (meta) => {
                 generateVoiceButton.innerHTML = "Load model"
 
                 const modelGameFolder = audioPreviewPath.split("/")[0]
-                const modelFileName = audioPreviewPath.split("/")[1].split(".wav")[0]
 
                 generateVoiceButton.dataset.modelQuery = JSON.stringify({
                     outputs: parseInt(model.outputs),
-                    model: `${path}/models/${modelGameFolder}/${modelFileName}`,
+                    model: `${modelsPath}/${voiceId}`,
                     model_speakers: model.emb_size,
                     cmudict: model.cmudict
                 })
@@ -1595,13 +1614,13 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
         const gameSelectionContent = createElem("div.gameSelectionContent")
 
         let numVoices = 0
-        if (fs.existsSync(`${path}/models/${gameId}`)) {
-            const files = fs.readdirSync(`${path}/models/${gameId}`)
+        const modelsPath = window.userSettings[`modelspath_${gameId}`]
+        if (fs.existsSync(modelsPath)) {
+            const files = fs.readdirSync(modelsPath)
             numVoices = files.filter(fn => fn.includes(".json")).length
             totalVoices += numVoices
         }
         if (numVoices==0) {
-            gameSelection.style.cursor = "not-allowed"
             gameSelectionContent.style.background = "rgba(150,150,150,0.7)"
         } else {
             gameSelectionContent.classList.add("gameSelectionContentToHover")
@@ -1614,10 +1633,8 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
         gameSelection.appendChild(gameSelectionContent)
 
         gameSelectionContent.addEventListener("click", () => {
-            if (numVoices) {
-                changeGame(fileName)
-                closeModal(gameSelectionContainer)
-            }
+            changeGame(fileName)
+            closeModal(gameSelectionContainer)
         })
 
         itemsToSort.push([numVoices, gameSelection])
