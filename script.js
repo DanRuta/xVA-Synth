@@ -146,9 +146,9 @@ setting_models_path_input.addEventListener("change", () => {
         changeGame(window.currentGame.join("-"))
     })
 
-    if (!window.watchedModelsDirs.includes(modelsDir)) {
-        window.watchedModelsDirs.push(modelsDir)
-        fs.watch(modelsDir, {recursive: false, persistent: true}, (eventType, filename) => {
+    if (!window.watchedModelsDirs.includes(setting_models_path_input.value)) {
+        window.watchedModelsDirs.push(setting_models_path_input.value)
+        fs.watch(setting_models_path_input.value, {recursive: false, persistent: true}, (eventType, filename) => {
             changeGame(window.currentGame.join("-"))
         })
     }
