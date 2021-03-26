@@ -33,7 +33,7 @@ window.models = {}
 window.pitchEditor = {letters: [], currentVoice: null, resetPitch: null, resetDurs: null, letterFocus: [], ampFlatCounter: 0, hasChanged: false}
 window.currentModel = undefined
 window.currentModelButton = undefined
-
+window.watchedModelsDirs = []
 
 window.appLogger.log(`Settings: ${JSON.stringify(window.userSettings)}`)
 
@@ -142,8 +142,16 @@ setting_models_path_input.addEventListener("change", () => {
     setting_models_path_input.value = setting_models_path_input.value.replace(/\/\//g, "/").replace(/\\/g,"/")
     window.userSettings[`modelspath_${gameFolder}`] = setting_models_path_input.value
     saveUserSettings()
-    loadAllModels()
-    changeGame(window.currentGame.join("-"))
+    loadAllModels().then(() => {
+        changeGame(window.currentGame.join("-"))
+    })
+
+    if (!window.watchedModelsDirs.includes(modelsDir)) {
+        window.watchedModelsDirs.push(modelsDir)
+        fs.watch(modelsDir, {recursive: false, persistent: true}, (eventType, filename) => {
+            changeGame(window.currentGame.join("-"))
+        })
+    }
 })
 
 // Change game
@@ -1638,6 +1646,15 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
         })
 
         itemsToSort.push([numVoices, gameSelection])
+
+        const modelsDir = window.userSettings[`modelspath_${gameId}`]
+        if (!window.watchedModelsDirs.includes(modelsDir)) {
+            window.watchedModelsDirs.push(modelsDir)
+
+            fs.watch(modelsDir, {recursive: false, persistent: true}, (eventType, filename) => {
+                loadAllModels().then(() => changeGame(fileName))
+            })
+        }
     })
 
     itemsToSort.sort((a,b) => a[0]<b[0]?1:-1).forEach(([numVoices, elem]) => {
