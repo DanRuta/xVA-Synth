@@ -181,13 +181,13 @@ const readFile = (file) => {
         reader.readAsText(file)
         reader.onloadend = () => {
             const lines = reader.result.split("\n")
-            const header = lines.shift().split(",")
+            const header = lines.shift().split(",").map(head => head.replace(/\r/, ""))
             lines.forEach(line => {
                 const record = {}
                 if (line.trim().length) {
                     const parts = CSVToArray(line)[0]
                     parts.forEach((val, vi) => {
-                        record[header[vi]] = val//?val.replace(/^"/, "").replace(/"$/, ""):val
+                        record[header[vi].replace(/^"/, "").replace(/"$/, "")] = val//?val.replace(/^"/, "").replace(/"$/, ""):val
                     })
                     dataLines.push(record)
                 }
@@ -358,7 +358,7 @@ const refreshRecordsList = () => {
         recordAndElem[1].children[0].innerHTML = batchRecordsContainer.children.length.toString()
         batchRecordsContainer.appendChild(recordAndElem[1])
     })
-    window.batchLines = finalOrder
+    window.batch_state.lines = finalOrder
 }
 
 // Sort the lines by voice_id, and then by vocoder used
@@ -540,7 +540,20 @@ const batchKickOffGeneration = () => {
             })
         }).then(() => {
 
-            const outFolder = `${record[0].out_path}/${record[2]}_${record[0].voice_id}_${record[0].vocoder}_${sequence.replace(/[\/\\:\*?<>"|]*/g, "")}.${window.userSettings.audio.format}`
+            let outPath
+            let outFolder
+
+            if (record[0].out_path.split("/").reverse()[0].includes(".")) {
+                outPath = record[0].out_path
+                outFolder = String(record[0].out_path).split("/").reverse().slice(1,10000).reverse().join("/")
+            } else {
+                outPath = `${record[0].out_path}/${record[2]}_${record[0].voice_id}_${record[0].vocoder}_${sequence.replace(/[\/\\:\*?<>"|]*/g, "")}.${window.userSettings.audio.format}`
+                outFolder = record[0].out_path
+            }
+
+            if (!fs.existsSync(outFolder)) {
+                fs.mkdirSync(outFolder)
+            }
 
             if (window.userSettings.audio.ffmpeg) {
                 const options = {
@@ -559,7 +572,7 @@ const batchKickOffGeneration = () => {
                     method: "Post",
                     body: JSON.stringify({
                         input_path: tempFileLocation,
-                        output_path: outFolder,
+                        output_path: outPath,
                         options: JSON.stringify(options)
                     })
                 }).then(r=>r.text()).then(res => {
@@ -574,7 +587,7 @@ const batchKickOffGeneration = () => {
                     }
                 })
             } else {
-                fs.copyFile(tempFileLocation, outFolder, err => {
+                fs.copyFile(tempFileLocation, outPath, err => {
                     if (err) {
                         console.log(err)
                         window.appLogger.log(err)
