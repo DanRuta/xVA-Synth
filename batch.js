@@ -121,7 +121,7 @@ batch_generateSample.addEventListener("click", () => {
         "Include as many lines of text you wish with one line of data per line of voice to be read out.",
         "Make sure that the required columns (game_id, voice_id, and text) are filled out",
         "The others can be left blank, and the app will figure out some sensible defaults",
-        "The valid options for vocoder are one of: quickanddirty, waveglow, waveglowBIG, bespokehifi",
+        "The valid options for vocoder are one of: quickanddirty, waveglow, waveglowBIG, hifi",
         "If your specified model does not have a bespoke hifi model, it will use the waveglow model, also the default if you leave this blank.",
         "For all the other options, you can leave them blank.",
         "If no output path is specified for a specific voice, the default batch output directory will be used",
@@ -138,7 +138,7 @@ batch_generateSample.addEventListener("click", () => {
             game_id: game,
             voice_id: model.voiceId,
             text: line,
-            vocoder: ["quickanddirty","waveglow","waveglowBIG","bespokehifi"][parseInt(Math.random()*4)],
+            vocoder: ["quickanddirty","waveglow","waveglowBIG","hifi"][parseInt(Math.random()*4)],
             out_path: "",
             pacing: 1
         }
@@ -289,8 +289,8 @@ const preProcessCSVData = data => {
                 return []
             }
             // Check that the vocoder exists
-            if (!["quickanddirty", "waveglow", "waveglowBIG", "bespokehifi", undefined].includes(record.vocoder)) {
-                window.errorModal(`[Line: ${di+2}] ERROR: Vocoder "${record.vocoder}" does not exist. Available options: quickanddirty, waveglow, waveglowBIG, bespokehifi  (or leaving it blank)`)
+            if (!["quickanddirty", "waveglow", "waveglowBIG", "hifi", undefined].includes(record.vocoder)) {
+                window.errorModal(`[Line: ${di+2}] ERROR: Vocoder "${record.vocoder}" does not exist. Available options: quickanddirty, waveglow, waveglowBIG, hifi  (or leaving it blank)`)
                 return []
             }
 
@@ -305,7 +305,7 @@ const preProcessCSVData = data => {
             record.pacing = parseFloat(record.pacing)
             // if (!record.vocoder || !window.games[record.game_id].models[record.voice_id].hifi) {
             // console.log(record.vocoder, window.games[record.game_id].models, )
-            if (!record.vocoder || (record.vocoder=="bespokehifi" && !window.games[record.game_id].models.find(rec => rec.voiceId==record.voice_id).hifi)) {
+            if (!record.vocoder || (record.vocoder=="hifi" && !window.games[record.game_id].models.find(rec => rec.voiceId==record.voice_id).hifi)) {
                 record.vocoder = "waveglow"
             }
         } catch (e) {
@@ -498,7 +498,7 @@ const batchChangeVocoder = (vocoder, game, voice) => {
             batch_progressNotes.innerHTML = `Changing vocoder to: ${vocoder}`
         }
 
-        const vocoderMappings = [["waveglow", "256_waveglow"], ["waveglowBIG", "big_waveglow"], ["quickanddirty", "qnd"], ["bespokehifi", `${game}/${voice}.hg.pt`]]
+        const vocoderMappings = [["waveglow", "256_waveglow"], ["waveglowBIG", "big_waveglow"], ["quickanddirty", "qnd"], ["hifi", `${game}/${voice}.hg.pt`]]
 
         fetch(`http://localhost:8008/setVocoder`, {
             method: "Post",
@@ -534,7 +534,7 @@ const prepareLinesBatchForSynth = () => {
 
         const record = window.batch_state.lines[window.batch_state.lineIndex+i]
 
-        const vocoderMappings = [["waveglow", "256_waveglow"], ["waveglowBIG", "big_waveglow"], ["quickanddirty", "qnd"], ["bespokehifi", `${record[0].game_id}/${record[0].voice_id}.hg.pt`]]
+        const vocoderMappings = [["waveglow", "256_waveglow"], ["waveglowBIG", "big_waveglow"], ["quickanddirty", "qnd"], ["hifi", `${record[0].game_id}/${record[0].voice_id}.hg.pt`]]
         const vocoder = vocoderMappings.find(voc => voc[0]==record[0].vocoder)[1]
 
         if (firstItemVoiceId==undefined) firstItemVoiceId = record[0].voice_id
@@ -707,7 +707,7 @@ const batchKickOffGenerationBACKUP = () => {
 
         const record = window.batch_state.lines[window.batch_state.lineIndex]
         const model = window.games[record[0].game_id].models.find(model => model.voiceId==record[0].voice_id).model
-        const vocoderMappings = [["waveglow", "256_waveglow"], ["waveglowBIG", "big_waveglow"], ["quickanddirty", "qnd"], ["bespokehifi", `${record[0].game_id}/${record[0].voice_id}.hg.pt`]]
+        const vocoderMappings = [["waveglow", "256_waveglow"], ["waveglowBIG", "big_waveglow"], ["quickanddirty", "qnd"], ["hifi", `${record[0].game_id}/${record[0].voice_id}.hg.pt`]]
 
         const sequence = record[0].text
         const pitch = undefined // maybe later
