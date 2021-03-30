@@ -300,8 +300,14 @@
                 <h2>Batch synthesis</h2>
                 <div id="batch_container">
                     <div id="batch_intro">
+                        <div>
+                            <span>Batch size:</span>
+                            <input type="number" id="batch_batchSizeInput" value="1" placeholder="1" min="1" step="1">
+                        </div>
                         <div>Place the .csv batch file(s) into the box below. Click the "Generate sample" button to generate an example .csv file. The mandatory columns are "game_id", "voice_id", and "text". The rest are optional.</div>
-                        <button id="batch_generateSample">Generate Sample</button>
+                        <div>
+                            <button id="batch_generateSample">Generate Sample</button>
+                        </div>
                     </div>
                     <div id="batch_main">
                         <span id="batchDropZoneNote">Drag and drop .csv files here</span>

@@ -26,7 +26,8 @@ window.batch_state = {
     lastModel: undefined,
     lastVocoder: undefined,
     lineIndex: 0,
-    status: false
+    status: false,
+    outPathsChecked: [],
 }
 
 // https://stackoverflow.com/questions/1293147/example-javascript-code-to-parse-csv-data
@@ -511,7 +512,197 @@ const batchChangeVocoder = (vocoder, game, voice) => {
         })
     })
 }
+
+const clearOldTempFiles = () => {
+    const oldTempFiles = fs.readdirSync(`${window.path}/output`).filter(fileName => fileName.includes("temp-"))
+    oldTempFiles.forEach(file => {
+        try {
+            fs.unlinkSync(`${window.path}/output/${file}`)
+        } catch (e) {console.log(e)}
+    })
+}
+
+const prepareLinesBatchForSynth = () => {
+
+    const linesBatch = []
+    const records = []
+    let firstItemVoiceId = undefined
+    let firstItemVocoder = undefined
+    let speaker_i = undefined
+
+    for (let i=0; i<Math.min(window.userSettings.batch_batchSize, window.batch_state.lines.length-window.batch_state.lineIndex); i++) {
+
+        const record = window.batch_state.lines[window.batch_state.lineIndex+i]
+
+        const vocoderMappings = [["waveglow", "256_waveglow"], ["waveglowBIG", "big_waveglow"], ["quickanddirty", "qnd"], ["bespokehifi", `${record[0].game_id}/${record[0].voice_id}.hg.pt`]]
+        const vocoder = vocoderMappings.find(voc => voc[0]==record[0].vocoder)[1]
+
+        if (firstItemVoiceId==undefined) firstItemVoiceId = record[0].voice_id
+        if (firstItemVocoder==undefined) firstItemVocoder = vocoder
+
+        if (record[0].voice_id!=firstItemVoiceId || vocoder!=firstItemVocoder) {
+            break
+        }
+
+        const model = window.games[record[0].game_id].models.find(model => model.voiceId==record[0].voice_id).model
+
+        const sequence = record[0].text
+        const pitch = undefined // maybe later
+        const duration = undefined // maybe later
+        speaker_i = model.games[0].emb_i
+        const pace = record[0].pacing
+
+        clearOldTempFiles()
+
+        const tempFileNum = `${Math.random().toString().split(".")[1]}`
+        const tempFileLocation = `${window.path}/output/temp-${tempFileNum}.wav`
+
+        let outPath
+        let outFolder
+
+        if (record[0].out_path.split("/").reverse()[0].includes(".")) {
+            outPath = record[0].out_path
+            outFolder = String(record[0].out_path).split("/").reverse().slice(1,10000).reverse().join("/")
+        } else {
+            outPath = `${record[0].out_path}/${record[2]}_${record[0].voice_id}_${record[0].vocoder}_${sequence.replace(/[\/\\:\*?<>"|]*/g, "")}.${window.userSettings.audio.format}`
+            outFolder = record[0].out_path
+        }
+
+        linesBatch.push([sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder])
+        records.push(record)
+    }
+
+    return [speaker_i, firstItemVoiceId, firstItemVocoder, linesBatch, records]
+}
+
+const batchKickOffFfmpegOutput = (ri, linesBatch, records, body) => {
+    return new Promise((resolve, reject) => {
+        fetch(`http://localhost:8008/outputAudio`, {
+            method: "Post",
+            body
+        }).then(r=>r.text()).then(res => {
+            if (res.length) {
+                window.appLogger.log("res", res)
+                if (window.batch_state.state) {
+                    batch_pauseBtn.click()
+                }
+
+                for (let ri2=ri; ri2<linesBatch.length; ri2++) {
+                    records[ri][1].children[1].innerHTML = "Ready"
+                    records[ri][1].children[1].style.background = "none"
+                }
+
+                reject()
+            } else {
+                records[ri][1].children[1].innerHTML = "Done"
+                records[ri][1].children[1].style.background = "green"
+                window.batch_state.lineIndex += 1
+                resolve()
+            }
+        })
+    })
+
+}
+
 const batchKickOffGeneration = () => {
+    return new Promise((resolve) => {
+
+        const [speaker_i, voice_id, vocoder, linesBatch, records] = prepareLinesBatchForSynth()
+        records.forEach(record => {
+            record[1].children[1].innerHTML = "Running"
+            record[1].children[1].style.background = "goldenrod"
+        })
+
+        const record = window.batch_state.lines[window.batch_state.lineIndex]
+
+        if (window.batch_state.state) {
+            if (linesBatch.length==1) {
+                batch_progressNotes.innerHTML = `Synthesizing line: <i>${record[0].text}</i>`
+            } else {
+                batch_progressNotes.innerHTML = `Synthesizing ${linesBatch.length} lines`
+            }
+        }
+        fetch(`http://localhost:8008/synthesize_batch`, {
+            method: "Post",
+            body: JSON.stringify({speaker_i, vocoder, linesBatch})
+        }).then(r=>r.text()).then(async (res) => {
+
+            if (res) {
+                if (res=="CUDA OOM") {
+                    window.errorModal("CUDA OOM: There is not enough VRAM to run this. Try lowering the batch size, or shortening very long sentences.")
+                } else {
+                    window.errorModal(res)
+                }
+                if (window.batch_state.state) {
+                    batch_pauseBtn.click()
+                }
+                return
+            }
+
+
+            // Create the output directory if it does not exist
+            linesBatch.forEach(record => {
+                let outFolder = record[6]
+                if (!window.batch_state.outPathsChecked.includes(outFolder)) {
+                    window.batch_state.outPathsChecked.push(outFolder)
+                    if (!fs.existsSync(outFolder)) {
+                        fs.mkdirSync(outFolder)
+                    }
+                }
+            })
+
+            if (window.userSettings.audio.ffmpeg) {
+                const options = {
+                    hz: window.userSettings.audio.hz,
+                    padStart: window.userSettings.audio.padStart,
+                    padEnd: window.userSettings.audio.padEnd,
+                    bit_depth: window.userSettings.audio.bitdepth,
+                    amplitude: window.userSettings.audio.amplitude
+                }
+
+                if (window.batch_state.state) {
+                    batch_progressNotes.innerHTML = `Outputting audio via ffmpeg...`
+                }
+
+                for (let ri=0; ri<linesBatch.length; ri++) {
+                    let tempFileLocation = linesBatch[ri][4]
+                    let outPath = linesBatch[ri][5]
+                    try {
+                        if (window.batch_state.state) {
+                            await batchKickOffFfmpegOutput(ri, linesBatch, records, JSON.stringify({
+                                input_path: tempFileLocation,
+                                output_path: outPath,
+                                options: JSON.stringify(options)
+                            }))
+                        }
+                    } catch (e) {
+                        resolve()
+                    }
+                }
+                resolve()
+            } else {
+                linesBatch.forEach((lineRecord, li) => {
+                    let tempFileLocation = lineRecord[4]
+                    let outPath = lineRecord[5]
+                    try {
+                        fs.copyFileSync(tempFileLocation, outPath)
+                        records[li][1].children[1].innerHTML = "Done"
+                        records[li][1].children[1].style.background = "green"
+                        window.batch_state.lineIndex += 1
+
+                    } catch (err) {
+                        console.log(err)
+                        window.appLogger.log(err)
+                        window.appLogger.log(err)
+                        batch_pauseBtn.click()
+                    }
+                    resolve()
+                })
+            }
+        })
+    })
+}
+const batchKickOffGenerationBACKUP = () => {
     return new Promise((resolve) => {
 
         const record = window.batch_state.lines[window.batch_state.lineIndex]
@@ -617,10 +808,7 @@ const performSynthesis = async () => {
     batch_progressBar.innerHTML = `${parseInt(percentDone* 100)/100}%`
     window.electronBrowserWindow.setProgressBar(percentDone/100)
 
-
     const record = window.batch_state.lines[window.batch_state.lineIndex]
-    record[1].children[1].innerHTML = "Running"
-    record[1].children[1].style.background = "goldenrod"
 
     // Change the voice model if the next line uses a different one
     if (window.batch_state.lastModel!=record[0].voice_id) {
@@ -635,8 +823,6 @@ const performSynthesis = async () => {
     }
 
     await batchKickOffGeneration()
-
-    window.batch_state.lineIndex += 1
 
     if (window.batch_state.lineIndex==window.batch_state.lines.length) {
         // The end
@@ -673,6 +859,15 @@ const stopBatch = () => {
     batch_progressBar.style.display = "none"
     batch_pauseBtn.style.display = "none"
     batch_stopBtn.style.display = "none"
+
+    window.batch_state.lines.forEach(record => {
+        if (record[1].children[1].innerHTML=="Ready" || record[1].children[1].innerHTML=="Running") {
+            record[1].children[1].innerHTML = "Stopped"
+            record[1].children[1].style.background = "none"
+        }
+    })
+
+    clearOldTempFiles()
 }
 
 

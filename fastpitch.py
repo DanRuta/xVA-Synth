@@ -196,6 +196,58 @@ def loadModel (fastpitch, ckpt, n_speakers, device):
     del checkpoint_data
     return fastpitch
 
+def infer_batch(PROD, user_settings, linesBatch, fastpitch, vocoder, speaker_i, logger=None, old_sequence=None):
+    print(f'Inferring batch of {len(linesBatch)} lines')
+
+    sigma_infer = 0.9
+    stft_hop_length = 256
+    sampling_rate = 22050
+    denoising_strength = 0.01
+
+    text_sequences = []
+    for record in linesBatch:
+        text = record[0]
+        sequence = text_to_sequence(text, ['english_cleaners'])
+        text = torch.LongTensor(sequence)
+        text_sequences.append(text)
+    text_sequences = pad_sequence(text_sequences, batch_first=True).to(fastpitch.device)
+
+    with torch.no_grad():
+        pace = torch.tensor([record[3] for record in linesBatch]).unsqueeze(1).to(fastpitch.device)
+        pitch_data = None # Maybe in the future
+        mel, mel_lens, dur_pred, pitch_pred = fastpitch.infer_advanced(text_sequences, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=None)
+
+        if "waveglow" in vocoder:
+            init_waveglow(user_settings["use_gpu"], fastpitch, vocoder, logger=logger)
+
+            audios = fastpitch.waveglow.infer(mel, sigma=sigma_infer)
+            audios = fastpitch.denoiser(audios.float(), strength=denoising_strength).squeeze(1)
+
+            for i, audio in enumerate(audios):
+                audio = audio[:mel_lens[i].item() * stft_hop_length]
+                audio = audio/torch.max(torch.abs(audio))
+                output = linesBatch[i][4]
+                write(output, sampling_rate, audio.cpu().numpy())
+            del audios
+        else:
+            init_hifigan(PROD, fastpitch, user_settings["use_gpu"], vocoder)
+            y_g_hat = fastpitch.hifi_gan(mel)
+            audios = y_g_hat.view((y_g_hat.shape[0], y_g_hat.shape[2]))
+            # audio = audio * 2.3026  # This brings it to the same volume, but makes it clip in places
+            for i, audio in enumerate(audios):
+                audio = audio[:mel_lens[i].item() * stft_hop_length]
+                audio = audio.cpu().numpy()
+                audio = audio * 32768.0
+                audio = audio.astype('int16')
+                output = linesBatch[i][4]
+                write(output, sampling_rate, audio)
+
+        del mel, mel_lens
+
+    return ""
+
+
+
 def infer(PROD, user_settings, text, output, fastpitch, vocoder, speaker_i, pace=1.0, pitch_data=None, logger=None, old_sequence=None):
 
     print(f'Inferring: "{text}" ({len(text)})')

@@ -190,12 +190,25 @@ class Handler(BaseHTTPRequestHandler):
                 req_response = fastpitch.infer(PROD, user_settings, text, out_path, fastpitch=fastpitch_model, vocoder=vocoder, \
                     speaker_i=speaker_i, pitch_data=pitch_data, logger=logger, pace=pace, old_sequence=old_sequence)
 
+            if self.path == "/synthesize_batch":
+                linesBatch = post_data["linesBatch"]
+                speaker_i = post_data["speaker_i"]
+                vocoder = post_data["vocoder"]
+                try:
+                    req_response = fastpitch.infer_batch(PROD, user_settings, linesBatch, fastpitch=fastpitch_model, vocoder=vocoder, \
+                        speaker_i=speaker_i, logger=logger)
+                except RuntimeError as e:
+                    if "CUDA out of memory" in str(e):
+                        req_response = "CUDA OOM"
+                    else:
+                        req_response = str(e)
+
+
             if self.path == "/outputAudio":
                 input_path = post_data["input_path"]
                 output_path = post_data["output_path"]
                 options = json.loads(post_data["options"])
                 req_response = run_audio_post(logger, input_path, output_path, options)
-
 
             self._set_response()
             self.wfile.write(req_response.encode("utf-8"))

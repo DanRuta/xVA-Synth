@@ -74,6 +74,9 @@ if (!Object.keys(window.userSettings).includes("batch_clearDirFirst")) { // For 
 if (!Object.keys(window.userSettings).includes("defaultToHiFi")) { // For backwards compatibility
     window.userSettings.defaultToHiFi = true
 }
+if (!Object.keys(window.userSettings).includes("batch_batchSize")) { // For backwards compatibility
+    window.userSettings.batch_batchSize = 1
+}
 
 
 useGPUCbx.checked = window.userSettings.useGPU
@@ -225,16 +228,26 @@ fs.readdir(`${path}/assets`, (err, assetFiles) => {
 
 
 // Batch stuff
+// Output folder
 batch_outputFolderInput.addEventListener("change", () => {
     window.userSettings.batchOutFolder = batch_outputFolderInput.value
     saveUserSettings()
 })
 batch_outputFolderInput.value = window.userSettings.batchOutFolder
+// Clear out dir first
 batch_clearDirFirstCkbx.addEventListener("change", () => {
     window.userSettings.batch_clearDirFirst = batch_clearDirFirstCkbx.checked
     saveUserSettings()
 })
 batch_clearDirFirstCkbx.checked = window.userSettings.batch_clearDirFirst
+// Batch size
+batch_batchSizeInput.addEventListener("change", () => {
+    window.userSettings.batch_batchSize = parseInt(batch_batchSizeInput.value)
+    saveUserSettings()
+})
+batch_batchSizeInput.value = parseInt(window.userSettings.batch_batchSize)
+// ======
+
 
 exports.saveUserSettings = saveUserSettings
 exports.deleteFolderRecursive = deleteFolderRecursive

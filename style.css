@@ -736,9 +736,22 @@ a {
     justify-content: space-between;
     align-items: center;
     padding-bottom: 20px;
+    width: 80vw;
 }
 #batch_intro > div:first-child {
-    width: 85%;
+    display: flex;
+    align-items: center;
+    width: 250px;
+}
+#batch_intro > div:last-child {
+    width: 250px;
+}
+#batch_intro > div:first-child > input {
+    width: 50px;
+    margin-left: 10px;
+}
+#batch_intro > div:nth-child(2) {
+    width: 80%;
 }
 #batch_outputFolderInput, #batch_progressBar {
     width: 400px;
