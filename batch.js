@@ -232,7 +232,23 @@ const uploadBatchCSVs = async (eType, event) => {
             }
 
             const records = await readFile(file)
-            records.forEach(item => dataLines.push(item))
+            records.forEach(item => {
+                if (window.userSettings.batch_skipExisting) {
+                    let outPath
+
+                    if (item.out_path.split("/").reverse()[0].includes(".")) {
+                        outPath = item.out_path
+                    } else {
+                        outPath = `${item.out_path}/${record[2]}_${item.voice_id}_${item.vocoder}_${sequence.replace(/[\/\\:\*?<>"|]*/g, "")}.${window.userSettings.audio.format}`
+                    }
+
+                    if (!fs.existsSync(outPath)) {
+                        dataLines.push(item)
+                    }
+                } else {
+                    dataLines.push(item)
+                }
+            })
         }
         console.log("dataLines")
         console.log(dataLines)
@@ -406,6 +422,7 @@ batch_clearBtn.addEventListener("click", () => {
     batch_clearBtn.style.display = "none"
     batch_outputFolderInput.style.display = "inline-block"
     batch_clearDirOpts.style.display = "flex"
+    batch_skipExistingOpts.style.display = "flex"
     batch_progressItems.style.display = "none"
     batch_progressBar.style.display = "none"
 
@@ -431,6 +448,7 @@ const startBatch = () => {
     batch_clearBtn.style.display = "none"
     batch_outputFolderInput.style.display = "none"
     batch_clearDirOpts.style.display = "none"
+    batch_skipExistingOpts.style.display = "none"
     batch_progressItems.style.display = "flex"
     batch_progressBar.style.display = "flex"
     batch_pauseBtn.style.display = "inline-block"
@@ -855,6 +873,7 @@ const stopBatch = () => {
     batch_clearBtn.style.display = "inline-block"
     batch_outputFolderInput.style.display = "inline-block"
     batch_clearDirOpts.style.display = "flex"
+    batch_skipExistingOpts.style.display = "flex"
     batch_progressItems.style.display = "none"
     batch_progressBar.style.display = "none"
     batch_pauseBtn.style.display = "none"

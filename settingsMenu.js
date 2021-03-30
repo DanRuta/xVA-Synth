@@ -71,6 +71,9 @@ if (!Object.keys(window.userSettings).includes("batchOutFolder")) { // For backw
 if (!Object.keys(window.userSettings).includes("batch_clearDirFirst")) { // For backwards compatibility
     window.userSettings.batch_clearDirFirst = false
 }
+if (!Object.keys(window.userSettings).includes("batch_skipExisting")) { // For backwards compatibility
+    window.userSettings.batch_skipExisting = true
+}
 if (!Object.keys(window.userSettings).includes("defaultToHiFi")) { // For backwards compatibility
     window.userSettings.defaultToHiFi = true
 }
@@ -239,7 +242,12 @@ batch_clearDirFirstCkbx.addEventListener("change", () => {
     window.userSettings.batch_clearDirFirst = batch_clearDirFirstCkbx.checked
     saveUserSettings()
 })
-batch_clearDirFirstCkbx.checked = window.userSettings.batch_clearDirFirst
+// Ignore existing output
+batch_skipExisting.addEventListener("change", () => {
+    window.userSettings.batch_skipExisting = batch_skipExisting.checked
+    saveUserSettings()
+})
+batch_skipExisting.checked = window.userSettings.batch_skipExisting
 // Batch size
 batch_batchSizeInput.addEventListener("change", () => {
     window.userSettings.batch_batchSize = parseInt(batch_batchSizeInput.value)
