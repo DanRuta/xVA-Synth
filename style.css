@@ -838,8 +838,10 @@ a {
 }
 /*Out path*/
 #batchRecordsHeader > div:nth-child(7), #batchRecordsContainer > div > div:nth-child(7) {
-    min-width: 200px;
-    max-width: 200px;
+    min-width: 300px;
+    max-width: 300px;
+    direction: rtl;
+    text-align: left;
 }
 /*Pacing*/
 #batchRecordsHeader > div:nth-child(8), #batchRecordsContainer > div > div:nth-child(8) {

@@ -164,6 +164,11 @@ const changeGame = (meta) => {
     generateVoiceButton.innerHTML = "Generate Voice"
     selectedGameDisplay.innerHTML = meta[3].split(".")[0]
 
+    // Change batch panel colours, if it is initialized
+    try {
+        Array.from(batchRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${window.currentGame[1]}`)
+    } catch (e) {}
+
     // Change the app title
     if (meta[2]) {
         document.title = `${meta[2]}VA Synth`
@@ -512,6 +517,11 @@ generateVoiceButton.addEventListener("click", () => {
 
 
     if (generateVoiceButton.dataset.modelQuery && generateVoiceButton.dataset.modelQuery!="null") {
+
+        if (window.batch_state.state) {
+            window.errorModal("Batch synthesis is in progress. Loading a model in the main app now would break things.")
+            return
+        }
 
         window.appLogger.log(`Loading voice set: ${JSON.parse(generateVoiceButton.dataset.modelQuery).model}`)
         window.batch_state.lastModel = JSON.parse(generateVoiceButton.dataset.modelQuery).model.split("/").reverse()[0]
