@@ -292,6 +292,9 @@ class FastPitch(nn.Module):
             # Predict durations
             log_dur_pred = self.duration_predictor(pred_enc_out, pred_enc_mask)
             dur_pred = torch.clamp(torch.exp(log_dur_pred) - 1, 0, max_duration)
+
+            dur_pred = torch.clamp(dur_pred, 0.25)
+
             # Pitch over chars
             pitch_pred = self.pitch_predictor(enc_out, enc_mask)
         else:
