@@ -463,6 +463,7 @@ const startBatch = () => {
 
     window.batch_state.lineIndex = 0
     window.batch_state.state = true
+    window.batch_state.outPathsChecked = []
     performSynthesis()
 }
 
