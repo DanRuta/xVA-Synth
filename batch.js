@@ -242,6 +242,8 @@ const uploadBatchCSVs = async (eType, event) => {
                         outPath = `${item.out_path}/${record[2]}_${item.voice_id}_${item.vocoder}_${sequence.replace(/[\/\\:\*?<>"|]*/g, "")}.${window.userSettings.audio.format}`
                     }
 
+                    outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
+
                     if (!fs.existsSync(outPath)) {
                         dataLines.push(item)
                     }
@@ -350,7 +352,7 @@ const populateRecordsList = records => {
         const rVoiceElem = createElem("div", record.voice_id)
         const rTextElem = createElem("div", record.text)
         const rVocoderElem = createElem("div", record.vocoder)
-        const rOutPathElem = createElem("div", record.out_path)
+        const rOutPathElem = createElem("div", "&lrm;"+record.out_path+"&lrm;")
         const rPacingElem = createElem("div", (record.pacing||" ").toString())
 
 
@@ -495,7 +497,7 @@ const batchChangeVoice = (game, voice) => {
 
         fetch(`http://localhost:8008/loadModel`, {
             method: "Post",
-            body: JSON.stringify({"outputs": null, "model": `${window.path}/models/${game}/${voice}`, "model_speakers": model.emb_size})
+            body: JSON.stringify({"outputs": null, "model": `${window.userSettings[`modelspath_${game}`]}/${voice}`, "model_speakers": model.emb_size})
         }).then(r=>r.text()).then(res => {
             resolve()
         }).catch(e => {
@@ -527,6 +529,7 @@ const batchChangeVocoder = (vocoder, game, voice) => {
         }).catch(e => {
             console.log(e)
             window.appLogger.log(e)
+            window.errorModal("Something went wrong:<br><br>"+e)
             batch_pauseBtn.click()
         })
     })
@@ -586,6 +589,7 @@ const prepareLinesBatchForSynth = () => {
             outPath = `${record[0].out_path}/${record[2]}_${record[0].voice_id}_${record[0].vocoder}_${sequence.replace(/[\/\\:\*?<>"|]*/g, "")}.${window.userSettings.audio.format}`
             outFolder = record[0].out_path
         }
+        outFolder = outFolder.length ? outFolder : window.userSettings.batchOutFolder
 
         linesBatch.push([sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder])
         records.push(record)
@@ -611,7 +615,7 @@ const batchKickOffFfmpegOutput = (ri, linesBatch, records, body) => {
                     records[ri][1].children[1].style.background = "none"
                 }
 
-                reject()
+                reject(res)
             } else {
                 records[ri][1].children[1].innerHTML = "Done"
                 records[ri][1].children[1].style.background = "green"
@@ -661,7 +665,8 @@ const batchKickOffGeneration = () => {
 
             // Create the output directory if it does not exist
             linesBatch.forEach(record => {
-                let outFolder = record[6]
+                let outFolder = record[6].startsWith("./") ? window.userSettings.batchOutFolder + record[6].slice(1,100000) : record[6]
+
                 if (!window.batch_state.outPathsChecked.includes(outFolder)) {
                     window.batch_state.outPathsChecked.push(outFolder)
                     if (!fs.existsSync(outFolder)) {
@@ -685,7 +690,10 @@ const batchKickOffGeneration = () => {
 
                 for (let ri=0; ri<linesBatch.length; ri++) {
                     let tempFileLocation = linesBatch[ri][4]
-                    let outPath = linesBatch[ri][5]
+                    let outPath = linesBatch[ri][5].includes(":") || linesBatch[ri][5].includes("./") ? linesBatch[ri][5] : `${linesBatch[ri][6]}/${linesBatch[ri][5]}`
+                    if (outPath.startsWith("./")) {
+                        outPath = window.userSettings.batchOutFolder + outPath.slice(1,100000)
+                    }
                     try {
                         if (window.batch_state.state) {
                             await batchKickOffFfmpegOutput(ri, linesBatch, records, JSON.stringify({
@@ -695,6 +703,8 @@ const batchKickOffGeneration = () => {
                             }))
                         }
                     } catch (e) {
+                        console.log(e)
+                        window.errorModal("Something went wrong:<br><br>"+e)
                         resolve()
                     }
                 }
@@ -718,100 +728,6 @@ const batchKickOffGeneration = () => {
                     resolve()
                 })
             }
-        })
-    })
-}
-const batchKickOffGenerationBACKUP = () => {
-    return new Promise((resolve) => {
-
-        const record = window.batch_state.lines[window.batch_state.lineIndex]
-        const model = window.games[record[0].game_id].models.find(model => model.voiceId==record[0].voice_id).model
-        const vocoderMappings = [["waveglow", "256_waveglow"], ["waveglowBIG", "big_waveglow"], ["quickanddirty", "qnd"], ["hifi", `${record[0].game_id}/${record[0].voice_id}.hg.pt`]]
-
-        const sequence = record[0].text
-        const pitch = undefined // maybe later
-        const duration = undefined // maybe later
-        const speaker_i = model.games[0].emb_i
-        const pace = record[0].pacing
-
-        try {fs.unlinkSync(localStorage.getItem("tempFileLocation"))} catch (e) {/*Do nothing*/}
-        const tempFileNum = `${Math.random().toString().split(".")[1]}`
-        const tempFileLocation = `${window.path}/output/temp-${tempFileNum}.wav`
-
-        if (window.batch_state.state) {
-            batch_progressNotes.innerHTML = `Synthesizing line: <i>${record[0].text}</i>`
-        }
-        fetch(`http://localhost:8008/synthesize`, {
-            method: "Post",
-            body: JSON.stringify({
-                sequence, pitch, duration, speaker_i, pace,
-                outfile: tempFileLocation,
-                vocoder: vocoderMappings.find(voc => voc[0]==record[0].vocoder)[1]
-            })
-        }).then(() => {
-
-            let outPath
-            let outFolder
-
-            if (record[0].out_path.split("/").reverse()[0].includes(".")) {
-                outPath = record[0].out_path
-                outFolder = String(record[0].out_path).split("/").reverse().slice(1,10000).reverse().join("/")
-            } else {
-                outPath = `${record[0].out_path}/${record[2]}_${record[0].voice_id}_${record[0].vocoder}_${sequence.replace(/[\/\\:\*?<>"|]*/g, "")}.${window.userSettings.audio.format}`
-                outFolder = record[0].out_path
-            }
-
-            if (!fs.existsSync(outFolder)) {
-                fs.mkdirSync(outFolder)
-            }
-
-            if (window.userSettings.audio.ffmpeg) {
-                const options = {
-                    hz: window.userSettings.audio.hz,
-                    padStart: window.userSettings.audio.padStart,
-                    padEnd: window.userSettings.audio.padEnd,
-                    bit_depth: window.userSettings.audio.bitdepth,
-                    amplitude: window.userSettings.audio.amplitude
-                }
-
-                if (window.batch_state.state) {
-                    batch_progressNotes.innerHTML = `Outputting audio via ffmpeg...`
-                }
-
-                fetch(`http://localhost:8008/outputAudio`, {
-                    method: "Post",
-                    body: JSON.stringify({
-                        input_path: tempFileLocation,
-                        output_path: outPath,
-                        options: JSON.stringify(options)
-                    })
-                }).then(r=>r.text()).then(res => {
-                    if (res.length) {
-                        console.log("res", res)
-                        window.appLogger.log("res", res)
-                        batch_pauseBtn.click()
-                    } else {
-                        record[1].children[1].innerHTML = "Done"
-                        record[1].children[1].style.background = "green"
-                        resolve()
-                    }
-                })
-            } else {
-                fs.copyFile(tempFileLocation, outPath, err => {
-                    if (err) {
-                        console.log(err)
-                        window.appLogger.log(err)
-                        window.appLogger.log(err)
-                        batch_pauseBtn.click()
-                    } else {
-                        record[1].children[1].innerHTML = "Done"
-                        record[1].children[1].style.background = "green"
-                        resolve()
-                    }
-                })
-            }
-
-            localStorage.setItem("tempFileLocation", tempFileLocation)
         })
     })
 }

@@ -103,6 +103,7 @@ def init (PROD, use_gpu, vocoder, logger):
     fastpitch.device = device
     fastpitch.waveglow = None
     fastpitch.wg_type = None
+    fastpitch.ckpt_path = None
 
     try:
         os.remove(f'{"./resources/app" if PROD else "."}/FASTPITCH_LOADING')
@@ -126,10 +127,11 @@ def init_hifigan (PROD, fastpitch, use_gpu, vocoder):
     if "waveglow" in vocoder:
         vocoder = "qnd"
 
-    if vocoder == "qnd":
+    if vocoder == "qnd" or fastpitch.ckpt_path is None:
         model_path = f'{"./resources/app" if PROD else "."}/python/hifi.pt'
     else:
-        model_path = f'{"./resources/app" if PROD else "."}/models/{vocoder}'
+        model_path = fastpitch.ckpt_path+".hg.pt"
+
 
 
     # Hi-Fi GAN
@@ -191,6 +193,7 @@ def loadModel (fastpitch, ckpt, n_speakers, device):
         except:
             pass
     fastpitch.load_state_dict(checkpoint_data, strict=False)
+    fastpitch.ckpt_path = ckpt
 
     fastpitch.eval()
     del checkpoint_data

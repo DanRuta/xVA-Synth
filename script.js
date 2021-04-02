@@ -1,5 +1,7 @@
 "use strict"
 
+window.appVersion = "v1.3.2"
+
 const PRODUCTION = process.mainModule.filename.includes("resources")
 const path = PRODUCTION ? "./resources/app" : "."
 window.path = path
@@ -15,7 +17,6 @@ const {startBatch} = require("./batch.js")
 
 let themeColour
 window.electronBrowserWindow = require("electron").remote.getCurrentWindow()
-window.appVersion = "v1.3.2"
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 const oldCError = console.error
 console.error = (data) => {
