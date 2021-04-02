@@ -1,6 +1,6 @@
 "use strict"
 
-window.appVersion = "v1.3.2"
+window.appVersion = "v1.3.3"
 
 const PRODUCTION = process.mainModule.filename.includes("resources")
 const path = PRODUCTION ? "./resources/app" : "."
@@ -62,10 +62,12 @@ let isGenerating = false
 const loadAllModels = () => {
     return new Promise(resolve => {
 
-        let modelPaths = Object.keys(window.userSettings).filter(key => key.includes("modelspath_")).map(key => window.userSettings[key])
+        let gameFolder
+        let modelPathsKeys = Object.keys(window.userSettings).filter(key => key.includes("modelspath_"))
         window.games = {}
 
-        modelPaths.forEach(modelsPath => {
+        modelPathsKeys.forEach(modelsPathKey => {
+            const modelsPath = window.userSettings[modelsPathKey]
             try {
                 const files = fs.readdirSync(modelsPath).filter(f => f.endsWith(".json"))
 
@@ -75,7 +77,7 @@ const loadAllModels = () => {
 
                 files.forEach(fileName => {
 
-                    const gameFolder = modelsPath.split("/").reverse()[0]
+                    gameFolder = modelsPathKey.split("_")[1]
 
                     try {
                         if (!models.hasOwnProperty(`${gameFolder}/${fileName}`)) {
@@ -122,14 +124,14 @@ const loadAllModels = () => {
                         })
                     } catch (e) {
                         console.log(e)
-                        window.appLogger.log("ERROR loading models for game: "+ path  + " with fileName: "+fileName)
+                        window.appLogger.log("ERROR loading models for game: "+ gameFolder  + " with fileName: "+fileName)
                         window.appLogger.log(e)
+                        window.appLogger.log(e.stack)
                     }
                 })
-                // })
             } catch (e) {
                 console.log(e)
-                window.appLogger.log("ERROR loading models for game: "+ path)
+                window.appLogger.log("ERROR loading models for game: "+ gameFolder)
                 window.appLogger.log(e)
             }
 
