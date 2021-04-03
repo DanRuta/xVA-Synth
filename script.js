@@ -1,6 +1,6 @@
 "use strict"
 
-window.appVersion = "v1.3.3"
+window.appVersion = "v1.3.4"
 
 const PRODUCTION = process.mainModule.filename.includes("resources")
 const path = PRODUCTION ? "./resources/app" : "."
@@ -167,13 +167,18 @@ const changeGame = (meta) => {
     generateVoiceButton.innerHTML = "Generate Voice"
     selectedGameDisplay.innerHTML = meta[3].split(".")[0]
 
+
     // Change batch panel colours, if it is initialized
     try {
         Array.from(batchRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${window.currentGame[1]}`)
     } catch (e) {}
 
     // Change the app title
-    if (meta[2]) {
+    title.innerHTML = "Select Voice Type"
+    if (window.games[window.currentGame[0]] == undefined) {
+        title.innerHTML = `No models in: ${window.userSettings[`modelspath_${window.currentGame[0]}`]}`
+        console.log(title.innerHTML)
+    } else if (meta[2]) {
         document.title = `${meta[2]}VA Synth`
         dragBar.innerHTML = `${meta[2]}VA Synth`
     } else {
@@ -224,7 +229,7 @@ const changeGame = (meta) => {
     // Populate models
     voiceTypeContainer.innerHTML = ""
     voiceSamples.innerHTML = ""
-    title.innerHTML = "Select Voice Type"
+
 
     // No models found
     if (!Object.keys(window.games).length) {
@@ -1664,9 +1669,13 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
         if (!window.watchedModelsDirs.includes(modelsDir)) {
             window.watchedModelsDirs.push(modelsDir)
 
-            fs.watch(modelsDir, {recursive: false, persistent: true}, (eventType, filename) => {
-                loadAllModels().then(() => changeGame(fileName))
-            })
+            try {
+                fs.watch(modelsDir, {recursive: false, persistent: true}, (eventType, filename) => {
+                    loadAllModels().then(() => changeGame(fileName))
+                })
+            } catch (e) {}
+
+            loadAllModels().then(() => changeGame(fileName))
         }
     })
 
