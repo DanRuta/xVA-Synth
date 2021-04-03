@@ -1674,8 +1674,6 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
                     loadAllModels().then(() => changeGame(fileName))
                 })
             } catch (e) {}
-
-            loadAllModels().then(() => changeGame(fileName))
         }
     })
 
