@@ -71,6 +71,9 @@ if (!Object.keys(window.userSettings).includes("batchOutFolder")) { // For backw
 if (!Object.keys(window.userSettings).includes("batch_clearDirFirst")) { // For backwards compatibility
     window.userSettings.batch_clearDirFirst = false
 }
+if (!Object.keys(window.userSettings).includes("batch_fastMode")) { // For backwards compatibility
+    window.userSettings.batch_fastMode = false
+}
 if (!Object.keys(window.userSettings).includes("batch_skipExisting")) { // For backwards compatibility
     window.userSettings.batch_skipExisting = true
 }
@@ -88,6 +91,8 @@ setting_slidersTooltip.checked = window.userSettings.sliderTooltip
 setting_defaultToHiFi.checked = window.userSettings.defaultToHiFi
 setting_keepPaceOnNew.checked = window.userSettings.keepPaceOnNew
 setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
+setting_darkprompt.checked = window.userSettings.darkPrompt
+setting_batch_fastmode.checked = window.userSettings.batch_fastMode
 setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
 setting_audio_format.value = window.userSettings.audio.format
 setting_audio_hz.value = window.userSettings.audio.hz
@@ -155,6 +160,10 @@ setting_darkprompt.addEventListener("click", () => {
     saveUserSettings()
 })
 setTheme()
+setting_batch_fastmode.addEventListener("click", () => {
+    window.userSettings.batch_fastMode = setting_batch_fastmode.checked
+    saveUserSettings()
+})
 
 setting_audio_ffmpeg.addEventListener("click", () => {
     window.userSettings.audio.ffmpeg = setting_audio_ffmpeg.checked

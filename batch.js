@@ -542,14 +542,6 @@ const batchChangeVocoder = (vocoder, game, voice) => {
     })
 }
 
-const clearOldTempFiles = () => {
-    const oldTempFiles = fs.readdirSync(`${window.path}/output`).filter(fileName => fileName.includes("temp-"))
-    oldTempFiles.forEach(file => {
-        try {
-            fs.unlinkSync(`${window.path}/output/${file}`)
-        } catch (e) {console.log(e)}
-    })
-}
 
 const prepareLinesBatchForSynth = () => {
 
@@ -581,8 +573,6 @@ const prepareLinesBatchForSynth = () => {
         speaker_i = model.games[0].emb_i
         const pace = record[0].pacing
 
-        clearOldTempFiles()
-
         const tempFileNum = `${Math.random().toString().split(".")[1]}`
         const tempFileLocation = `${window.path}/output/temp-${tempFileNum}.wav`
 
@@ -605,7 +595,7 @@ const prepareLinesBatchForSynth = () => {
     return [speaker_i, firstItemVoiceId, firstItemVocoder, linesBatch, records]
 }
 
-const batchKickOffFfmpegOutput = (ri, linesBatch, records, body) => {
+const batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, body) => {
     return new Promise((resolve, reject) => {
         fetch(`http://localhost:8008/outputAudio`, {
             method: "Post",
@@ -618,18 +608,23 @@ const batchKickOffFfmpegOutput = (ri, linesBatch, records, body) => {
                 }
 
                 for (let ri2=ri; ri2<linesBatch.length; ri2++) {
-                    records[ri][1].children[1].innerHTML = "Ready"
-                    records[ri][1].children[1].style.background = "none"
+                    records[ri][1].children[1].innerHTML = "Failed"
+                    records[ri][1].children[1].style.background = "red"
                 }
 
                 reject(res)
             } else {
                 records[ri][1].children[1].innerHTML = "Done"
                 records[ri][1].children[1].style.background = "green"
-                window.batch_state.lineIndex += 1
+                fs.unlinkSync(tempFileLocation)
                 resolve()
             }
+        }).catch(e => {
+            if (e.code=="ECONNREFUSED") {
+                batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, body)
+            }
         })
+
     })
 
 }
@@ -703,11 +698,21 @@ const batchKickOffGeneration = () => {
                     }
                     try {
                         if (window.batch_state.state) {
-                            await batchKickOffFfmpegOutput(ri, linesBatch, records, JSON.stringify({
-                                input_path: tempFileLocation,
-                                output_path: outPath,
-                                options: JSON.stringify(options)
-                            }))
+                            records[ri][1].children[1].innerHTML = "Outputting"
+                            if (window.userSettings.batch_fastMode) {
+                                batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
+                                    input_path: tempFileLocation,
+                                    output_path: outPath,
+                                    options: JSON.stringify(options)
+                                }))
+                            } else {
+                                await batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
+                                    input_path: tempFileLocation,
+                                    output_path: outPath,
+                                    options: JSON.stringify(options)
+                                }))
+                            }
+                            window.batch_state.lineIndex += 1
                         }
                     } catch (e) {
                         console.log(e)
@@ -734,6 +739,11 @@ const batchKickOffGeneration = () => {
                     }
                     resolve()
                 })
+            }
+        }).catch(async e => {
+            if (e.code=="ECONNREFUSED") {
+                await batchKickOffGeneration()
+                resolve()
             }
         })
     })
@@ -809,8 +819,6 @@ const stopBatch = () => {
             record[1].children[1].style.background = "none"
         }
     })
-
-    clearOldTempFiles()
 }
 
 
