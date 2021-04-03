@@ -233,16 +233,23 @@ const uploadBatchCSVs = async (eType, event) => {
 
             const records = await readFile(file)
             records.forEach(item => {
+
                 if (window.userSettings.batch_skipExisting) {
                     let outPath
 
-                    if (item.out_path.split("/").reverse()[0].includes(".")) {
+                    if (item.out_path && item.out_path.split("/").reverse()[0].includes(".")) {
                         outPath = item.out_path
                     } else {
-                        outPath = `${item.out_path}/${record[2]}_${item.voice_id}_${item.vocoder}_${sequence.replace(/[\/\\:\*?<>"|]*/g, "")}.${window.userSettings.audio.format}`
+                        if (item.out_path) {
+                            outPath = item.out_path
+                        } else {
+                            outPath = window.userSettings.batchOutFolder
+                        }
+                        outPath = `${outPath}/${item.voice_id}_${item.vocoder}_${item.text.replace(/[\/\\:\*?<>"|]*/g, "")}.${window.userSettings.audio.format}`
                     }
 
                     outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
+
 
                     if (!fs.existsSync(outPath)) {
                         dataLines.push(item)
@@ -586,7 +593,7 @@ const prepareLinesBatchForSynth = () => {
             outPath = record[0].out_path
             outFolder = String(record[0].out_path).split("/").reverse().slice(1,10000).reverse().join("/")
         } else {
-            outPath = `${record[0].out_path}/${record[2]}_${record[0].voice_id}_${record[0].vocoder}_${sequence.replace(/[\/\\:\*?<>"|]*/g, "")}.${window.userSettings.audio.format}`
+            outPath = `${record[0].out_path}/${record[0].voice_id}_${record[0].vocoder}_${sequence.replace(/[\/\\:\*?<>"|]*/g, "")}.${window.userSettings.audio.format}`
             outFolder = record[0].out_path
         }
         outFolder = outFolder.length ? outFolder : window.userSettings.batchOutFolder
