@@ -12,12 +12,12 @@ const {shell, ipcRenderer} = require("electron")
 const fetch = require("node-fetch")
 const {text_to_sequence, english_cleaners} = require("./text.js")
 const {xVAAppLogger} = require("./appLogger.js")
+window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 const {saveUserSettings, deleteFolderRecursive} = require("./settingsMenu.js")
 const {startBatch} = require("./batch.js")
 
 let themeColour
 window.electronBrowserWindow = require("electron").remote.getCurrentWindow()
-window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 const oldCError = console.error
 console.error = (data) => {
     window.appLogger.log(data)
@@ -547,6 +547,8 @@ generateVoiceButton.addEventListener("click", () => {
                 if (window.userSettings.defaultToHiFi && window.currentModel.hifi) {
                     vocoder_select.value = Array.from(vocoder_select.children).find(opt => opt.innerHTML=="Bespoke HiFi GAN").value
                     changeVocoder(vocoder_select.value)
+                } else if (window.userSettings.vocoder.includes(".hg.pt")) {
+                    changeVocoder("qnd")
                 }
             })
         }).catch(e => {
