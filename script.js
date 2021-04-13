@@ -1,6 +1,6 @@
 "use strict"
 
-window.appVersion = "v1.3.5"
+window.appVersion = "v1.3.6"
 
 const PRODUCTION = process.mainModule.filename.includes("resources")
 const path = PRODUCTION ? "./resources/app" : "."
@@ -1737,3 +1737,17 @@ voiceSearchInput.addEventListener("keyup", () => {
         voiceElems.forEach(elem => elem.style.display="block")
     }
 })
+
+EULA_closeButon.addEventListener("click", () => {
+    if (EULA_accept_ckbx.checked) {
+        closeModal(EULAContainer)
+        window.userSettings.EULA_accepted = true
+        saveUserSettings()
+    }
+})
+if (!Object.keys(window.userSettings).includes("EULA_accepted") || window.userSettings.EULA_accepted==true) {
+    EULAContainer.style.opacity = 0
+    EULAContainer.style.display = "flex"
+    chrome.style.opacity = 1
+    requestAnimationFrame(() => requestAnimationFrame(() => EULAContainer.style.opacity = 1))
+}

@@ -275,7 +275,7 @@ a {
      opacity: 0.5;
  }
 
- #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer {
+ #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer, #EULAContainer {
      display: flex;
      justify-content: center;
      align-items: center;
@@ -285,6 +285,16 @@ a {
      transition: opacity 200ms;
      background: rgba(0,0,0,0.5);
      z-index: 100;
+ }
+ #EULAContainer > .modal > div:nth-child(2) {
+    overflow-y: auto;
+    height: 60vh;
+    text-align: left;
+ }
+ #EULAContainer > .modal > div:nth-child(3) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
  }
  hr {
      width: 100%;
@@ -326,7 +336,7 @@ a {
      min-height: 500px;
      min-width: 500px;
  }
- #gameSelectionContainer > .modal, #batchGenerationContainer > .modal {
+ #gameSelectionContainer > .modal, #batchGenerationContainer > .modal, #EULAContainer > .modal {
     height: 75vh;
     width: 85vw;
     min-height: 500px;
