@@ -1751,3 +1751,7 @@ if (!Object.keys(window.userSettings).includes("EULA_accepted") || window.userSe
     chrome.style.opacity = 1
     requestAnimationFrame(() => requestAnimationFrame(() => EULAContainer.style.opacity = 1))
 }
+document.querySelectorAll('a[href^="http"]').forEach(a => a.addEventListener("click", e => {
+    event.preventDefault();
+    shell.openExternal(a.href);
+}))
