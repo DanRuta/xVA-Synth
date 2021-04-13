@@ -1745,7 +1745,7 @@ EULA_closeButon.addEventListener("click", () => {
         saveUserSettings()
     }
 })
-if (!Object.keys(window.userSettings).includes("EULA_accepted") || window.userSettings.EULA_accepted==true) {
+if (!Object.keys(window.userSettings).includes("EULA_accepted") || window.userSettings.EULA_accepted==false) {
     EULAContainer.style.opacity = 0
     EULAContainer.style.display = "flex"
     chrome.style.opacity = 1
