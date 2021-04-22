@@ -80,6 +80,7 @@ try:
         user_settings["use_gpu"] = False
     logger.info(str(user_settings))
 except:
+    logger.info(traceback.format_exc())
     pass
 
 def write_settings ():
@@ -106,6 +107,7 @@ logger.info("Models ready")
 try:
     os.remove(f'{"./resources/app" if PROD else "."}/WAVEGLOW_LOADING')
 except:
+    logger.info(traceback.format_exc())
     pass
 
 
@@ -229,9 +231,11 @@ try:
 except:
     with open("./DEBUG_server_error.txt", "w+") as f:
         f.write(traceback.format_exc())
+    logger.info(traceback.format_exc())
 try:
     os.remove(f'{"./resources/app" if PROD else "."}/SERVER_STARTING')
 except:
+    logger.info(traceback.format_exc())
     pass
 try:
     server.serve_forever()

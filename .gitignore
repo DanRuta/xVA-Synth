@@ -15,6 +15,7 @@ __pycache__/
 .cache/
 *.pyc
 server.log
+server.log.*
 cpython
 xVASynth-win*
 model.rar

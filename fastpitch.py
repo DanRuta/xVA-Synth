@@ -108,6 +108,7 @@ def init (PROD, use_gpu, vocoder, logger):
     try:
         os.remove(f'{"./resources/app" if PROD else "."}/FASTPITCH_LOADING')
     except:
+        logger.info(traceback.format_exc())
         pass
 
     if vocoder=="qnd":

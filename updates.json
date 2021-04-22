@@ -19,5 +19,7 @@
     "1.3.1": "- Added settings to use per-game custom (user specified) models directories\n- Made the model loading automatically refresh with file changes (re-starting the app no longer needed when installing new models)\n- Various quality-of-life UI tweaks",
     "1.3.2": "- Added batched batch mode - so parallelizing voice generation (limited only by your VRAM)\n- Option to skip batch generating lines which have already been generated\n- Globally improved voice generation quality, where word spacing was too short (zero) by default\n- Various UI tweaks\n- Speed optimizations for the batch synthesis mode",
     "1.3.3": "- Fixed occasional issues with loading models from certain custom paths",
-    "1.3.4": "- Improved error handling for when models cannot be found by the app"
+    "1.3.4": "- Improved error handling for when models cannot be found by the app",
+    "1.3.5": "- Added 'Fast Mode' to batch synthesis (more parallelization)\n- Fixed a few small UI bugs\n- Fixed batch mode erroneous handling of no specified output path for .csv records",
+    "1.3.6": "- Fixed special ellipsis character error\n- Fixed occasional model loading vocoder error\n- Fixed video links not opening in new windows\n- Added batch synthesis video link to the batch menu\n- Added EULA"
 }
