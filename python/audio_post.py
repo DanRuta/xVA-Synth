@@ -9,15 +9,14 @@ def run_audio_post(logger, input, output, options=None):
 
         ffmpeg_options = {"ar": options["hz"]}
 
-        if options["padStart"] or options["padEnd"]:
-            ffmpeg_options["af"] = []
-            if options["padStart"]:
-                ffmpeg_options["af"].append(f'adelay={options["padStart"]}')
-            if options["padEnd"]:
-                ffmpeg_options["af"].append(f'apad=pad_dur={options["padEnd"]}ms')
+        ffmpeg_options["af"] = []
+        if options["padStart"]:
+            ffmpeg_options["af"].append(f'adelay={options["padStart"]}')
+        if options["padEnd"]:
+            ffmpeg_options["af"].append(f'apad=pad_dur={options["padEnd"]}ms')
 
-            ffmpeg_options["af"].append(f'volume={options["amplitude"]}')
-            ffmpeg_options["af"] = ",".join(ffmpeg_options["af"])
+        ffmpeg_options["af"].append(f'volume={options["amplitude"]}')
+        ffmpeg_options["af"] = ",".join(ffmpeg_options["af"])
 
 
         if options["bit_depth"]:
