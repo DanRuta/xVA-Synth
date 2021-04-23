@@ -599,8 +599,8 @@ generateVoiceButton.addEventListener("click", () => {
         }
 
         if (editor.innerHTML && editor.innerHTML.length && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
-            pitch = window.pitchEditor.pitchNew
-            duration = window.pitchEditor.dursNew.map(v => v*pace_slid.value)
+            pitch = window.pitchEditor.pitchNew.map(v=> v==undefined?0:v)
+            duration = window.pitchEditor.dursNew.map(v => v*pace_slid.value).map(v=> v==undefined?0:v)
             isFreshRegen = false
         }
         window.pitchEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
@@ -868,7 +868,7 @@ const createModal = (type, message) => {
 }
 window.closeModal = (container=undefined, notThisOne=undefined) => {
     return new Promise(resolve => {
-        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, container]
+        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, container, modalContainer]
         const containers = container==undefined ? allContainers : [container]
         containers.forEach(cont => {
             if ((notThisOne!=undefined&&notThisOne!=cont) && (notThisOne==undefined || notThisOne!=cont) && cont!=undefined) {
@@ -876,8 +876,8 @@ window.closeModal = (container=undefined, notThisOne=undefined) => {
             }
         })
 
-        const someOpenContainer = allContainers.find(container => container!=undefined && container.style.opacity==1)
-        if (!someOpenContainer || someOpenContainer==container) {
+        const someOpenContainer = allContainers.find(container => container!=undefined && container.style.opacity==1 && container.style.display!="none")
+        if (!someOpenContainer || someOpenContainer==container || someOpenContainer==modalContainer) {
             chrome.style.opacity = 0.88
         }
 
