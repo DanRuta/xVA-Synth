@@ -823,12 +823,12 @@ const createModal = (type, message) => {
             modal.appendChild(createElem("div", yesButton, noButton))
 
             yesButton.addEventListener("click", () => {
-                closeModal().then(() => {
+                closeModal(modalContainer).then(() => {
                     resolve(true)
                 })
             })
             noButton.addEventListener("click", () => {
-                closeModal().then(() => {
+                closeModal(modalContainer).then(() => {
                     resolve(false)
                 })
             })
@@ -838,7 +838,7 @@ const createModal = (type, message) => {
             modal.appendChild(createElem("div", closeButton))
 
             closeButton.addEventListener("click", () => {
-                closeModal().then(() => {
+                closeModal(modalContainer).then(() => {
                     resolve(false)
                 })
             })
@@ -866,21 +866,24 @@ const createModal = (type, message) => {
         requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
     })
 }
-window.closeModal = (container=modalContainer, notThisOne=undefined) => {
+window.closeModal = (container=undefined, notThisOne=undefined) => {
     return new Promise(resolve => {
-        const containers = container==undefined
-            ? [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, container]
-            : [container]
+        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, container]
+        const containers = container==undefined ? allContainers : [container]
         containers.forEach(cont => {
-            if (notThisOne!=cont && (notThisOne==undefined || notThisOne!=cont)) {
+            if ((notThisOne!=undefined&&notThisOne!=cont) && (notThisOne==undefined || notThisOne!=cont) && cont!=undefined) {
                 cont.style.opacity = 0
             }
         })
 
-        chrome.style.opacity = 0.88
+        const someOpenContainer = allContainers.find(container => container!=undefined && container.style.opacity==1)
+        if (!someOpenContainer || someOpenContainer==container) {
+            chrome.style.opacity = 0.88
+        }
+
         setTimeout(() => {
             containers.forEach(cont => {
-                if (notThisOne==undefined || notThisOne!=cont) {
+                if ((notThisOne==undefined || notThisOne!=cont) && cont!=undefined) {
                     cont.style.display = "none"
                 }
             })
@@ -1492,20 +1495,26 @@ patreonIcon.addEventListener("click", () => {
     data.split("\r\n").forEach(name => names.add(name))
     names.add("minermanb")
 
-    let content = `You can support development on patreon at this link:<br>
-        <span id="patreonButton" href="https://www.patreon.com/bePatron?u=48461563" data-patreon-widget-type="become-patron-button">
-        <svg style="height: 1rem;width: 1rem;" viewBox="0 0 569 546" xmlns="http://www.w3.org/2000/svg"><g><circle cx="362.589996" fill="#ffffff" cy="204.589996" data-fill="1" id="Oval" r="204.589996"></circle><rect fill="#ffffff" data-fill="2" height="545.799988" id="Rectangle" width="100" x="0" y="0"></rect></g></svg>
-        <span style="width:5px"></span>
-        Become a Patron!</span>
-        <br><hr><br>Special thanks:`
+    let content = ``
+    creditsList.innerHTML = ""
     names.forEach(name => content += `<br>${name}`)
+    creditsList.innerHTML = content
 
-    closeModal().then(() => {
-        createModal("error", content)
-        patreonButton.addEventListener("click", () => {
-            shell.openExternal("https://patreon.com")
-        })
+    closeModal(undefined, patreonContainer).then(() => {
+        patreonContainer.style.opacity = 0
+        patreonContainer.style.display = "flex"
+        chrome.style.opacity = 0.88
+        requestAnimationFrame(() => requestAnimationFrame(() => patreonContainer.style.opacity = 1))
+        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
     })
+})
+patreonContainer.addEventListener("click", event => {
+    if (event.target==patreonContainer) {
+        closeModal(patreonContainer)
+    }
+})
+patreonButton.addEventListener("click", () => {
+    shell.openExternal("https://patreon.com")
 })
 fetch("http://danruta.co.uk/patreon.txt").then(r=>r.text()).then(data => fs.writeFileSync(`${path}/patreon.txt`, data, "utf8"))
 
