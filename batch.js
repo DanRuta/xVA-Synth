@@ -215,6 +215,9 @@ const uploadBatchCSVs = async (eType, event) => {
     const dataLines = []
 
     if (eType=="drop") {
+
+        batchDropZoneNote.innerHTML = "Procesing data..."
+
         const dataTransfer = event.dataTransfer
         const files = Array.from(dataTransfer.files)
         for (let fi=0; fi<files.length; fi++) {
@@ -269,6 +272,8 @@ const uploadBatchCSVs = async (eType, event) => {
         } else {
             batch_clearBtn.click()
         }
+
+        batchDropZoneNote.innerHTML = "Drag and drop .csv files here"
     }
 }
 
