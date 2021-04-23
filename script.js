@@ -1673,7 +1673,10 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
 
             try {
                 fs.watch(modelsDir, {recursive: false, persistent: true}, (eventType, filename) => {
-                    loadAllModels().then(() => changeGame(fileName))
+                    if (window.userSettings.autoReloadVoices) {
+                        window.appLogger.log(`${eventType}: ${filename}`)
+                        loadAllModels().then(() => changeGame(fileName))
+                    }
                 })
             } catch (e) {}
         }
@@ -1701,6 +1704,8 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
 
     searchGameInput.placeholder = `Search ${Array.from(totalGames).length} games with ${totalVoices} voices...`
 })
+
+
 
 
 

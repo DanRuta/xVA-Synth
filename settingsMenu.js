@@ -83,6 +83,9 @@ if (!Object.keys(window.userSettings).includes("defaultToHiFi")) { // For backwa
 if (!Object.keys(window.userSettings).includes("batch_batchSize")) { // For backwards compatibility
     window.userSettings.batch_batchSize = 1
 }
+if (!Object.keys(window.userSettings).includes("autoPlayGen")) { // For backwards compatibility
+    window.userSettings.autoPlayGen = true
+}
 
 
 useGPUCbx.checked = window.userSettings.useGPU
@@ -92,6 +95,7 @@ setting_defaultToHiFi.checked = window.userSettings.defaultToHiFi
 setting_keepPaceOnNew.checked = window.userSettings.keepPaceOnNew
 setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
 setting_darkprompt.checked = window.userSettings.darkPrompt
+setting_areload_voices.checked = window.userSettings.autoReloadVoices
 setting_batch_fastmode.checked = window.userSettings.batch_fastMode
 setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
 setting_audio_format.value = window.userSettings.audio.format
@@ -144,6 +148,11 @@ setting_keepPaceOnNew.addEventListener("click", () => {
     window.userSettings.keepPaceOnNew = setting_keepPaceOnNew.checked
     saveUserSettings()
 })
+setting_areload_voices.addEventListener("click", () => {
+    window.userSettings.autoReloadVoices = setting_areload_voices.checked
+    saveUserSettings()
+})
+setting_areload_voices.checked = window.userSettings.autoReloadVoices
 
 const setTheme = () => {
     if (window.userSettings.darkPrompt) {
