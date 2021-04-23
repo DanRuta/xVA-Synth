@@ -448,11 +448,19 @@ batch_clearBtn.addEventListener("click", () => {
     batchRecordsContainer.innerHTML = ""
 })
 
+
 const startBatch = () => {
 
     // Output directory
     if (!fs.existsSync(window.userSettings.batchOutFolder)) {
-        fs.mkdirSync(window.userSettings.batchOutFolder)
+        window.userSettings.batchOutFolder.split("/")
+         .reduce((prevPath, folder) => {
+           const currentPath = path.join(prevPath, folder, path.sep);
+           if (!fs.existsSync(currentPath)){
+             fs.mkdirSync(currentPath);
+           }
+           return currentPath;
+         }, '');
     }
     if (batch_clearDirFirstCkbx.checked) {
         deleteFolderRecursive(window.userSettings.batchOutFolder, true)

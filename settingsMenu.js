@@ -251,8 +251,13 @@ fs.readdir(`${path}/assets`, (err, assetFiles) => {
 // Batch stuff
 // Output folder
 batch_outputFolderInput.addEventListener("change", () => {
-    window.userSettings.batchOutFolder = batch_outputFolderInput.value
-    saveUserSettings()
+    if (batch_outputFolderInput.value.length==0) {
+        window.errorModal("Please enter a directory path")
+        batch_outputFolderInput.value = window.userSettings.batchOutFolder
+    } else {
+        window.userSettings.batchOutFolder = batch_outputFolderInput.value
+        saveUserSettings()
+    }
 })
 batch_outputFolderInput.value = window.userSettings.batchOutFolder
 // Clear out dir first
