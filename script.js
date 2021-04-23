@@ -1,6 +1,6 @@
 "use strict"
 
-window.appVersion = "v1.3.6"
+window.appVersion = "v1.3.7"
 
 const PRODUCTION = process.mainModule.filename.includes("resources")
 const path = PRODUCTION ? "./resources/app" : "."
