@@ -59,7 +59,7 @@ let fileRenameCounter = 0
 let fileChangeCounter = 0
 let isGenerating = false
 
-const loadAllModels = () => {
+window.loadAllModels = () => {
     return new Promise(resolve => {
 
         let gameFolder
@@ -158,7 +158,7 @@ setting_models_path_input.addEventListener("change", () => {
 })
 
 // Change game
-const changeGame = (meta) => {
+window.changeGame = (meta) => {
 
     meta = meta.split("-")
     window.currentGame = meta

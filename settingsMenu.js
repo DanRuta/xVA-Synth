@@ -41,6 +41,9 @@ if (!Object.keys(window.userSettings).includes("sliderTooltip")) { // For backwa
 if (!Object.keys(window.userSettings).includes("darkPrompt")) { // For backwards compatibility
     window.userSettings.darkPrompt = false
 }
+if (!Object.keys(window.userSettings).includes("autoReloadVoices")) { // For backwards compatibility
+    window.userSettings.autoReloadVoices = false
+}
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("hz")) { // For backwards compatibility
     window.userSettings.audio.hz = 22050
 }
@@ -87,27 +90,32 @@ if (!Object.keys(window.userSettings).includes("autoPlayGen")) { // For backward
     window.userSettings.autoPlayGen = true
 }
 
+const updateUIWithSettings = () => {
+    useGPUCbx.checked = window.userSettings.useGPU
+    autoplay_ckbx.checked = window.userSettings.autoplay
+    setting_slidersTooltip.checked = window.userSettings.sliderTooltip
+    setting_defaultToHiFi.checked = window.userSettings.defaultToHiFi
+    setting_keepPaceOnNew.checked = window.userSettings.keepPaceOnNew
+    setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
+    setting_darkprompt.checked = window.userSettings.darkPrompt
+    setting_areload_voices.checked = window.userSettings.autoReloadVoices
+    setting_batch_fastmode.checked = window.userSettings.batch_fastMode
+    setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
+    setting_audio_format.value = window.userSettings.audio.format
+    setting_audio_hz.value = window.userSettings.audio.hz
+    setting_audio_pad_start.value = window.userSettings.audio.padStart
+    setting_audio_pad_end.value = window.userSettings.audio.padEnd
+    setting_audio_bitdepth.value = window.userSettings.audio.bitdepth
+    setting_audio_amplitude.value = window.userSettings.audio.amplitude
 
-useGPUCbx.checked = window.userSettings.useGPU
-autoplay_ckbx.checked = window.userSettings.autoplay
-setting_slidersTooltip.checked = window.userSettings.sliderTooltip
-setting_defaultToHiFi.checked = window.userSettings.defaultToHiFi
-setting_keepPaceOnNew.checked = window.userSettings.keepPaceOnNew
-setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
-setting_darkprompt.checked = window.userSettings.darkPrompt
-setting_areload_voices.checked = window.userSettings.autoReloadVoices
-setting_batch_fastmode.checked = window.userSettings.batch_fastMode
-setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
-setting_audio_format.value = window.userSettings.audio.format
-setting_audio_hz.value = window.userSettings.audio.hz
-setting_audio_pad_start.value = window.userSettings.audio.padStart
-setting_audio_pad_end.value = window.userSettings.audio.padEnd
-setting_audio_bitdepth.value = window.userSettings.audio.bitdepth
-setting_audio_amplitude.value = window.userSettings.audio.amplitude
+    batch_batchSizeInput.value = parseInt(window.userSettings.batch_batchSize)
+    batch_skipExisting.checked = window.userSettings.batch_skipExisting
+    batch_clearDirFirstCkbx.checked = window.userSettings.batch_clearDirFirst
 
-const [height, width] = window.userSettings.customWindowSize.split(",").map(v => parseInt(v))
-ipcRenderer.send("resize", {height, width})
-
+    const [height, width] = window.userSettings.customWindowSize.split(",").map(v => parseInt(v))
+    ipcRenderer.send("resize", {height, width})
+}
+updateUIWithSettings()
 saveUserSettings()
 
 
@@ -270,14 +278,77 @@ batch_skipExisting.addEventListener("change", () => {
     window.userSettings.batch_skipExisting = batch_skipExisting.checked
     saveUserSettings()
 })
-batch_skipExisting.checked = window.userSettings.batch_skipExisting
 // Batch size
 batch_batchSizeInput.addEventListener("change", () => {
     window.userSettings.batch_batchSize = parseInt(batch_batchSizeInput.value)
     saveUserSettings()
 })
-batch_batchSizeInput.value = parseInt(window.userSettings.batch_batchSize)
 // ======
+
+
+
+reset_settings_btn.addEventListener("click", () => {
+    window.confirmModal(`Are you sure you'd like to reset your settings?`).then(confirmation => {
+        if (confirmation) {
+            window.userSettings.audio.format = "wav"
+            window.userSettings.audio.hz = 22050
+            window.userSettings.audio.padStart = 0
+            window.userSettings.audio.padEnd = 0
+            window.userSettings.audio.ffmpeg = false
+            window.userSettings.autoPlayGen = false
+            window.userSettings.autoReloadVoices = false
+            window.userSettings.autoplay = true
+            window.userSettings.darkPrompt = false
+            window.userSettings.defaultToHiFi = true
+            window.userSettings.keepPaceOnNew = true
+            window.userSettings.sliderTooltip = true
+            window.userSettings.audio.bitdepth = "pcm_s32le"
+
+            window.userSettings.batch_batchSize = 1
+            window.userSettings.batch_clearDirFirst= false
+            window.userSettings.batch_fastMode = false
+            window.userSettings.batch_skipExisting = true
+            updateUIWithSettings()
+            saveUserSettings()
+        }
+    })
+})
+reset_paths_btn.addEventListener("click", () => {
+    window.confirmModal(`Are you sure you'd like to reset your paths? This includes the paths for models, and output.`).then(confirmation => {
+        if (confirmation) {
+            const currGame = window.currentGame[0]
+
+            // Models paths
+            const assetFiles = fs.readdirSync(`${path}/assets`)
+            assetFiles.filter(fn=>(fn.endsWith(".jpg")||fn.endsWith(".png"))&&fn.split("-").length==4).forEach(assetFileName => {
+                const gameId = assetFileName.split("-")[0]
+                window.userSettings[`modelspath_${gameId}`] = `${__dirname.replace(/\\/g,"/")}/models/${gameId}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
+                if (gameId==currGame) {
+                    setting_models_path_input.value = window.userSettings[`modelspath_${gameId}`]
+                }
+            })
+
+            // Output paths
+            const gameDirs = fs.readdirSync(`${path}/models`)
+            gameDirs.filter(name => !name.includes(".")).forEach(gameId => {
+                window.userSettings[`outpath_${gameId}`] = `${__dirname.replace(/\\/g,"/")}/output/${gameId}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
+                if (gameId==currGame) {
+                    setting_out_path_input.value = window.userSettings[`outpath_${gameId}`]
+                }
+            })
+
+            if (window.currentModelButton) {
+                window.currentModelButton.click()
+            }
+
+            window.userSettings.batchOutFolder = `${__dirname.replace(/\\/g,"/")}/batch`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
+            batch_outputFolderInput.value = window.userSettings.batchOutFolder
+
+            window.loadAllModels().then(() => window.changeGame(window.currentGame.join("-")))
+            saveUserSettings()
+        }
+    })
+})
 
 
 exports.saveUserSettings = saveUserSettings

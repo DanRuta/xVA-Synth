@@ -395,6 +395,16 @@ a {
  #infoContainer > .modal > .flexTable > div > div:last-child {
      width: 100%;
  }
+ #resetBtnsContainer {
+    display: flex;
+    justify-content: space-around;
+ }
+ #resetBtnsContainer > button {
+    width: 30%;
+ }
+
+
+
  /*Chrome*/
  #chrome {
      display: flex;
