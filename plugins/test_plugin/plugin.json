@@ -1,0 +1,77 @@
+{
+    "plugin-name": "Test plugin",
+    "plugin-version": "1.0",
+    "plugin-short-description": "A test plugin to develop the functionality",
+    "min-app-version": "1.0.0",
+    "max-app-version": null,
+    "install-requires-restart": false,
+    "uninstall-requires-restart": false,
+
+    "front-end-style-files": ["style1.css"],
+
+    "front-end-entry-file": {
+        "start": {
+            "pre": {
+                "file": "frontendPlugin.js",
+                "function": "preStartFn"
+            },
+            "post": {
+                "file": "frontendPlugin.js",
+                "function": "postStartFn"
+            }
+        },
+        "keep-sample": {
+            "pre": {
+                "file": "frontendPlugin.js",
+                "function": "preKeepSample"
+            },
+            "post": {
+                "file": "frontendPlugin.js",
+                "function": "postKeepSample"
+            }
+        }
+    },
+    "back-end-entry-file": {
+        "start": {
+            "pre": {
+                "file": null,
+                "function": "start_pre"
+            },
+            "post": {
+                "file": null,
+                "function": "start_post"
+            }
+        },
+        "load-model": {
+            "pre": {
+                "file": null,
+                "function": null
+            },
+            "post": {
+                "file": null,
+                "function": null
+            }
+        },
+        "synth-line": {
+            "pre": {
+                "file": null,
+                "function": null
+            },
+            "post": {
+                "file": null,
+                "function": null
+            }
+        },
+        "output-audio": {
+            "replace": false,
+            "pre": {
+                "file": "main.py",
+                "function": "output_audio_pre"
+            },
+            "post": {
+                "file": null,
+                "function": null
+            }
+        }
+    }
+}

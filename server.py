@@ -13,6 +13,11 @@ with open(f'{"./resources/app" if PROD else "."}/WAVEGLOW_LOADING', "w+") as f:
 with open(f'{"./resources/app" if PROD else "."}/SERVER_STARTING', "w+") as f:
     f.write("")
 
+
+
+
+# Imports and logger setup
+# ========================
 try:
     import numpy
     import pyinstaller_imports
@@ -23,9 +28,12 @@ try:
     from http.server import BaseHTTPRequestHandler, HTTPServer
     from python.audio_post import run_audio_post
 except:
+    print(traceback.format_exc())
     with open("./DEBUG_err_imports.txt", "w+") as f:
         f.write(traceback.format_exc())
 
+# Pyinstaller hack
+# ================
 try:
     def script_method(fn, _rcb=None):
         return fn
@@ -38,10 +46,7 @@ try:
 except:
     with open("./DEBUG_err_import_torch.txt", "w+") as f:
         f.write(traceback.format_exc())
-
-print("Start")
-
-fastpitch_model = 0
+# ================
 
 try:
     logger = logging.getLogger('serverLog')
@@ -56,18 +61,49 @@ try:
     logger.addHandler(fh)
     logger.addHandler(ch)
     logger.info("New session")
+
+    logger.orig_info = logger.info
+
+    def prefixed_log (msg):
+        logger.info(f'{logger.logging_prefix}{msg}')
+
+
+    def set_logger_prefix (prefix=""):
+        if len(prefix):
+            logger.logging_prefix = f'[{prefix}]: '
+            logger.log = prefixed_log
+        else:
+            logger.log = logger.orig_info
+
+    logger.set_logger_prefix = set_logger_prefix
+    logger.set_logger_prefix("")
+
 except:
     with open("./DEBUG_err_logger.txt", "w+") as f:
         f.write(traceback.format_exc())
+    try:
+        logger.info(traceback.format_exc())
+    except:
+        pass
+# ========================
+
+
 
 try:
-    import fastpitch
+    from plugins_manager import PluginManager
+    plugin_manager = PluginManager(PROD, CPU_ONLY, logger)
+    logger.info("Plugin manager loaded.")
 except:
-    print(traceback.format_exc())
+    logger.info("Plugin manager FAILED.")
     logger.info(traceback.format_exc())
+
+plugin_manager.run_plugins(plist=plugin_manager.plugins["start"]["pre"], event="pre start", data=None)
+
+
 
 
 # User settings
+# =============
 user_settings = {"use_gpu": not CPU_ONLY, "vocoder": "256_waveglow"}
 try:
     with open(f'{"./resources/app" if PROD else "."}/usersettings.csv', "r") as f:
@@ -91,16 +127,25 @@ def write_settings ():
 
 use_gpu = user_settings["use_gpu"]
 print(f'user_settings, {user_settings}')
+# =============
+
+
+# FastPitch setup
+# ===============
+fastpitch_model = 0
+try:
+    import fastpitch
+except:
+    print(traceback.format_exc())
+    logger.info(traceback.format_exc())
 try:
     fastpitch_model = fastpitch.init(PROD, use_gpu=use_gpu, vocoder=user_settings["vocoder"], logger=logger)
 except:
     print(traceback.format_exc())
     logger.info(traceback.format_exc())
+# ===============
 
 
-# Server
-with open("./DEBUG_start.txt", "w+") as f:
-    f.write("Starting")
 
 print("Models ready")
 logger.info("Models ready")
@@ -126,6 +171,11 @@ def setDevice (use_gpu):
 setDevice(user_settings["use_gpu"])
 
 
+
+
+# Server
+with open("./DEBUG_start.txt", "w+") as f:
+    f.write("Starting")
 class Handler(BaseHTTPRequestHandler):
     def _set_response(self):
         self.send_response(200)
@@ -150,9 +200,10 @@ class Handler(BaseHTTPRequestHandler):
 
             print("POST")
             print(self.path)
-            logger.info(post_data)
+
 
             if self.path == "/setVocoder":
+                logger.info(post_data)
                 vocoder = post_data["vocoder"]
                 user_settings["vocoder"] = vocoder
                 hifi_gan = "waveglow" not in vocoder
@@ -167,6 +218,7 @@ class Handler(BaseHTTPRequestHandler):
                     fastpitch_model = fastpitch.init_waveglow(use_gpu, fastpitch_model, vocoder, logger)
 
             if self.path == "/setDevice":
+                logger.info(post_data)
                 use_gpu = post_data["device"]=="gpu"
                 setDevice(use_gpu)
 
@@ -174,9 +226,12 @@ class Handler(BaseHTTPRequestHandler):
                 write_settings()
 
             if self.path == "/loadModel":
+                logger.info(post_data)
                 ckpt = post_data["model"]
                 n_speakers = post_data["model_speakers"] if "model_speakers" in post_data else None
+                plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["pre"], event="pre load-model", data=ckpt)
                 fastpitch_model = fastpitch.loadModel(fastpitch_model, ckpt=ckpt, n_speakers=n_speakers, device=fastpitch_model.device)
+                plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["post"], event="post load-model", data=ckpt)
 
             if self.path == "/synthesize":
                 text = post_data["sequence"]
@@ -189,8 +244,10 @@ class Handler(BaseHTTPRequestHandler):
                 pitch_data = [pitch, duration]
                 old_sequence = post_data["old_sequence"] if "old_sequence" in post_data else None
 
+                plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["pre"], event="pre synth-line", data=post_data)
                 req_response = fastpitch.infer(PROD, user_settings, text, out_path, fastpitch=fastpitch_model, vocoder=vocoder, \
                     speaker_i=speaker_i, pitch_data=pitch_data, logger=logger, pace=pace, old_sequence=old_sequence)
+                plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["post"], event="post synth-line", data=post_data)
 
             if self.path == "/synthesize_batch":
                 linesBatch = post_data["linesBatch"]
@@ -210,7 +267,24 @@ class Handler(BaseHTTPRequestHandler):
                 input_path = post_data["input_path"]
                 output_path = post_data["output_path"]
                 options = json.loads(post_data["options"])
+                # For plugins
+                extraInfo = {}
+                if "extraInfo" in post_data:
+                    extraInfo = json.loads(post_data["extraInfo"])
+                    extraInfo["audio_options"] = options
+                    extraInfo["input_path"] = input_path
+                    extraInfo["output_path"] = output_path
+
+                plugin_manager.run_plugins(plist=plugin_manager.plugins["output-audio"]["pre"], event="pre output-audio", data=extraInfo)
                 req_response = run_audio_post(logger, input_path, output_path, options)
+                plugin_manager.run_plugins(plist=plugin_manager.plugins["output-audio"]["post"], event="post output-audio", data=extraInfo)
+
+            if self.path == "/refreshPlugins":
+                status = plugin_manager.refresh_active_plugins()
+                logger.info("status")
+                logger.info(status)
+                req_response = ",".join(status)
+
 
             self._set_response()
             self.wfile.write(req_response.encode("utf-8"))
@@ -226,8 +300,6 @@ try:
     server = HTTPServer(("",8008), Handler)
     with open("./DEBUG_server_up.txt", "w+") as f:
         f.write("Starting")
-    print("Server ready")
-    logger.info("Server ready")
 except:
     with open("./DEBUG_server_error.txt", "w+") as f:
         f.write(traceback.format_exc())
@@ -238,7 +310,12 @@ except:
     logger.info(traceback.format_exc())
     pass
 try:
+    plugin_manager.run_plugins(plist=plugin_manager.plugins["start"]["post"], event="post start", data=None)
+    print("Server ready")
+    logger.info("Server ready")
     server.serve_forever()
+
+
 except KeyboardInterrupt:
     pass
 server.server_close()

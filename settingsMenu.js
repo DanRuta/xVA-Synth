@@ -27,6 +27,9 @@ window.userSettings = localStorage.getItem("userSettings") ||
         autoPlayGen: false,
         audio: {
             format: "wav"
+        },
+        plugins: {
+
         }
     }
 if ((typeof window.userSettings)=="string") {
@@ -88,6 +91,12 @@ if (!Object.keys(window.userSettings).includes("batch_batchSize")) { // For back
 }
 if (!Object.keys(window.userSettings).includes("autoPlayGen")) { // For backwards compatibility
     window.userSettings.autoPlayGen = true
+}
+if (!Object.keys(window.userSettings).includes("plugins")) { // For backwards compatibility
+    window.userSettings.plugins = {}
+}
+if (!Object.keys(window.userSettings.plugins).includes("loadOrder")) { // For backwards compatibility
+    window.userSettings.plugins.loadOrder = ""
 }
 
 const updateUIWithSettings = () => {

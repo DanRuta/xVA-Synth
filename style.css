@@ -275,7 +275,7 @@ a {
      opacity: 0.5;
  }
 
- #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer, #EULAContainer, #patreonContainer {
+ #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer, #EULAContainer, #patreonContainer, #pluginsContainer {
      display: flex;
      justify-content: center;
      align-items: center;
@@ -330,7 +330,7 @@ a {
      width: 25vw;
      text-align: center;
  }
- #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal, #patreonContainer > .modal {
+ #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal, #patreonContainer > .modal, #pluginsContainer > .modal {
      height: 65vh;
      width: 45vw;
      min-height: 500px;
@@ -340,6 +340,10 @@ a {
     height: 75vh;
     width: 85vw;
     min-height: 500px;
+    min-width: 500px;
+ }
+ #pluginsContainer > .modal {
+    width: 65vw;
     min-width: 500px;
  }
  .gameSelection {
@@ -635,7 +639,7 @@ a {
      width: 20px;
  }
 
- #settingsCog, #patreonIcon, #updatesIcon, #infoIcon, #batchIcon {
+ #settingsCog, #patreonIcon, #updatesIcon, #infoIcon, #batchIcon, #pluginsIcon {
      display: flex;
      position: fixed;
      z-index: 1000;
@@ -653,6 +657,10 @@ a {
  }
  #batchIcon {
     right: 125px;
+    top: 38px;
+ }
+ #pluginsIcon {
+    right: 155px;
     top: 38px;
  }
  #updatesContainer > div {
@@ -678,7 +686,7 @@ a {
     height: 30px !important;
     width: 30px;
  }
- #settingsCog > svg, #patreonIcon > img, #updatesIcon > svg, #infoIcon > svg, #batchIcon > svg {
+ #settingsCog > svg, #patreonIcon > img, #updatesIcon > svg, #infoIcon > svg, #batchIcon > svg, #pluginsIcon > svg {
      height: 25px;
      cursor: pointer;
      filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7))
@@ -735,7 +743,7 @@ a {
     flex-direction: column;
     align-items: center;
 }
-#batch_main {
+#batch_main, #plugins_main {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -744,6 +752,9 @@ a {
     background: rgb(75,75,75);
     color: gray;
     overflow: auto;
+}
+#plugins_main {
+    width: 60vw;
 }
 #batchDropZoneNote {
     font-size: 30pt;
@@ -791,38 +802,43 @@ a {
     text-shadow: 0 0 2px black;
     border: 1px solid white;
 }
-#batch_out_opts {
+#batch_out_opts, #plugins_opts {
     min-height: 45px;
 }
-#batch_out_opts, #batch_out_opts>span {
+#batch_out_opts, #batch_out_opts>span, #plugins_opts {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 5px;
 }
-#batchRecordsHeader {
+#batchRecordsHeader, #pluginsRecordsHeader {
     position: sticky;
     top: 0;
 }
-#batchRecordsHeader > div {
+#batchRecordsHeader > div, #pluginsRecordsHeader > div {
     background-color: rgb(75,75,75);
     box-shadow: 0 1px 5px 1px rgba(0,0,0,0.3);
     text-shadow: 0 0 2px black;
     font-weight: bold;
 }
-#batchRecordsHeader, #batchRecordsContainer > div {
+#pluginsRecordsContainer > div {
+    cursor: pointer;
+}
+#batchRecordsHeader, #batchRecordsContainer > div, #pluginsRecordsHeader, #pluginsRecordsContainer > div {
     width: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
 }
-#batchRecordsHeader > div, #batchRecordsContainer > div > div {
+#batchRecordsHeader > div, #batchRecordsContainer > div > div, #pluginsRecordsHeader > div, #pluginsRecordsContainer > div > div {
     padding: 2px;
     border: 1px solid;
     color: white;
     flex-grow: 1;
     height: 20px;
     text-overflow: ellipsis;
+}
+#batchRecordsHeader > div, #batchRecordsContainer > div > div {
     white-space: nowrap;
     overflow: hidden;
 }
@@ -867,4 +883,46 @@ a {
 #batchRecordsHeader > div:nth-child(8), #batchRecordsContainer > div > div:nth-child(8) {
     min-width: 50px;
     /*max-width: 50px;*/
+}
+
+/*PLUGINS*/
+/*Enabled*/
+#pluginsRecordsContainer > div > div:first-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#pluginsRecordsHeader > div:first-child, #pluginsRecordsContainer > div > div:first-child {
+    min-width: 65px;
+    max-width: 65px;
+}
+/*Load order*/
+#pluginsRecordsHeader > div:nth-child(2), #pluginsRecordsContainer > div > div:nth-child(2) {
+    min-width: 60px;
+    max-width: 60px;
+}
+/*Plugin name*/
+#pluginsRecordsHeader > div:nth-child(3), #pluginsRecordsContainer > div > div:nth-child(3) {
+    min-width: 200px;
+    max-width: 200px;
+}
+/*Version*/
+#pluginsRecordsHeader > div:nth-child(4), #pluginsRecordsContainer > div > div:nth-child(4) {
+    min-width: 60px;
+    max-width: 60px;
+}
+/*Type*/
+#pluginsRecordsHeader > div:nth-child(5), #pluginsRecordsContainer > div > div:nth-child(5) {
+    min-width: 60px;
+    max-width: 60px;
+}
+/*Plugin short descriptions*/
+#pluginsRecordsHeader > div:nth-child(6), #pluginsRecordsContainer > div > div:nth-child(6) {
+    min-width: 450px;
+    /*max-width: 450px;*/
+}
+/*Plugin ID*/
+#pluginsRecordsHeader > div:nth-child(7), #pluginsRecordsContainer > div > div:nth-child(7) {
+    min-width: 150px;
+    max-width: 150px;
 }

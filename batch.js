@@ -283,7 +283,6 @@ const preProcessCSVData = data => {
     batchDropZoneNote.style.display = "none"
     batchRecordsHeader.style.display = "flex"
     batch_clearBtn.style.display = "inline-block"
-    // batchRecordsHeader.style.backgroundColor = `#${window.currentGame[1]}`
     Array.from(batchRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${window.currentGame[1]}`)
 
     const availableGames = Object.keys(window.games)

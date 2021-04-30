@@ -15,6 +15,9 @@ const {xVAAppLogger} = require("./appLogger.js")
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 const {saveUserSettings, deleteFolderRecursive} = require("./settingsMenu.js")
 const {startBatch} = require("./batch.js")
+const {PluginsManager} = require("./plugins_manager.js")
+window.pluginsManager = new PluginsManager(window.path, window.appLogger)
+window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["start"]["pre"], event="pre start")
 
 let themeColour
 window.electronBrowserWindow = require("electron").remote.getCurrentWindow()
@@ -172,6 +175,9 @@ window.changeGame = (meta) => {
     try {
         Array.from(batchRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${window.currentGame[1]}`)
     } catch (e) {}
+    try {
+        Array.from(pluginsRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${window.currentGame[1]}`)
+    } catch (e) {}
 
     // Change the app title
     title.innerHTML = "Select Voice Type"
@@ -221,6 +227,7 @@ window.changeGame = (meta) => {
     }
     a {color: #${themeColour}};
     #batchRecordsHeader > div {background-color: #${themeColour} !important;}
+    #pluginsRecordsHeader > div {background-color: #${themeColour} !important;}
     `
 
     try {fs.mkdirSync(`${path}/output/${meta[0]}`)} catch (e) {/*Do nothing*/}
@@ -356,6 +363,8 @@ window.changeGame = (meta) => {
             }
 
             window.currentModel = model
+            window.currentModel.voiceId = voiceId
+            window.currentModel.voiceName = button.innerHTML
             window.currentModel.hifi = hifi
             window.currentModel.audioPreviewPath = audioPreviewPath
             window.currentModelButton = button
@@ -675,23 +684,47 @@ const saveFile = (from, to) => {
 
     try {fs.mkdirSync(containerFolderPath)} catch (e) {/*Do nothing*/}
 
+    // For plugins
+    const pluginData = {
+        game: window.currentGame[0],
+        voiceId: window.currentModel.voiceId,
+        voiceName: window.currentModel.voiceName,
+        inputSequence: window.pitchEditor.inputSequence,
+        letters: window.pitchEditor.letters,
+        pitch: window.pitchEditor.pitchNew,
+        durations: window.pitchEditor.dursNew,
+        vocoder: vocoder_select.value,
+        from, to
+    }
+    const options = {
+        hz: window.userSettings.audio.hz,
+        padStart: window.userSettings.audio.padStart,
+        padEnd: window.userSettings.audio.padEnd,
+        bit_depth: window.userSettings.audio.bitdepth,
+        amplitude: window.userSettings.audio.amplitude
+    }
+    pluginData.audioOptions = options
+    window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["pre"], event="pre keep-sample", pluginData)
+
     if (window.userSettings.audio.ffmpeg) {
         spinnerModal("Saving the audio file...")
-        const options = {
-            hz: window.userSettings.audio.hz,
-            padStart: window.userSettings.audio.padStart,
-            padEnd: window.userSettings.audio.padEnd,
-            bit_depth: window.userSettings.audio.bitdepth,
-            amplitude: window.userSettings.audio.amplitude
-        }
 
         console.log(`About to save file from ${from} to ${to} with options: ${JSON.stringify(options)}`)
         window.appLogger.log(`About to save file from ${from} to ${to} with options: ${JSON.stringify(options)}`)
+
+
+        const extraInfo = {
+            game: window.currentGame[0],
+            voiceId: window.currentModel.voiceId,
+            voiceName: window.currentModel.voiceName
+        }
+
         fetch(`http://localhost:8008/outputAudio`, {
             method: "Post",
             body: JSON.stringify({
                 input_path: from,
                 output_path: to,
+                extraInfo: JSON.stringify(pluginData),
                 options: JSON.stringify(options)
             })
         }).then(r=>r.text()).then(res => {
@@ -702,6 +735,7 @@ const saveFile = (from, to) => {
                 } else {
                     fs.writeFileSync(`${to}.json`, JSON.stringify({inputSequence: dialogueInput.value.trim(), pitchEditor: window.pitchEditor, pacing: parseFloat(pace_slid.value)}, null, 4))
                     voiceSamples.appendChild(makeSample(to, true))
+                    window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["post"], event="post keep-sample", pluginData)
                 }
             })
         }).catch(res => {
@@ -719,6 +753,7 @@ const saveFile = (from, to) => {
             }
             fs.writeFileSync(`${to}.json`, JSON.stringify({inputSequence: dialogueInput.value.trim(), pitchEditor: window.pitchEditor, pacing: parseFloat(pace_slid.value)}, null, 4))
             voiceSamples.appendChild(makeSample(to, true))
+            window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["post"], event="post keep-sample", pluginData)
         })
     }
 }
@@ -868,7 +903,7 @@ const createModal = (type, message) => {
 }
 window.closeModal = (container=undefined, notThisOne=undefined) => {
     return new Promise(resolve => {
-        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, container, modalContainer]
+        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, container, pluginsContainer, modalContainer]
         const containers = container==undefined ? allContainers : [container]
         containers.forEach(cont => {
             if ((notThisOne!=undefined&&notThisOne!=cont) && (notThisOne==undefined || notThisOne!=cont) && cont!=undefined) {
@@ -898,6 +933,7 @@ window.closeModal = (container=undefined, notThisOne=undefined) => {
 
 let startingSplashInterval
 let loadingStage = 0
+let hasRunPostStartPlugins = false
 startingSplashInterval = setInterval(() => {
     if (fs.existsSync(`${path}/FASTPITCH_LOADING`)) {
         if (loadingStage==0) {
@@ -917,6 +953,10 @@ startingSplashInterval = setInterval(() => {
     } else {
         closeModal().then(() => {
             clearInterval(startingSplashInterval)
+            if (!hasRunPostStartPlugins) {
+                hasRunPostStartPlugins = true
+                window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["start"]["post"], event="post start")
+            }
         })
     }
 }, 100)
@@ -1715,6 +1755,26 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
 })
 
 
+
+
+
+// Plugins
+// =======
+pluginsIcon.addEventListener("click", () => {
+    closeModal(undefined, pluginsContainer).then(() => {
+        pluginsContainer.style.opacity = 0
+        pluginsContainer.style.display = "flex"
+        chrome.style.opacity = 0.88
+        requestAnimationFrame(() => requestAnimationFrame(() => pluginsContainer.style.opacity = 1))
+        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
+    })
+})
+pluginsContainer.addEventListener("click", event => {
+    if (event.target==pluginsContainer) {
+        window.closeModal(pluginsContainer)
+    }
+})
+// =======
 
 
 
