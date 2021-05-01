@@ -23,7 +23,7 @@ const postKeepSample = (window, data) => {
 // Optional
 // =======
 const setup = () => {
-    window.appLogger.log("setup")
+    window.appLogger.log(`Setting up plugin. App version: ${window.appVersion}`)
     console.log("setup")
 }
 // =======

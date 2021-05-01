@@ -3,13 +3,13 @@
     "plugin-version": "1.0",
     "plugin-short-description": "A test plugin to develop the functionality",
     "min-app-version": "1.0.0",
-    "max-app-version": null,
+    "max-app-version": "1.4.0",
     "install-requires-restart": false,
-    "uninstall-requires-restart": false,
+    "uninstall-requires-restart": true,
 
     "front-end-style-files": ["style1.css"],
 
-    "front-end-entry-file": {
+    "front-end-hooks": {
         "start": {
             "pre": {
                 "file": "frontendPlugin.js",
@@ -31,10 +31,10 @@
             }
         }
     },
-    "back-end-entry-file": {
+    "back-end-hooks": {
         "start": {
             "pre": {
-                "file": null,
+                "file": "start.py",
                 "function": "start_pre"
             },
             "post": {

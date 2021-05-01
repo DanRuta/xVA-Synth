@@ -130,8 +130,8 @@ class PluginsManager {
             record.appendChild(createElem("div", `${pi}`))
             record.appendChild(createElem("div", pluginData["plugin-name"]))
 
-            const hasBackendScript = !!Object.keys(pluginData["back-end-entry-file"]).find(key => pluginData["back-end-entry-file"][key]["pre"]["file"] || pluginData["back-end-entry-file"][key]["post"]["file"])
-            const hasFrontendScript = !!pluginData["front-end-entry-file"]
+            const hasBackendScript = !!Object.keys(pluginData["back-end-hooks"]).find(key => pluginData["back-end-hooks"][key]["pre"]["file"] || pluginData["back-end-hooks"][key]["post"]["file"])
+            const hasFrontendScript = !!pluginData["front-end-hooks"]
             const type =  hasFrontendScript && hasBackendScript ? "Both": (!hasFrontendScript && !hasBackendScript ? "None" : (hasFrontendScript ? "Front" : "Back"))
 
             // console.log(pluginId, pluginData)
@@ -270,10 +270,10 @@ class PluginsManager {
 
     loadModuleFns (pluginId, pluginData, task, hookTime) {
         try {
-            if (Object.keys(pluginData).includes("front-end-entry-file") && Object.keys(pluginData["front-end-entry-file"]).includes(task) && Object.keys(pluginData["front-end-entry-file"][task]).includes(hookTime) ) {
+            if (Object.keys(pluginData).includes("front-end-hooks") && Object.keys(pluginData["front-end-hooks"]).includes(task) && Object.keys(pluginData["front-end-hooks"][task]).includes(hookTime) ) {
 
-                const file = pluginData["front-end-entry-file"][task][hookTime]["file"]
-                const functionName = pluginData["front-end-entry-file"][task][hookTime]["function"]
+                const file = pluginData["front-end-hooks"][task][hookTime]["file"]
+                const functionName = pluginData["front-end-hooks"][task][hookTime]["function"]
 
                 if (!file.endsWith(".js")) {
                     window.appLogger.log(`[Plugin: ${pluginId}]: Cannot import ${file} file for ${hookTime} ${task} entry-point: Only JavaScript files are supported right now.`)

@@ -1,5 +1,7 @@
-logger = setup["logger"]
-isCPUonly = setup["isCPUonly"]
+logger = setupData["logger"]
+isDev = setupData["isDev"]
+isCPUonly = setupData["isCPUonly"]
+appVersion = setupData["appVersion"]
 
 def output_audio_pre(data=None):
     global logger, isCPUonly
@@ -45,7 +47,7 @@ def output_audio_pre(data=None):
 # OPTIONAL
 # ========
 def setup(data=None):
-    logger.log(f'Setting up plugin.')
+    logger.log(f'Setting up plugin. App version: {data["appVersion"]} | CPU only: {data["isCPUonly"]} | Development mode: {data["isDev"]}')
 # ========
 
 

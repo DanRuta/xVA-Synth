@@ -58,14 +58,14 @@ class PluginManager(object):
                         if not minVersionOk or not maxVersionOk:
                             continue
 
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-entry-file", "start", "pre"], [])
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-entry-file", "start", "post"], [])
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-entry-file", "load-model", "pre"], [])
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-entry-file", "load-model", "post"], [])
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-entry-file", "synth-line", "pre"], [])
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-entry-file", "synth-line", "post"], [])
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-entry-file", "output-audio", "pre"], [])
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-entry-file", "output-audio", "post"], [])
+                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "start", "pre"], [])
+                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "start", "post"], [])
+                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "load-model", "pre"], [])
+                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "load-model", "post"], [])
+                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "synth-line", "pre"], [])
+                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "synth-line", "post"], [])
+                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "output-audio", "pre"], [])
+                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "output-audio", "post"], [])
 
                     status.append("OK")
                 except:

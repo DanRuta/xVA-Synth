@@ -1,5 +1,5 @@
-logger = setup["logger"]
-isCPUonly = setup["isCPUonly"]
+logger = setupData["logger"]
+isCPUonly = setupData["isCPUonly"]
 
 
 def start_pre(data=None):
