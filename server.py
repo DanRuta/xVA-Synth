@@ -1,7 +1,9 @@
 import os
 import traceback
 
-PROD = (not (os.getcwd() == "F:\\Speech\\xVA-Synth") and "Plan.todo" in os.getcwd())
+APP_VERSION = "1.3.7"
+
+PROD = False
 # PROD = True
 CPU_ONLY = False
 CPU_ONLY = True
@@ -91,7 +93,7 @@ except:
 
 try:
     from plugins_manager import PluginManager
-    plugin_manager = PluginManager(PROD, CPU_ONLY, logger)
+    plugin_manager = PluginManager(APP_VERSION, PROD, CPU_ONLY, logger)
     logger.info("Plugin manager loaded.")
 except:
     logger.info("Plugin manager FAILED.")

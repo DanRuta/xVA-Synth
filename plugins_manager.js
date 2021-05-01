@@ -4,9 +4,10 @@ const fs = require("fs")
 
 class PluginsManager {
 
-    constructor (path, appLogger) {
+    constructor (path, appLogger, appVersion) {
 
         this.path = path
+        this.appVersion = appVersion
         this.appLogger = appLogger
         this.plugins = []
         this.selectedPlugin = undefined
@@ -83,7 +84,11 @@ class PluginsManager {
             pluginIDs.forEach(pluginId => {
                 try {
                     const pluginData = JSON.parse(fs.readFileSync(`${this.path}/plugins/${pluginId}/plugin.json`))
-                    plugins.push([pluginId, pluginData, false])
+
+                    const minVersionOk = checkVersionRequirements(pluginData["min-app-version"], this.appVersion)
+                    const maxVersionOk = checkVersionRequirements(pluginData["max-app-version"], this.appVersion, true)
+
+                    plugins.push([pluginId, pluginData, false, minVersionOk, maxVersionOk])
 
                 } catch (e) {
                     this.appLogger.log(`Error loading plugin ${pluginId}: ${e}`)
@@ -117,7 +122,7 @@ class PluginsManager {
     updateUI () {
         pluginsRecordsContainer.innerHTML = ""
 
-        this.plugins.forEach(([pluginId, pluginData, isEnabled], pi) => {
+        this.plugins.forEach(([pluginId, pluginData, isEnabled, minVersionOk, maxVersionOk], pi) => {
             const record = createElem("div")
             const enabledCkbx = createElem("input", {type: "checkbox"})
             enabledCkbx.checked = isEnabled
@@ -133,6 +138,24 @@ class PluginsManager {
 
             record.appendChild(createElem("div", pluginData["plugin-version"]))
             record.appendChild(createElem("div", type))
+            // Min app version requirement
+            const minAppVersionElem = createElem("div", pluginData["min-app-version"])
+            record.appendChild(minAppVersionElem)
+            if (pluginData["min-app-version"] && !minVersionOk) {
+                minAppVersionElem.style.color = "red"
+                enabledCkbx.checked = false
+                enabledCkbx.disabled = true
+            }
+
+            // Max app version requirement
+            const maxAppVersionElem = createElem("div", pluginData["max-app-version"])
+            record.appendChild(maxAppVersionElem)
+            if (pluginData["max-app-version"] && !maxVersionOk) {
+                maxAppVersionElem.style.color = "red"
+                enabledCkbx.checked = false
+                enabledCkbx.disabled = true
+            }
+
             record.appendChild(createElem("div", pluginData["plugin-short-description"]))
             record.appendChild(createElem("div", pluginId))
             pluginsRecordsContainer.appendChild(record)
@@ -282,6 +305,60 @@ class PluginsManager {
 
 }
 
+const checkVersionRequirements = (requirements, appVersion, checkMax=false) => {
+
+    if (!requirements) {
+        return true
+    }
+
+    const appVersionRequirement = requirements.toString().split(".").map(v=>parseInt(v))
+    const appVersionInts = appVersion.replace("v", "").split(".").map(v=>parseInt(v))
+    let appVersionOk = true
+
+    if (checkMax) {
+
+        if (appVersionRequirement[0] >= appVersionInts[0] ) {
+            if (appVersionRequirement.length>1 && parseInt(appVersionRequirement[0]) == appVersionInts[0]) {
+                if (appVersionRequirement[1] >= appVersionInts[1] ) {
+                    if (appVersionRequirement.length>2 && parseInt(appVersionRequirement[1]) == appVersionInts[1]) {
+                        if (appVersionRequirement[2] >= appVersionInts[2] ) {
+                        } else {
+                            appVersionOk = false
+                        }
+                    }
+                } else {
+                    appVersionOk = false
+                }
+            }
+        } else {
+            appVersionOk = false
+        }
+
+
+    } else {
+        if (appVersionRequirement[0] <= appVersionInts[0] ) {
+            if (appVersionRequirement.length>1 && parseInt(appVersionRequirement[0]) == appVersionInts[0]) {
+                if (appVersionRequirement[1] <= appVersionInts[1] ) {
+                    if (appVersionRequirement.length>2 && parseInt(appVersionRequirement[1]) == appVersionInts[1]) {
+                        if (appVersionRequirement[2] <= appVersionInts[2] ) {
+                        } else {
+                            appVersionOk = false
+                        }
+                    }
+                } else {
+                    appVersionOk = false
+                }
+            }
+        } else {
+            appVersionOk = false
+        }
+    }
+
+
+
+
+    return appVersionOk
+}
 
 
 exports.PluginsManager = PluginsManager

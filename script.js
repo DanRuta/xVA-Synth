@@ -16,7 +16,7 @@ window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 const {saveUserSettings, deleteFolderRecursive} = require("./settingsMenu.js")
 const {startBatch} = require("./batch.js")
 const {PluginsManager} = require("./plugins_manager.js")
-window.pluginsManager = new PluginsManager(window.path, window.appLogger)
+window.pluginsManager = new PluginsManager(window.path, window.appLogger, window.appVersion)
 window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["start"]["pre"], event="pre start")
 
 let themeColour

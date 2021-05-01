@@ -1,11 +1,13 @@
 import json
 import traceback
 
+
 class PluginManager(object):
 
-    def __init__(self, PROD, CPU_ONLY, logger):
+    def __init__(self, APP_VERSION, PROD, CPU_ONLY, logger):
         super(PluginManager, self).__init__()
 
+        self.APP_VERSION = APP_VERSION
         self.CPU_ONLY = CPU_ONLY
         self.path = "./resources/app" if PROD else "."
         self.modules_path = "resources.app." if PROD else ""
@@ -49,6 +51,12 @@ class PluginManager(object):
                     with open(f'{self.path}/plugins/{plugin_id}/plugin.json') as f:
                         plugin_json = f.read()
                         plugin_json = json.loads(plugin_json)
+
+                        minVersionOk = checkVersionRequirements(plugin_json["min-app-version"] if "min-app-version" in plugin_json else None, self.APP_VERSION)
+                        maxVersionOk = checkVersionRequirements(plugin_json["max-app-version"] if "max-app-version" in plugin_json else None, self.APP_VERSION, True)
+
+                        if not minVersionOk or not maxVersionOk:
+                            continue
 
                         self.load_module_function(plugin_json, plugin_id, ["back-end-entry-file", "start", "pre"], [])
                         self.load_module_function(plugin_json, plugin_id, ["back-end-entry-file", "start", "post"], [])
@@ -117,3 +125,45 @@ class PluginManager(object):
             except:
                 self.logger.info(f'[Plugin run error at event "{event}": {plugin_name}]')
                 self.logger.info(traceback.format_exc())
+
+
+def checkVersionRequirements (requirements, appVersion, checkMax=False):
+
+    if not requirements:
+        return True
+
+    appVersionRequirement = [int(val) for val in str(requirements).split(".")]
+    appVersionInts = [int(val) for val in str(appVersion).split(".")]
+    appVersionOk = True
+
+    if checkMax:
+
+        if appVersionRequirement[0] >= appVersionInts[0]:
+            if len(appVersionRequirement)>1 and int(appVersionRequirement[0])==appVersionInts[0]:
+                if appVersionRequirement[1] >= appVersionInts[1]:
+                    if len(appVersionRequirement)>2 and int(appVersionRequirement[1])==appVersionInts[1]:
+                        if appVersionRequirement[2] >= appVersionInts[2]:
+                            pass
+                        else:
+                            appVersion = False
+                else:
+                    appVersionOk = False
+        else:
+            appVersionOk = False
+
+    else:
+
+        if appVersionRequirement[0] <= appVersionInts[0]:
+            if len(appVersionRequirement)>1 and int(appVersionRequirement[0])==appVersionInts[0]:
+                if appVersionRequirement[1] <= appVersionInts[1]:
+                    if len(appVersionRequirement)>2 and int(appVersionRequirement[1])==appVersionInts[1]:
+                        if appVersionRequirement[2] <= appVersionInts[2]:
+                            pass
+                        else:
+                            appVersion = False
+                else:
+                    appVersionOk = False
+        else:
+            appVersionOk = False
+
+    return appVersionOk
