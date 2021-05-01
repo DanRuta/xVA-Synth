@@ -9,6 +9,7 @@ class PluginManager(object):
 
         self.APP_VERSION = APP_VERSION
         self.CPU_ONLY = CPU_ONLY
+        self.PROD = PROD
         self.path = "./resources/app" if PROD else "."
         self.modules_path = "resources.app." if PROD else ""
         self.logger = logger
@@ -91,19 +92,18 @@ class PluginManager(object):
                     return
 
                 if file_name.endswith(".py"):
+                    setup = {"logger": self.logger, "appVersion": self.APP_VERSION, "isCPUonly": self.CPU_ONLY, "isDev": not self.PROD}
+
                     def register_function(fn):
                         if fn.__name__==function:
                             self.plugins[structure2[-2]][structure2[-1]].append([plugin_name, file_name, fn])
                         elif fn.__name__=="setup":
                             if f'{plugin_name}/{file_name}' not in self.setupModules:
                                 self.setupModules.add(f'{plugin_name}/{file_name}')
-                                fn()
-
-
-                    setup = {"logger": self.logger, "isCPUonly": self.CPU_ONLY}
+                                fn(setup)
 
                     exec(open(f'{self.path}/plugins/{plugin_name}/{file_name}').read(), None, {
-                        "setup": setup,
+                        "setupData": setup,
                         "plugins": self.plugins,
                         "register_function": register_function
                     })
