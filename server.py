@@ -176,8 +176,6 @@ setDevice(user_settings["use_gpu"])
 
 
 # Server
-with open("./DEBUG_start.txt", "w+") as f:
-    f.write("Starting")
 class Handler(BaseHTTPRequestHandler):
     def _set_response(self):
         self.send_response(200)
@@ -300,8 +298,6 @@ class Handler(BaseHTTPRequestHandler):
 
 try:
     server = HTTPServer(("",8008), Handler)
-    with open("./DEBUG_server_up.txt", "w+") as f:
-        f.write("Starting")
 except:
     with open("./DEBUG_server_error.txt", "w+") as f:
         f.write(traceback.format_exc())

@@ -6,7 +6,7 @@ class PluginsManager {
 
     constructor (path, appLogger, appVersion) {
 
-        this.path = path
+        this.path = `${__dirname.replace(/\\/g,"/")}${path.slice(1, 100000)}`
         this.appVersion = appVersion
         this.appLogger = appLogger
         this.plugins = []
@@ -281,7 +281,7 @@ class PluginsManager {
                 }
 
                 if (file && functionName) {
-                    const module = require(`${self.path}/plugins/${pluginId}/${file}`)
+                    const module = require(`${this.path}/plugins/${pluginId}/${file}`)
 
                     if (module.setup && !this.setupModules.has(`${pluginId}/${file}`)) {
                         window.appLogger.setPrefix(pluginId)
