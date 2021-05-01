@@ -92,6 +92,9 @@ if (!Object.keys(window.userSettings).includes("batch_batchSize")) { // For back
 if (!Object.keys(window.userSettings).includes("autoPlayGen")) { // For backwards compatibility
     window.userSettings.autoPlayGen = true
 }
+if (!Object.keys(window.userSettings).includes("outputJSON")) { // For backwards compatibility
+    window.userSettings.outputJSON = true
+}
 if (!Object.keys(window.userSettings).includes("plugins")) { // For backwards compatibility
     window.userSettings.plugins = {}
 }
@@ -108,6 +111,8 @@ const updateUIWithSettings = () => {
     setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
     setting_darkprompt.checked = window.userSettings.darkPrompt
     setting_areload_voices.checked = window.userSettings.autoReloadVoices
+    setting_output_json.checked = window.userSettings.outputJSON
+
     setting_batch_fastmode.checked = window.userSettings.batch_fastMode
     setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
     setting_audio_format.value = window.userSettings.audio.format
@@ -169,7 +174,10 @@ setting_areload_voices.addEventListener("click", () => {
     window.userSettings.autoReloadVoices = setting_areload_voices.checked
     saveUserSettings()
 })
-setting_areload_voices.checked = window.userSettings.autoReloadVoices
+setting_output_json.addEventListener("click", () => {
+    window.userSettings.outputJSON = setting_output_json.checked
+    saveUserSettings()
+})
 
 const setTheme = () => {
     if (window.userSettings.darkPrompt) {
