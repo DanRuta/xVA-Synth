@@ -334,7 +334,7 @@ a {
      height: 65vh;
      width: 45vw;
      min-height: 500px;
-     min-width: 500px;
+     min-width: 750px;
  }
  #gameSelectionContainer > .modal, #batchGenerationContainer > .modal, #EULAContainer > .modal {
     height: 75vh;
@@ -395,6 +395,8 @@ a {
  #settingsOptionsContainer {
      flex-grow: 1;
      width: 85%;
+     overflow-y: auto;
+     overflow-x: hidden;
  }
  #infoContainer > .modal > .flexTable > div > div:last-child {
      width: 100%;
@@ -603,6 +605,7 @@ a {
      justify-content: space-between;
      align-items: center;
      width: 100%;
+     min-height: 35px;
  }
 
  .flexTable > div > div > input {
@@ -941,4 +944,14 @@ a {
 #pluginsRecordsHeader > div:nth-child(9), #pluginsRecordsContainer > div > div:nth-child(9) {
     min-width: 150px;
     max-width: 150px;
+}
+
+
+
+
+
+@media screen and (max-width: 1300px) {
+    #letterLength {
+        width: 50px;
+    }
 }
