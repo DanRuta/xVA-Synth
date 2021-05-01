@@ -200,6 +200,11 @@ class PluginsManager {
     }
 
     apply () {
+
+        const enabledPlugins = this.plugins.filter(([pluginId, pluginData, isEnabled]) => isEnabled).map(([pluginId, pluginData, isEnabled]) => pluginId)
+        const newPlugins = enabledPlugins.filter(pluginId => !window.userSettings.plugins.loadOrder.includes(`*${pluginId}`))
+        const removedPlugins = window.userSettings.plugins.loadOrder.split(",").filter(pluginId => pluginId.startsWith("*") && !enabledPlugins.includes(pluginId.slice(1, 100000)) ).map(pluginId => pluginId.slice(1, 100000))
+
         this.savePlugins()
         this.resetModules()
         this.loadModules()
@@ -224,6 +229,14 @@ class PluginsManager {
 
             if (!status.length || successful.length==0 && failed.length==0) {
                 message = "Sucess. No plugins active."
+            }
+
+            const restartRequired = newPlugins.map(newPluginId => this.plugins.find(([pluginId, pluginData, isEnabled]) => pluginId==newPluginId))
+                                              .filter(([pluginId, pluginData, isEnabled]) => !!pluginData["install-requires-restart"]).length +
+                                    removedPlugins.map(removedPluginId => this.plugins.find(([pluginId, pluginData, isEnabled]) => pluginId==removedPluginId))
+                                              .filter(([pluginId, pluginData, isEnabled]) => !!pluginData["uninstall-requires-restart"]).length
+            if (restartRequired) {
+                message += "<br><br> App restart is required for at least one of the plugins to take effect."
             }
 
             window.errorModal(message)
