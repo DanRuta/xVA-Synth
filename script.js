@@ -15,12 +15,13 @@ const {xVAAppLogger} = require("./appLogger.js")
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 const {saveUserSettings, deleteFolderRecursive} = require("./settingsMenu.js")
 const {startBatch} = require("./batch.js")
+window.electronBrowserWindow = require("electron").remote.getCurrentWindow()
+
 const {PluginsManager} = require("./plugins_manager.js")
 window.pluginsManager = new PluginsManager(window.path, window.appLogger, window.appVersion)
 window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["start"]["pre"], event="pre start")
 
 let themeColour
-window.electronBrowserWindow = require("electron").remote.getCurrentWindow()
 const oldCError = console.error
 console.error = (data) => {
     window.appLogger.log(data)
