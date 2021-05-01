@@ -549,22 +549,20 @@ generateVoiceButton.addEventListener("click", () => {
             method: "Post",
             body: generateVoiceButton.dataset.modelQuery
         }).then(r=>r.text()).then(res => {
-            closeModal().then(() => {
-                generateVoiceButton.dataset.modelQuery = null
-                generateVoiceButton.innerHTML = "Generate Voice"
-                generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
+            generateVoiceButton.dataset.modelQuery = null
+            generateVoiceButton.innerHTML = "Generate Voice"
+            generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
 
-                if (window.userSettings.defaultToHiFi && window.currentModel.hifi) {
-                    vocoder_select.value = Array.from(vocoder_select.children).find(opt => opt.innerHTML=="Bespoke HiFi GAN").value
-                    changeVocoder(vocoder_select.value)
-                } else if (window.userSettings.vocoder.includes(".hg.pt")) {
-                    changeVocoder("qnd")
-                }
-            })
+            if (window.userSettings.defaultToHiFi && window.currentModel.hifi) {
+                vocoder_select.value = Array.from(vocoder_select.children).find(opt => opt.innerHTML=="Bespoke HiFi GAN").value
+                changeVocoder(vocoder_select.value)
+            } else if (window.userSettings.vocoder.includes(".hg.pt")) {
+                changeVocoder("qnd")
+            }
         }).catch(e => {
             console.log(e)
             if (e.code =="ENOENT") {
-                closeModal().then(() => {
+                closeModal(null, modalContainer).then(() => {
                     createModal("error", "There was an issue connecting to the python server.<br><br>Try again in a few seconds. If the issue persists, make sure localhost port 8008 is free, or send the server.log file to me on GitHub or Nexus.")
                 })
             }
