@@ -16,6 +16,8 @@ window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 const {saveUserSettings, deleteFolderRecursive} = require("./settingsMenu.js")
 const {startBatch} = require("./batch.js")
 window.electronBrowserWindow = require("electron").remote.getCurrentWindow()
+const child = require("child_process").execFile
+const spawn = require("child_process").spawn
 
 const {PluginsManager} = require("./plugins_manager.js")
 window.pluginsManager = new PluginsManager(window.path, window.appLogger, window.appVersion)
@@ -499,6 +501,34 @@ const makeSample = (src, newSample) => {
         })
     })
 
+    const editInProgramButton = createElem("div", {title: "Edit in external program"})
+    editInProgramButton.innerHTML = `<svg class="renameSVG" version="1.0" width="175.000000pt" height="240.000000pt" viewBox="0 0 175.000000 240.000000"  preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,240.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none"><path d="M615 2265 l-129 -125 -68 0 c-95 0 -98 -4 -98 -150 0 -146 3 -150 98 -150 l68 0 129 -125 c128 -123 165 -145 179 -109 8 20 8 748 0 768 -14 36 -51 14 -179 -109z"/> <path d="M1016 2344 c-22 -21 -20 -30 10 -51 66 -45 126 -109 151 -162 22 -47 27 -69 27 -141 0 -72 -5 -94 -27 -141 -25 -53 -85 -117 -151 -162 -30 -20 -33 -39 -11 -57 22 -18 64 3 132 64 192 173 164 491 -54 636 -54 35 -56 35 -77 14z"/> <path d="M926 2235 c-8 -22 1 -37 46 -70 73 -53 104 -149 78 -241 -13 -44 -50 -92 -108 -136 -26 -21 -27 -31 -6 -52 37 -38 150 68 179 167 27 91 13 181 -41 259 -49 70 -133 112 -148 73z"/> <path d="M834 2115 c-9 -23 2 -42 33 -57 53 -25 56 -108 4 -134 -35 -18 -44 -30 -36 -53 8 -25 34 -27 76 -6 92 48 92 202 0 250 -38 19 -70 19 -77 0z"/> <path d="M1381 1853 c-33 -47 -182 -253 -264 -364 -100 -137 -187 -262 -187 -270 0 -8 140 -204 177 -249 5 -6 41 41 109 141 30 45 60 86 65 93 48 54 197 276 226 336 33 68 37 83 37 160 1 71 -3 93 -23 130 -53 101 -82 106 -140 23z"/> <path d="M211 1861 c-56 -60 -68 -184 -27 -283 15 -38 106 -168 260 -371 130 -173 236 -320 236 -328 0 -8 -9 -25 -20 -39 -11 -14 -20 -29 -20 -33 0 -5 -10 -23 -23 -40 -12 -18 -27 -41 -33 -52 -13 -24 -65 -114 -80 -138 -10 -17 -13 -16 -60 7 -98 49 -209 43 -305 -17 -83 -51 -129 -141 -129 -251 0 -161 115 -283 275 -294 101 -6 173 22 243 96 56 58 79 97 133 227 46 112 101 203 164 274 l53 60 42 -45 c27 -29 69 -103 124 -217 86 -176 133 -250 197 -306 157 -136 405 -73 478 123 37 101 21 202 -46 290 -91 118 -275 147 -402 63 -30 -20 -42 -23 -49 -14 -5 7 -48 82 -96 167 -47 85 -123 202 -168 260 -45 58 -111 143 -146 190 -85 110 -251 326 -321 416 -31 40 -65 84 -76 100 -11 15 -35 46 -54 68 -19 23 -45 58 -59 79 -30 45 -54 47 -91 8z m653 -943 c20 -28 20 -33 0 -52 -42 -43 -109 10 -69 54 24 26 50 25 69 -2z m653 -434 c49 -20 87 -85 87 -149 -2 -135 -144 -209 -257 -134 -124 82 -89 265 58 299 33 8 64 4 112 -16z m-1126 -20 c47 -24 73 -71 77 -139 3 -50 0 -65 -20 -94 -34 -50 -71 -73 -125 -78 -99 -9 -173 53 -181 152 -11 135 126 223 249 159z"/></g></svg>`
+    editInProgramButton.addEventListener("click", () => {
+
+        if (window.userSettings.externalAudioEditor && window.userSettings.externalAudioEditor.length) {
+            const fileName = audio.children[0].src.split("file:///")[1].split("%20").join(" ")
+            const sp = spawn(window.userSettings.externalAudioEditor, [fileName], {'detached': true}, (err, data) => {
+                if (err) {
+                    console.log(err)
+                    console.log(err.message)
+                    window.errorModal(err.message)
+                }
+            })
+
+            sp.on("error", err => {
+                if (err.message.includes("ENOENT")) {
+                    window.errorModal(`The following program path is not valid:<br><br> ${window.userSettings.externalAudioEditor}`)
+                } else {
+                    window.errorModal(err.message)
+                }
+            })
+
+        } else {
+            window.errorModal("Specify your audio editing tool in the settings")
+        }
+    })
+
+
     const deleteFileButton = createElem("div", {title: "Delete file"})
     deleteFileButton.innerHTML = "&#10060;"
     deleteFileButton.addEventListener("click", () => {
@@ -515,6 +545,7 @@ const makeSample = (src, newSample) => {
     })
     audioControls.appendChild(renameButton)
     audioControls.appendChild(audio)
+    audioControls.appendChild(editInProgramButton)
     audioControls.appendChild(openFileLocationButton)
     audioControls.appendChild(deleteFileButton)
     sample.appendChild(audioControls)

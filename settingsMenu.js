@@ -101,6 +101,9 @@ if (!Object.keys(window.userSettings).includes("plugins")) { // For backwards co
 if (!Object.keys(window.userSettings.plugins).includes("loadOrder")) { // For backwards compatibility
     window.userSettings.plugins.loadOrder = ""
 }
+if (!Object.keys(window.userSettings).includes("externalAudioEditor")) { // For backwards compatibility
+    window.userSettings.setting_external_audio_editor = ""
+}
 
 const updateUIWithSettings = () => {
     useGPUCbx.checked = window.userSettings.useGPU
@@ -113,7 +116,7 @@ const updateUIWithSettings = () => {
     setting_areload_voices.checked = window.userSettings.autoReloadVoices
     setting_output_json.checked = window.userSettings.outputJSON
 
-    setting_batch_fastmode.checked = window.userSettings.batch_fastMode
+    setting_external_audio_editor.value = window.userSettings.externalAudioEditor
     setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
     setting_audio_format.value = window.userSettings.audio.format
     setting_audio_hz.value = window.userSettings.audio.hz
@@ -121,6 +124,8 @@ const updateUIWithSettings = () => {
     setting_audio_pad_end.value = window.userSettings.audio.padEnd
     setting_audio_bitdepth.value = window.userSettings.audio.bitdepth
     setting_audio_amplitude.value = window.userSettings.audio.amplitude
+
+    setting_batch_fastmode.checked = window.userSettings.batch_fastMode
 
     batch_batchSizeInput.value = parseInt(window.userSettings.batch_batchSize)
     batch_skipExisting.checked = window.userSettings.batch_skipExisting
@@ -199,6 +204,10 @@ setting_batch_fastmode.addEventListener("click", () => {
     saveUserSettings()
 })
 
+setting_external_audio_editor.addEventListener("change", () => {
+    window.userSettings.externalAudioEditor = setting_external_audio_editor.value
+    saveUserSettings()
+})
 setting_audio_ffmpeg.addEventListener("click", () => {
     window.userSettings.audio.ffmpeg = setting_audio_ffmpeg.checked
     setting_audio_format.disabled = !window.userSettings.audio.ffmpeg
