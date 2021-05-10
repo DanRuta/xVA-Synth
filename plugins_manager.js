@@ -131,7 +131,9 @@ class PluginsManager {
             record.appendChild(createElem("div", pluginData["plugin-name"]))
             record.appendChild(createElem("div", pluginData["author"]||""))
 
-            const hasBackendScript = !!Object.keys(pluginData["back-end-hooks"]).find(key => pluginData["back-end-hooks"][key]["pre"]["file"] || pluginData["back-end-hooks"][key]["post"]["file"])
+            const hasBackendScript = !!Object.keys(pluginData["back-end-hooks"]).find(key => {
+                return (key=="custom-event" && pluginData["back-end-hooks"]["custom-event"]["file"]) || pluginData["back-end-hooks"][key]["pre"]["file"] || pluginData["back-end-hooks"][key]["post"]["file"]
+            })
             const hasFrontendScript = !!pluginData["front-end-hooks"]
             const type =  hasFrontendScript && hasBackendScript ? "Both": (!hasFrontendScript && !hasBackendScript ? "None" : (hasFrontendScript ? "Front" : "Back"))
 

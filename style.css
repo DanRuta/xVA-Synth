@@ -907,8 +907,8 @@ a {
 }
 /*Load order*/
 #pluginsRecordsHeader > div:nth-child(2), #pluginsRecordsContainer > div > div:nth-child(2) {
-    min-width: 60px;
-    max-width: 60px;
+    min-width: 50px;
+    max-width: 50px;
 }
 /*Plugin name*/
 #pluginsRecordsHeader > div:nth-child(3), #pluginsRecordsContainer > div > div:nth-child(3) {

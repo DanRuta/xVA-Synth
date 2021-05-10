@@ -1,0 +1,28 @@
+{
+    "plugin-name": "Custom events example",
+    "author": "DanRuta",
+    "nexus-link": null,
+    "plugin-version": "1.0",
+    "plugin-short-description": "A demo plugin to show how custom python events work",
+    "min-app-version": "1.0.0",
+    "max-app-version": "1.4.0",
+    "install-requires-restart": false,
+    "uninstall-requires-restart": true,
+
+    "front-end-style-files": [],
+
+    "front-end-hooks": {
+        "start": {
+            "post": {
+                "file": "frontendPlugin.js",
+                "function": "postStartFn"
+            }
+        }
+    },
+    "back-end-hooks": {
+        "custom-event": {
+            "file": "main.py",
+            "function": "custom_event_fn"
+        }
+    }
+}

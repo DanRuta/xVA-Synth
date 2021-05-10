@@ -218,6 +218,9 @@ class Handler(BaseHTTPRequestHandler):
                     use_gpu = user_settings["use_gpu"]
                     fastpitch_model = fastpitch.init_waveglow(use_gpu, fastpitch_model, vocoder, logger)
 
+            if self.path == "/customEvent":
+                plugin_manager.run_plugins(plist=plugin_manager.plugins["custom-event"], event="custom-event", data=post_data)
+
             if self.path == "/setDevice":
                 logger.info(post_data)
                 use_gpu = post_data["device"]=="gpu"

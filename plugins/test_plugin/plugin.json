@@ -74,6 +74,10 @@
                 "file": null,
                 "function": null
             }
+        },
+        "custom-event": {
+            "file": "custom_event.py",
+            "function": "custom_event_fn"
         }
     }
 }

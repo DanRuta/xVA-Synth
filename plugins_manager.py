@@ -18,6 +18,7 @@ class PluginManager(object):
 
     def reset_plugins (self):
         self.plugins = {
+            "custom-event": [],
             "start": {
                 "pre": [],
                 "post": []
@@ -67,6 +68,7 @@ class PluginManager(object):
                         self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "synth-line", "post"], [])
                         self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "output-audio", "pre"], [])
                         self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "output-audio", "post"], [])
+                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "custom-event"], [])
 
                     status.append("OK")
                 except:
@@ -106,7 +108,10 @@ class PluginManager(object):
                         for key in list(locals_data.keys()):
                             if isinstance(locals_data[key], types.FunctionType):
                                 if key==function:
-                                    self.plugins[structure2[-2]][structure2[-1]].append([plugin_name, file_name, locals_data[key]])
+                                    if structure2[-1]=="custom-event":
+                                        self.plugins[structure2[-1]].append([plugin_name, file_name, locals_data[key]])
+                                    else:
+                                        self.plugins[structure2[-2]][structure2[-1]].append([plugin_name, file_name, locals_data[key]])
                                 elif key=="setup":
                                     if f'{plugin_name}/{file_name}' not in self.setupModules:
                                         self.setupModules.add(f'{plugin_name}/{file_name}')
@@ -119,9 +124,19 @@ class PluginManager(object):
 
 
     def run_plugins (self, plist, event="", data=None):
+        response = None
+        if event=="custom-event" and "pluginId" not in data:
+            self.logger.info(f'Custom event called, but "pluginId" not specified. Not running.')
+            return None
+
         if len(plist):
             self.logger.info("Running plugins for event:" + event)
+
         for [plugin_name, file_name, function] in plist:
+
+            if event=="custom-event" and plugin_name!=data["pluginId"]:
+                continue
+
             try:
                 self.logger.info(plugin_name)
                 self.logger.set_logger_prefix(plugin_name)
@@ -131,6 +146,8 @@ class PluginManager(object):
             except:
                 self.logger.info(f'[Plugin run error at event "{event}": {plugin_name}]')
                 self.logger.info(traceback.format_exc())
+
+        return response
 
 
 def checkVersionRequirements (requirements, appVersion, checkMax=False):
