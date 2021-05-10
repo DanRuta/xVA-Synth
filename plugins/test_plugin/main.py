@@ -43,14 +43,9 @@ def output_audio_pre(data=None):
 
 
 
-
 # OPTIONAL
 # ========
 def setup(data=None):
     logger.log(f'Setting up plugin. App version: {data["appVersion"]} | CPU only: {data["isCPUonly"]} | Development mode: {data["isDev"]}')
 # ========
 
-
-
-register_function(output_audio_pre)
-register_function(setup)

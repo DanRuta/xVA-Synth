@@ -94,19 +94,25 @@ class PluginManager(object):
                 if file_name.endswith(".py"):
                     setup = {"logger": self.logger, "appVersion": self.APP_VERSION, "isCPUonly": self.CPU_ONLY, "isDev": not self.PROD}
 
-                    def register_function(fn):
-                        if fn.__name__==function:
-                            self.plugins[structure2[-2]][structure2[-1]].append([plugin_name, file_name, fn])
-                        elif fn.__name__=="setup":
-                            if f'{plugin_name}/{file_name}' not in self.setupModules:
-                                self.setupModules.add(f'{plugin_name}/{file_name}')
-                                fn(setup)
+                    with open(f'{self.path}/plugins/{plugin_name}/{file_name}') as f:
 
-                    exec(open(f'{self.path}/plugins/{plugin_name}/{file_name}').read(), None, {
-                        "setupData": setup,
-                        "plugins": self.plugins,
-                        "register_function": register_function
-                    })
+                        locals_data = locals()
+                        locals_data["setupData"] = setup
+                        locals_data["plugins"] = self.plugins
+
+                        exec(f.read(), None, locals_data)
+
+                        import types
+                        for key in list(locals_data.keys()):
+                            if isinstance(locals_data[key], types.FunctionType):
+                                if key==function:
+                                    self.plugins[structure2[-2]][structure2[-1]].append([plugin_name, file_name, locals_data[key]])
+                                elif key=="setup":
+                                    if f'{plugin_name}/{file_name}' not in self.setupModules:
+                                        self.setupModules.add(f'{plugin_name}/{file_name}')
+                                        locals_data[key](setup)
+
+
 
                 else:
                     self.logger.info(f'[Plugin: {plugin_name}]: Cannot import {file_name} file for {structure2[-1]} {structure2[-2]} entry-point: Only python files are supported right now.')
