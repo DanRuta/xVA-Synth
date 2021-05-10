@@ -29,6 +29,7 @@ try:
     import json
     from http.server import BaseHTTPRequestHandler, HTTPServer
     from python.audio_post import run_audio_post
+    import ffmpeg
 except:
     print(traceback.format_exc())
     with open("./DEBUG_err_imports.txt", "w+") as f:
@@ -274,6 +275,7 @@ class Handler(BaseHTTPRequestHandler):
                     extraInfo["audio_options"] = options
                     extraInfo["input_path"] = input_path
                     extraInfo["output_path"] = output_path
+                    extraInfo["ffmpeg"] = ffmpeg
 
                 plugin_manager.run_plugins(plist=plugin_manager.plugins["output-audio"]["pre"], event="pre output-audio", data=extraInfo)
                 req_response = run_audio_post(logger, input_path, output_path, options)
