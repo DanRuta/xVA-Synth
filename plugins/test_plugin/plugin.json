@@ -1,5 +1,7 @@
 {
     "plugin-name": "Test plugin",
+    "author": "DanRuta",
+    "nexus-link": null,
     "plugin-version": "1.0",
     "plugin-short-description": "A test plugin to develop the functionality",
     "min-app-version": "1.0.0",

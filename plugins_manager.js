@@ -129,6 +129,7 @@ class PluginsManager {
             record.appendChild(createElem("div", enabledCkbx))
             record.appendChild(createElem("div", `${pi}`))
             record.appendChild(createElem("div", pluginData["plugin-name"]))
+            record.appendChild(createElem("div", pluginData["author"]||""))
 
             const hasBackendScript = !!Object.keys(pluginData["back-end-hooks"]).find(key => pluginData["back-end-hooks"][key]["pre"]["file"] || pluginData["back-end-hooks"][key]["post"]["file"])
             const hasFrontendScript = !!pluginData["front-end-hooks"]
