@@ -956,11 +956,17 @@ window.closeModal = (container=undefined, notThisOne=undefined) => {
 
         containers.forEach(cont => {
             if ((notThisOne==undefined || notThisOne!=cont) && cont!=undefined) {
-                cont.style.display = "none"
+                cont.style.opacity = 0
             }
         })
 
-
+        setTimeout(() => {
+            containers.forEach(cont => {
+                if ((notThisOne==undefined || notThisOne!=cont) && cont!=undefined) {
+                    cont.style.display = "none"
+                }
+            })
+        }, 200)
         try {
             activeModal.remove()
         } catch (e) {}
