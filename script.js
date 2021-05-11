@@ -1212,6 +1212,11 @@ right.addEventListener("click", event => {
     letterElems.forEach((letterDiv, l) => {
         letterDiv.style.color = "black"
     })
+    letterPitchNumb.disabled = true
+    letterPitchNumb.value = ""
+    letterLength.disabled = true
+    letterLengthNumb.disabled = true
+    letterLengthNumb.value = ""
 })
 
 letterPitchNumb.addEventListener("input", () => {
