@@ -949,23 +949,22 @@ window.closeModal = (container=undefined, notThisOne=undefined) => {
             }
         })
 
-        const someOpenContainer = allContainers.find(container => container!=undefined && container.style.opacity==1 && container.style.display!="none")
-        if (!someOpenContainer || someOpenContainer==container || someOpenContainer==modalContainer) {
+        const someOpenContainer = allContainers.find(container => container!=undefined && container.style.opacity==1 && container.style.display!="none" && container!=modalContainer)
+        if (!someOpenContainer || someOpenContainer==container) {
             chrome.style.opacity = 0.88
         }
 
-        setTimeout(() => {
-            containers.forEach(cont => {
-                if ((notThisOne==undefined || notThisOne!=cont) && cont!=undefined) {
-                    cont.style.display = "none"
-                }
-            })
+        containers.forEach(cont => {
+            if ((notThisOne==undefined || notThisOne!=cont) && cont!=undefined) {
+                cont.style.display = "none"
+            }
+        })
 
-            try {
-                activeModal.remove()
-            } catch (e) {}
-            resolve()
-        }, notThisOne==undefined?200:100)
+
+        try {
+            activeModal.remove()
+        } catch (e) {}
+        resolve()
     })
 }
 
@@ -1546,28 +1545,35 @@ window.addEventListener("keydown", event => {
     }
 })
 
+window.setupModal = (openingButton, modalContainerElem, callback) => {
+    openingButton.addEventListener("click", () => {
+        if (callback) {
+            callback()
+        }
+        closeModal(undefined, modalContainerElem).then(() => {
+            modalContainerElem.style.opacity = 0
+            modalContainerElem.style.display = "flex"
+            // chrome.style.opacity = 0.88
+            requestAnimationFrame(() => requestAnimationFrame(() => modalContainerElem.style.opacity = 1))
+            requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
+        })
+    })
+    modalContainerElem.addEventListener("click", event => {
+        if (event.target==modalContainerElem) {
+            window.closeModal(modalContainerElem)
+        }
+    })
+}
+
 
 // Info
 // ====
-infoIcon.addEventListener("click", () => {
-    closeModal(undefined, infoContainer).then(() => {
-        infoContainer.style.opacity = 0
-        infoContainer.style.display = "flex"
-        chrome.style.opacity = 0.88
-        requestAnimationFrame(() => requestAnimationFrame(() => infoContainer.style.opacity = 1))
-        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
-    })
-})
-infoContainer.addEventListener("click", event => {
-    if (event.target==infoContainer) {
-        closeModal(infoContainer)
-    }
-})
+window.setupModal(infoIcon, infoContainer)
+
 
 // Patreon
 // =======
-patreonIcon.addEventListener("click", () => {
-
+window.setupModal(patreonIcon, patreonContainer, () => {
     const data = fs.readFileSync(`${path}/patreon.txt`, "utf8")
     const names = new Set()
     data.split("\r\n").forEach(name => names.add(name))
@@ -1577,19 +1583,6 @@ patreonIcon.addEventListener("click", () => {
     creditsList.innerHTML = ""
     names.forEach(name => content += `<br>${name}`)
     creditsList.innerHTML = content
-
-    closeModal(undefined, patreonContainer).then(() => {
-        patreonContainer.style.opacity = 0
-        patreonContainer.style.display = "flex"
-        chrome.style.opacity = 0.88
-        requestAnimationFrame(() => requestAnimationFrame(() => patreonContainer.style.opacity = 1))
-        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
-    })
-})
-patreonContainer.addEventListener("click", event => {
-    if (event.target==patreonContainer) {
-        closeModal(patreonContainer)
-    }
 })
 patreonButton.addEventListener("click", () => {
     shell.openExternal("https://patreon.com")
@@ -1641,20 +1634,8 @@ const showUpdates = () => {
     })
 }
 checkForUpdates()
-updatesIcon.addEventListener("click", () => {
-    closeModal(undefined, updatesContainer).then(() => {
-        updatesContainer.style.opacity = 0
-        updatesContainer.style.display = "flex"
-        chrome.style.opacity = 0.88
-        requestAnimationFrame(() => requestAnimationFrame(() => updatesContainer.style.opacity = 1))
-        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
-    })
-})
-updatesContainer.addEventListener("click", event => {
-    if (event.target==updatesContainer) {
-        closeModal(updatesContainer)
-    }
-})
+window.setupModal(updatesIcon, updatesContainer)
+
 checkUpdates.addEventListener("click", () => {
     checkUpdates.innerHTML = "Checking for updates..."
     checkForUpdates()
@@ -1664,55 +1645,16 @@ showUpdates()
 
 // Batch generation
 // ========
-batchIcon.addEventListener("click", () => {
-    closeModal(undefined, batchGenerationContainer).then(() => {
-        batchGenerationContainer.style.opacity = 0
-        batchGenerationContainer.style.display = "flex"
-        chrome.style.opacity = 0.88
-        requestAnimationFrame(() => requestAnimationFrame(() => batchGenerationContainer.style.opacity = 1))
-        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
-    })
-})
-batchGenerationContainer.addEventListener("click", event => {
-    if (event.target==batchGenerationContainer) {
-        window.closeModal(batchGenerationContainer)
-    }
-})
+window.setupModal(batchIcon, batchGenerationContainer)
 
 // Settings
 // ========
-settingsCog.addEventListener("click", () => {
-    closeModal(undefined, settingsContainer).then(() => {
-        settingsContainer.style.opacity = 0
-        settingsContainer.style.display = "flex"
-        chrome.style.opacity = 0.88
-        requestAnimationFrame(() => requestAnimationFrame(() => settingsContainer.style.opacity = 1))
-        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
-    })
-})
-settingsContainer.addEventListener("click", event => {
-    if (event.target==settingsContainer) {
-        window.closeModal(settingsContainer)
-    }
-})
-
+window.setupModal(settingsCog, settingsContainer)
 
 // Change Game
 // ===========
-changeGameButton.addEventListener("click", () => {
-    closeModal(undefined, gameSelectionContainer).then(() => {
-        gameSelectionContainer.style.opacity = 0
-        gameSelectionContainer.style.display = "flex"
-        chrome.style.opacity = 0.88
-        requestAnimationFrame(() => requestAnimationFrame(() => gameSelectionContainer.style.opacity = 1))
-        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
-    })
-})
-gameSelectionContainer.addEventListener("click", event => {
-    if (event.target==gameSelectionContainer) {
-        window.closeModal(gameSelectionContainer)
-    }
-})
+window.setupModal(changeGameButton, gameSelectionContainer)
+
 fs.readdir(`${path}/assets`, (err, fileNames) => {
 
     let totalVoices = 0
@@ -1796,24 +1738,10 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
 
 
 
+
 // Plugins
 // =======
-pluginsIcon.addEventListener("click", () => {
-    closeModal(undefined, pluginsContainer).then(() => {
-        pluginsContainer.style.opacity = 0
-        pluginsContainer.style.display = "flex"
-        chrome.style.opacity = 0.88
-        requestAnimationFrame(() => requestAnimationFrame(() => pluginsContainer.style.opacity = 1))
-        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
-    })
-})
-pluginsContainer.addEventListener("click", event => {
-    if (event.target==pluginsContainer) {
-        window.closeModal(pluginsContainer)
-    }
-})
-// =======
-
+window.setupModal(pluginsIcon, pluginsContainer)
 
 
 // Other
@@ -1850,6 +1778,7 @@ voiceSearchInput.addEventListener("keyup", () => {
     }
 })
 
+// ELUA
 EULA_closeButon.addEventListener("click", () => {
     if (EULA_accept_ckbx.checked) {
         closeModal(EULAContainer)
@@ -1863,6 +1792,7 @@ if (!Object.keys(window.userSettings).includes("EULA_accepted") || window.userSe
     chrome.style.opacity = 1
     requestAnimationFrame(() => requestAnimationFrame(() => EULAContainer.style.opacity = 1))
 }
+// Links
 document.querySelectorAll('a[href^="http"]').forEach(a => a.addEventListener("click", e => {
     event.preventDefault();
     shell.openExternal(a.href);
