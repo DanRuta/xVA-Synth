@@ -13,6 +13,11 @@ a {
      user-select: none;
      box-shadow: 0 1px 5px 1px rgba(0,0,0,0.3);
      transition: background-color 500ms;
+     min-height: 25px;
+ }
+ .voiceType {
+     min-height: auto;
+     font-size: 15px;
  }
  button:hover, .voiceType:hover {
      filter: brightness(110%);
@@ -43,6 +48,7 @@ a {
  }
  #left {
      width: 350px;
+     max-width: 300px;
  }
  #right {
      width: calc(100vw - 300px);
@@ -136,6 +142,7 @@ a {
      padding: 2px;
  }
  #topRight {
+     height: 3vh;
      display: block;
      padding-bottom: 5px;
      z-index: 3;
@@ -201,7 +208,7 @@ a {
  }
  #voiceSamples {
      width: calc(95vw - 300px);
-     height: calc(90vh - 185px - 290px);
+     height: calc(91vh - 185px - 290px);
      background: rgba(255,255,255,0.1);
      margin-left: 2.5vw;
      margin-right: 2.5vw;
