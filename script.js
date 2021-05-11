@@ -198,6 +198,7 @@ window.changeGame = (meta) => {
     const gameFolder = meta[0]
     const gameName = meta[meta.length-1].split(".")[0]
 
+    setting_models_path_container.style.display = "flex"
     setting_out_path_container.style.display = "flex"
     setting_models_path_label.innerHTML = `<i style="display:inline">${gameName}</i><span>models path</span>`
     setting_models_path_input.value = window.userSettings[`modelspath_${gameFolder}`]

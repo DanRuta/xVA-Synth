@@ -102,7 +102,7 @@ if (!Object.keys(window.userSettings.plugins).includes("loadOrder")) { // For ba
     window.userSettings.plugins.loadOrder = ""
 }
 if (!Object.keys(window.userSettings).includes("externalAudioEditor")) { // For backwards compatibility
-    window.userSettings.setting_external_audio_editor = ""
+    window.userSettings.externalAudioEditor = ""
 }
 
 const updateUIWithSettings = () => {
@@ -378,5 +378,6 @@ reset_paths_btn.addEventListener("click", () => {
 })
 
 
+window.saveUserSettings = saveUserSettings
 exports.saveUserSettings = saveUserSettings
 exports.deleteFolderRecursive = deleteFolderRecursive
