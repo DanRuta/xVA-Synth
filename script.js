@@ -813,7 +813,8 @@ const keepSampleFunction = shiftClick => {
 
         toLocation = toLocation.split("/")
         toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/[\/\\:\*?<>"|]*/g, "")
-        toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/\.wav$/, "").slice(0, 75)+".wav"
+        toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/\.wav$/, "").slice(0, 75).replace(/\.$/, "")
+        toLocation[toLocation.length-1] += ".wav"
         toLocation = toLocation.join("/")
 
         const outFolder = toLocation.split("/").reverse().slice(2, 100).reverse().join("/")

@@ -248,7 +248,7 @@ const uploadBatchCSVs = async (eType, event) => {
                         } else {
                             outPath = window.userSettings.batchOutFolder
                         }
-                        outPath = `${outPath}/${item.voice_id}_${item.vocoder}_${item.text.replace(/[\/\\:\*?<>"|]*/g, "").slice(0, 75)}.${window.userSettings.audio.format}`
+                        outPath = `${outPath}/${item.voice_id}_${item.vocoder}_${item.text.replace(/[\/\\:\*?<>"|]*/g, "").slice(0, 75).replace(/\.$/, "")}.${window.userSettings.audio.format}`
                     }
 
                     outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
