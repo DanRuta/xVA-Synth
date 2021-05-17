@@ -95,6 +95,9 @@ if (!Object.keys(window.userSettings).includes("autoPlayGen")) { // For backward
 if (!Object.keys(window.userSettings).includes("outputJSON")) { // For backwards compatibility
     window.userSettings.outputJSON = true
 }
+if (!Object.keys(window.userSettings).includes("filenameNumericalSeq")) { // For backwards compatibility
+    window.userSettings.filenameNumericalSeq = false
+}
 if (!Object.keys(window.userSettings).includes("plugins")) { // For backwards compatibility
     window.userSettings.plugins = {}
 }
@@ -115,6 +118,7 @@ const updateUIWithSettings = () => {
     setting_darkprompt.checked = window.userSettings.darkPrompt
     setting_areload_voices.checked = window.userSettings.autoReloadVoices
     setting_output_json.checked = window.userSettings.outputJSON
+    setting_output_num_seq.checked = window.userSettings.filenameNumericalSeq
 
     setting_external_audio_editor.value = window.userSettings.externalAudioEditor
     setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
@@ -181,6 +185,10 @@ setting_areload_voices.addEventListener("click", () => {
 })
 setting_output_json.addEventListener("click", () => {
     window.userSettings.outputJSON = setting_output_json.checked
+    saveUserSettings()
+})
+setting_output_num_seq.addEventListener("click", () => {
+    window.userSettings.filenameNumericalSeq = setting_output_num_seq.checked
     saveUserSettings()
 })
 

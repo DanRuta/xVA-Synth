@@ -814,8 +814,40 @@ const keepSampleFunction = shiftClick => {
         toLocation = toLocation.split("/")
         toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/[\/\\:\*?<>"|]*/g, "")
         toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/\.wav$/, "").slice(0, 75).replace(/\.$/, "")
+
+
+        // Numerical file name counter
+        if (window.userSettings.filenameNumericalSeq) {
+            let existingFiles = []
+            try {
+                existingFiles = fs.readdirSync(toLocation.slice(0, toLocation.length-1).join("/")).filter(fname => !fname.endsWith(".json"))
+            } catch (e) {
+            }
+            existingFiles = existingFiles.filter(fname => fname.includes(toLocation[toLocation.length-1]))
+            existingFiles = existingFiles.map(fname => {
+                const parts = fname.split(".")
+                if (parts.length>2 && parts[parts.length-2].length) {
+                    if (parseInt(parts[parts.length-2]) != NaN) {
+                        return parseInt(parts[parts.length-2])
+                    }
+                }
+                return null
+            })
+            existingFiles = existingFiles.filter(val => !!val)
+            if (existingFiles.length==0) {
+                existingFiles.push(0)
+            }
+
+            if (existingFiles.length) {
+                existingFiles = existingFiles.sort((a,b) => {a<b?-1:1})
+                toLocation[toLocation.length-1] = `${toLocation[toLocation.length-1]}.${String(existingFiles[existingFiles.length-1]+1).padStart(4, "0")}`
+            }
+        }
+
+
         toLocation[toLocation.length-1] += ".wav"
         toLocation = toLocation.join("/")
+
 
         const outFolder = toLocation.split("/").reverse().slice(2, 100).reverse().join("/")
         if (!fs.existsSync(outFolder)) {
