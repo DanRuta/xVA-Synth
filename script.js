@@ -787,12 +787,20 @@ const saveFile = (from, to) => {
             if (err) {
                 console.log(err)
                 window.appLogger.log(err)
+                if (!fs.existsSync(from)) {
+                    window.appLogger.log(`The temporary file does not exist at this file path: ${from}`)
+                }
+                const outputFolder = to.split("/").reverse().slice(1,1000).reverse().join("/")
+                if (!fs.existsSync(outputFolder)) {
+                    window.appLogger.log(`The output directory does not exist at this file path: ${outputFolder}`)
+                }
+            } else {
+                if (window.userSettings.outputJSON) {
+                    fs.writeFileSync(`${to}.json`, JSON.stringify({inputSequence: dialogueInput.value.trim(), pitchEditor: window.pitchEditor, pacing: parseFloat(pace_slid.value)}, null, 4))
+                }
+                voiceSamples.appendChild(makeSample(to, true))
+                window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["post"], event="post keep-sample", pluginData)
             }
-            if (window.userSettings.outputJSON) {
-                fs.writeFileSync(`${to}.json`, JSON.stringify({inputSequence: dialogueInput.value.trim(), pitchEditor: window.pitchEditor, pacing: parseFloat(pace_slid.value)}, null, 4))
-            }
-            voiceSamples.appendChild(makeSample(to, true))
-            window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["post"], event="post keep-sample", pluginData)
         })
     }
 }
@@ -805,6 +813,7 @@ const keepSampleFunction = shiftClick => {
 
         toLocation = toLocation.split("/")
         toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/[\/\\:\*?<>"|]*/g, "")
+        toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/\.wav$/, "").slice(0, 75)+".wav"
         toLocation = toLocation.join("/")
 
         const outFolder = toLocation.split("/").reverse().slice(2, 100).reverse().join("/")
