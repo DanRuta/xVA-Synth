@@ -642,7 +642,7 @@ generateVoiceButton.addEventListener("click", () => {
             }
         }
 
-        if (editor.innerHTML && editor.innerHTML.length && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
+        if (editor.innerHTML && editor.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice)) {
             pitch = window.pitchEditor.pitchNew.map(v=> v==undefined?0:v)
             duration = window.pitchEditor.dursNew.map(v => v*pace_slid.value).map(v=> v==undefined?0:v)
             isFreshRegen = false

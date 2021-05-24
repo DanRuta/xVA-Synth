@@ -95,6 +95,9 @@ if (!Object.keys(window.userSettings).includes("autoPlayGen")) { // For backward
 if (!Object.keys(window.userSettings).includes("outputJSON")) { // For backwards compatibility
     window.userSettings.outputJSON = true
 }
+if (!Object.keys(window.userSettings).includes("keepEditorOnVoiceChange")) { // For backwards compatibility
+    window.userSettings.keepEditorOnVoiceChange = false
+}
 if (!Object.keys(window.userSettings).includes("filenameNumericalSeq")) { // For backwards compatibility
     window.userSettings.filenameNumericalSeq = false
 }
