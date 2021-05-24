@@ -13,6 +13,8 @@ const fetch = require("node-fetch")
 const {text_to_sequence, english_cleaners} = require("./text.js")
 const {xVAAppLogger} = require("./appLogger.js")
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
+process.on(`uncaughtException`, data => window.appLogger.log(data))
+window.onerror = (err, url, lineNum) => window.appLogger.log(err)
 const {saveUserSettings, deleteFolderRecursive} = require("./settingsMenu.js")
 const {startBatch} = require("./batch.js")
 window.electronBrowserWindow = require("electron").remote.getCurrentWindow()
@@ -29,8 +31,6 @@ console.error = (data) => {
     window.appLogger.log(data)
     oldCError(arguments)
 }
-process.on(`uncaughtException`, data => window.appLogger.log(data))
-window.onerror = (err, url, lineNum) => window.appLogger.log(err)
 
 window.addEventListener("error", function (e) {window.appLogger.log(e.error.stack)})
 window.addEventListener('unhandledrejection', function (e) {window.appLogger.log(e.reason.stack)})
@@ -594,6 +594,8 @@ generateVoiceButton.addEventListener("click", () => {
                 changeVocoder(vocoder_select.value)
             } else if (window.userSettings.vocoder.includes(".hg.pt")) {
                 changeVocoder("qnd")
+            } else {
+                closeModal()
             }
         }).catch(e => {
             console.log(e)
@@ -1007,6 +1009,10 @@ window.closeModal = (container=undefined, notThisOne=undefined) => {
             containers.forEach(cont => {
                 if ((notThisOne==undefined || notThisOne!=cont) && cont!=undefined) {
                     cont.style.display = "none"
+                    const someOpenContainer2 = allContainers.find(container => container!=undefined && container.style.opacity==1 && container.style.display!="none" && container!=modalContainer)
+                    if (!someOpenContainer2 || someOpenContainer2==container) {
+                        chrome.style.opacity = 0.88
+                    }
                 }
             })
         }, 200)

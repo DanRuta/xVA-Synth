@@ -122,6 +122,7 @@ const updateUIWithSettings = () => {
     setting_areload_voices.checked = window.userSettings.autoReloadVoices
     setting_output_json.checked = window.userSettings.outputJSON
     setting_output_num_seq.checked = window.userSettings.filenameNumericalSeq
+    setting_keepEditorOnVoiceChange.checked = window.userSettings.keepEditorOnVoiceChange
 
     setting_external_audio_editor.value = window.userSettings.externalAudioEditor
     setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg

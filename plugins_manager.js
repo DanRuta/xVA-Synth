@@ -6,7 +6,7 @@ class PluginsManager {
 
     constructor (path, appLogger, appVersion) {
 
-        this.path = `${__dirname.replace(/\\/g,"/")}${path.slice(1, 100000)}`
+        this.path = `${__dirname.replace(/\\/g,"/")}${path.slice(1, 100000)}`.replace("/resources/app/resources/app", "/resources/app")
         this.appVersion = appVersion
         this.appLogger = appLogger
         this.plugins = []
@@ -21,6 +21,7 @@ class PluginsManager {
         this.scanPlugins()
         this.updateUI()
         this.savePlugins()
+        this.appLogger.log(`${this.path}/plugins`)
         fs.watch(`${this.path}/plugins`, {recursive: false, persistent: true}, (eventType, filename) => {
             this.scanPlugins()
             this.updateUI()

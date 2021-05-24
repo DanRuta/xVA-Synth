@@ -273,7 +273,7 @@ def infer(PROD, user_settings, text, output, fastpitch, vocoder, speaker_i, pace
             old_sequence = torch.LongTensor(old_sequence)
             old_sequence = pad_sequence([old_sequence], batch_first=True).to(fastpitch.device)
 
-        mel, mel_lens, dur_pred, pitch_pred = fastpitch.infer_advanced(text, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=old_sequence)
+        mel, mel_lens, dur_pred, pitch_pred = fastpitch.infer_advanced(logger, text, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=old_sequence)
 
         if "waveglow" in vocoder:
             init_waveglow(user_settings["use_gpu"], fastpitch, vocoder, logger=logger)

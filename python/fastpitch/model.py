@@ -238,8 +238,7 @@ class FastPitch(nn.Module):
 
 
 
-    def infer_using_vals (self, pace, enc_out, max_duration, enc_mask, dur_pred_existing=None, pitch_pred_existing=None, old_sequence=None, new_sequence=None):
-
+    def infer_using_vals (self, logger, pace, enc_out, max_duration, enc_mask, dur_pred_existing=None, pitch_pred_existing=None, old_sequence=None, new_sequence=None):
 
         start_index = None
         end_index = None
@@ -301,7 +300,6 @@ class FastPitch(nn.Module):
             dur_pred = dur_pred_existing
             pitch_pred = pitch_pred_existing
 
-
         # Splice/replace pitch/duration values from the old input if simulating only a partial re-generation
         if start_index is not None or end_index is not None:
             dur_pred_np = list(dur_pred.cpu().detach().numpy())[0]
@@ -324,8 +322,8 @@ class FastPitch(nn.Module):
             dur_pred = torch.tensor(dur_pred_np).to(self.device).unsqueeze(0)
             pitch_pred = torch.tensor(pitch_pred_np).to(self.device).unsqueeze(0)
 
-
         pitch_emb = self.pitch_emb(pitch_pred.unsqueeze(1)).transpose(1, 2)
+
         enc_out = enc_out + pitch_emb
         len_regulated, dec_lens = regulate_len(dur_pred, enc_out, pace, mel_max_len=None)
         dec_out, dec_mask = self.decoder(len_regulated, dec_lens)
@@ -334,7 +332,7 @@ class FastPitch(nn.Module):
         return mel_out, dec_lens, dur_pred, pitch_pred
 
 
-    def infer_advanced (self, inputs, speaker_i, pace=1.0, pitch_data=None, max_duration=75, old_sequence=None):
+    def infer_advanced (self, logger, inputs, speaker_i, pace=1.0, pitch_data=None, max_duration=75, old_sequence=None):
 
         if speaker_i is not None:
             speaker = torch.ones(inputs.size(0)).long().to(inputs.device) * speaker_i
@@ -355,11 +353,11 @@ class FastPitch(nn.Module):
 
             # Try using the provided pitch/duration data, but fall back to using its own, otherwise
             try:
-                return self.infer_using_vals(pace, enc_out, max_duration, enc_mask, dur_pred_existing=dur_pred, pitch_pred_existing=pitch_pred, old_sequence=old_sequence, new_sequence=inputs)
+                return self.infer_using_vals(logger, pace, enc_out, max_duration, enc_mask, dur_pred_existing=dur_pred, pitch_pred_existing=pitch_pred, old_sequence=old_sequence, new_sequence=inputs)
             except:
                 print(traceback.format_exc())
-                return self.infer_using_vals(pace, enc_out, max_duration, enc_mask, None, None, None)
+                return self.infer_using_vals(logger, pace, enc_out, max_duration, enc_mask, None, None, None)
 
         else:
-            return self.infer_using_vals(pace, enc_out, max_duration, enc_mask, None, None, None)
+            return self.infer_using_vals(logger, pace, enc_out, max_duration, enc_mask, None, None, None)
 

@@ -400,10 +400,10 @@ a {
      justify-content: center;
  }
  #settingsOptionsContainer {
-     flex-grow: 1;
-     width: 85%;
-     overflow-y: auto;
-     overflow-x: hidden;
+    flex-grow: 1;
+    width: 90%;
+    overflow-y: auto;
+    overflow-x: hidden;
  }
  #infoContainer > .modal > .flexTable > div > div:last-child {
      width: 100%;
@@ -894,6 +894,9 @@ a {
     min-width: 50px;
     /*max-width: 50px;*/
 }
+
+
+
 
 /*PLUGINS*/
 /*Enabled*/
