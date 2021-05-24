@@ -1137,6 +1137,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen, pac
     if (isFreshRegen) {
         window.pitchEditor.letterFocus = []
         pace_slid.value = pace
+        paceNumbInput.value = pace
     }
 
     window.pitchEditor.letters = letters
@@ -1436,6 +1437,7 @@ pace_slid.addEventListener("change", () => {
     if (autoplay_ckbx.checked) {
         generateVoiceButton.click()
     }
+    paceNumbInput.value = pace_slid.value
 })
 
 pace_slid.addEventListener("input", () => {
@@ -1452,6 +1454,15 @@ pace_slid.addEventListener("input", () => {
         editorTooltip.style.top = `${parseInt(sliderRect.top)-parseInt(tooltipRect.height) - 15}px`
         editorTooltip.innerHTML = pace_slid.value
     }
+})
+paceNumbInput.addEventListener("change", () => {
+    pace_slid.value = paceNumbInput.value
+    if (autoplay_ckbx.checked) {
+        generateVoiceButton.click()
+    }
+})
+paceNumbInput.addEventListener("keyup", () => {
+    pace_slid.value = paceNumbInput.value
 })
 autoplay_ckbx.addEventListener("change", () => {
     window.userSettings.autoplay = autoplay_ckbx.checked
