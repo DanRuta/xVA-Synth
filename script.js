@@ -610,12 +610,12 @@ generateVoiceButton.addEventListener("click", () => {
         if (isGenerating) {
             return
         }
-        isGenerating = true
 
         const sequence = dialogueInput.value.trim().replace("…", "...")
         if (sequence.length==0) {
             return
         }
+        isGenerating = true
 
         const existingSample = samplePlay.querySelector("audio")
         if (existingSample) {
