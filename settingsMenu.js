@@ -133,6 +133,11 @@ const updateUIWithSettings = () => {
     setting_audio_bitdepth.value = window.userSettings.audio.bitdepth
     setting_audio_amplitude.value = window.userSettings.audio.amplitude
 
+    setting_s2s_autogenerate.checked = window.userSettings.s2s_autogenerate
+    setting_s2s_prePitchShift.checked = window.userSettings.s2s_prePitchShift
+    setting_s2s_removeNoise.checked = window.userSettings.s2s_removeNoise
+    setting_s2s_noiseRemStrength.value = window.userSettings.s2s_noiseRemStrength
+
     setting_batch_fastmode.checked = window.userSettings.batch_fastMode
 
     batch_batchSizeInput.value = parseInt(window.userSettings.batch_batchSize)
@@ -167,36 +172,36 @@ useGPUCbx.addEventListener("change", () => {
         }
     })
 })
-setting_autoplaygenCbx.addEventListener("click", () => {
-    window.userSettings.autoPlayGen = setting_autoplaygenCbx.checked
-    saveUserSettings()
-})
-setting_slidersTooltip.addEventListener("click", () => {
-    window.userSettings.sliderTooltip = setting_slidersTooltip.checked
-    saveUserSettings()
-})
-setting_defaultToHiFi.addEventListener("click", () => {
-    window.userSettings.defaultToHiFi = setting_defaultToHiFi.checked
-    saveUserSettings()
-})
-setting_keepPaceOnNew.addEventListener("click", () => {
-    window.userSettings.keepPaceOnNew = setting_keepPaceOnNew.checked
-    saveUserSettings()
-})
-setting_areload_voices.addEventListener("click", () => {
-    window.userSettings.autoReloadVoices = setting_areload_voices.checked
-    saveUserSettings()
-})
-setting_output_json.addEventListener("click", () => {
-    window.userSettings.outputJSON = setting_output_json.checked
-    saveUserSettings()
-})
-setting_output_num_seq.addEventListener("click", () => {
-    window.userSettings.filenameNumericalSeq = setting_output_num_seq.checked
-    saveUserSettings()
-})
 
-const setTheme = () => {
+
+const initMenuSetting = (elem, setting, type, callback=undefined, valFn=undefined) => {
+
+    valFn = valFn ? valFn : x=>x
+
+    if (type=="checkbox") {
+        elem.addEventListener("click", () => {
+            if (setting.includes(".")) {
+                window.userSettings[setting.split(".")[0]][setting.split(".")[1]] = valFn(elem.checked)
+            } else {
+                window.userSettings[setting] = valFn(elem.checked)
+            }
+            saveUserSettings()
+            if (callback) callback()
+        })
+    } else {
+        elem.addEventListener("change", () => {
+            if (setting.includes(".")) {
+                window.userSettings[setting.split(".")[0]][setting.split(".")[1]] = valFn(elem.value)
+            } else {
+                window.userSettings[setting] = valFn(elem.value)
+            }
+            saveUserSettings()
+            if (callback) callback()
+        })
+    }
+}
+
+const setPromptTheme = () => {
     if (window.userSettings.darkPrompt) {
         dialogueInput.style.backgroundColor = "rgba(25,25,25,0.9)"
         dialogueInput.style.color = "white"
@@ -207,59 +212,47 @@ const setTheme = () => {
 }
 setting_darkprompt.addEventListener("click", () => {
     window.userSettings.darkPrompt = setting_darkprompt.checked
-    setTheme()
-    saveUserSettings()
-})
-setTheme()
-setting_batch_fastmode.addEventListener("click", () => {
-    window.userSettings.batch_fastMode = setting_batch_fastmode.checked
-    saveUserSettings()
-})
+}
 
-setting_external_audio_editor.addEventListener("change", () => {
-    window.userSettings.externalAudioEditor = setting_external_audio_editor.value
-    saveUserSettings()
-})
-setting_audio_ffmpeg.addEventListener("click", () => {
-    window.userSettings.audio.ffmpeg = setting_audio_ffmpeg.checked
+initMenuSetting(setting_autoplaygenCbx, "autoPlayGen", "checkbox")
+initMenuSetting(setting_slidersTooltip, "sliderTooltip", "checkbox")
+initMenuSetting(setting_defaultToHiFi, "defaultToHiFi", "checkbox")
+initMenuSetting(setting_keepPaceOnNew, "keepPaceOnNew", "checkbox")
+initMenuSetting(setting_areload_voices, "autoReloadVoices", "checkbox")
+initMenuSetting(setting_output_json, "outputJSON", "checkbox")
+initMenuSetting(setting_output_num_seq, "filenameNumericalSeq", "checkbox")
+initMenuSetting(setting_darkprompt, "darkPrompt", "checkbox", setPromptTheme)
+
+initMenuSetting(setting_batch_fastmode, "batch_fastMode", "checkbox")
+
+
+initMenuSetting(setting_external_audio_editor, "externalAudioEditor", "text")
+initMenuSetting(setting_audio_ffmpeg, "audio.ffmpeg", "checkbox", () => {
     setting_audio_format.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_hz.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_pad_start.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_pad_end.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_bitdepth.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_amplitude.disabled = !window.userSettings.audio.ffmpeg
-    saveUserSettings()
 })
+initMenuSetting(setting_audio_format, "audio.format", "text")
+initMenuSetting(setting_audio_hz, "audio.hz", "text", undefined, parseInt)
+initMenuSetting(setting_audio_pad_start, "audio.padStart", "text", undefined, parseInt)
+initMenuSetting(setting_audio_pad_end, "audio.padEnd", "text", undefined, parseInt)
+initMenuSetting(setting_audio_bitdepth, "audio.bitdepth", "select")
+initMenuSetting(setting_audio_amplitude, "audio.amplitude", "select", parseFloat)
+initMenuSetting(batch_clearDirFirstCkbx, "batch_clearDirFirst", "checkbox")
+initMenuSetting(batch_skipExisting, "batch_skipExisting", "checkbox")
+initMenuSetting(batch_batchSizeInput, "batch_batchSize", "text", undefined, parseInt)
+
+setPromptTheme()
+
 setting_audio_format.disabled = !window.userSettings.audio.ffmpeg
-setting_audio_format.addEventListener("change", () => {
-    window.userSettings.audio.format = setting_audio_format.value
-    saveUserSettings()
-})
 setting_audio_hz.disabled = !window.userSettings.audio.ffmpeg
-setting_audio_hz.addEventListener("change", () => {
-    window.userSettings.audio.hz = setting_audio_hz.value
-    saveUserSettings()
-})
 setting_audio_pad_start.disabled = !window.userSettings.audio.ffmpeg
-setting_audio_pad_start.addEventListener("change", () => {
-    window.userSettings.audio.padStart = parseInt(setting_audio_pad_start.value)
-    saveUserSettings()
-})
 setting_audio_pad_end.disabled = !window.userSettings.audio.ffmpeg
-setting_audio_pad_end.addEventListener("change", () => {
-    window.userSettings.audio.padEnd = parseInt(setting_audio_pad_end.value)
-    saveUserSettings()
-})
 setting_audio_bitdepth.disabled = !window.userSettings.audio.ffmpeg
-setting_audio_bitdepth.addEventListener("change", () => {
-    window.userSettings.audio.bitdepth = setting_audio_bitdepth.value
-    saveUserSettings()
-})
 setting_audio_amplitude.disabled = !window.userSettings.audio.ffmpeg
-setting_audio_amplitude.addEventListener("change", () => {
-    window.userSettings.audio.amplitude = setting_audio_amplitude.value
-    saveUserSettings()
-})
 
 // Output path
 fs.readdir(`${path}/models`, (err, gameDirs) => {
@@ -307,21 +300,6 @@ batch_outputFolderInput.addEventListener("change", () => {
     }
 })
 batch_outputFolderInput.value = window.userSettings.batchOutFolder
-// Clear out dir first
-batch_clearDirFirstCkbx.addEventListener("change", () => {
-    window.userSettings.batch_clearDirFirst = batch_clearDirFirstCkbx.checked
-    saveUserSettings()
-})
-// Ignore existing output
-batch_skipExisting.addEventListener("change", () => {
-    window.userSettings.batch_skipExisting = batch_skipExisting.checked
-    saveUserSettings()
-})
-// Batch size
-batch_batchSizeInput.addEventListener("change", () => {
-    window.userSettings.batch_batchSize = parseInt(batch_batchSizeInput.value)
-    saveUserSettings()
-})
 // ======
 
 
