@@ -45,7 +45,10 @@ if (!Object.keys(window.userSettings).includes("darkPrompt")) { // For backwards
     window.userSettings.darkPrompt = false
 }
 if (!Object.keys(window.userSettings).includes("prompt_fontSize")) { // For backwards compatibility
-    window.userSettings.prompt_fontSize = 14
+    window.userSettings.prompt_fontSize = 13
+}
+if (!Object.keys(window.userSettings).includes("bg_gradient_opacity")) { // For backwards compatibility
+    window.userSettings.bg_gradient_opacity = 13
 }
 if (!Object.keys(window.userSettings).includes("autoReloadVoices")) { // For backwards compatibility
     window.userSettings.autoReloadVoices = false
@@ -123,6 +126,7 @@ const updateUIWithSettings = () => {
     setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
     setting_darkprompt.checked = window.userSettings.darkPrompt
     setting_prompt_fontSize.value = window.userSettings.prompt_fontSize
+    setting_bg_gradient_opacity.value = window.userSettings.bg_gradient_opacity
     setting_areload_voices.checked = window.userSettings.autoReloadVoices
     setting_output_json.checked = window.userSettings.outputJSON
     setting_output_num_seq.checked = window.userSettings.filenameNumericalSeq
@@ -217,6 +221,16 @@ const setPromptTheme = () => {
 const setPromptFontSize = () => {
     dialogueInput.style.fontSize = `${window.userSettings.prompt_fontSize}pt`
 }
+const updateBackground = () => {
+    const background = `linear-gradient(0deg, rgba(128,128,128,${window.userSettings.bg_gradient_opacity}) 0px, rgba(0,0,0,0)), url("assets/${window.currentGame.join("-")}")`
+    // Fade the background image transition
+    rightBG1.style.background = background
+    rightBG2.style.opacity = 0
+    setTimeout(() => {
+        rightBG2.style.background = rightBG1.style.background
+        rightBG2.style.opacity = 1
+    }, 1000)
+}
 
 initMenuSetting(setting_autoplaygenCbx, "autoPlayGen", "checkbox")
 initMenuSetting(setting_slidersTooltip, "sliderTooltip", "checkbox")
@@ -227,6 +241,7 @@ initMenuSetting(setting_output_json, "outputJSON", "checkbox")
 initMenuSetting(setting_output_num_seq, "filenameNumericalSeq", "checkbox")
 initMenuSetting(setting_darkprompt, "darkPrompt", "checkbox", setPromptTheme)
 initMenuSetting(setting_prompt_fontSize, "prompt_fontSize", "number", setPromptFontSize)
+initMenuSetting(setting_bg_gradient_opacity, "bg_gradient_opacity", "number", updateBackground)
 
 initMenuSetting(setting_batch_fastmode, "batch_fastMode", "checkbox")
 
