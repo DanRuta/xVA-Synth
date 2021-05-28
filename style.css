@@ -505,7 +505,7 @@ a {
  #editor > div > div {
      text-align: center;
      font-size: 20pt;
-
+     font-weight: bold;
      margin-right: 20px;
  }
 
@@ -551,7 +551,7 @@ a {
      background-color: rgba(255,255,255,0.3);
  }
  .letter {
-     text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+     text-shadow: 1px 1px 1px rgba(255,255,255,0.5);
      margin-left: 3px;
  }
  #editorTooltip {
