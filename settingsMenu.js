@@ -44,6 +44,9 @@ if (!Object.keys(window.userSettings).includes("sliderTooltip")) { // For backwa
 if (!Object.keys(window.userSettings).includes("darkPrompt")) { // For backwards compatibility
     window.userSettings.darkPrompt = false
 }
+if (!Object.keys(window.userSettings).includes("prompt_fontSize")) { // For backwards compatibility
+    window.userSettings.prompt_fontSize = 14
+}
 if (!Object.keys(window.userSettings).includes("autoReloadVoices")) { // For backwards compatibility
     window.userSettings.autoReloadVoices = false
 }
@@ -119,6 +122,7 @@ const updateUIWithSettings = () => {
     setting_keepPaceOnNew.checked = window.userSettings.keepPaceOnNew
     setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
     setting_darkprompt.checked = window.userSettings.darkPrompt
+    setting_prompt_fontSize.value = window.userSettings.prompt_fontSize
     setting_areload_voices.checked = window.userSettings.autoReloadVoices
     setting_output_json.checked = window.userSettings.outputJSON
     setting_output_num_seq.checked = window.userSettings.filenameNumericalSeq
@@ -210,8 +214,8 @@ const setPromptTheme = () => {
         dialogueInput.style.color = "black"
     }
 }
-setting_darkprompt.addEventListener("click", () => {
-    window.userSettings.darkPrompt = setting_darkprompt.checked
+const setPromptFontSize = () => {
+    dialogueInput.style.fontSize = `${window.userSettings.prompt_fontSize}pt`
 }
 
 initMenuSetting(setting_autoplaygenCbx, "autoPlayGen", "checkbox")
@@ -222,6 +226,7 @@ initMenuSetting(setting_areload_voices, "autoReloadVoices", "checkbox")
 initMenuSetting(setting_output_json, "outputJSON", "checkbox")
 initMenuSetting(setting_output_num_seq, "filenameNumericalSeq", "checkbox")
 initMenuSetting(setting_darkprompt, "darkPrompt", "checkbox", setPromptTheme)
+initMenuSetting(setting_prompt_fontSize, "prompt_fontSize", "number", setPromptFontSize)
 
 initMenuSetting(setting_batch_fastmode, "batch_fastMode", "checkbox")
 
@@ -246,6 +251,7 @@ initMenuSetting(batch_skipExisting, "batch_skipExisting", "checkbox")
 initMenuSetting(batch_batchSizeInput, "batch_batchSize", "text", undefined, parseInt)
 
 setPromptTheme()
+setPromptFontSize()
 
 setting_audio_format.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_hz.disabled = !window.userSettings.audio.ffmpeg
