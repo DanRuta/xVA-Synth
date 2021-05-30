@@ -28,7 +28,7 @@ try:
     from logging.handlers import RotatingFileHandler
     import json
     from http.server import BaseHTTPRequestHandler, HTTPServer
-    from python.audio_post import run_audio_post
+    from python.audio_post import run_audio_post, prepare_input_audio
     import ffmpeg
 except:
     print(traceback.format_exc())
@@ -143,6 +143,23 @@ except:
     logger.info(traceback.format_exc())
 try:
     fastpitch_model = fastpitch.init(PROD, use_gpu=use_gpu, vocoder=user_settings["vocoder"], logger=logger)
+except:
+    print(traceback.format_exc())
+    logger.info(traceback.format_exc())
+# ===============
+
+
+# xVASpeech setup
+# ===============
+xVASpeechModel = 0
+try:
+    import xVASpeech
+except:
+    print(traceback.format_exc())
+    logger.info(traceback.format_exc())
+try:
+    print(xVASpeech)
+    xVASpeechModel = xVASpeech.init(PROD, use_gpu, logger)
 except:
     print(traceback.format_exc())
     logger.info(traceback.format_exc())
@@ -265,6 +282,34 @@ class Handler(BaseHTTPRequestHandler):
                         req_response = "CUDA OOM"
                     else:
                         req_response = str(e)
+
+
+            if self.path == "/runSpeechToSpeech":
+                logger.info("post_data")
+                logger.info(post_data)
+                input_path = post_data["input_path"]
+                voiceId = post_data["voiceId"]
+                modelPath = post_data["modelPath"]
+                doPitchShift = post_data["doPitchShift"]
+                removeNoise = post_data["removeNoise"]
+                removeNoiseStrength = post_data["removeNoiseStrength"]
+
+                final_path = prepare_input_audio(PROD, logger, input_path, removeNoise, removeNoiseStrength)
+                print("final_path", final_path)
+                logger.info("final_path")
+                logger.info(final_path)
+
+                if xVASpeechModel.voiceId != voiceId:
+                    xVASpeech.loadModel(xVASpeechModel, voiceId, modelPath)
+
+                text, pitch, durs = xVASpeech.infer(logger, xVASpeechModel, final_path, use_gpu=user_settings["use_gpu"], doPitchShift=doPitchShift)
+
+                pitch_durations_text = ""
+                pitch_durations_text += ",".join([str(v) for v in pitch])+"\n"
+                pitch_durations_text += ",".join([str(v) for v in durs])+"\n"
+                pitch_durations_text += f'{text.lower()}'
+
+                req_response = pitch_durations_text
 
 
             if self.path == "/outputAudio":

@@ -282,7 +282,40 @@ a {
      opacity: 0.5;
  }
 
- #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer, #EULAContainer, #patreonContainer, #pluginsContainer {
+ #inputContainer {
+     display: flex;
+
+ }
+ #mic_SVG {
+     height: 40px;
+     width: 40px;
+     margin-left: 50px;
+     margin-top: 16px;
+     margin-bottom: 2px;
+     filter: drop-shadow( 1px 1px 1px rgba(0, 0, 0, 1));
+     cursor: pointer;
+ }
+ #mic_progress_SVG {
+     filter: drop-shadow( 1px 1px 1px rgba(0, 0, 0, .3));
+     margin-top: -50px;
+     margin-top: -61px;
+     pointer-events: none;
+     margin-left: 33px;
+ }
+
+ #mic_progress_SVG_circle{
+     pointer-events: none;
+     transform: rotate(-90deg);
+     cursor: pointer;
+     transform-origin: 50% 50%;
+ }
+ #dialogueInput {
+     width: calc(95vw - 380px) !important;
+     margin-left: 1vw;
+ }
+
+
+ #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer, #EULAContainer, #patreonContainer, #pluginsContainer, #s2sSelectContainer {
      display: flex;
      justify-content: center;
      align-items: center;
@@ -337,7 +370,7 @@ a {
      width: 25vw;
      text-align: center;
  }
- #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal, #patreonContainer > .modal, #pluginsContainer > .modal {
+ #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal, #patreonContainer > .modal, #pluginsContainer > .modal, #s2sSelectContainer > .modal {
      height: 65vh;
      width: 45vw;
      min-height: 500px;
@@ -752,6 +785,71 @@ a {
 
 
 
+/*Speech to speech*/
+#s2sVLSampleRecordContainer, #s2sVLSampleRecordContainer>span , #s2sNoiseRecordContainer, #s2sNoiseRecordContainer>span {
+    display: flex;
+    align-items: center;
+    width: 90%;
+}
+#s2sVLSampleRecordContainer>span, #s2sNoiseRecordContainer>span {
+    width: auto;
+}
+#s2sVLSampleRecordContainer, #s2sNoiseRecordContainer {
+    justify-content: space-around;
+}
+#s2sVLSampleRecordContainer > *, #s2sNoiseRecordContainer > * {
+    margin: 5px;
+}
+#s2sVLSampleRecordTimer, #s2sNoiseSampleRecordTimer {
+    width: 25px;
+}
+#s2sVLVoiceSampleAudioContainer, #s2sNoiseAudioContainer {
+    width: 200px;
+    margin-left: 60px;
+}
+#s2sVoiceList {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    height: 100%;
+    background: rgb(75,75,75);
+    overflow-y: auto;
+    padding-top: 10px;
+}
+#s2sGenders {
+    display: flex;
+}
+#s2sGenders > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#s2sGenders > div > * {
+    padding: 5px;
+}
+#s2sVoiceList > div {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    min-height: 35px;
+}
+#s2sVoiceList > div > div:first-child {
+    width: 300px;
+}
+#s2sVoiceList > div > audio:last-child {
+    width: 200px;
+}
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+
+
+
+
+
+
+
 /* Batch stuff */
 #batch_container {
     display: flex;
@@ -966,6 +1064,16 @@ a {
     max-width: 150px;
 }
 
+
+
+
+/* Speech-to-Speech stuff */
+#s2s_selectedVoiceName {
+    width: 170px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
 
 
 

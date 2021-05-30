@@ -185,6 +185,9 @@ def loadModel (fastpitch, ckpt, n_speakers, device):
     if 'state_dict' in checkpoint_data:
         checkpoint_data = checkpoint_data['state_dict']
 
+    hifi_gan = fastpitch.hifi_gan
+    del fastpitch.hifi_gan
+
     symbols_embedding_dim = 384
     if n_speakers is not None:
         fastpitch.speaker_emb = nn.Embedding(n_speakers, symbols_embedding_dim).to(device)
@@ -193,8 +196,11 @@ def loadModel (fastpitch, ckpt, n_speakers, device):
             del fastpitch.speaker_emb
         except:
             pass
-    fastpitch.load_state_dict(checkpoint_data, strict=False)
+    fastpitch.load_state_dict(checkpoint_data, strict=True)
     fastpitch.ckpt_path = ckpt
+    fastpitch = fastpitch.float()
+
+    fastpitch.hifi_gan = hifi_gan
 
     fastpitch.eval()
     del checkpoint_data

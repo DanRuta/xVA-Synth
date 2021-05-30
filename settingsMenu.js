@@ -116,6 +116,18 @@ if (!Object.keys(window.userSettings.plugins).includes("loadOrder")) { // For ba
 if (!Object.keys(window.userSettings).includes("externalAudioEditor")) { // For backwards compatibility
     window.userSettings.externalAudioEditor = ""
 }
+if (!Object.keys(window.userSettings).includes("s2s_autogenerate")) { // For backwards compatibility
+    window.userSettings.s2s_autogenerate = true
+}
+if (!Object.keys(window.userSettings).includes("s2s_prePitchShift")) { // For backwards compatibility
+    window.userSettings.s2s_prePitchShift = false
+}
+if (!Object.keys(window.userSettings).includes("s2s_removeNoise")) { // For backwards compatibility
+    window.userSettings.s2s_removeNoise = false
+}
+if (!Object.keys(window.userSettings).includes("s2s_noiseRemStrength")) { // For backwards compatibility
+    window.userSettings.s2s_noiseRemStrength = 0.25
+}
 
 const updateUIWithSettings = () => {
     useGPUCbx.checked = window.userSettings.useGPU
@@ -238,6 +250,7 @@ initMenuSetting(setting_defaultToHiFi, "defaultToHiFi", "checkbox")
 initMenuSetting(setting_keepPaceOnNew, "keepPaceOnNew", "checkbox")
 initMenuSetting(setting_areload_voices, "autoReloadVoices", "checkbox")
 initMenuSetting(setting_output_json, "outputJSON", "checkbox")
+initMenuSetting(setting_keepEditorOnVoiceChange, "keepEditorOnVoiceChange", "checkbox")
 initMenuSetting(setting_output_num_seq, "filenameNumericalSeq", "checkbox")
 initMenuSetting(setting_darkprompt, "darkPrompt", "checkbox", setPromptTheme)
 initMenuSetting(setting_prompt_fontSize, "prompt_fontSize", "number", setPromptFontSize)
@@ -261,6 +274,12 @@ initMenuSetting(setting_audio_pad_start, "audio.padStart", "text", undefined, pa
 initMenuSetting(setting_audio_pad_end, "audio.padEnd", "text", undefined, parseInt)
 initMenuSetting(setting_audio_bitdepth, "audio.bitdepth", "select")
 initMenuSetting(setting_audio_amplitude, "audio.amplitude", "select", parseFloat)
+
+initMenuSetting(setting_s2s_autogenerate, "s2s_autogenerate", "checkbox")
+initMenuSetting(setting_s2s_prePitchShift, "s2s_prePitchShift", "checkbox")
+initMenuSetting(setting_s2s_removeNoise, "s2s_removeNoise", "checkbox")
+initMenuSetting(setting_s2s_noiseRemStrength, "s2s_noiseRemStrength", "number", undefined, parseFloat)
+
 initMenuSetting(batch_clearDirFirstCkbx, "batch_clearDirFirst", "checkbox")
 initMenuSetting(batch_skipExisting, "batch_skipExisting", "checkbox")
 initMenuSetting(batch_batchSizeInput, "batch_batchSize", "text", undefined, parseInt)

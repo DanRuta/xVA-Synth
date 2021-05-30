@@ -17,3 +17,29 @@ _arpabet = ['@' + s for s in cmudict.valid_symbols]
 # Export all symbols:
 symbols = [_pad] + list(_special) + list(_punctuation) + list(_letters) + _arpabet
 pad_idx = 0
+
+
+def get_symbols(symbol_set='english_basic'):
+    if symbol_set == 'english_basic':
+        _pad = '_'
+        _punctuation = '!\'(),.:;? '
+        _special = '-'
+        _letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+        symbols = list(_pad + _special + _punctuation + _letters) + _arpabet
+    elif symbol_set == 'english_basic_lowercase':
+        _pad = '_'
+        _punctuation = '!\'"(),.:;? '
+        _special = '-'
+        _letters = 'abcdefghijklmnopqrstuvwxyz'
+        symbols = list(_pad + _special + _punctuation + _letters) + _arpabet
+    elif symbol_set == 'english_expanded':
+        _punctuation = '!\'",.:;? '
+        _math = '#%&*+-/[]()'
+        _special = '_@©°½—₩€$'
+        _accented = 'áçéêëñöøćž'
+        _letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+        symbols = list(_punctuation + _math + _special + _accented + _letters) + _arpabet
+    else:
+        raise Exception("{} symbol set does not exist".format(symbol_set))
+
+    return symbols

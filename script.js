@@ -16,6 +16,7 @@ window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 process.on(`uncaughtException`, data => window.appLogger.log(data))
 window.onerror = (err, url, lineNum) => window.appLogger.log(err)
 const {saveUserSettings, deleteFolderRecursive} = require("./settingsMenu.js")
+const xVASpeech = require("./xVASpeech.js")
 const {startBatch} = require("./batch.js")
 window.electronBrowserWindow = require("electron").remote.getCurrentWindow()
 const child = require("child_process").execFile
@@ -113,10 +114,14 @@ window.loadAllModels = () => {
                                 }
                             })
 
-                            const modelData = {model, modelsPath, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, gender, modelVersion: model.modelVersion, hifi: undefined}
+                            const modelData = {model, modelsPath, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, gender, modelVersion: model.modelVersion, hifi: undefined, xvaspeech: undefined}
                             const potentialHiFiPath = `${modelsPath}/${voiceId}.hg.pt`
                             if (fs.existsSync(potentialHiFiPath)) {
                                 modelData.hifi = potentialHiFiPath
+                            }
+                            const potentialxVASpeechPath = `${modelsPath}/${voiceId}.xvaspeech.pt`
+                            if (fs.existsSync(potentialxVASpeechPath)) {
+                                modelData.xvaspeech = potentialxVASpeechPath
                             }
 
                             if (existingDuplicates.length) {
@@ -206,7 +211,7 @@ window.changeGame = (meta) => {
     setting_out_path_input.value = window.userSettings[`outpath_${gameFolder}`]
 
     if (meta) {
-        const background = `linear-gradient(0deg, grey 0px, rgba(0,0,0,0)), url("assets/${meta.join("-")}")`
+        const background = `linear-gradient(0deg, rgba(128,128,128,${window.userSettings.bg_gradient_opacity}) 0px, rgba(0,0,0,0)), url("assets/${meta.join("-")}")`
         Array.from(document.querySelectorAll("button")).forEach(e => e.style.background = `#${themeColour}`)
         Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.background = `#${themeColour}`)
         Array.from(document.querySelectorAll(".spinner")).forEach(e => e.style.borderLeftColor = `#${themeColour}`)
@@ -277,7 +282,6 @@ window.changeGame = (meta) => {
             if (event.ctrlKey && event.shiftKey) {
                 if (event.altKey) {
                     const files = fs.readdirSync(`./output`).filter(fname => fname.includes("temp-") && fname.includes(".wav"))
-                    console.log("files", files)
                     if (files.length) {
                         const options = {
                             hz: window.userSettings.audio.hz,
@@ -442,7 +446,6 @@ const makeSample = (src, newSample) => {
     const openFileLocationButton = createElem("div", {title: "Open containing folder"})
     openFileLocationButton.innerHTML = "&#10064;"
     openFileLocationButton.addEventListener("click", () => {
-        console.log("open dir", src)
         shell.showItemInFolder(src)
     })
 
@@ -637,9 +640,8 @@ generateVoiceButton.addEventListener("click", () => {
         let isFreshRegen = true
         let old_sequence = undefined
 
-
         if (editor.innerHTML && editor.innerHTML.length && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
-            if (window.pitchEditor.sequence && sequence!=window.pitchEditor.inputSequence) {
+            if (window.pitchEditor.audioInput || window.pitchEditor.sequence && sequence!=window.pitchEditor.inputSequence) {
                 old_sequence = window.pitchEditor.inputSequence
             }
         }
@@ -986,7 +988,7 @@ const createModal = (type, message) => {
 }
 window.closeModal = (container=undefined, notThisOne=undefined) => {
     return new Promise(resolve => {
-        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, container, pluginsContainer, modalContainer]
+        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, container, pluginsContainer, modalContainer, s2sSelectContainer]
         const containers = container==undefined ? allContainers : [container]
         containers.forEach(cont => {
             if ((notThisOne!=undefined&&notThisOne!=cont) && (notThisOne==undefined || notThisOne!=cont) && cont!=undefined) {
@@ -1807,12 +1809,16 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
 
 
 
-
-
-
 // Plugins
 // =======
 window.setupModal(pluginsIcon, pluginsContainer)
+
+// Speech-to-Speech
+// ================
+window.setupModal(s2s_selectVoiceBtn, s2sSelectContainer, () => window.populateS2SVoiceList())
+window.setupModal(s2s_settingsRecNoiseBtn, s2sSelectContainer, () => window.populateS2SVoiceList())
+
+
 
 
 // Other

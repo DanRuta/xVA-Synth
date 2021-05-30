@@ -11,6 +11,10 @@ _pounds_re = re.compile(r'£([0-9\,]*[0-9]+)')
 _dollars_re = re.compile(r'\$([0-9\.\,]*[0-9]+)')
 _ordinal_re = re.compile(r'[0-9]+(st|nd|rd|th)')
 _number_re = re.compile(r'[0-9]+')
+_magnitudes = ['trillion', 'billion', 'million', 'thousand', 'hundred', 'm', 'b', 't']
+_currency_re = re.compile(r'([\$€£₩])([0-9\.\,]*[0-9]+)(?:[ ]?({})(?=[^a-zA-Z]))?'.format("|".join(_magnitudes)), re.IGNORECASE)
+_currency_key = {'$': 'dollar', '£': 'pound', '€': 'euro', '₩': 'won'}
+_magnitudes_key = {'m': 'million', 'b': 'billion', 't': 'trillion'}
 
 
 def _remove_commas(m):
@@ -19,6 +23,48 @@ def _remove_commas(m):
 
 def _expand_decimal_point(m):
   return m.group(1).replace('.', ' point ')
+
+def _expand_currency(m):
+    currency = _currency_key[m.group(1)]
+    quantity = m.group(2)
+    magnitude = m.group(3)
+
+    # remove commas from quantity to be able to convert to numerical
+    quantity = quantity.replace(',', '')
+
+    # check for million, billion, etc...
+    if magnitude is not None and magnitude.lower() in _magnitudes:
+        if len(magnitude) == 1:
+            magnitude = _magnitudes_key[magnitude.lower()]
+        return "{} {} {}".format(_expand_hundreds(quantity), magnitude, currency+'s')
+
+    parts = quantity.split('.')
+    if len(parts) > 2:
+        return quantity + " " + currency + "s"    # Unexpected format
+
+    dollars = int(parts[0]) if parts[0] else 0
+
+    cents = int(parts[1]) if len(parts) > 1 and parts[1] else 0
+    if dollars and cents:
+        dollar_unit = currency if dollars == 1 else currency+'s'
+        cent_unit = 'cent' if cents == 1 else 'cents'
+        return "{} {}, {} {}".format(
+            _expand_hundreds(dollars), dollar_unit,
+            _inflect.number_to_words(cents), cent_unit)
+    elif dollars:
+        dollar_unit = currency if dollars == 1 else currency+'s'
+        return "{} {}".format(_expand_hundreds(dollars), dollar_unit)
+    elif cents:
+        cent_unit = 'cent' if cents == 1 else 'cents'
+        return "{} {}".format(_inflect.number_to_words(cents), cent_unit)
+    else:
+        return 'zero' + ' ' + currency + 's'
+def _expand_hundreds(text):
+    number = float(text)
+    if 1000 < number < 10000 and (number % 100 == 0) and (number % 1000 != 0):
+        return _inflect.number_to_words(int(number / 100)) + " hundred"
+    else:
+        return _inflect.number_to_words(text)
 
 
 def _expand_dollars(m):
