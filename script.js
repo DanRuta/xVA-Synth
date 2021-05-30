@@ -972,14 +972,44 @@ if (dialogueInputCache) {
 // Pitch/Duration editor
 // =====================
 
-window.setLetterFocus = (l, multi) => {
-    if (window.pitchEditor.letterFocus.length && !multi) {
-        window.pitchEditor.letterFocus.forEach(li => letterElems[li].style.color = "black")
-        window.pitchEditor.letterFocus = []
+window.setLetterFocus = (l, ctrlKey, altKey) => {
+    // On alt key modifier, make a selection on the whole whole word
+    if (altKey) {
+        window.pitchEditor.letterFocus.push(l)
+        let l2 = l
+        // Looking backwards
+        while (l2>=0) {
+            let prevLetter = window.pitchEditor.letters[l2]
+            if (prevLetter!="_") {
+                window.pitchEditor.letterFocus.push(l2)
+            } else {
+                break
+            }
+            l2--
+        }
+        l2 = l
+        // Looking forward
+        while (l2<window.pitchEditor.letters.length) {
+            let nextLetter = window.pitchEditor.letters[l2]
+            if (nextLetter!="_") {
+                window.pitchEditor.letterFocus.push(l2)
+            } else {
+                break
+            }
+            l2++
+        }
+
+    } else {
+        if (window.pitchEditor.letterFocus.length && !ctrlKey) {
+            window.pitchEditor.letterFocus.forEach(li => letterElems[li].style.color = "black")
+            window.pitchEditor.letterFocus = []
+        }
+        window.pitchEditor.letterFocus.push(l)
     }
-    window.pitchEditor.letterFocus.push(l)
+
     window.pitchEditor.letterFocus = Array.from(new Set(window.pitchEditor.letterFocus.sort()))
     window.pitchEditor.letterFocus.forEach(li => letterElems[li].style.color = "red")
+
 
     if (window.pitchEditor.letterFocus.length==1) {
         letterLength.value = parseFloat(window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]])
@@ -1065,7 +1095,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen, pac
         sliders.push(slider)
         letterDiv.appendChild(slider)
 
-        letterLabel.addEventListener("click", event => setLetterFocus(l, event.ctrlKey))
+        letterLabel.addEventListener("click", event => setLetterFocus(l, event.ctrlKey, event.altKey))
         let multiLetterPitchDelta = undefined
         let multiLetterStartPitchVals = []
         slider.addEventListener("mousedown", () => {
