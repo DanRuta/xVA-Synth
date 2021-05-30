@@ -92,7 +92,7 @@ class PluginsManager {
                     plugins.push([pluginId, pluginData, false, minVersionOk, maxVersionOk])
 
                 } catch (e) {
-                    this.appLogger.log(`Error loading plugin ${pluginId}: ${e}`)
+                    this.appLogger.log(`${window.i18n.ERR_LOADING_PLUGIN} ${pluginId}: ${e}`)
                 }
             })
 
@@ -223,16 +223,16 @@ class PluginsManager {
             const successful = plugins.filter(p => p=="OK")
             const failed = plugins.filter(p => p!="OK")
 
-            let message = `Successfully initialized ${successful.length} plugin${successful.length>1||successful.length==0?"s":""}.`
+            let message = `${window.i18n.SUCCESSFULLY_INITIALIZED} ${successful.length} ${successful.length>1||successful.length==0?window.i18n.PLUGINS:window.i18n.PLUGIN}.`
             if (failed.length) {
                 if (successful.length==0) {
                     message = ""
                 }
-                message += ` Failed to initialize the following plugin${failed.length>1?"s":""}: <br>${failed.join("<br>")} <br><br>Check the server.log file for detailed error traces`
+                message += ` ${window.i18n.FAILED_INIT_FOLLOWING} ${failed.length>1?window.i18n.PLUGINS:window.i18n.PLUGIN}: <br>${failed.join("<br>")} <br><br>${window.i18n.CHECK_SERVERLOG}`
             }
 
             if (!status.length || successful.length==0 && failed.length==0) {
-                message = "Sucess. No plugins active."
+                message = window.i18n.SUCC_NO_ACTIVE_PLUGINS
             }
 
             const restartRequired = newPlugins.map(newPluginId => this.plugins.find(([pluginId, pluginData, isEnabled]) => pluginId==newPluginId))
@@ -240,7 +240,7 @@ class PluginsManager {
                                     removedPlugins.map(removedPluginId => this.plugins.find(([pluginId, pluginData, isEnabled]) => pluginId==removedPluginId))
                                               .filter(([pluginId, pluginData, isEnabled]) => !!pluginData["uninstall-requires-restart"]).length
             if (restartRequired) {
-                message += "<br><br> App restart is required for at least one of the plugins to take effect."
+                message += `<br><br> ${window.i18n.APP_RESTART_NEEDED}`
             }
 
             window.errorModal(message)
@@ -264,7 +264,7 @@ class PluginsManager {
                             pluginsCSS.innerHTML += styleData
                         }
                     } catch (e) {
-                        window.appLogger.log(`Error loading style file for plugin ${pluginId}: ${e}`)
+                        window.appLogger.log(`${window.i18n.ERR_LOADING_CSS} ${pluginId}: ${e}`)
                     }
                 })
 
@@ -280,7 +280,7 @@ class PluginsManager {
                 const functionName = pluginData["front-end-hooks"][task][hookTime]["function"]
 
                 if (!file.endsWith(".js")) {
-                    window.appLogger.log(`[Plugin: ${pluginId}]: Cannot import ${file} file for ${hookTime} ${task} entry-point: Only JavaScript files are supported right now.`)
+                    window.appLogger.log(`[${window.i18n.PLUGIN}: ${pluginId}]: ${window.i18n.CANT_IMPORT_FILE_FOR_HOOK_TASK_ENTRYPOINT.replace("_1", file).replace("_2", hookTime).replace("_3", task)}: ${window.i18n.ONLY_JS}`)
                     return
                 }
 
@@ -298,8 +298,7 @@ class PluginsManager {
                 }
             }
         } catch (e) {
-            console.log(`Error loading plugin ${pluginId}->${task}->${hookTime}: ` + e)
-            window.appLogger.log(`Error loading plugin ${pluginId}->${task}->${hookTime}: ` + e)
+            window.appLogger.log(`${window.i18n.ERR_LOADING_PLUGIN} ${pluginId}->${task}->${hookTime}: ` + e)
         }
 
     }
@@ -315,7 +314,7 @@ class PluginsManager {
                 window.appLogger.setPrefix("")
 
             } catch (e) {
-                window.appLogger.log(`[Plugin run error at event "${event}": ${pluginId}]: ${e}`)
+                window.appLogger.log(`[${window.i18n.PLUGIN_RUN_ERROR} "${event}": ${pluginId}]: ${e}`)
             }
         })
     }

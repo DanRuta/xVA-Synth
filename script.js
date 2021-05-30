@@ -15,6 +15,7 @@ const {xVAAppLogger} = require("./appLogger.js")
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 process.on(`uncaughtException`, data => window.appLogger.log(data))
 window.onerror = (err, url, lineNum) => window.appLogger.log(err)
+require("./i18n.js")
 require("./util.js")
 const {saveUserSettings, deleteFolderRecursive} = require("./settingsMenu.js")
 const xVASpeech = require("./xVASpeech.js")
@@ -136,14 +137,14 @@ window.loadAllModels = () => {
                         })
                     } catch (e) {
                         console.log(e)
-                        window.appLogger.log("ERROR loading models for game: "+ gameFolder  + " with fileName: "+fileName)
+                        window.appLogger.log(`${window.i18n.ERR_LOADING_MODELS_FOR_GAME_WITH_FILENAME.replace("_1", gameFolder)} `+fileName)
                         window.appLogger.log(e)
                         window.appLogger.log(e.stack)
                     }
                 })
             } catch (e) {
                 console.log(e)
-                window.appLogger.log("ERROR loading models for game: "+ gameFolder)
+                window.appLogger.log(`${window.i18n.ERR_LOADING_MODELS_FOR_GAME}: `+ gameFolder)
                 window.appLogger.log(e)
             }
 
@@ -176,7 +177,7 @@ window.changeGame = (meta) => {
     window.currentGame = meta
     themeColour = meta[1]
     generateVoiceButton.disabled = true
-    generateVoiceButton.innerHTML = "Generate Voice"
+    generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
     selectedGameDisplay.innerHTML = meta[3].split(".")[0]
 
 
@@ -189,9 +190,9 @@ window.changeGame = (meta) => {
     } catch (e) {}
 
     // Change the app title
-    title.innerHTML = "Select Voice Type"
+    title.innerHTML = window.i18n.SELECT_VOICE_TYPE
     if (window.games[window.currentGame[0]] == undefined) {
-        title.innerHTML = `No models in: ${window.userSettings[`modelspath_${window.currentGame[0]}`]}`
+        title.innerHTML = `${window.i18n.NO_MODELS_IN}: ${window.userSettings[`modelspath_${window.currentGame[0]}`]}`
         console.log(title.innerHTML)
     } else if (meta[2]) {
         document.title = `${meta[2]}VA Synth`
@@ -206,9 +207,9 @@ window.changeGame = (meta) => {
 
     setting_models_path_container.style.display = "flex"
     setting_out_path_container.style.display = "flex"
-    setting_models_path_label.innerHTML = `<i style="display:inline">${gameName}</i><span>models path</span>`
+    setting_models_path_label.innerHTML = `<i style="display:inline">${gameName}</i><span>${window.i18n.SETTINGS_MODELS_PATH}</span>`
     setting_models_path_input.value = window.userSettings[`modelspath_${gameFolder}`]
-    setting_out_path_label.innerHTML = `<i style="display:inline">${gameName}</i> output path`
+    setting_out_path_label.innerHTML = `<i style="display:inline">${gameName}</i> ${window.i18n.SETTINGS_OUTPUT_PATH}`
     setting_out_path_input.value = window.userSettings[`outpath_${gameFolder}`]
 
     if (meta) {
@@ -250,13 +251,13 @@ window.changeGame = (meta) => {
 
     // No models found
     if (!Object.keys(window.games).length) {
-        title.innerHTML = "No models found"
+        title.innerHTML = window.i18n.NO_MODELS_FOUND
         return
     }
 
     const buttons = []
 
-    voiceSearchInput.placeholder = `Search ${window.games[meta[0]] ? window.games[meta[0]].models.length : "0"} voices...`
+    voiceSearchInput.placeholder = window.i18n.SEARCH_N_VOICES.replace("_", window.games[meta[0]] ? window.games[meta[0]].models.length : "0")
     voiceSearchInput.value = ""
 
     if (!window.games[meta[0]]) {
@@ -292,8 +293,6 @@ window.changeGame = (meta) => {
                             amplitude: window.userSettings.audio.amplitude
                         }
 
-                        // console.log(`About to save file from ${from} to ${to} with options: ${JSON.stringify(options)}`)
-                        // window.appLogger.log(`About to save file from ${from} to ${to} with options: ${JSON.stringify(options)}`)
                         fetch(`http://localhost:8008/outputAudio`, {
                             method: "Post",
                             body: JSON.stringify({
@@ -367,7 +366,7 @@ window.changeGame = (meta) => {
                 appVersionOk = false
             }
             if (!appVersionOk) {
-                window.errorModal(`This model requires app version v${model.version}<br><br>This app version: ${window.appVersion}`)
+                window.errorModal(`${window.i18n.MODEL_REQUIRES_VERSION} v${model.version}<br><br>${window.i18n.THIS_APP_VERSION}: ${window.appVersion}`)
                 return
             }
 
@@ -390,11 +389,11 @@ window.changeGame = (meta) => {
 
             // The model is already loaded. Don't re-load it.
             if (generateVoiceButton.dataset.modelIDLoaded == voiceId) {
-                generateVoiceButton.innerHTML = "Generate Voice"
+                generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
                 generateVoiceButton.dataset.modelQuery = "null"
 
             } else {
-                generateVoiceButton.innerHTML = "Load model"
+                generateVoiceButton.innerHTML = window.i18n.LOAD_MODEL
 
                 const modelGameFolder = audioPreviewPath.split("/")[0]
 
@@ -444,14 +443,14 @@ const makeSample = (src, newSample) => {
         src: src,
         type: `audio/${fileFormat}`
     }))
-    const openFileLocationButton = createElem("div", {title: "Open containing folder"})
+    const openFileLocationButton = createElem("div", {title: window.i18n.OPEN_CONTAINING_FOLDER})
     openFileLocationButton.innerHTML = "&#10064;"
     openFileLocationButton.addEventListener("click", () => {
         shell.showItemInFolder(src)
     })
 
     if (fs.existsSync(`${src}.json`)) {
-        const editButton = createElem("div", {title: "Adjust sample in the editor"})
+        const editButton = createElem("div", {title: window.i18n.ADJUST_SAMPLE_IN_EDITOR})
         editButton.innerHTML = `<svg class="renameSVG" version="1.0" xmlns="http:\/\/www.w3.org/2000/svg" width="344.000000pt" height="344.000000pt" viewBox="0 0 344.000000 344.000000" preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,344.000000) scale(0.100000,-0.100000)" fill="#555555" stroke="none"><path d="M1489 2353 l-936 -938 -197 -623 c-109 -343 -195 -626 -192 -629 2 -3 284 84 626 193 l621 198 937 938 c889 891 937 940 934 971 -11 108 -86 289 -167 403 -157 219 -395 371 -655 418 l-34 6 -937 -937z m1103 671 c135 -45 253 -135 337 -257 41 -61 96 -178 112 -241 l12 -48 -129 -129 -129 -129 -287 287 -288 288 127 127 c79 79 135 128 148 128 11 0 55 -12 97 -26z m-1798 -1783 c174 -79 354 -248 436 -409 59 -116 72 -104 -213 -196 l-248 -80 -104 104 c-58 58 -105 109 -105 115 0 23 154 495 162 495 5 0 37 -13 72 -29z"/></g></svg>`
         editButton.addEventListener("click", () => {
             let editData = fs.readFileSync(`${src}.json`, "utf8")
@@ -472,12 +471,12 @@ const makeSample = (src, newSample) => {
         audioControls.appendChild(editButton)
     }
 
-    const renameButton = createElem("div", {title: "Rename the file"})
+    const renameButton = createElem("div", {title: window.i18n.RENAME_THE_FILE})
     renameButton.innerHTML = `<svg class="renameSVG" version="1.0" xmlns="http://www.w3.org/2000/svg" width="166.000000pt" height="336.000000pt" viewBox="0 0 166.000000 336.000000" preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,336.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none"> <path d="M165 3175 c-30 -31 -35 -42 -35 -84 0 -34 6 -56 21 -75 42 -53 58 -56 324 -56 l245 0 0 -1290 0 -1290 -245 0 c-266 0 -282 -3 -324 -56 -15 -19 -21 -41 -21 -75 0 -42 5 -53 35 -84 l36 -35 281 0 280 0 41 40 c30 30 42 38 48 28 5 -7 9 -16 9 -21 0 -4 15 -16 33 -27 30 -19 51 -20 319 -20 l287 0 36 35 c30 31 35 42 35 84 0 34 -6 56 -21 75 -42 53 -58 56 -324 56 l-245 0 0 1290 0 1290 245 0 c266 0 282 3 324 56 15 19 21 41 21 75 0 42 -5 53 -35 84 l-36 35 -287 0 c-268 0 -289 -1 -319 -20 -18 -11 -33 -23 -33 -27 0 -5 -4 -14 -9 -21 -6 -10 -18 -2 -48 28 l-41 40 -280 0 -281 0 -36 -35z"/></g></svg>`
 
     renameButton.addEventListener("click", () => {
         createModal("prompt", {
-            prompt: "Enter new file name, or submit unchanged to cancel.",
+            prompt: window.i18n.ENTER_NEW_FILENAME_UNCHANGED_CANCEL,
             value: sample.querySelector("div").innerHTML
         }).then(newFileName => {
             if (newFileName!=fileName) {
@@ -506,7 +505,7 @@ const makeSample = (src, newSample) => {
         })
     })
 
-    const editInProgramButton = createElem("div", {title: "Edit in external program"})
+    const editInProgramButton = createElem("div", {title: window.i18n.EDIT_IN_EXTERNAL_PROGRAM})
     editInProgramButton.innerHTML = `<svg class="renameSVG" version="1.0" width="175.000000pt" height="240.000000pt" viewBox="0 0 175.000000 240.000000"  preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,240.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none"><path d="M615 2265 l-129 -125 -68 0 c-95 0 -98 -4 -98 -150 0 -146 3 -150 98 -150 l68 0 129 -125 c128 -123 165 -145 179 -109 8 20 8 748 0 768 -14 36 -51 14 -179 -109z"/> <path d="M1016 2344 c-22 -21 -20 -30 10 -51 66 -45 126 -109 151 -162 22 -47 27 -69 27 -141 0 -72 -5 -94 -27 -141 -25 -53 -85 -117 -151 -162 -30 -20 -33 -39 -11 -57 22 -18 64 3 132 64 192 173 164 491 -54 636 -54 35 -56 35 -77 14z"/> <path d="M926 2235 c-8 -22 1 -37 46 -70 73 -53 104 -149 78 -241 -13 -44 -50 -92 -108 -136 -26 -21 -27 -31 -6 -52 37 -38 150 68 179 167 27 91 13 181 -41 259 -49 70 -133 112 -148 73z"/> <path d="M834 2115 c-9 -23 2 -42 33 -57 53 -25 56 -108 4 -134 -35 -18 -44 -30 -36 -53 8 -25 34 -27 76 -6 92 48 92 202 0 250 -38 19 -70 19 -77 0z"/> <path d="M1381 1853 c-33 -47 -182 -253 -264 -364 -100 -137 -187 -262 -187 -270 0 -8 140 -204 177 -249 5 -6 41 41 109 141 30 45 60 86 65 93 48 54 197 276 226 336 33 68 37 83 37 160 1 71 -3 93 -23 130 -53 101 -82 106 -140 23z"/> <path d="M211 1861 c-56 -60 -68 -184 -27 -283 15 -38 106 -168 260 -371 130 -173 236 -320 236 -328 0 -8 -9 -25 -20 -39 -11 -14 -20 -29 -20 -33 0 -5 -10 -23 -23 -40 -12 -18 -27 -41 -33 -52 -13 -24 -65 -114 -80 -138 -10 -17 -13 -16 -60 7 -98 49 -209 43 -305 -17 -83 -51 -129 -141 -129 -251 0 -161 115 -283 275 -294 101 -6 173 22 243 96 56 58 79 97 133 227 46 112 101 203 164 274 l53 60 42 -45 c27 -29 69 -103 124 -217 86 -176 133 -250 197 -306 157 -136 405 -73 478 123 37 101 21 202 -46 290 -91 118 -275 147 -402 63 -30 -20 -42 -23 -49 -14 -5 7 -48 82 -96 167 -47 85 -123 202 -168 260 -45 58 -111 143 -146 190 -85 110 -251 326 -321 416 -31 40 -65 84 -76 100 -11 15 -35 46 -54 68 -19 23 -45 58 -59 79 -30 45 -54 47 -91 8z m653 -943 c20 -28 20 -33 0 -52 -42 -43 -109 10 -69 54 24 26 50 25 69 -2z m653 -434 c49 -20 87 -85 87 -149 -2 -135 -144 -209 -257 -134 -124 82 -89 265 58 299 33 8 64 4 112 -16z m-1126 -20 c47 -24 73 -71 77 -139 3 -50 0 -65 -20 -94 -34 -50 -71 -73 -125 -78 -99 -9 -173 53 -181 152 -11 135 126 223 249 159z"/></g></svg>`
     editInProgramButton.addEventListener("click", () => {
 
@@ -522,24 +521,24 @@ const makeSample = (src, newSample) => {
 
             sp.on("error", err => {
                 if (err.message.includes("ENOENT")) {
-                    window.errorModal(`The following program path is not valid:<br><br> ${window.userSettings.externalAudioEditor}`)
+                    window.errorModal(`${window.i18n.FOLLOWING_PATH_NOT_VALID}:<br><br> ${window.userSettings.externalAudioEditor}`)
                 } else {
                     window.errorModal(err.message)
                 }
             })
 
         } else {
-            window.errorModal("Specify your audio editing tool in the settings")
+            window.errorModal(window.i18n.SPECIFY_EDIT_TOOL)
         }
     })
 
 
-    const deleteFileButton = createElem("div", {title: "Delete file"})
+    const deleteFileButton = createElem("div", {title: window.i18n.DELETE_FILE})
     deleteFileButton.innerHTML = "&#10060;"
     deleteFileButton.addEventListener("click", () => {
-        confirmModal(`Are you sure you'd like to delete this file?<br><br><i>${fileName}</i>`).then(confirmation => {
+        confirmModal(`${window.i18n.SURE_DELETE}<br><br><i>${fileName}</i>`).then(confirmation => {
             if (confirmation) {
-                window.appLogger.log(`Deleting${newSample?"new":" "} file: ${src}`)
+                window.appLogger.log(`${newSample?window.i18n.DELETING_NEW_FILE:window.i18n.DELETING}: ${src}`)
                 fs.unlinkSync(src)
                 sample.remove()
                 if (fs.existsSync(`${src}.json`)) {
@@ -569,20 +568,20 @@ generateVoiceButton.addEventListener("click", () => {
     if (generateVoiceButton.dataset.modelQuery && generateVoiceButton.dataset.modelQuery!="null") {
 
         if (window.batch_state.state) {
-            window.errorModal("Batch synthesis is in progress. Loading a model in the main app now would break things.")
+            window.errorModal(window.i18n.BATCH_ERR_IN_PROGRESS)
             return
         }
 
-        window.appLogger.log(`Loading voice set: ${JSON.parse(generateVoiceButton.dataset.modelQuery).model}`)
+        window.appLogger.log(`${window.i18n.LOADING_VOICE}: ${JSON.parse(generateVoiceButton.dataset.modelQuery).model}`)
         window.batch_state.lastModel = JSON.parse(generateVoiceButton.dataset.modelQuery).model.split("/").reverse()[0]
 
-        spinnerModal("Loading voice set<br>(may take a minute... but not much more!)")
+        spinnerModal(`${window.i18n.LOADING_VOICE}`)
         fetch(`http://localhost:8008/loadModel`, {
             method: "Post",
             body: generateVoiceButton.dataset.modelQuery
         }).then(r=>r.text()).then(res => {
             generateVoiceButton.dataset.modelQuery = null
-            generateVoiceButton.innerHTML = "Generate Voice"
+            generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
             generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
 
             if (window.userSettings.defaultToHiFi && window.currentModel.hifi) {
@@ -597,7 +596,7 @@ generateVoiceButton.addEventListener("click", () => {
             console.log(e)
             if (e.code =="ENOENT") {
                 closeModal(null, modalContainer).then(() => {
-                    createModal("error", "There was an issue connecting to the python server.<br><br>Try again in a few seconds. If the issue persists, make sure localhost port 8008 is free, or send the server.log file to me on GitHub or Nexus.")
+                    createModal("error", window.i18n.ERR_SERVER)
                 })
             }
         })
@@ -650,7 +649,7 @@ generateVoiceButton.addEventListener("click", () => {
         const pace = (window.userSettings.keepPaceOnNew && isFreshRegen)?pace_slid.value:1
 
 
-        window.appLogger.log(`Synthesising audio: ${sequence}`)
+        window.appLogger.log(`${window.i18n.SYNTHESIZING}: ${sequence}`)
 
         fetch(`http://localhost:8008/synthesize`, {
             method: "Post",
@@ -700,7 +699,7 @@ generateVoiceButton.addEventListener("click", () => {
         }).catch(res => {
             isGenerating = false
             console.log(res)
-            window.errorModal(`Something went wrong`)
+            window.errorModal(window.i18n.SOMETHING_WENT_WRONG)
             toggleSpinnerButtons()
         })
     }
@@ -739,11 +738,9 @@ const saveFile = (from, to) => {
     window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["pre"], event="pre keep-sample", pluginData)
 
     if (window.userSettings.audio.ffmpeg) {
-        spinnerModal("Saving the audio file...")
+        spinnerModal(window.i18n.SAVING_AUDIO_FILE)
 
-        console.log(`About to save file from ${from} to ${to} with options: ${JSON.stringify(options)}`)
-        window.appLogger.log(`About to save file from ${from} to ${to} with options: ${JSON.stringify(options)}`)
-
+        window.appLogger.log(`${window.i18n.ABOUT_TO_SAVE_FROM_N1_TO_N2_WITH_OPTIONS}: ${JSON.stringify(options)}`.replace("_1", from).replace("_2", to))
 
         const extraInfo = {
             game: window.currentGame[0],
@@ -763,7 +760,7 @@ const saveFile = (from, to) => {
             closeModal().then(() => {
                 if (res.length) {
                     console.log("res", res)
-                    window.errorModal(`Something went wrong<br><br>Input: ${from}<br>Output: ${to}<br><br>${res}`)
+                    window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${window.i18n.INPUT}: ${from}<br>${window.i18n.OUTPUT}: ${to}<br><br>${res}`)
                 } else {
                     if (window.userSettings.outputJSON) {
                         fs.writeFileSync(`${to}.json`, JSON.stringify({inputSequence: dialogueInput.value.trim(), pitchEditor: window.pitchEditor, pacing: parseFloat(pace_slid.value)}, null, 4))
@@ -774,9 +771,8 @@ const saveFile = (from, to) => {
             })
         }).catch(res => {
             window.appLogger.log(res)
-            console.log("CATCH res", res)
             closeModal().then(() => {
-                window.errorModal(`Something went wrong<br><br>Input: ${from}<br>Output: ${to}<br><br>${res}`)
+                window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${window.i18n.INPUT}: ${from}<br>${window.i18n.OUTPUT}: ${to}<br><br>${res}`)
             })
         })
     } else {
@@ -785,11 +781,11 @@ const saveFile = (from, to) => {
                 console.log(err)
                 window.appLogger.log(err)
                 if (!fs.existsSync(from)) {
-                    window.appLogger.log(`The temporary file does not exist at this file path: ${from}`)
+                    window.appLogger.log(`${window.i18n.TEMP_FILE_NOT_EXIST}: ${from}`)
                 }
                 const outputFolder = to.split("/").reverse().slice(1,1000).reverse().join("/")
                 if (!fs.existsSync(outputFolder)) {
-                    window.appLogger.log(`The output directory does not exist at this file path: ${outputFolder}`)
+                    window.appLogger.log(`${window.i18n.OUT_DIR_NOT_EXIST}: ${outputFolder}`)
                 }
             } else {
                 if (window.userSettings.outputJSON) {
@@ -848,14 +844,14 @@ window.keepSampleFunction = shiftClick => {
 
         const outFolder = toLocation.split("/").reverse().slice(2, 100).reverse().join("/")
         if (!fs.existsSync(outFolder)) {
-            return void window.errorModal(`The output directory does not exist:<br><br><i>${outFolder}</i><br><br>You can change this in the settings.`)
+            return void window.errorModal(`${window.i18n.OUT_DIR_NOT_EXIST}:<br><br><i>${outFolder}</i><br><br>${window.i18n.YOU_CAN_CHANGE_IN_SETTINGS}`)
         }
 
         // File name conflict
         const alreadyExists = fs.existsSync(toLocation)
         if (alreadyExists || shiftClick) {
 
-            const promptText = alreadyExists ? `File already exists. Adjust the file name here, or submit without changing to overwrite the old file.` : `Enter file name`
+            const promptText = alreadyExists ? window.i18n.FILE_EXISTS_ADJUST : window.i18n.ENTER_FILE_NAME
 
             createModal("prompt", {
                 prompt: promptText,
@@ -926,17 +922,17 @@ let hasRunPostStartPlugins = false
 startingSplashInterval = setInterval(() => {
     if (fs.existsSync(`${path}/FASTPITCH_LOADING`)) {
         if (loadingStage==0) {
-            spinnerModal("Loading...<br>May take a minute (but not much more)<br><br>Building FastPitch model...")
+            spinnerModal(`${window.i18n.LOADING}...<br>${window.i18n.MAY_TAKE_A_MINUTE}<br><br>${window.i18n.BUILDING_FASTPITCH}...`)
             loadingStage = 1
         }
     } else if (fs.existsSync(`${path}/WAVEGLOW_LOADING`)) {
         if (loadingStage==1) {
-            activeModal.children[0].innerHTML = "Loading...<br>May take a minute (but not much more)<br><br>Loading WaveGlow model..."
+            activeModal.children[0].innerHTML = `${window.i18n.LOADING}...<br>${window.i18n.MAY_TAKE_A_MINUTE}<br><br>${window.i18n.LOADING_WAVEGLOW}...`
             loadingStage = 2
         }
     } else if (fs.existsSync(`${path}/SERVER_STARTING`)) {
         if (loadingStage==2) {
-            activeModal.children[0].innerHTML = "Loading...<br>May take a minute (but not much more)<br><br>Starting up the python backend..."
+            activeModal.children[0].innerHTML = `${window.i18n.LOADING}...<br>${window.i18n.MAY_TAKE_A_MINUTE}<br><br>${window.i18n.STARTING_PYTHON}...`
             loadingStage = 3
         }
     } else {
@@ -1382,7 +1378,7 @@ vocoder_select.value = window.userSettings.vocoder.includes(".hg.") ? "qnd" : wi
 const changeVocoder = vocoder => {
     window.userSettings.vocoder = vocoder
     window.batch_state.lastVocoder = vocoder
-    spinnerModal("Changing models...")
+    spinnerModal(window.i18n.CHANGING_MODELS)
     fetch(`http://localhost:8008/setVocoder`, {
         method: "Post",
         body: JSON.stringify({vocoder})
@@ -1423,15 +1419,15 @@ fetch("http://danruta.co.uk/patreon.txt").then(r=>r.text()).then(data => fs.writ
 // Updates
 // =======
 app_version.innerHTML = window.appVersion
-updatesVersions.innerHTML = `This app version: ${window.appVersion}`
+updatesVersions.innerHTML = `${window.i18n.THIS_APP_VERSION}: ${window.appVersion}`
 
 const checkForUpdates = () => {
     fetch("http://danruta.co.uk/xvasynth_updates.txt").then(r=>r.json()).then(data => {
         fs.writeFileSync(`${path}/updates.json`, JSON.stringify(data), "utf8")
-        checkUpdates.innerHTML = "Check for updates now"
+        checkUpdates.innerHTML = window.i18n.CHECK_FOR_UPDATES
         showUpdates()
     }).catch(() => {
-        checkUpdates.innerHTML = "Can't reach server"
+        checkUpdates.innerHTML = window.i18n.CANT_REACH_SERVER
     })
 }
 const showUpdates = () => {
@@ -1446,11 +1442,9 @@ const showUpdates = () => {
     if (!appIsUpToDate) {
         update_nothing.style.display = "none"
         update_something.style.display = "block"
-        updatesVersions.innerHTML = `This app version: ${appVersion}. Available: ${sortedLogVersions[sortedLogVersions.length-1]}`
-        console.log(`Update available: This: ${appVersion}, available: ${sortedLogVersions[sortedLogVersions.length-1]}`)
+        updatesVersions.innerHTML = `${window.i18n.THIS_APP_VERSION}: ${appVersion}. ${window.i18n.AVAILABLE}: ${sortedLogVersions[sortedLogVersions.length-1]}`
     } else {
-        updatesVersions.innerHTML = `This app version: ${appVersion}. Up-to-date.`
-        console.log("App is up-to-date")
+        updatesVersions.innerHTML = `${window.i18n.THIS_APP_VERSION}: ${appVersion}. ${window.i18n.UPTODATE}`
     }
 
     updatesLogList.innerHTML = ""
@@ -1467,7 +1461,7 @@ checkForUpdates()
 window.setupModal(updatesIcon, updatesContainer)
 
 checkUpdates.addEventListener("click", () => {
-    checkUpdates.innerHTML = "Checking for updates..."
+    checkUpdates.innerHTML = window.i18n.CHECKING_FOR_UPDATES
     checkForUpdates()
 })
 showUpdates()
@@ -1514,7 +1508,7 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
             totalGames.add(gameId)
         }
 
-        gameSelectionContent.appendChild(createElem("div", `${numVoices} voice${(numVoices>1||numVoices==0)?"s":""}`))
+        gameSelectionContent.appendChild(createElem("div", `${numVoices} ${(numVoices>1||numVoices==0)?window.i18n.VOICE_PLURAL:window.i18n.VOICE}`))
         gameSelectionContent.appendChild(createElem("div", gameName))
 
         gameSelection.appendChild(gameSelectionContent)
@@ -1561,7 +1555,7 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
         }
     })
 
-    searchGameInput.placeholder = `Search ${Array.from(totalGames).length} games with ${totalVoices} voices...`
+    searchGameInput.placeholder = window.i18n.SEARCH_N_GAMES_WITH_N2_VOICES.replace("_1", Array.from(totalGames).length).replace("_2", totalVoices)
 })
 
 
@@ -1590,9 +1584,8 @@ if (fs.existsSync(`${path}/models/nvidia_waveglowpyt_fp32_20190427.pt`)) {
         }
     })
 } else {
-    console.log("No Waveglow")
     setTimeout(() => {
-        window.errorModal("WaveGlow model not found. Download it also (separate download), and place the .pt file in the models folder.")
+        window.errorModal(window.i18n.WAVEGLOW_NOT_FOUND)
     }, 1500)
 }
 

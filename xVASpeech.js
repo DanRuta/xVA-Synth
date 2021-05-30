@@ -152,7 +152,7 @@ const useWavFileForxVASpeech = (fileName) => {
         const pace = 1
         setPitchEditorValues(textSequence.replace(/\s/g, "_").split(""), pitchData, durationsData, isFreshRegen, pace)
 
-        generateVoiceButton.innerHTML = "Generate Voice"
+        generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
         keepSampleButton.style.display = "none"
         samplePlay.style.display = "none"
 
@@ -199,10 +199,10 @@ const micClickHandler = () => {
                 micClickHandler()
                 return
             }
-            if (window.currentModel && generateVoiceButton.innerHTML == "Generate Voice") {
+            if (window.currentModel && generateVoiceButton.innerHTML == window.i18n.GENERATE_VOICE) {
                 window.startRecord()
             } else {
-                window.errorModal("Please load a target voice from the panel on the left, first.")
+                window.errorModal(window.i18n.LOAD_TARGET_MODEL)
             }
         }
     }
@@ -263,7 +263,7 @@ const populateS2SVoiceList = () => {
     })
 
     if (s2sVoiceList.innerHTML=="") {
-        s2sVoiceList.appendChild(createElem("div", "No xVASpeech models are installed"))
+        s2sVoiceList.appendChild(createElem("div", window.i18n.NO_XVASPEECH_MODELS))
     }
 }
 window.populateS2SVoiceList = populateS2SVoiceList
@@ -406,13 +406,13 @@ const uploadS2SFile = (eType, event) => {
         if (!Object.keys(window.userSettings).includes("s2s_voiceId")) {
             s2s_selectVoiceBtn.click()
         } else {
-            if (window.currentModel && generateVoiceButton.innerHTML == "Generate Voice") {
+            if (window.currentModel && generateVoiceButton.innerHTML == window.i18n.GENERATE_VOICE) {
                 const dataTransfer = event.dataTransfer
                 const files = Array.from(dataTransfer.files)
                 const file = files[0]
 
                 if (!file.name.endsWith(".wav")) {
-                    window.errorModal("Only .wav files are supported for speech-to-speech file input at the moment.")
+                    window.errorModal(window.i18n.ONLY_WAV_S2S)
                     return
                 }
 
@@ -424,7 +424,7 @@ const uploadS2SFile = (eType, event) => {
                 fs.copyFileSync(file.path, fileName)
                 useWavFileForxVASpeech(fileName)
             } else {
-                window.errorModal("Please load a target voice from the panel on the left, first.")
+                window.errorModal(window.i18n.LOAD_TARGET_MODEL)
             }
         }
     }

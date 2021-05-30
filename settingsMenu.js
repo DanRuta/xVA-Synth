@@ -175,7 +175,7 @@ saveUserSettings()
 // Settings Menu
 // =============
 useGPUCbx.addEventListener("change", () => {
-    spinnerModal("Changing device...")
+    spinnerModal(window.i18n.CHANGING_DEVICE)
     fetch(`http://localhost:8008/setDevice`, {
         method: "Post",
         body: JSON.stringify({device: useGPUCbx.checked ? "gpu" : "cpu"})
@@ -187,7 +187,7 @@ useGPUCbx.addEventListener("change", () => {
         console.log(e)
         if (e.code =="ENOENT") {
             window.closeModal().then(() => {
-                createModal("error", "There was a problem")
+                createModal("error", window.i18n.THERE_WAS_A_PROBLEM)
             })
         }
     })
@@ -332,7 +332,7 @@ fs.readdir(`${path}/assets`, (err, assetFiles) => {
 // Output folder
 batch_outputFolderInput.addEventListener("change", () => {
     if (batch_outputFolderInput.value.length==0) {
-        window.errorModal("Please enter a directory path")
+        window.errorModal(window.i18n.ENTER_DIR_PATH)
         batch_outputFolderInput.value = window.userSettings.batchOutFolder
     } else {
         window.userSettings.batchOutFolder = batch_outputFolderInput.value
@@ -345,7 +345,7 @@ batch_outputFolderInput.value = window.userSettings.batchOutFolder
 
 
 reset_settings_btn.addEventListener("click", () => {
-    window.confirmModal(`Are you sure you'd like to reset your settings?`).then(confirmation => {
+    window.confirmModal(window.i18n.SURE_RESET_SETTINGS).then(confirmation => {
         if (confirmation) {
             window.userSettings.audio.format = "wav"
             window.userSettings.audio.hz = 22050
@@ -371,7 +371,7 @@ reset_settings_btn.addEventListener("click", () => {
     })
 })
 reset_paths_btn.addEventListener("click", () => {
-    window.confirmModal(`Are you sure you'd like to reset your paths? This includes the paths for models, and output.`).then(confirmation => {
+    window.confirmModal(window.i18n.SURE_RESET_PATHS).then(confirmation => {
         if (confirmation) {
             const currGame = window.currentGame[0]
 

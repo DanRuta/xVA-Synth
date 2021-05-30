@@ -113,7 +113,7 @@ batch_generateSample.addEventListener("click", () => {
     const games = Object.keys(window.games)
 
     if (games.length==0) {
-        window.errorModal("No voice models available in the app. Load at least one.")
+        window.errorModal(window.i18n.BATCH_ERR_NO_VOICES)
         return
     }
 
@@ -188,7 +188,7 @@ const readFile = (file) => {
                 if (line.trim().length) {
                     const parts = CSVToArray(line)[0]
                     parts.forEach((val, vi) => {
-                        record[header[vi].replace(/^"/, "").replace(/"$/, "")] = val//?val.replace(/^"/, "").replace(/"$/, ""):val
+                        record[header[vi].replace(/^"/, "").replace(/"$/, "")] = val
                     })
                     dataLines.push(record)
                 }
@@ -216,7 +216,7 @@ const uploadBatchCSVs = async (eType, event) => {
 
     if (eType=="drop") {
 
-        batchDropZoneNote.innerHTML = "Procesing data..."
+        batchDropZoneNote.innerHTML = window.i18n.PROCESSING_DATA
 
         const dataTransfer = event.dataTransfer
         const files = Array.from(dataTransfer.files)
@@ -262,8 +262,6 @@ const uploadBatchCSVs = async (eType, event) => {
                 }
             })
         }
-        console.log("dataLines")
-        console.log(dataLines)
 
         const cleanedData = preProcessCSVData(dataLines)
         if (cleanedData.length) {
@@ -273,7 +271,7 @@ const uploadBatchCSVs = async (eType, event) => {
             batch_clearBtn.click()
         }
 
-        batchDropZoneNote.innerHTML = "Drag and drop .csv files here"
+        batchDropZoneNote.innerHTML = window.i18n.BATCH_DROPZONE
     }
 }
 
@@ -293,33 +291,32 @@ const preProcessCSVData = data => {
             // Validate the records first
             // ==================
             if (!record.game_id) {
-                // console.log(`[Line: ${di}] ERROR: Missing game_id value`)
-                window.errorModal(`[Line: ${di+2}] ERROR: Missing game_id value`)
+                window.errorModal(`[${window.i18n.LINE}: ${di+2}] ${window.i18n.ERROR}: ${window.i18n.MISSING} game_id`)
                 return []
             }
             if (!record.voice_id) {
-                window.errorModal(`[Line: ${di+2}] ERROR: Missing voice_id value`)
+                window.errorModal(`[${window.i18n.LINE}: ${di+2}] ${window.i18n.ERROR}: ${window.i18n.MISSING} voice_id`)
                 return []
             }
             if (!record.text || record.text.length==0) {
-                window.errorModal(`[Line: ${di+2}] ERROR: Missing text value`)
+                window.errorModal(`[${window.i18n.LINE}: ${di+2}] ${window.i18n.ERROR}: ${window.i18n.MISSING} text`)
                 return []
             }
 
             // Check that the game_id exists
             if (!availableGames.includes(record.game_id)) {
-                window.errorModal(`[Line: ${di+2}] ERROR: game_id "${record.game_id}" does not match any available games (${availableGames.join(',')})`)
+                window.errorModal(`[${window.i18n.LINE}: ${di+2}] ${window.i18n.ERROR}: game_id "${record.game_id}" ${window.i18n.BATCH_ERR_GAMEID} (${availableGames.join(',')})`)
                 return []
             }
             // Check that the voice_id exists
             const gameVoices = window.games[record.game_id].models.map(item => item.voiceId)
             if (!gameVoices.includes(record.voice_id)) {
-                window.errorModal(`[Line: ${di+2}] ERROR: voice_id "${record.voice_id}" does not match any in the game: ${record.game_id}`)
+                window.errorModal(`[${window.i18n.LINE}: ${di+2}] ${window.i18n.ERROR}: voice_id "${record.voice_id}" ${window.i18n.BATCH_ERR_VOICEID}: ${record.game_id}`)
                 return []
             }
             // Check that the vocoder exists
             if (!["quickanddirty", "waveglow", "waveglowBIG", "hifi", undefined].includes(record.vocoder)) {
-                window.errorModal(`[Line: ${di+2}] ERROR: Vocoder "${record.vocoder}" does not exist. Available options: quickanddirty, waveglow, waveglowBIG, hifi  (or leaving it blank)`)
+                window.errorModal(`[${window.i18n.LINE}: ${di+2}] ${window.i18n.ERROR}: ${window.i18n.BATCHH_VOCODER} "${record.vocoder}" ${window.i18n.BATCH_ERR_VOCODER1}: quickanddirty, waveglow, waveglowBIG, hifi ${window.i18n.BATCH_ERR_VOCODER2}`)
                 return []
             }
 
@@ -332,8 +329,6 @@ const preProcessCSVData = data => {
                 record.pacing = 1
             }
             record.pacing = parseFloat(record.pacing)
-            // if (!record.vocoder || !window.games[record.game_id].models[record.voice_id].hifi) {
-            // console.log(record.vocoder, window.games[record.game_id].models, )
             if (!record.vocoder || (record.vocoder=="hifi" && !window.games[record.game_id].models.find(rec => rec.voiceId==record.voice_id).hifi)) {
                 record.vocoder = "waveglow"
             }
@@ -356,7 +351,6 @@ const populateRecordsList = records => {
     records.forEach((record, ri) => {
         const row = createElem("div")
 
-        // const rNumElem = createElem("div", ri.toString())
         const rNumElem = createElem("div", batchRecordsContainer.children.length.toString())
         const rStatusElem = createElem("div", "Ready")
         const rGameElem = createElem("div", record.game_id)
@@ -383,7 +377,6 @@ const populateRecordsList = records => {
 const refreshRecordsList = () => {
     batchRecordsContainer.innerHTML = ""
     const finalOrder = groupLines()
-    // window.batch_lines.forEach(recordAndElem => {
     finalOrder.forEach(recordAndElem => {
         recordAndElem[1].children[0].innerHTML = batchRecordsContainer.children.length.toString()
         batchRecordsContainer.appendChild(recordAndElem[1])
@@ -395,7 +388,6 @@ const refreshRecordsList = () => {
 const groupLines = () => {
     const voices_order = []
 
-    // const lines = window.batch_lines.sort((a,b) => {
     const lines = window.batch_state.lines.sort((a,b) => {
         return a.voice_id - b.voice_id
     })
@@ -442,7 +434,6 @@ batch_clearBtn.addEventListener("click", () => {
     batch_pauseBtn.style.display = "none"
     batch_stopBtn.style.display = "none"
     batch_synthesizeBtn.style.display = "none"
-    // batch_openDirBtn.style.display = "none"
 
     batchRecordsContainer.innerHTML = ""
 })
@@ -474,11 +465,10 @@ const startBatch = () => {
     batch_progressBar.style.display = "flex"
     batch_pauseBtn.style.display = "inline-block"
     batch_stopBtn.style.display = "inline-block"
-    // batch_openDirBtn.style.display = "inline-block"
     batch_openDirBtn.style.display = "none"
 
     window.batch_state.lines.forEach(record => {
-        record[1].children[1].innerHTML = "Ready"
+        record[1].children[1].innerHTML = window.i18n.READY
         record[1].children[1].style.background = "none"
     })
 
@@ -493,7 +483,7 @@ const batchChangeVoice = (game, voice) => {
 
         // Update the main app with any changes, if a voice has already been selected
         if (window.currentModel) {
-            generateVoiceButton.innerHTML = "Load model"
+            generateVoiceButton.innerHTML = window.i18n.LOAD_MODEL
             keepSampleButton.style.display = "none"
             samplePlay.style.display = "none"
 
@@ -509,7 +499,7 @@ const batchChangeVoice = (game, voice) => {
 
 
         if (window.batch_state.state) {
-            batch_progressNotes.innerHTML = `Changing voice model to: ${voice}`
+            batch_progressNotes.innerHTML = `${window.i18n.BATCH_CHANGING_MODEL_TO}: ${voice}`
         }
 
         const model = window.games[game].models.find(model => model.voiceId==voice).model
@@ -525,7 +515,7 @@ const batchChangeVoice = (game, voice) => {
             batch_pauseBtn.click()
             if (e.code =="ENOENT") {
                 closeModal().then(() => {
-                    createModal("error", "There was an issue connecting to the python server.<br><br>Try again in a few seconds. If the issue persists, make sure localhost port 8008 is free, or send the server.log file to me on GitHub or Nexus.")
+                    createModal("error", window.i18n.ERR_SERVER)
                 })
             }
         })
@@ -535,7 +525,7 @@ const batchChangeVocoder = (vocoder, game, voice) => {
     return new Promise((resolve) => {
         console.log("Changing vocoder: ", vocoder)
         if (window.batch_state.state) {
-            batch_progressNotes.innerHTML = `Changing vocoder to: ${vocoder}`
+            batch_progressNotes.innerHTML = `${window.i18n.BATCH_CHANGING_VOCODER_TO}: ${vocoder}`
         }
 
         const vocoderMappings = [["waveglow", "256_waveglow"], ["waveglowBIG", "big_waveglow"], ["quickanddirty", "qnd"], ["hifi", `${game}/${voice}.hg.pt`]]
@@ -548,7 +538,7 @@ const batchChangeVocoder = (vocoder, game, voice) => {
         }).catch(e => {
             console.log(e)
             window.appLogger.log(e)
-            window.errorModal("Something went wrong:<br><br>"+e)
+            window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}:<br><br>`+e)
             batch_pauseBtn.click()
         })
     })
@@ -620,13 +610,13 @@ const batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, bod
                 }
 
                 for (let ri2=ri; ri2<linesBatch.length; ri2++) {
-                    records[ri][1].children[1].innerHTML = "Failed"
+                    records[ri][1].children[1].innerHTML = window.i18n.FAILED
                     records[ri][1].children[1].style.background = "red"
                 }
 
                 reject(res)
             } else {
-                records[ri][1].children[1].innerHTML = "Done"
+                records[ri][1].children[1].innerHTML = window.i18n.DONE
                 records[ri][1].children[1].style.background = "green"
                 fs.unlinkSync(tempFileLocation)
                 resolve()
@@ -646,7 +636,7 @@ const batchKickOffGeneration = () => {
 
         const [speaker_i, voice_id, vocoder, linesBatch, records] = prepareLinesBatchForSynth()
         records.forEach(record => {
-            record[1].children[1].innerHTML = "Running"
+            record[1].children[1].innerHTML = window.i18n.RUNNING
             record[1].children[1].style.background = "goldenrod"
         })
 
@@ -654,9 +644,9 @@ const batchKickOffGeneration = () => {
 
         if (window.batch_state.state) {
             if (linesBatch.length==1) {
-                batch_progressNotes.innerHTML = `Synthesizing line: <i>${record[0].text}</i>`
+                batch_progressNotes.innerHTML = `${window.i18n.SYNTHESIZING}: <i>${record[0].text}</i>`
             } else {
-                batch_progressNotes.innerHTML = `Synthesizing ${linesBatch.length} lines`
+                batch_progressNotes.innerHTML = `${window.i18n.SYNTHESIZING} ${linesBatch.length} ${window.i18n.LINES}`
             }
         }
         fetch(`http://localhost:8008/synthesize_batch`, {
@@ -666,7 +656,7 @@ const batchKickOffGeneration = () => {
 
             if (res) {
                 if (res=="CUDA OOM") {
-                    window.errorModal("CUDA OOM: There is not enough VRAM to run this. Try lowering the batch size, or shortening very long sentences.")
+                    window.errorModal(window.i18n.BATCH_ERR_CUDA_OOM)
                 } else {
                     window.errorModal(res)
                 }
@@ -699,7 +689,7 @@ const batchKickOffGeneration = () => {
                 }
 
                 if (window.batch_state.state) {
-                    batch_progressNotes.innerHTML = `Outputting audio via ffmpeg...`
+                    batch_progressNotes.innerHTML = window.i18n.BATCH_OUTPUTTING_FFMPEG
                 }
 
                 for (let ri=0; ri<linesBatch.length; ri++) {
@@ -710,7 +700,7 @@ const batchKickOffGeneration = () => {
                     }
                     try {
                         if (window.batch_state.state) {
-                            records[ri][1].children[1].innerHTML = "Outputting"
+                            records[ri][1].children[1].innerHTML = window.i18n.OUTPUTTING
                             if (window.userSettings.batch_fastMode) {
                                 batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
                                     input_path: tempFileLocation,
@@ -728,7 +718,7 @@ const batchKickOffGeneration = () => {
                         }
                     } catch (e) {
                         console.log(e)
-                        window.errorModal("Something went wrong:<br><br>"+e)
+                        window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}:<br><br>`+e)
                         resolve()
                     }
                 }
@@ -739,7 +729,7 @@ const batchKickOffGeneration = () => {
                     let outPath = lineRecord[5]
                     try {
                         fs.copyFileSync(tempFileLocation, outPath)
-                        records[li][1].children[1].innerHTML = "Done"
+                        records[li][1].children[1].innerHTML = window.i18n.DONE
                         records[li][1].children[1].style.background = "green"
                         window.batch_state.lineIndex += 1
 
@@ -799,10 +789,10 @@ const performSynthesis = async () => {
 
 const pauseResumeBatch = () => {
 
-    batch_progressNotes.innerHTML = `Paused`
+    batch_progressNotes.innerHTML = window.i18n.PAUSED
 
     const isRunning = window.batch_state.state
-    batch_pauseBtn.innerHTML = isRunning ? "Resume" : "Pause"
+    batch_pauseBtn.innerHTML = isRunning ? window.i18n.RESUME : window.i18n.PAUSE
     window.batch_state.state = !isRunning
 
     if (!isRunning) {
@@ -826,8 +816,8 @@ const stopBatch = () => {
     batch_stopBtn.style.display = "none"
 
     window.batch_state.lines.forEach(record => {
-        if (record[1].children[1].innerHTML=="Ready" || record[1].children[1].innerHTML=="Running") {
-            record[1].children[1].innerHTML = "Stopped"
+        if (record[1].children[1].innerHTML==window.i18n.READY || record[1].children[1].innerHTML==window.i18n.RUNNING) {
+            record[1].children[1].innerHTML = window.i18n.STOPPED
             record[1].children[1].style.background = "none"
         }
     })

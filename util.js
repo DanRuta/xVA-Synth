@@ -9,7 +9,7 @@ window.toggleSpinnerButtons = () => {
 window.confirmModal = message => new Promise(resolve => resolve(createModal("confirm", message)))
 window.spinnerModal = message => new Promise(resolve => resolve(createModal("spinner", message)))
 window.errorModal = message => new Promise(resolve => resolve(createModal("error", message)))
-const createModal = (type, message) => {
+window.createModal = (type, message) => {
     return new Promise(resolve => {
         modalContainer.innerHTML = ""
         const displayMessage = message.prompt ? message.prompt : message
@@ -18,9 +18,9 @@ const createModal = (type, message) => {
 
         if (type=="confirm") {
             const yesButton = createElem("button", {style: {background: `#${themeColour}`}})
-            yesButton.innerHTML = "Yes"
+            yesButton.innerHTML = window.i18n.YES
             const noButton = createElem("button", {style: {background: `#${themeColour}`}})
-            noButton.innerHTML = "No"
+            noButton.innerHTML = window.i18n.NO
             modal.appendChild(createElem("div", yesButton, noButton))
 
             yesButton.addEventListener("click", () => {
@@ -35,7 +35,7 @@ const createModal = (type, message) => {
             })
         } else if (type=="error") {
             const closeButton = createElem("button", {style: {background: `#${themeColour}`}})
-            closeButton.innerHTML = "Close"
+            closeButton.innerHTML = window.i18n.CLOSE
             modal.appendChild(createElem("div", closeButton))
 
             closeButton.addEventListener("click", () => {
@@ -45,7 +45,7 @@ const createModal = (type, message) => {
             })
         } else if (type=="prompt") {
             const closeButton = createElem("button", {style: {background: `#${themeColour}`}})
-            closeButton.innerHTML = "Submit"
+            closeButton.innerHTML = window.i18n.SUBMIT
             const inputElem = createElem("input", {type: "text", value: message.value})
             modal.appendChild(createElem("div", inputElem))
             modal.appendChild(createElem("div", closeButton))
@@ -246,7 +246,6 @@ window.setupModal = (openingButton, modalContainerElem, callback) => {
         closeModal(undefined, modalContainerElem).then(() => {
             modalContainerElem.style.opacity = 0
             modalContainerElem.style.display = "flex"
-            // chrome.style.opacity = 0.88
             requestAnimationFrame(() => requestAnimationFrame(() => modalContainerElem.style.opacity = 1))
             requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
         })

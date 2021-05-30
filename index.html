@@ -75,7 +75,7 @@
                     <div id="adv_opts">
                         <div>
                             <div>
-                                <span>Length:</span>
+                                <span id="i18n_length">Length:</span>
                                 <input id="letterLength" disabled="true" type="range" name="length" min="0.1" step="0.1" max="20">
                                 <input id="letterLengthNumb" disabled="true" type="number" name="lengthNum" min="0.1" step="0.1" max="15">
                             </div>
@@ -85,11 +85,11 @@
                             </div>
                             <button id="resetLetter_btn">Reset Letter</button>
                             <div>
-                                <span>Auto regenerate:</span>
+                                <span id="i18n_autoregen">Auto regenerate:</span>
                                 <input id="autoplay_ckbx" type="checkbox" name="">
                             </div>
                             <div>
-                                <span>Vocoder:</span>
+                                <span id="i18n_vocoder">Vocoder:</span>
                                 <select id="vocoder_select">
                                     <option value="256_waveglow">WaveGlow</option>
                                     <option value="big_waveglow">Big WaveGlow</option>
@@ -103,10 +103,10 @@
                             <button id="reset_btn">Reset</button>
                             <button id="amplify_btn">Amplify</button>
                             <button id="flatten_btn">Flatten</button>
-                            <button id="increase_btn">Increase</button>
-                            <button id="decrease_btn">Decrease</button>
+                            <button id="increase_btn">Raise</button>
+                            <button id="decrease_btn">Lower</button>
                             <div>
-                                <span>Pacing:</span>
+                                <span id="i18n_pacing">Pacing:</span>
                                 <input id="pace_slid" type="range" name="length" min="0.5" step="0.01" max="2" value="1">
                                 <input style="margin-left: 5px;" id="paceNumbInput" type="number" name="paceNumbInput" min="0.5" step="0.1" max="2" value="1">
                             </div>
@@ -120,76 +120,76 @@
         </div>
         <div id="settingsContainer"  style="display:none">
             <div class="modal">
-                <h2>Settings</h2>
+                <h2 id="i18n_settings">Settings</h2>
                 <div id="settingsOptionsContainer" class="flexTable">
                     <div>
-                        <div>Use GPU (requires CUDA)</div>
+                        <div id="i18n_setting_gpu">Use GPU (requires CUDA)</div>
                         <div>
                             <input id="useGPUCbx" type="checkbox" name="">
                         </div>
                     </div>
                     <div>
-                        <div>Autoplay generated audio</div>
+                        <div id="i18n_setting_autoplay">Autoplay generated audio</div>
                         <div>
                             <input id="setting_autoplaygenCbx" type="checkbox" name="">
                         </div>
                     </div>
                     <div>
-                        <div>Default to loading the HiFi vocoder on voice change, if available</div>
+                        <div id="i18n_setting_defaulthifi">Default to loading the HiFi vocoder on voice change, if available</div>
                         <div>
                             <input id="setting_defaultToHiFi" type="checkbox" name="">
                         </div>
                     </div>
                     <div>
-                        <div>Keep the same pacing value on new text generations</div>
+                        <div id="i18n_setting_keeppacing">Keep the same pacing value on new text generations</div>
                         <div>
                             <input id="setting_keepPaceOnNew" type="checkbox" name="">
                         </div>
                     </div>
                     <div>
-                        <div>Show the sliders tooltip</div>
+                        <div id="i18n_setting_tooltip">Show the sliders tooltip</div>
                         <div>
                             <input id="setting_slidersTooltip" type="checkbox" name="">
                         </div>
                     </div>
                     <div>
-                        <div>Dark mode text prompt</div>
+                        <div id="i18n_setting_darkmode">Dark mode text prompt</div>
                         <div>
                             <input id="setting_darkprompt" type="checkbox" name="">
                         </div>
                     </div>
                     <div>
-                        <div>Text prompt font size</div>
+                        <div id="i18n_setting_promptfontsize">Text prompt font size</div>
                         <div>
                             <input id="setting_prompt_fontSize" type="number" min="6" step="1">
                         </div>
                     </div>
                     <div>
-                        <div>Background image fade opacity</div>
+                        <div id="i18n_setting_bg_fade">Background image fade opacity</div>
                         <div>
                             <input id="setting_bg_gradient_opacity" type="number" min="0" max="1" step="0.1">
                         </div>
                     </div>
                     <div>
-                        <div>Auto-reload voices on files changes</div>
+                        <div id="i18n_setting_autoreloadvoices">Auto-reload voices on files changes</div>
                         <div>
                             <input id="setting_areload_voices" type="checkbox" name="">
                         </div>
                     </div>
                     <div>
-                        <div>Keep editor state on voice change</div>
+                        <div id="i18n_setting_keepeditorstate">Keep editor state on voice change</div>
                         <div>
                             <input id="setting_keepEditorOnVoiceChange" type="checkbox" name="">
                         </div>
                     </div>
                     <div>
-                        <div>Output .json (needed for editing)</div>
+                        <div id="i18n_setting_outputjson">Output .json (needed for editing)</div>
                         <div>
                             <input id="setting_output_json" type="checkbox" name="">
                         </div>
                     </div>
                     <div>
-                        <div>Use sequential numbering for file names</div>
+                        <div id="i18n_setting_seqnumbering">Use sequential numbering for file names</div>
                         <div>
                             <input id="setting_output_num_seq" type="checkbox" name="">
                         </div>
@@ -198,44 +198,44 @@
                     <hr style="width:100%">
 
                     <div>
-                        <div>External program for editing audio</div>
+                        <div id="i18n_setting_external_edit">External program for editing audio</div>
                         <div>
                             <input id="setting_external_audio_editor" name="" placeholder="C:/Program Files (x86)/Audacity/audacity.exe">
                         </div>
                     </div>
 
                     <div>
-                        <div>Use ffmpeg post-processing (requires ffmpeg >=4.3)</div>
+                        <div id="i18n_setting_ffmpeg">Use ffmpeg post-processing (requires ffmpeg >=4.3)</div>
                         <div>
                             <input id="setting_audio_ffmpeg" name="" type="checkbox">
                         </div>
                     </div>
                     <div>
-                        <div>Audio format (wav, mp3, etc)</div>
+                        <div id="i18n_setting_ffmpeg_format">Audio format (wav, mp3, etc)</div>
                         <div>
                             <input id="setting_audio_format" name="" placeholder="wav">
                         </div>
                     </div>
                     <div>
-                        <div>Audio sample rate (Hz)</div>
+                        <div id="i18n_setting_ffmpeg_hz">Audio sample rate (Hz)</div>
                         <div>
                             <input id="setting_audio_hz" type="number" placeholder="22050">
                         </div>
                     </div>
                     <div>
-                        <div>Silence padding start (ms)</div>
+                        <div id="i18n_setting_ffmpeg_padstart">Silence padding start (ms)</div>
                         <div>
                             <input id="setting_audio_pad_start" name="" placeholder="0">
                         </div>
                     </div>
                     <div>
-                        <div>Silence padding end (ms)</div>
+                        <div id="i18n_setting_ffmpeg_padend">Silence padding end (ms)</div>
                         <div>
                             <input id="setting_audio_pad_end" name="" placeholder="0">
                         </div>
                     </div>
                     <div>
-                        <div>Audio bit depth</div>
+                        <div id="i18n_setting_ffmpeg_bitdepth">Audio bit depth</div>
                         <div>
                             <select id="setting_audio_bitdepth">
                                 <option value="pcm_s16le">pcm_s16le</option>
@@ -244,7 +244,7 @@
                         </div>
                     </div>
                     <div>
-                        <div>Amplitude multiplier</div>
+                        <div id="i18n_setting_ffmpeg_amplitude">Amplitude multiplier</div>
                         <div>
                             <input id="setting_audio_amplitude" name="" placeholder="1" type="number" step=0.01 min=0>
                         </div>
@@ -252,7 +252,7 @@
 
                     <hr style="width:100%">
                     <div>
-                        <div>Use fast mode for Batch synth</div>
+                        <div id="i18n_setting_batch_fastmode">Use fast mode for Batch synth</div>
                         <div>
                             <input id="setting_batch_fastmode" type="checkbox" name="">
                         </div>
@@ -261,7 +261,7 @@
                     <hr style="width:100%">
 
                     <div>
-                        <div>Microphone</div>
+                        <div id="i18n_setting_microphone">Microphone</div>
                         <div>
                             <select id="setting_mic_selection">
                             </select>
@@ -269,7 +269,7 @@
                     </div>
 
                     <div>
-                        <div>Speech-to-Speech voice</div>
+                        <div id="i18n_setting_s2s_voice">Speech-to-Speech voice</div>
                         <div>
                             <span style="display: flex;align-items: center;">
                                 <span id="s2s_selectedVoiceName"><i>None</i></span>
@@ -279,21 +279,21 @@
                     </div>
 
                     <div>
-                        <div>Automatically generate voice</div>
+                        <div id="i18n_setting_autogeneratevoice">Automatically generate voice</div>
                         <div>
                             <input id="setting_s2s_autogenerate" type="checkbox" name="">
                         </div>
                     </div>
 
                     <div>
-                        <div>Pre-adjust the input audio average pitch to match the xVASpeech model voice's</div>
+                        <div id="i18n_setting_s2s_preadjust_pitch">Pre-adjust the input audio average pitch to match the xVASpeech model voice's</div>
                         <div>
                             <input id="setting_s2s_prePitchShift" type="checkbox" name="">
                         </div>
                     </div>
 
                     <div style="min-height: 65px;">
-                        <div>Remove background noise from microphone. You need to record a background noise clip first. (requires sox >= v14.4.2) </div>
+                        <div id="i18n_setting_s2s_bgnoise">Remove background noise from microphone. You need to record a background noise clip first. (requires sox >= v14.4.2) </div>
                         <div>
                             <div style="display: flex;align-items: center;">
                                 <input style="margin-right: 20px;" id="setting_s2s_removeNoise" type="checkbox" name="">
@@ -303,7 +303,7 @@
                     </div>
 
                     <div>
-                        <div>Noise removal strength (0.2-0.3 recommended)</div>
+                        <div id="i18n_setting_s2s_bgnoise_strength">Noise removal strength (0.2-0.3 recommended)</div>
                         <div>
                             <input id="setting_s2s_noiseRemStrength" name="" placeholder="0.25" type="number" step=0.01 min=0 max=1>
                         </div>
@@ -334,7 +334,7 @@
         <div id="updatesContainer" style="display:none">
             <div class="modal">
                 <div id="updatesVersions">This app version: 1.0.0</div>
-                <div>Updates log:</div>
+                <div id="i18n_updateslog">Updates log:</div>
 
                 <div id="updatesLogList">
 
@@ -346,23 +346,23 @@
 
         <div id="pluginsContainer" style="display:none">
             <div class="modal">
-                <h2>Plugins</h2>
-                <div>Download plugins only from trusted sources</div>
+                <h2 id="i18n_plugins">Plugins</h2>
+                <div id="i18n_plugins_trusted">Download plugins only from trusted sources</div>
                 <div id="batch_container">
                     <div id="batch_intro">
                     </div>
                     <div id="plugins_main" style="display: block;">
                         <div id="pluginsRecordsHeader">
-                            <div>Enabled</div>
-                            <div>Order</div>
-                            <div>Plugin Name</div>
-                            <div>Author</div>
-                            <div>Plugin Version</div>
-                            <div>Type</div>
-                            <div>Min App Version</div>
-                            <div>Max App Version</div>
-                            <div>Description</div>
-                            <div>Plugin Id</div>
+                            <div id="i18n_pluginsh_enabled">Enabled</div>
+                            <div id="i18n_pluginsh_order">Order</div>
+                            <div id="i18n_pluginsh_name">Plugin Name</div>
+                            <div id="i18n_pluginsh_author">Author</div>
+                            <div id="i18n_pluginsh_version">Plugin Version</div>
+                            <div id="i18n_pluginsh_type">Type</div>
+                            <div id="i18n_pluginsh_minv">Min App Version</div>
+                            <div id="i18n_pluginsh_maxv">Max App Version</div>
+                            <div id="i18n_pluginsh_description">Description</div>
+                            <div id="i18n_pluginsh_pluginid">Plugin Id</div>
                         </div>
                         <div id="pluginsRecordsContainer">
                         </div>
@@ -382,65 +382,68 @@
 
         <div id="infoContainer" style="display:none">
             <div class="modal">
-                <h2>App info</h2>
+                <h2 id="i18n_appinfo">App info</h2>
 
                 <span>
-                    For instructions on how to use the app, please watch <a style="display:inline" href="https://www.youtube.com/watch?v=xqJ-ujWvu7s" target="_blank">this short video</a> showcase on YouTube.
+                    <span id="i18n_appinfo_instr_1">For instructions on how to use the app, please watch</span>
+                    <a id="i18n_appinfo_instr_2" style="display:inline" href="https://www.youtube.com/watch?v=xqJ-ujWvu7s" target="_blank">this short video</a>
+                    <span id="i18n_appinfo_instr_3">showcase on YouTube.</span>
                 </span>
                 <span>
-                    You can also view and/or contribute to the community guide on GitHub <a href="https://github.com/DanRuta/xvasynth-community-guide" target="_blank">here</a><span>.</span>
+                    <span id="i18n_appinfo_instr_4">You can also view and/or contribute to the community guide on GitHub </span>
+                    <a id="i18n_appinfo_instr_5" href="https://github.com/DanRuta/xvasynth-community-guide" target="_blank">here</a><span>.</span>
                 </span>
 
                 <hr>
-                <div>Keyboard shortcuts reference</div>
+                <div id="i18n_keyboard_reference">Keyboard shortcuts reference</div>
                 <div class="flexTable">
                     <div>
-                        <div>Enter</div>
-                        <div>Generate the audio</div>
+                        <div id="i18n_keyboard_enter">Enter</div>
+                        <div id="i18n_keyboard_enter_do">Generate the audio</div>
                     </div>
                     <div>
-                        <div>Escape</div>
-                        <div>Close modals and menus</div>
+                        <div id="i18n_keyboard_escape">Escape</div>
+                        <div id="i18n_keyboard_escape_do">Close modals and menus</div>
                     </div>
                     <div>
-                        <div>Space</div>
-                        <div>Bring focus to the input textarea</div>
+                        <div id="i18n_keyboard_space">Space</div>
+                        <div id="i18n_keyboard_space_do">Bring focus to the input textarea</div>
                     </div>
                     <div>
-                        <div>Ctrl+S</div>
-                        <div>Keep sample</div>
+                        <div id="i18n_keyboard_ctrls">Ctrl+S</div>
+                        <div id="i18n_keyboard_ctrls_do">Keep sample</div>
                     </div>
                     <div>
-                        <div>Ctrl+Shift-S</div>
-                        <div>Keep sample (but with naming prompt)</div>
+                        <div id="i18n_keyboard_ctrlshifts">Ctrl+Shift-S</div>
+                        <div id="i18n_keyboard_ctrlshifts_do">Keep sample (but with naming prompt)</div>
                     </div>
                     <div>
-                        <div>Y/N</div>
-                        <div>Yes/No options in prompt modals</div>
+                        <div id="i18n_keyboard_yn">Y/N</div>
+                        <div id="i18n_keyboard_yn_do">Yes/No options in prompt modals</div>
                     </div>
                     <div>
-                        <div>Left/Right arrows:</div>
-                        <div>Move left/right along which letter is focused</div>
+                        <div id="i18n_keyboard_lr">Left/Right arrows</div>
+                        <div id="i18n_keyboard_lr_do">Move left/right along which letter is focused</div>
                     </div>
                     <div>
-                        <div>Shift-Left/Right arrows:</div>
-                        <div>Create multi-letter selection range</div>
+                        <div id="i18n_keyboard_shift_lr">Shift-Left/Right arrows</div>
+                        <div id="i18n_keyboard_shift_lr_do">Create multi-letter selection range</div>
                     </div>
                     <div>
-                        <div>Up/Down arrows:</div>
-                        <div>Move pitch up/down for the letter(s) selected</div>
+                        <div id="i18n_keyboard_ud">Up/Down arrows</div>
+                        <div id="i18n_keyboard_ud_do">Move pitch up/down for the letter(s) selected</div>
                     </div>
                     <div>
-                        <div>Ctrl+Left/Right arrows:</div>
-                        <div>Move the sequence-wide pacing slider</div>
+                        <div id="i18n_keyboard_ctrl_lr">Ctrl+Left/Right arrows</div>
+                        <div id="i18n_keyboard_ctrl_lr_do">Move the sequence-wide pacing slider</div>
                     </div>
                     <div>
-                        <div>Ctrl+Up/Down arrows:</div>
-                        <div>Pitch increase/decrease buttons</div>
+                        <div id="i18n_keyboard_ctrl_ud">Ctrl+Up/Down arrows</div>
+                        <div id="i18n_keyboard_ctrl_ud_do">Pitch increase/decrease buttons</div>
                     </div>
                     <div>
-                        <div>Ctrl+Shift+Up/Down arrows:</div>
-                        <div>Pitch amplify/flatten buttons</div>
+                        <div id="i18n_keyboard_ctrlshiftud">Ctrl+Shift+Up/Down arrows</div>
+                        <div id="i18n_keyboard_ctrlshiftud_do">Pitch amplify/flatten buttons</div>
                     </div>
                 </div>
 
@@ -449,14 +452,15 @@
         </div>
         <div id="patreonContainer" style="display:none">
             <div class="modal">
-                <h2>Support</h2>
+                <h2 id="i18n_support">Support</h2>
 
-                You can support development on patreon at this link:<br>
+                <span id="i18n_support_link">You can support development on patreon at this link:</span>
+
                 <span id="patreonButton" href="https://www.patreon.com/bePatron?u=48461563" data-patreon-widget-type="become-patron-button">
                 <svg style="height: 1rem;width: 1rem;" viewBox="0 0 569 546" xmlns="http://www.w3.org/2000/svg"><g><circle cx="362.589996" fill="#ffffff" cy="204.589996" data-fill="1" id="Oval" r="204.589996"></circle><rect fill="#ffffff" data-fill="2" height="545.799988" id="Rectangle" width="100" x="0" y="0"></rect></g></svg>
                 <span style="width:5px"></span>
                 Become a Patron!</span>
-                <br><hr><br>Special thanks:
+                <br><hr><br><span id="i18n_support_thanks">Special thanks:</span>
 
                 <span id="creditsList"></span>
             </div>
@@ -525,7 +529,7 @@
 
                 <div>
                     <input type="checkbox" id="EULA_accept_ckbx">
-                    <span>I accept the EULA</span>
+                    <span id="i18n_eula_accept">I accept the EULA</span>
                 </div>
 
                 <button id="EULA_closeButon">Close</button>
@@ -533,14 +537,19 @@
         </div>
         <div id="batchGenerationContainer" style="display:none">
             <div class="modal">
-                <h2>Batch synthesis</h2>
+                <h2 id="i18n_batch_synthesis">Batch synthesis</h2>
                 <div id="batch_container">
                     <div id="batch_intro">
                         <div>
-                            <span>Batch size:</span>
+                            <span id="i18n_batchsize">Batch size:</span>
                             <input type="number" id="batch_batchSizeInput" value="1" placeholder="1" min="1" step="1">
                         </div>
-                        <div>Place the .csv batch file(s) into the box below. Click the "Generate sample" button to generate an example .csv file. The mandatory columns are "game_id", "voice_id", and "text". Watch <a href="https://www.youtube.com/watch?v=PK-m54f84q4" target="_blank">this short video</a> for a demo and more instructions.</div>
+                        <div>
+                            <span id="i18n_batch_instr1">Place the .csv batch file(s) into the box below. Click the "Generate sample" button to generate an example .csv file. The mandatory columns are "game_id", "voice_id", and "text". Watch </span>
+
+                            <a id="i18n_batch_instr2" href="https://www.youtube.com/watch?v=PK-m54f84q4" target="_blank">this short video</a>
+                            <span id="i18n_batch_instr3">for a demo and more instructions.</span>
+                        </div>
                         <div>
                             <button id="batch_generateSample">Generate Sample</button>
                         </div>
@@ -548,14 +557,14 @@
                     <div id="batch_main">
                         <span id="batchDropZoneNote">Drag and drop .csv files here</span>
                         <div id="batchRecordsHeader" style="display: none;">
-                            <div>#</div>
-                            <div>Status</div>
-                            <div>Game</div>
-                            <div>Voice</div>
-                            <div>Text</div>
-                            <div>Vocoder</div>
-                            <div>Out Path</div>
-                            <div>Pacing</div>
+                            <div id="i18n_batchh_num">#</div>
+                            <div id="i18n_batchh_status">Status</div>
+                            <div id="i18n_batchh_game">Game</div>
+                            <div id="i18n_batchh_voice">Voice</div>
+                            <div id="i18n_batchh_text">Text</div>
+                            <div id="i18n_batchh_vocoder">Vocoder</div>
+                            <div id="i18n_batchh_outpath">Out Path</div>
+                            <div id="i18n_batchh_pacing">Pacing</div>
                         </div>
                         <div id="batchRecordsContainer">
 
@@ -570,11 +579,11 @@
                             <span></span>
                             <span id="batch_clearDirOpts">
                                 <input type="checkbox" id="batch_clearDirFirstCkbx">
-                                <span>Clear out the directory first</span>
+                                <span id="i18n_batch_cleardir">Clear out the directory first</span>
                             </span>
                             <span id="batch_skipExistingOpts">
                                 <input type="checkbox" id="batch_skipExisting">
-                                <span>Skip existing output</span>
+                                <span id="i18n_batch_skip">Skip existing output</span>
                             </span>
                             <span style="display:none" id="batch_progressItems">
                                 <span id="batch_progressNotes">currently doing...</span>
@@ -594,11 +603,11 @@
 
         <div id="s2sSelectContainer" style="display:none">
             <div class="modal">
-                <h2>Select Speech-to-Speech voice</h2>
-                <div style="color:red;font-size: 14pt;margin-top: -20px;">Experimental</div>
-                <div style="color:red">The speech to speech feature is in active research/development. All is subject to change, and will be improved over time. This notice will be removed when the research is complete.</div>
+                <h2 id="i18n_s2s_selectvoice">Select Speech-to-Speech voice</h2>
+                <div id="i18n_s2s_experimental" style="color:red;font-size: 14pt;margin-top: -20px;">Experimental</div>
+                <div id="i18n_s2s_experimental_note" style="color:red">The speech to speech feature is in active research/development. All is subject to change, and will be improved over time. This notice will be removed when the research is complete.</div>
 
-                <div>You can record a few seconds of silence to capture background noise to remove from your future recordings.</div>
+                <div id="i18n_s2s_record_note">You can record a few seconds of silence to capture background noise to remove from your future recordings.</div>
 
                 <div id="s2sNoiseRecordContainer">
                     <span>
@@ -610,7 +619,7 @@
 
                 <hr>
 
-                <div>Pick from the available xVASpeech models which voice sounds most like yours. If you have an xVASpeech model trained for your own voice, make sure you use that one. You can record a short sample here, for comparison. Ensure the volume is also similar. For this to work well, your voice/microphone should sound as similar as possible to the audio of the voice you select.</div>
+                <div id="i18n_s2s_instructions">Pick from the available xVASpeech models which voice sounds most like yours. If you have an xVASpeech model trained for your own voice, make sure you use that one. You can record a short sample here, for comparison. Ensure the volume is also similar. For this to work well, your voice/microphone should sound as similar as possible to the audio of the voice you select.</div>
 
                 <div id="s2sVLSampleRecordContainer">
                     <span>
@@ -628,15 +637,15 @@
                 <div id="s2sGenders">
                     <div>
                         <input type="checkbox" id="s2sVLFemale" name="s2sVLFemale" checked>
-                        <label for="s2sVLFemale">Female</label>
+                        <label id="i18n_s2s_female" for="s2sVLFemale">Female</label>
                     </div>
                     <div>
                         <input type="checkbox" id="s2sVLMale" name="s2sVLMale" checked>
-                        <label for="s2sVLMale">Male</label>
+                        <label id="i18n_s2s_male" for="s2sVLMale">Male</label>
                     </div>
                     <div>
                         <input type="checkbox" id="s2sVLOther" name="s2sVLOther" checked>
-                        <label for="s2sVLOther">Other</label>
+                        <label id="i18n_s2s_other" for="s2sVLOther">Other</label>
                     </div>
                 </div>
 
