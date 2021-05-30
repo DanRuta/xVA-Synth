@@ -225,7 +225,7 @@ def infer_batch(PROD, user_settings, linesBatch, fastpitch, vocoder, speaker_i, 
     with torch.no_grad():
         pace = torch.tensor([record[3] for record in linesBatch]).unsqueeze(1).to(fastpitch.device)
         pitch_data = None # Maybe in the future
-        mel, mel_lens, dur_pred, pitch_pred = fastpitch.infer_advanced(text_sequences, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=None)
+        mel, mel_lens, dur_pred, pitch_pred = fastpitch.infer_advanced(logger, text_sequences, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=None)
 
         if "waveglow" in vocoder:
             init_waveglow(user_settings["use_gpu"], fastpitch, vocoder, logger=logger)
