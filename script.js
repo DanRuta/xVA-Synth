@@ -1176,7 +1176,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen, pac
 // Un-select letters when clicking anywhere else
 right.addEventListener("click", event => {
     if (event.target.nodeName=="BUTTON" || event.target.nodeName=="INPUT" || event.target.nodeName=="SVG" || event.target.nodeName=="IMG" || event.target.nodeName=="path" ||
-        ["letterElem", "infoContainer"].includes(event.target.className)) {
+        ["letterElem", "infoContainer"].includes(event.target.className) || event.target==editor ) {
         return
     }
 
