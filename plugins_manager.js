@@ -63,6 +63,7 @@ class PluginsManager {
 
     resetModules () {
         this.setupModules = new Set()
+        this.teardownModules = {}
         this.pluginsModules = {
             "start": {
                 "pre": [],
@@ -209,6 +210,10 @@ class PluginsManager {
         const newPlugins = enabledPlugins.filter(pluginId => !window.userSettings.plugins.loadOrder.includes(`*${pluginId}`))
         const removedPlugins = window.userSettings.plugins.loadOrder.split(",").filter(pluginId => pluginId.startsWith("*") && !enabledPlugins.includes(pluginId.slice(1, 100000)) ).map(pluginId => pluginId.slice(1, 100000))
 
+        removedPlugins.forEach(pluginId => {
+            this.teardownModules[pluginId].forEach(func => func())
+        })
+
         this.savePlugins()
         this.resetModules()
         this.loadModules()
@@ -287,6 +292,13 @@ class PluginsManager {
                 if (file && functionName) {
                     const module = require(`${this.path}/plugins/${pluginId}/${file}`)
 
+                    if (module.teardown) {
+                        if (!Object.keys(this.teardownModules).includes(pluginId)) {
+                            this.teardownModules[pluginId] = []
+                        }
+                        this.teardownModules[pluginId].push(module.teardown)
+                    }
+
                     if (module.setup && !this.setupModules.has(`${pluginId}/${file}`)) {
                         window.appLogger.setPrefix(pluginId)
                         module.setup(window)
@@ -298,6 +310,7 @@ class PluginsManager {
                 }
             }
         } catch (e) {
+            console.log(`${window.i18n.ERR_LOADING_PLUGIN} ${pluginId}->${task}->${hookTime}: ` + e)
             window.appLogger.log(`${window.i18n.ERR_LOADING_PLUGIN} ${pluginId}->${task}->${hookTime}: ` + e)
         }
 

@@ -14,6 +14,8 @@ class PluginManager(object):
         self.modules_path = "resources.app." if PROD else ""
         self.logger = logger
         self.setupModules = set()
+        self.enabledPlugins = set()
+        self.teardownModules = {}
         self.refresh_active_plugins()
 
     def reset_plugins (self):
@@ -39,11 +41,22 @@ class PluginManager(object):
 
     def refresh_active_plugins (self):
 
+        with open("plugins.txt") as f:
+            lines = f.read().split("\n")
+
+        removed_plugins = []
+        for line in lines:
+            if not line.startswith("*") and line in self.enabledPlugins:
+                removed_plugins.append(line)
+
+        for plugin_id in removed_plugins:
+            for func in self.teardownModules[plugin_id]:
+                params = {"logger": self.logger, "appVersion": self.APP_VERSION, "isCPUonly": self.CPU_ONLY, "isDev": not self.PROD}
+                func(params)
+
         self.reset_plugins()
         status = []
 
-        with open("plugins.txt") as f:
-            lines = f.read().split("\n")
 
         for line in lines:
             if line.startswith("*"):
@@ -69,6 +82,8 @@ class PluginManager(object):
                         self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "output-audio", "pre"], [])
                         self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "output-audio", "post"], [])
                         self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "custom-event"], [])
+
+                        self.enabledPlugins.add(plugin_id)
 
                     status.append("OK")
                 except:
@@ -116,7 +131,10 @@ class PluginManager(object):
                                     if f'{plugin_name}/{file_name}' not in self.setupModules:
                                         self.setupModules.add(f'{plugin_name}/{file_name}')
                                         locals_data[key](setup)
-
+                                elif key=="teardown":
+                                    if plugin_name not in self.teardownModules.keys():
+                                        self.teardownModules[plugin_name] = []
+                                    self.teardownModules[plugin_name].append(locals_data[key])
 
 
                 else:
