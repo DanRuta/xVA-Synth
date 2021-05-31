@@ -196,7 +196,7 @@ def loadModel (fastpitch, ckpt, n_speakers, device):
             del fastpitch.speaker_emb
         except:
             pass
-    fastpitch.load_state_dict(checkpoint_data, strict=True)
+    fastpitch.load_state_dict(checkpoint_data, strict=False)
     fastpitch.ckpt_path = ckpt
     fastpitch = fastpitch.float()
 
