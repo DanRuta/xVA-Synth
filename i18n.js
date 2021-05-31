@@ -182,7 +182,6 @@ window.i18n.setEnglish = () => {
     window.i18n.NO_MODELS_IN = "No models in"
     window.i18n.NO_MODELS_FOUND = "No models found"
     window.i18n.MODEL_REQUIRES_VERSION = `This model requires app version`
-    window.i18n.THIS_APP_VERSION = `This app version`
     window.i18n.OPEN_CONTAINING_FOLDER = "Open containing folder"
     window.i18n.ADJUST_SAMPLE_IN_EDITOR = "Adjust sample in the editor"
     window.i18n.ENTER_NEW_FILENAME_UNCHANGED_CANCEL = "Enter new file name, or submit unchanged to cancel."
@@ -253,7 +252,7 @@ window.i18n.setEnglish = () => {
     window.i18n.SUCCESSFULLY_INITIALIZED = "Successfully initialized"
     window.i18n.FAILED_INIT_FOLLOWING = "Failed to initialize the following"
     window.i18n.CHECK_SERVERLOG = "Check the server.log file for detailed error traces"
-    window.i18n.SUCC_NO_ACTIVE_PLUGINS = "Sucess. No plugins active."
+    window.i18n.SUCC_NO_ACTIVE_PLUGINS = "Success. No plugins active."
     window.i18n.APP_RESTART_NEEDED = "App restart is required for at least one of the plugins to take effect."
     window.i18n.ERR_LOADING_CSS = "Error loading style file for plugin"
     window.i18n.PLUGIN = "Plugin"
