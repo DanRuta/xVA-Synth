@@ -133,7 +133,7 @@ window.i18n.setEnglish = () => {
 
     window.i18n.BATCH_SYNTHESIS = "Batch Synthesis"
     window.i18n.BATCH_SIZE = "Batch Size"
-    window.i18n.BATCH_INSTR1 = `Place the .csv batch file(s) into the box below. Click the "Generate sample" button to generate an example .csv file. The mandatory columns are "game_id", "voice_id", and "text". Watch `
+    window.i18n.BATCH_INSTR1 = `Place the .csv batch file(s) into the box below. The mandatory columns are "game_id", "voice_id", and "text", but you can also specify output filename/filepath under "out_path", pacing under "pacing", and vocoder under "vocoder" (Available options: 'hifi', 'quickanddirty', 'waveglow', 'waveglowBIG'). Click the "Generate sample" button to generate an example .csv file if you need one. Watch`
     window.i18n.BATCH_INSTR2 = "this short video"
     window.i18n.BATCH_INSTR3 = "for a demo and more instructions."
     window.i18n.BATCH_GEN_SAMPLE = "Generate Sample"
@@ -300,7 +300,7 @@ window.i18n.updateUI = () => {
     i18n_setting_outputjson.innerHTML = window.i18n.SETTINGS_OUTPUTJSON
     i18n_setting_seqnumbering.innerHTML = window.i18n.SETTINGS_SEQNUMBERING
     i18n_setting_base_speaker.innerHTML = window.i18n.SETTINGS_BASE_SPEAKER
-    setting_alt_speaker.innerHTML = window.i18n.SETTINGS_ALT_SPEAKER
+    i18n_setting_alt_speaker.innerHTML = window.i18n.SETTINGS_ALT_SPEAKER
     i18n_setting_external_edit.innerHTML = window.i18n.SETTINGS_EXTERNALEDIT
     i18n_setting_ffmpeg.innerHTML = window.i18n.SETTINGS_FFMPEG
     i18n_setting_ffmpeg_format.innerHTML = window.i18n.SETTINGS_FFMPEG_FORMAT
