@@ -124,7 +124,6 @@ window.setTheme = (meta) => {
     Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.background = `#${primaryColour}`)
     Array.from(document.querySelectorAll(".spinner")).forEach(e => e.style.borderLeftColor = `#${primaryColour}`)
 
-    console.log("secondaryColour", secondaryColour)
     if (secondaryColour) {
         Array.from(document.querySelectorAll("button")).forEach(e => e.style.color = `#${secondaryColour}`)
         Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.color = `#${secondaryColour}`)

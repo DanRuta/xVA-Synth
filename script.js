@@ -923,9 +923,11 @@ startingSplashInterval = setInterval(() => {
 
 
 modalContainer.addEventListener("click", event => {
-    if (event.target==modalContainer && activeModal.dataset.type!="spinner") {
-        closeModal()
-    }
+    try {
+        if (event.target==modalContainer && activeModal.dataset.type!="spinner") {
+            closeModal()
+        }
+    } catch (e) {}
 })
 
 dialogueInput.addEventListener("keyup", () => {
