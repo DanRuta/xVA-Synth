@@ -39,6 +39,8 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_KEEPEDITORSTATE = "Keep editor state on voice change"
     window.i18n.SETTINGS_OUTPUTJSON = "Output .json (needed for editing)"
     window.i18n.SETTINGS_SEQNUMBERING = "Use sequential numbering for file names"
+    window.i18n.SETTINGS_BASE_SPEAKER = "Base app output device"
+    window.i18n.SETTINGS_ALT_SPEAKER = "Alternate output device (ctrl+click play)"
     window.i18n.SETTINGS_EXTERNALEDIT = "External program for editing audio"
     window.i18n.SETTINGS_FFMPEG = "Use ffmpeg post-processing (requires ffmpeg >=4.3)"
     window.i18n.SETTINGS_FFMPEG_FORMAT = "Audio format (wav, mp3, etc)"
@@ -297,6 +299,8 @@ window.i18n.updateUI = () => {
     i18n_setting_keepeditorstate.innerHTML = window.i18n.SETTINGS_KEEPEDITORSTATE
     i18n_setting_outputjson.innerHTML = window.i18n.SETTINGS_OUTPUTJSON
     i18n_setting_seqnumbering.innerHTML = window.i18n.SETTINGS_SEQNUMBERING
+    i18n_setting_base_speaker.innerHTML = window.i18n.SETTINGS_BASE_SPEAKER
+    setting_alt_speaker.innerHTML = window.i18n.SETTINGS_ALT_SPEAKER
     i18n_setting_external_edit.innerHTML = window.i18n.SETTINGS_EXTERNALEDIT
     i18n_setting_ffmpeg.innerHTML = window.i18n.SETTINGS_FFMPEG
     i18n_setting_ffmpeg_format.innerHTML = window.i18n.SETTINGS_FFMPEG_FORMAT
