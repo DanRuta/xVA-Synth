@@ -417,6 +417,13 @@ const makeSample = (src, newSample) => {
         src: src,
         type: `audio/${fileFormat}`
     }))
+    audio.addEventListener("play", () => {
+        if (window.ctrlKeyIsPressed) {
+            audio.setSinkId(window.userSettings.alt_speaker)
+        } else {
+            audio.setSinkId(window.userSettings.base_speaker)
+        }
+    })
     audio.setSinkId(window.userSettings.base_speaker)
     const openFileLocationButton = createElem("div", {title: window.i18n.OPEN_CONTAINING_FOLDER})
     openFileLocationButton.innerHTML = "&#10064;"
@@ -441,6 +448,13 @@ const makeSample = (src, newSample) => {
                     src: src,
                     type: `audio/${fileFormat}`
                 })))
+                samplePlay.addEventListener("play", () => {
+                    if (window.ctrlKeyIsPressed) {
+                        samplePlay.setSinkId(window.userSettings.alt_speaker)
+                    } else {
+                        samplePlay.setSinkId(window.userSettings.base_speaker)
+                    }
+                })
                 samplePlay.setSinkId(window.userSettings.base_speaker)
             }
         })
@@ -476,6 +490,13 @@ const makeSample = (src, newSample) => {
                         src: newPathComposed,
                         type: `audio/${fileFormat}`
                     })))
+                    samplePlay.addEventListener("play", () => {
+                        if (window.ctrlKeyIsPressed) {
+                            samplePlay.setSinkId(window.userSettings.alt_speaker)
+                        } else {
+                            samplePlay.setSinkId(window.userSettings.base_speaker)
+                        }
+                    })
                     samplePlay.setSinkId(window.userSettings.base_speaker)
                 }
             }
@@ -665,6 +686,13 @@ generateVoiceButton.addEventListener("click", () => {
 
             const audio = createElem("audio", {controls: true, style: {width:"150px"}}, createElem("source", {src: finalOutSrc, type: "audio/wav"}))
             audio.setSinkId(window.userSettings.base_speaker)
+            audio.addEventListener("play", () => {
+                if (window.ctrlKeyIsPressed) {
+                    audio.setSinkId(window.userSettings.alt_speaker)
+                } else {
+                    audio.setSinkId(window.userSettings.base_speaker)
+                }
+            })
             samplePlay.appendChild(audio)
             audio.load()
             if (window.userSettings.autoPlayGen) {

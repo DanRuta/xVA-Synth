@@ -178,7 +178,17 @@ window.addEventListener("resize", e => {
 
 // Keyboard actions
 // ================
+window.addEventListener("keyup", event => {
+    if (!event.ctrlKey) {
+        window.ctrlKeyIsPressed = false
+    }
+})
+
 window.addEventListener("keydown", event => {
+
+    if (event.ctrlKey) {
+        window.ctrlKeyIsPressed = true
+    }
 
     // The Enter key to submit text input prompts in modals
     if (event.key=="Enter" && modalContainer.style.display!="none" && event.target.tagName=="INPUT") {
