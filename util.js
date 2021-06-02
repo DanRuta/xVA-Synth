@@ -107,6 +107,71 @@ window.closeModal = (container=undefined, notThisOne=undefined) => {
 }
 
 
+window.setTheme = (meta) => {
+    const primaryColour = meta[1]
+    const secondaryColour = meta.length==5?meta[2]:undefined
+
+    // Change batch panel colours, if it is initialized
+    try {
+        Array.from(batchRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${primaryColour}`)
+    } catch (e) {}
+    try {
+        Array.from(pluginsRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${primaryColour}`)
+    } catch (e) {}
+
+    const background = `linear-gradient(0deg, rgba(128,128,128,${window.userSettings.bg_gradient_opacity}) 0px, rgba(0,0,0,0)), url("assets/${meta.join("-")}")`
+    Array.from(document.querySelectorAll("button")).forEach(e => e.style.background = `#${primaryColour}`)
+    Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.background = `#${primaryColour}`)
+    Array.from(document.querySelectorAll(".spinner")).forEach(e => e.style.borderLeftColor = `#${primaryColour}`)
+
+    console.log("secondaryColour", secondaryColour)
+    if (secondaryColour) {
+        Array.from(document.querySelectorAll("button")).forEach(e => e.style.color = `#${secondaryColour}`)
+        Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.color = `#${secondaryColour}`)
+        Array.from(document.querySelectorAll("button")).forEach(e => e.style.textShadow  = `none`)
+        Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.textShadow  = `none`)
+    } else {
+        Array.from(document.querySelectorAll("button")).forEach(e => e.style.color = `white`)
+        Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.color = `white`)
+        Array.from(document.querySelectorAll("button")).forEach(e => e.style.textShadow = `0 0 2px black`)
+        Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.textShadow = `0 0 2px black`)
+    }
+
+    // Fade the background image transition
+    rightBG1.style.background = background
+    rightBG2.style.opacity = 0
+    setTimeout(() => {
+        rightBG2.style.background = rightBG1.style.background
+        rightBG2.style.opacity = 1
+    }, 1000)
+
+    cssHack.innerHTML = `::selection {
+        background: #${primaryColour};
+    }
+    ::-webkit-scrollbar-thumb {
+        background-color: #${primaryColour} !important;
+    }
+    .slider::-webkit-slider-thumb {
+        background-color: #${primaryColour} !important;
+    }
+    a {color: #${primaryColour}};
+    #batchRecordsHeader > div {background-color: #${primaryColour} !important;}
+    #pluginsRecordsHeader > div {background-color: #${primaryColour} !important;}
+    `
+    if (secondaryColour) {
+        cssHack.innerHTML += `
+            #batchRecordsHeader > div {color: #${secondaryColour} !important;text-shadow: none}
+            #pluginsRecordsHeader > div {color: #${secondaryColour} !important;text-shadow: none}
+        `
+    } else {
+        cssHack.innerHTML += `
+            #batchRecordsHeader > div {color: white !important;text-shadow: 0 0 2px black;}
+            #pluginsRecordsHeader > div {color: white !important;text-shadow: 0 0 2px black;}
+        `
+    }
+}
+
+
 window.addEventListener("resize", e => {
     window.userSettings.customWindowSize = `${window.innerHeight},${window.innerWidth}`
     saveUserSettings()

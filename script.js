@@ -29,6 +29,7 @@ window.pluginsManager = new PluginsManager(window.path, window.appLogger, window
 window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["start"]["pre"], event="pre start")
 
 let themeColour
+let secondaryThemeColour
 const oldCError = console.error
 console.error = (data) => {
     window.appLogger.log(data)
@@ -176,18 +177,14 @@ window.changeGame = (meta) => {
     meta = meta.split("-")
     window.currentGame = meta
     themeColour = meta[1]
+    if (meta.length==5) {
+        secondaryThemeColour = meta[2]
+    } else {
+        secondaryThemeColour = undefined
+    }
     generateVoiceButton.disabled = true
     generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
-    selectedGameDisplay.innerHTML = meta[3].split(".")[0]
-
-
-    // Change batch panel colours, if it is initialized
-    try {
-        Array.from(batchRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${window.currentGame[1]}`)
-    } catch (e) {}
-    try {
-        Array.from(pluginsRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${window.currentGame[1]}`)
-    } catch (e) {}
+    selectedGameDisplay.innerHTML = meta.length==5 ? meta[4].split(".")[0] : meta[3].split(".")[0]
 
     // Change the app title
     title.innerHTML = window.i18n.SELECT_VOICE_TYPE
@@ -212,34 +209,7 @@ window.changeGame = (meta) => {
     setting_out_path_label.innerHTML = `<i style="display:inline">${gameName}</i> ${window.i18n.SETTINGS_OUTPUT_PATH}`
     setting_out_path_input.value = window.userSettings[`outpath_${gameFolder}`]
 
-    if (meta) {
-        const background = `linear-gradient(0deg, rgba(128,128,128,${window.userSettings.bg_gradient_opacity}) 0px, rgba(0,0,0,0)), url("assets/${meta.join("-")}")`
-        Array.from(document.querySelectorAll("button")).forEach(e => e.style.background = `#${themeColour}`)
-        Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.background = `#${themeColour}`)
-        Array.from(document.querySelectorAll(".spinner")).forEach(e => e.style.borderLeftColor = `#${themeColour}`)
-
-        // Fade the background image transition
-        rightBG1.style.background = background
-        rightBG2.style.opacity = 0
-        setTimeout(() => {
-            rightBG2.style.background = rightBG1.style.background
-            rightBG2.style.opacity = 1
-        }, 1000)
-    }
-
-    cssHack.innerHTML = `::selection {
-        background: #${themeColour};
-    }
-    ::-webkit-scrollbar-thumb {
-        background-color: #${themeColour} !important;
-    }
-    .slider::-webkit-slider-thumb {
-        background-color: #${themeColour} !important;
-    }
-    a {color: #${themeColour}};
-    #batchRecordsHeader > div {background-color: #${themeColour} !important;}
-    #pluginsRecordsHeader > div {background-color: #${themeColour} !important;}
-    `
+    window.setTheme(window.currentGame)
 
     try {fs.mkdirSync(`${path}/output/${meta[0]}`)} catch (e) {/*Do nothing*/}
     localStorage.setItem("lastGame", window.currentGame.join("-"))
@@ -247,7 +217,6 @@ window.changeGame = (meta) => {
     // Populate models
     voiceTypeContainer.innerHTML = ""
     voiceSamples.innerHTML = ""
-
 
     // No models found
     if (!Object.keys(window.games).length) {
@@ -269,6 +238,10 @@ window.changeGame = (meta) => {
         const button = createElem("div.voiceType", voiceName)
         button.style.background = `#${themeColour}`
         button.dataset.modelId = voiceId
+        if (secondaryThemeColour) {
+            button.style.color = `#${secondaryThemeColour}`
+            button.style.textShadow = `none`
+        }
 
         // Quick voice set preview, if there is a preview file
         button.addEventListener("contextmenu", () => {
@@ -1516,7 +1489,7 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
 
     const itemsToSort = []
 
-    fileNames.filter(fn=>(fn.endsWith(".jpg")||fn.endsWith(".png"))&&fn.split("-").length==4).forEach(fileName => {
+    fileNames.filter(fn=>(fn.endsWith(".jpg")||fn.endsWith(".png")) && (fn.split("-").length==4 || fn.split("-").length==5)).forEach(fileName => {
         const gameSelection = createElem("div.gameSelection")
         gameSelection.style.background = `url("assets/${fileName}")`
 
