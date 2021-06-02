@@ -249,6 +249,7 @@ window.changeGame = (meta) => {
             const audioPreview = createElem("audio", {autoplay: false}, createElem("source", {
                 src: `${audioPreviewPath}.wav`
             }))
+            audioPreview.setSinkId(window.userSettings.base_speaker)
         })
 
         button.addEventListener("click", event => {
@@ -416,6 +417,7 @@ const makeSample = (src, newSample) => {
         src: src,
         type: `audio/${fileFormat}`
     }))
+    audio.setSinkId(window.userSettings.base_speaker)
     const openFileLocationButton = createElem("div", {title: window.i18n.OPEN_CONTAINING_FOLDER})
     openFileLocationButton.innerHTML = "&#10064;"
     openFileLocationButton.addEventListener("click", () => {
@@ -439,6 +441,7 @@ const makeSample = (src, newSample) => {
                     src: src,
                     type: `audio/${fileFormat}`
                 })))
+                samplePlay.setSinkId(window.userSettings.base_speaker)
             }
         })
         audioControls.appendChild(editButton)
@@ -473,6 +476,7 @@ const makeSample = (src, newSample) => {
                         src: newPathComposed,
                         type: `audio/${fileFormat}`
                     })))
+                    samplePlay.setSinkId(window.userSettings.base_speaker)
                 }
             }
         })
@@ -659,8 +663,8 @@ generateVoiceButton.addEventListener("click", () => {
 
             const finalOutSrc = `./output/temp-${tempFileNum}.wav`.replace("..", ".")
 
-            const audio = createElem("audio", {controls: true, style: {width:"150px"}},
-                    createElem("source", {src: finalOutSrc, type: "audio/wav"}))
+            const audio = createElem("audio", {controls: true, style: {width:"150px"}}, createElem("source", {src: finalOutSrc, type: "audio/wav"}))
+            audio.setSinkId(window.userSettings.base_speaker)
             samplePlay.appendChild(audio)
             audio.load()
             if (window.userSettings.autoPlayGen) {

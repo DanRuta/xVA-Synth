@@ -19,6 +19,9 @@ a {
      min-height: auto;
      font-size: 15px;
  }
+ select {
+    max-width: 300px;
+ }
  button:hover, .voiceType:hover {
      filter: brightness(110%);
  }

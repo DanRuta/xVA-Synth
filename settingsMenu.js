@@ -171,6 +171,40 @@ updateUIWithSettings()
 saveUserSettings()
 
 
+// Audio hardware
+// ==============
+
+navigator.mediaDevices.enumerateDevices().then(devices => {
+    devices = devices.filter(device => device.kind=="audiooutput" && device.deviceId!="communications")
+
+    devices.forEach(device => {
+        const option = createElem("option", device.label)
+        option.value = device.deviceId
+        setting_base_speaker.appendChild(option)
+    })
+
+    setting_base_speaker.addEventListener("change", () => {
+        window.userSettings.base_speaker = setting_base_speaker.value
+        window.saveUserSettings()
+        window.initMic()
+
+        window.document.querySelectorAll("audio").forEach(audioElem => {
+            audioElem.setSinkId(window.userSettings.base_speaker)
+        })
+    })
+
+    if (Object.keys(window.userSettings).includes("base_speaker")) {
+        setting_base_speaker.value = window.userSettings.base_speaker
+    } else {
+        window.userSettings.base_speaker = setting_base_speaker.value
+        window.saveUserSettings()
+    }
+})
+
+
+
+
+
 
 // Settings Menu
 // =============

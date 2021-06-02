@@ -215,6 +215,7 @@ mic_SVG.addEventListener("contextmenu", () => {
         const audioPreview = createElem("audio", {autoplay: false}, createElem("source", {
             src: `${__dirname.replace(/\\/g,"/")}/output/recorded_file_post${window.userSettings.s2s_prePitchShift?"_praat":""}.wav`
         }))
+        audioPreview.setSinkId(window.userSettings.base_speaker)
     }
 })
 clearProgress()
@@ -248,10 +249,12 @@ const populateS2SVoiceList = () => {
         button.style.background = `#${themeColour}`
 
         record.appendChild(button)
-        record.appendChild(createElem("audio", {controls: true}, createElem("source", {
+        const audioElem = createElem("audio", {controls: true}, createElem("source", {
             src: audioPreviewPath+".wav",
             type: `audio/wav`
-        })))
+        }))
+        audioElem.setSinkId(window.userSettings.base_speaker)
+        record.appendChild(audioElem)
         s2sVoiceList.appendChild(record)
 
         button.addEventListener("click", () => {
@@ -324,10 +327,14 @@ s2sNoiseRecordSampleBtn.addEventListener("click", () => {
             window.xVASpeechState.stream.getAudioTracks()[0].stop()
             outputRecording(silenceFileName, () => {
                 s2sNoiseAudioContainer.innerHTML = ""
-                s2sNoiseAudioContainer.appendChild(createElem("audio", {controls: true}, createElem("source", {
+                const audioElem = createElem("audio", {controls: true}, createElem("source", {
                     src: silenceFileName,
                     type: `audio/wav`
-                })))
+                }))
+                audioElem.setSinkId(window.userSettings.base_speaker)
+                s2sNoiseAudioContainer.appendChild(audioElem)
+
+
             })
         } else {
             s2sNoiseSampleRecordTimer.innerHTML = `${5-secondsElapsed}s`
@@ -337,10 +344,12 @@ s2sNoiseRecordSampleBtn.addEventListener("click", () => {
     s2sNoiseSampleRecordTimer.innerHTML = `5s`
 })
 if (fs.existsSync(silenceFileName)) {
-    s2sNoiseAudioContainer.appendChild(createElem("audio", {controls: true}, createElem("source", {
+    const audioElem = createElem("audio", {controls: true}, createElem("source", {
         src: silenceFileName,
         type: `audio/wav`
-    })))
+    }))
+    audioElem.setSinkId(window.userSettings.base_speaker)
+    s2sNoiseAudioContainer.appendChild(audioElem)
 }
 
 
@@ -369,10 +378,14 @@ s2sVLRecordSampleBtn.addEventListener("click", () => {
             const fileName = `${__dirname.replace(/\\/g,"/")}/output/temp-recsample.wav`
             outputRecording(fileName, () => {
                 s2sVLVoiceSampleAudioContainer.innerHTML = ""
-                s2sVLVoiceSampleAudioContainer.appendChild(createElem("audio", {controls: true}, createElem("source", {
+                const audioElem = createElem("audio", {controls: true}, createElem("source", {
                     src: fileName,
                     type: `audio/wav`
-                })))
+                }))
+                audioElem.setSinkId(window.userSettings.base_speaker)
+                s2sVLVoiceSampleAudioContainer.appendChild(audioElem)
+
+
             })
         } else {
             s2sVLSampleRecordTimer.innerHTML = `${5-secondsElapsed}s`
