@@ -41,7 +41,7 @@ window.addEventListener('unhandledrejection', function (e) {window.appLogger.log
 
 window.games = {}
 window.models = {}
-window.pitchEditor = {letters: [], currentVoice: null, resetPitch: null, resetDurs: null, letterFocus: [], ampFlatCounter: 0, hasChanged: false}
+window.pitchEditor = {letters: [], currentVoice: null, resetPitch: null, resetDurs: null, letterFocus: [], hasChanged: false}
 window.currentModel = undefined
 window.currentModelButton = undefined
 window.watchedModelsDirs = []
@@ -669,7 +669,6 @@ generateVoiceButton.addEventListener("click", () => {
             window.pitchEditor.sequence = cleanedSequence
 
             if (pitch.length==0 || isFreshRegen) {
-                window.pitchEditor.ampFlatCounter = 0
                 window.pitchEditor.resetPitch = pitchData
                 window.pitchEditor.resetDurs = durationsData
             }
@@ -1317,12 +1316,11 @@ reset_btn.addEventListener("click", () => {
     pace_slid.value = 1
 })
 amplify_btn.addEventListener("click", () => {
-    window.pitchEditor.ampFlatCounter += 1
-    window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map((p, pi) => {
+    window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map((p, pi) => {
         if (window.pitchEditor.letterFocus.length>1 && window.pitchEditor.letterFocus.indexOf(pi)==-1) {
             return p
         }
-        const newVal = p*(1+window.pitchEditor.ampFlatCounter*0.025)
+        const newVal = p*1.025
         return newVal>0 ? Math.min(3, newVal) : Math.max(-3, newVal)
     })
     window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
@@ -1332,12 +1330,11 @@ amplify_btn.addEventListener("click", () => {
     kickOffAutoInferTimer()
 })
 flatten_btn.addEventListener("click", () => {
-    window.pitchEditor.ampFlatCounter -= 1
-    window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map((p,pi) => {
+    window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map((p,pi) => {
         if (window.pitchEditor.letterFocus.length>1 && window.pitchEditor.letterFocus.indexOf(pi)==-1) {
             return p
         }
-        return p*Math.max(0, 1+window.pitchEditor.ampFlatCounter*0.025)
+        return p*(1-0.025)
     })
     window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
     if (window.pitchEditor.letterFocus.length==1) {
