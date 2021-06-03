@@ -1046,6 +1046,15 @@ const infer = () => {
         generateVoiceButton.click()
     }
 }
+const kickOffAutoInferTimer = () => {
+    if (autoinfer_timer != null) {
+        clearTimeout(autoinfer_timer)
+        autoinfer_timer = null
+    }
+    if (autoplay_ckbx.checked) {
+        autoinfer_timer = setTimeout(infer, 500)
+    }
+}
 const set_letter_display = (elem, elem_i, length=null, value=null) => {
     if (length != null && elem) {
         const elem_length = length/2
@@ -1205,9 +1214,7 @@ letterPitchNumb.addEventListener("input", () => {
     }
     window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]] = lpnValue
     sliders[window.pitchEditor.letterFocus[0]].value = letterPitchNumb.value
-    if (autoplay_ckbx.checked) {
-        generateVoiceButton.click()
-    }
+    kickOffAutoInferTimer()
 })
 letterPitchNumb.addEventListener("change", () => {
     const lpnValue = parseFloat(letterPitchNumb.value) || 0
@@ -1216,9 +1223,7 @@ letterPitchNumb.addEventListener("change", () => {
     }
     window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]] = lpnValue
     sliders[window.pitchEditor.letterFocus[0]].value = letterPitchNumb.value
-    if (autoplay_ckbx.checked) {
-        generateVoiceButton.click()
-    }
+    kickOffAutoInferTimer()
 })
 
 resetLetter_btn.addEventListener("click", () => {
@@ -1286,13 +1291,7 @@ letterLength.addEventListener("input", () => {
 })
 letterLength.addEventListener("mouseup", () => {
     if (has_been_changed) {
-        if (autoinfer_timer != null) {
-            clearTimeout(autoinfer_timer)
-            autoinfer_timer = null
-        }
-        if (autoplay_ckbx.checked) {
-            autoinfer_timer = setTimeout(infer, 500)
-        }
+        kickOffAutoInferTimer()
     }
     editorTooltip.style.display = "none"
 })
@@ -1330,6 +1329,7 @@ amplify_btn.addEventListener("click", () => {
     if (window.pitchEditor.letterFocus.length==1) {
         letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*100)/100
     }
+    kickOffAutoInferTimer()
 })
 flatten_btn.addEventListener("click", () => {
     window.pitchEditor.ampFlatCounter -= 1
@@ -1343,6 +1343,7 @@ flatten_btn.addEventListener("click", () => {
     if (window.pitchEditor.letterFocus.length==1) {
         letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*100)/100
     }
+    kickOffAutoInferTimer()
 })
 increase_btn.addEventListener("click", () => {
     window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map((p,pi) => {
@@ -1355,6 +1356,7 @@ increase_btn.addEventListener("click", () => {
     if (window.pitchEditor.letterFocus.length==1) {
         letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*100)/100
     }
+    kickOffAutoInferTimer()
 })
 decrease_btn.addEventListener("click", () => {
     window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map((p,pi) => {
@@ -1367,6 +1369,7 @@ decrease_btn.addEventListener("click", () => {
     if (window.pitchEditor.letterFocus.length==1) {
         letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*100)/100
     }
+    kickOffAutoInferTimer()
 })
 pace_slid.addEventListener("change", () => {
     editorTooltip.style.display = "none"
