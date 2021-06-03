@@ -685,7 +685,7 @@ a {
      width: 95%;
  }
 
- .renameSVG {
+ .renameSVG, .openFolderSVG {
      height: 20px;
      width: 20px;
  }
