@@ -418,6 +418,12 @@ reset_settings_btn.addEventListener("click", () => {
 reset_paths_btn.addEventListener("click", () => {
     window.confirmModal(window.i18n.SURE_RESET_PATHS).then(confirmation => {
         if (confirmation) {
+
+            const pathKeys = Object.keys(window.userSettings).filter(key => key.includes("modelspath_"))
+            pathKeys.forEach(key => {
+                delete window.userSettings[key]
+            })
+
             const currGame = window.currentGame[0]
 
             // Models paths
