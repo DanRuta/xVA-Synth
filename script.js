@@ -1349,7 +1349,7 @@ increase_btn.addEventListener("click", () => {
         if (window.pitchEditor.letterFocus.length>1 && window.pitchEditor.letterFocus.indexOf(pi)==-1) {
             return p
         }
-        return p+0.1
+        return p+0.025
     })
     window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
     if (window.pitchEditor.letterFocus.length==1) {
@@ -1361,7 +1361,7 @@ decrease_btn.addEventListener("click", () => {
         if (window.pitchEditor.letterFocus.length>1 && window.pitchEditor.letterFocus.indexOf(pi)==-1) {
             return p
         }
-        return p-0.1
+        return p-0.025
     })
     window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
     if (window.pitchEditor.letterFocus.length==1) {
