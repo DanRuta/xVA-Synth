@@ -167,6 +167,9 @@ const readFileTxt = (file) => {
                     record.game_id = window.currentModel.games[0].gameId
                     record.voice_id = window.currentModel.games[0].voiceId
                     record.text = line
+                    if (window.currentModel.hifi) {
+                        record.vocoder = "hifi"
+                    }
                     dataLines.push(record)
                 }
             })
