@@ -181,7 +181,7 @@ const readFile = (file) => {
         const reader = new FileReader()
         reader.readAsText(file)
         reader.onloadend = () => {
-            const lines = reader.result.split("\n")
+            const lines = reader.result.replace(/\r\n/g, "\n").split("\n")
             const header = lines.shift().split(",").map(head => head.replace(/\r/, ""))
             lines.forEach(line => {
                 const record = {}
@@ -223,7 +223,7 @@ const uploadBatchCSVs = async (eType, event) => {
         for (let fi=0; fi<files.length; fi++) {
             const file = files[fi]
             if (!file.name.endsWith(".csv")) {
-                if (file.name.endsWith(".txt")) {
+                if (file.name.toLowerCase().endsWith(".txt")) {
                     if (window.currentModel) {
                         const records = await readFileTxt(file)
                         records.forEach(item => dataLines.push(item))
