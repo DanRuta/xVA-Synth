@@ -229,7 +229,31 @@ const uploadBatchCSVs = async (eType, event) => {
                 if (file.name.toLowerCase().endsWith(".txt")) {
                     if (window.currentModel) {
                         const records = await readFileTxt(file)
-                        records.forEach(item => dataLines.push(item))
+                        records.forEach(item => {
+                            if (window.userSettings.batch_skipExisting) {
+                                let outPath
+
+                                if (item.out_path && item.out_path.split("/").reverse()[0].includes(".")) {
+                                    outPath = item.out_path
+                                } else {
+                                    if (item.out_path) {
+                                        outPath = item.out_path
+                                    } else {
+                                        outPath = window.userSettings.batchOutFolder
+                                    }
+                                    outPath = `${outPath}/${item.voice_id}_${item.vocoder}_${item.text.replace(/[\/\\:\*?<>"|]*/g, "").slice(0, 75).replace(/\.$/, "")}.${window.userSettings.audio.format}`
+                                }
+
+                                outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
+
+                                if (!fs.existsSync(outPath)) {
+                                    dataLines.push(item)
+                                }
+
+                            } else {
+                                dataLines.push(item)
+                            }
+                        })
                     }
                     continue
                 } else {
@@ -255,7 +279,6 @@ const uploadBatchCSVs = async (eType, event) => {
                     }
 
                     outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
-
 
                     if (!fs.existsSync(outPath)) {
                         dataLines.push(item)
