@@ -52,6 +52,7 @@ class xVASpeech(nn.Module):
         self.register_buffer('pitch_mean', torch.tensor([113.7768555512196]))
         self.register_buffer('pitch_std', torch.tensor([0]))
         self.register_buffer('model_version', torch.tensor([1]))
+        self.register_buffer('min_app_version', torch.tensor([1,4,0]))
 
 
         self.tp = TextProcessing(self.symbol_set, self.text_cleaners)
@@ -137,18 +138,31 @@ def init (PROD, use_gpu, logger):
     return xVASpeechModel
 
 
-def loadModel (xVASpeechModel, voiceId, ckpt):
+def loadModel (logger, APP_VERSION, xVASpeechModel, voiceId, ckpt):
     print(f'Loading xVASpeech model: {ckpt}')
 
     checkpoint_data = torch.load(ckpt, map_location="cpu")
     sd = {k.replace('module.', ''): v for k, v in checkpoint_data.items()}
+
+    app_version_parts = APP_VERSION.split(".")
+
+    if sd["min_app_version"][0].item()<=int(app_version_parts[0]):
+        if sd["min_app_version"][1].item()<=int(app_version_parts[1]):
+            if sd["min_app_version"][2].item()<=int(app_version_parts[2]):
+                pass
+            else:
+                return f'ERROR:APP_VERSION,{sd["min_app_version"][0]}.{sd["min_app_version"][1]}.{sd["min_app_version"][2]}'
+        else:
+            return f'ERROR:APP_VERSION,{sd["min_app_version"][0]}.{sd["min_app_version"][1]}.{sd["min_app_version"][2]}'
+    else:
+        return f'ERROR:APP_VERSION,{sd["min_app_version"][0]}.{sd["min_app_version"][1]}.{sd["min_app_version"][2]}'
 
     getattr(xVASpeechModel, 'module', xVASpeechModel).load_state_dict(sd, strict=False)
     xVASpeechModel.eval()
     xVASpeechModel.voiceId = voiceId
     del checkpoint_data
 
-    return xVASpeechModel
+    return
 
 
 from scipy.io.wavfile import read

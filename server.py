@@ -300,7 +300,13 @@ class Handler(BaseHTTPRequestHandler):
                 logger.info(final_path)
 
                 if xVASpeechModel.voiceId != voiceId:
-                    xVASpeech.loadModel(xVASpeechModel, voiceId, modelPath)
+                    error = xVASpeech.loadModel(logger, APP_VERSION, xVASpeechModel, voiceId, modelPath)
+                    if error:
+                        req_response = error
+                        self._set_response()
+                        self.wfile.write(req_response.encode("utf-8"))
+                        return
+
 
                 text, pitch, durs = xVASpeech.infer(logger, xVASpeechModel, final_path, use_gpu=user_settings["use_gpu"], doPitchShift=doPitchShift)
 

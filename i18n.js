@@ -203,6 +203,7 @@ window.i18n.setEnglish = () => {
     window.i18n.WAVEGLOW_NOT_FOUND = "WaveGlow model not found. Download it also (separate download), and place the .pt file in the models folder."
     window.i18n.ERR_LOADING_MODELS_FOR_GAME = "ERROR loading models for game"
     window.i18n.ERR_LOADING_MODELS_FOR_GAME_WITH_FILENAME = "ERROR loading models for game _1 with filename:"
+    window.i18n.ERR_XVASPEECH_MODEL_VERSION = `This xVASpeech model needs minimum app version _1. Your app version:`
 
     window.i18n.CHANGING_MODELS = "Changing models..."
     window.i18n.CHANGING_DEVICE = "Changing device..."

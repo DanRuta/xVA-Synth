@@ -129,36 +129,44 @@ const useWavFileForxVASpeech = (fileName) => {
             voiceId: window.userSettings.s2s_voiceId.split(",")[0]
         })
     }).then(r=>r.text()).then(res => {
+
         mic_progress_SVG.style.animation = "none"
         clearProgress()
-        res = res.split("\n")
-        let pitchData = res[0]
-        let durationsData = res[1]
-        let textSequence = res[2]//.split(",").join("")
-        pitchData = pitchData.split(",").map(v => parseFloat(v))
-        const isFreshRegen = true
-        durationsData = durationsData.split(",").map(v => isFreshRegen ? parseFloat(v) : parseFloat(v)/pace_slid.value)
-        window.pitchEditor.inputSequence = textSequence
-        window.pitchEditor.sequence = textSequence
-        dialogueInput.value = textSequence
 
-        window.pitchEditor.ampFlatCounter = 0
-        window.pitchEditor.resetPitch = pitchData
-        window.pitchEditor.resetDurs = durationsData
-        window.pitchEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
+        if (res.includes("ERROR:APP_VERSION")) {
+            const xVASpeechModelVersion = "v"+res.split(",")[1]
+            window.errorModal(`${window.i18n.ERR_XVASPEECH_MODEL_VERSION.replace("_1", xVASpeechModelVersion)} ${window.appVersion}`)
+        } else {
+            res = res.split("\n")
+            let pitchData = res[0]
+            let durationsData = res[1]
+            let textSequence = res[2]//.split(",").join("")
+            pitchData = pitchData.split(",").map(v => parseFloat(v))
+            const isFreshRegen = true
+            durationsData = durationsData.split(",").map(v => isFreshRegen ? parseFloat(v) : parseFloat(v)/pace_slid.value)
+            window.pitchEditor.inputSequence = textSequence
+            window.pitchEditor.sequence = textSequence
+            dialogueInput.value = textSequence
 
-        window.pitchEditor.audioInput = true
+            window.pitchEditor.ampFlatCounter = 0
+            window.pitchEditor.resetPitch = pitchData
+            window.pitchEditor.resetDurs = durationsData
+            window.pitchEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
 
-        const pace = 1
-        setPitchEditorValues(textSequence.replace(/\s/g, "_").split(""), pitchData, durationsData, isFreshRegen, pace)
+            window.pitchEditor.audioInput = true
 
-        generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
-        keepSampleButton.style.display = "none"
-        samplePlay.style.display = "none"
+            const pace = 1
+            setPitchEditorValues(textSequence.replace(/\s/g, "_").split(""), pitchData, durationsData, isFreshRegen, pace)
 
-        if (window.userSettings.s2s_autogenerate) {
-            generateVoiceButton.click()
+            generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
+            keepSampleButton.style.display = "none"
+            samplePlay.style.display = "none"
+
+            if (window.userSettings.s2s_autogenerate) {
+                generateVoiceButton.click()
+            }
         }
+
     }).catch(e => {
         console.log(e)
         mic_progress_SVG.style.animation = "none"
