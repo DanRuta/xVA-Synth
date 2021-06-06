@@ -16,6 +16,7 @@ window.i18n.setEnglish = () => {
     window.i18n.AUTO_REGEN = "Auto regenerate:"
     window.i18n.VOCODER = "Vocoder:"
 
+    window.i18n.SEARCH_GAMES = "Search games..."
     window.i18n.SEARCH_N_VOICES = "Search _ voices..."
     window.i18n.SEARCH_N_GAMES_WITH_N2_VOICES = "Search _1 games with _2 voices..."
     window.i18n.RESET = "Reset"
