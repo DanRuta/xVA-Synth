@@ -177,10 +177,13 @@ window.changeGame = (meta) => {
     meta = meta.split("-")
     window.currentGame = meta
     themeColour = meta[1]
+    let titleID
     if (meta.length==5) {
         secondaryThemeColour = meta[2]
+        titleID = meta[3]
     } else {
         secondaryThemeColour = undefined
+        titleID = meta[2]
     }
     generateVoiceButton.disabled = true
     generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
@@ -191,9 +194,9 @@ window.changeGame = (meta) => {
     if (window.games[window.currentGame[0]] == undefined) {
         title.innerHTML = `${window.i18n.NO_MODELS_IN}: ${window.userSettings[`modelspath_${window.currentGame[0]}`]}`
         console.log(title.innerHTML)
-    } else if (meta[2]) {
-        document.title = `${meta[2]}VA Synth`
-        dragBar.innerHTML = `${meta[2]}VA Synth`
+    } else if (titleID) {
+        document.title = `${titleID}VA Synth`
+        dragBar.innerHTML = `${titleID}VA Synth`
     } else {
         document.title = `xVA Synth`
         dragBar.innerHTML = `xVA Synth`
