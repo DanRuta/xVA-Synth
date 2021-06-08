@@ -65,9 +65,22 @@ class xVASpeech(nn.Module):
         self.DO_PITCH_LOSS = True
         self.DO_REV_COMP_LOSS = True
         self.DO_SMALL_FFT_CHAR_PRED = True
-        self.DO_FFT2 = False
+        self.DO_FFT2 = True
         self.DO_FP = True
 
+        self.char_pred_fft = FFTransformer(
+            n_layer=6,
+            n_head=out_fft_n_heads,
+            d_model=symbols_embedding_dim,
+            d_head=out_fft_d_head,
+            d_inner=out_fft_conv1d_filter_size,
+            kernel_size=out_fft_conv1d_kernel_size,
+            dropout=p_out_fft_dropout,
+            dropatt=p_out_fft_dropatt,
+            dropemb=p_out_fft_dropemb,
+            embed_input=False,
+            d_embed=self.num_symbols
+        )
         self.char_pred_fft_proj = nn.Linear(symbols_embedding_dim, self.num_symbols, bias=True)
 
 
