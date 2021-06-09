@@ -211,7 +211,9 @@ class PluginsManager {
         const removedPlugins = window.userSettings.plugins.loadOrder.split(",").filter(pluginId => pluginId.startsWith("*") && !enabledPlugins.includes(pluginId.slice(1, 100000)) ).map(pluginId => pluginId.slice(1, 100000))
 
         removedPlugins.forEach(pluginId => {
-            this.teardownModules[pluginId].forEach(func => func())
+            if (this.teardownModules[pluginId]) {
+                this.teardownModules[pluginId].forEach(func => func())
+            }
         })
 
         this.savePlugins()

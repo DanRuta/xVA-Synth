@@ -50,9 +50,10 @@ class PluginManager(object):
                 removed_plugins.append(line)
 
         for plugin_id in removed_plugins:
-            for func in self.teardownModules[plugin_id]:
-                params = {"logger": self.logger, "appVersion": self.APP_VERSION, "isCPUonly": self.CPU_ONLY, "isDev": not self.PROD}
-                func(params)
+            if plugin_id in self.teardownModules:
+                for func in self.teardownModules[plugin_id]:
+                    params = {"logger": self.logger, "appVersion": self.APP_VERSION, "isCPUonly": self.CPU_ONLY, "isDev": not self.PROD}
+                    func(params)
 
         self.reset_plugins()
         status = []
