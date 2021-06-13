@@ -185,8 +185,9 @@ def loadModel (fastpitch, ckpt, n_speakers, device):
     if 'state_dict' in checkpoint_data:
         checkpoint_data = checkpoint_data['state_dict']
 
-    hifi_gan = fastpitch.hifi_gan
-    del fastpitch.hifi_gan
+    if "hifi_gan" in dir(fastpitch):
+        hifi_gan = fastpitch.hifi_gan
+        del fastpitch.hifi_gan
 
     symbols_embedding_dim = 384
     if n_speakers is not None:
