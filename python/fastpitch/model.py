@@ -338,6 +338,7 @@ class FastPitch(nn.Module):
             speaker = torch.ones(inputs.size(0)).long().to(inputs.device) * speaker_i
             spk_emb = self.speaker_emb(speaker).unsqueeze(1)
             spk_emb.mul_(self.speaker_emb_weight)
+            del speaker
         else:
             spk_emb = 0
 
@@ -351,6 +352,7 @@ class FastPitch(nn.Module):
             pitch_pred = torch.tensor(pitch_pred)
             pitch_pred = pitch_pred.view((1, pitch_pred.shape[0])).float().to(self.device)
 
+            del spk_emb
             # Try using the provided pitch/duration data, but fall back to using its own, otherwise
             try:
                 return self.infer_using_vals(logger, pace, enc_out, max_duration, enc_mask, dur_pred_existing=dur_pred, pitch_pred_existing=pitch_pred, old_sequence=old_sequence, new_sequence=inputs)
@@ -359,5 +361,6 @@ class FastPitch(nn.Module):
                 return self.infer_using_vals(logger, pace, enc_out, max_duration, enc_mask, None, None, None)
 
         else:
+            del spk_emb
             return self.infer_using_vals(logger, pace, enc_out, max_duration, enc_mask, None, None, None)
 

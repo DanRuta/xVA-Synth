@@ -305,6 +305,7 @@ def infer(PROD, user_settings, text, output, fastpitch, vocoder, speaker_i, pace
             # audio = audio * 2.3026  # This brings it to the same volume, but makes it clip in places
             audio = audio.cpu().numpy().astype('int16')
             write(output, sampling_rate, audio)
+            del audio
 
         del mel, mel_lens
 
@@ -312,5 +313,5 @@ def infer(PROD, user_settings, text, output, fastpitch, vocoder, speaker_i, pace
     pitch_durations_text = ",".join([str(v) for v in pitch])+"\n"+",".join([str(v) for v in durations])
 
 
-    del pitch_pred, dur_pred, text
+    del pitch_pred, dur_pred, text, sequence
     return pitch_durations_text +"\n"+cleaned_text
