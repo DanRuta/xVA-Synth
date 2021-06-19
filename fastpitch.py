@@ -116,6 +116,7 @@ def init (PROD, use_gpu, vocoder, logger):
     else:
         fastpitch = init_waveglow(use_gpu, fastpitch, vocoder, logger)
 
+    fastpitch.hifi_gan_path = None
     fastpitch = init_hifigan(PROD, fastpitch, use_gpu, vocoder)
 
     return fastpitch
@@ -135,17 +136,20 @@ def init_hifigan (PROD, fastpitch, use_gpu, vocoder):
 
 
 
-    # Hi-Fi GAN
-    config_file = os.path.join(f'{"./resources/app" if PROD else "."}/python/config.json')
-    with open(config_file) as f:
-        data = f.read()
+    if fastpitch.hifi_gan_path is None or fastpitch.hifi_gan_path!=model_path:
+        # Hi-Fi GAN
+        config_file = os.path.join(f'{"./resources/app" if PROD else "."}/python/config.json')
+        with open(config_file) as f:
+            data = f.read()
 
-    json_config = json.loads(data)
-    h = AttrDict(json_config)
-    fastpitch.hifi_gan = Generator(h).to(device)
-    hifigan_ckpt = torch.load(model_path, map_location=device)
-    fastpitch.hifi_gan.load_state_dict(hifigan_ckpt['generator'])
-    fastpitch.hifi_gan = fastpitch.hifi_gan.to(device)
+        json_config = json.loads(data)
+        h = AttrDict(json_config)
+        fastpitch.hifi_gan = Generator(h).to(device)
+        hifigan_ckpt = torch.load(model_path, map_location=device)
+        fastpitch.hifi_gan.load_state_dict(hifigan_ckpt['generator'])
+        fastpitch.hifi_gan = fastpitch.hifi_gan.to(device)
+        fastpitch.hifi_gan_path = model_path
+
     return fastpitch
 
 
