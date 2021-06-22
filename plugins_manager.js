@@ -22,11 +22,13 @@ class PluginsManager {
         this.updateUI()
         this.savePlugins()
         this.appLogger.log(`${this.path}/plugins`)
-        fs.watch(`${this.path}/plugins`, {recursive: false, persistent: true}, (eventType, filename) => {
-            this.scanPlugins()
-            this.updateUI()
-            this.savePlugins()
-        })
+        if (fs.existsSync(`${this.path}/plugins`)) {
+            fs.watch(`${this.path}/plugins`, {recursive: false, persistent: true}, (eventType, filename) => {
+                this.scanPlugins()
+                this.updateUI()
+                this.savePlugins()
+            })
+        }
 
         plugins_moveUpBtn.addEventListener("click", () => {
 
