@@ -228,12 +228,13 @@ window.addEventListener("keydown", event => {
         keepSampleFunction(true)
     }
     // Y/N for prompt modals
-    if (key=="y" || key=="n") {
+    if (key=="y" || key=="n" || key==" ") {
         if (document.querySelector("#activeModal")) {
             const buttons = Array.from(document.querySelector("#activeModal").querySelectorAll("button"))
             const yesBtn = buttons.find(btn => btn.innerHTML.toLowerCase()=="yes")
             const noBtn = buttons.find(btn => btn.innerHTML.toLowerCase()=="no")
             if (key=="y") yesBtn.click()
+            if (key==" ") yesBtn.click()
             if (key=="n") noBtn.click()
         }
     }
