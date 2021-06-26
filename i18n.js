@@ -124,6 +124,8 @@ window.i18n.setEnglish = () => {
     window.i18n.KEYBOARD_CTRL_UD_DO = "Pitch increase/decrease buttons"
     window.i18n.KEYBOARD_CTRLSHIFTUD = "Ctrl+Shift+Up/Down arrows"
     window.i18n.KEYBOARD_CTRLSHIFTUD_DO = "Pitch amplify/flatten buttons"
+    window.i18n.KEYBOARD_CTRLA = "Ctrl+A"
+    window.i18n.KEYBOARD_CTRLA_DO = "Select all editor sequence letters"
 
     window.i18n.SUPPORT = "Support"
     window.i18n.SUPPORT_LINK = "You can support development on patreon at this link:"
@@ -373,6 +375,8 @@ window.i18n.updateUI = () => {
 
     i18n_keyboard_alt_ctrl_lr.innerHTML = window.i18n.KEYBOARD_ALT_CTRL_LR
     i18n_keyboard_alt_ctrl_lr_do.innerHTML = window.i18n.KEYBOARD_ALT_CTRL_LR
+    i18n_keyboard_ctrla.innerHTML = window.i18n.KEYBOARD_CTRLA
+    i18n_keyboard_ctrla_do.innerHTML = window.i18n.KEYBOARD_CTRLA_DO
 
     i18n_keyboard_ud.innerHTML = window.i18n.KEYBOARD_UD
     i18n_keyboard_ud_do.innerHTML = window.i18n.KEYBOARD_UD_DO

@@ -227,6 +227,15 @@ window.addEventListener("keydown", event => {
     if (key=="s" && event.ctrlKey && event.shiftKey) {
         keepSampleFunction(true)
     }
+    // Create selection for all of the editor letters
+    if (key=="a" && event.ctrlKey && !event.shiftKey) {
+        window.pitchEditor.letterFocus = []
+        window.pitchEditor.dursNew.forEach((_,i) => {
+            window.pitchEditor.letterFocus.push(i)
+            setLetterFocus(i, true)
+        })
+        event.preventDefault()
+    }
     // Y/N for prompt modals
     if (key=="y" || key=="n" || key==" ") {
         if (document.querySelector("#activeModal")) {
