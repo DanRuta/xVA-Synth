@@ -114,6 +114,8 @@ window.i18n.setEnglish = () => {
     window.i18n.KEYBOARD_LR_DO = "Move left/right along which letter is focused"
     window.i18n.KEYBOARD_SHIFT_LR = "Shift-Left/Right arrows"
     window.i18n.KEYBOARD_SHIFT_LR_DO = "Create multi-letter selection range"
+    window.i18n.KEYBOARD_ALT_CTRL_LR = "Alt-Ctrl-Left/Right arrows"
+    window.i18n.KEYBOARD_ALT_CTRL_LR_DO = "Adjust width of letter selection"
     window.i18n.KEYBOARD_UD = "Up/Down arrows"
     window.i18n.KEYBOARD_UD_DO = "Move pitch up/down for the letter(s) selected"
     window.i18n.KEYBOARD_CTRL_LR = "Ctrl+Left/Right arrows"
@@ -368,6 +370,10 @@ window.i18n.updateUI = () => {
     i18n_keyboard_lr_do.innerHTML = window.i18n.KEYBOARD_LR_DO
     i18n_keyboard_shift_lr.innerHTML = window.i18n.KEYBOARD_SHIFT_LR
     i18n_keyboard_shift_lr_do.innerHTML = window.i18n.KEYBOARD_SHIFT_LR_DO
+
+    i18n_keyboard_alt_ctrl_lr.innerHTML = window.i18n.KEYBOARD_ALT_CTRL_LR
+    i18n_keyboard_alt_ctrl_lr_do.innerHTML = window.i18n.KEYBOARD_ALT_CTRL_LR
+
     i18n_keyboard_ud.innerHTML = window.i18n.KEYBOARD_UD
     i18n_keyboard_ud_do.innerHTML = window.i18n.KEYBOARD_UD_DO
     i18n_keyboard_ctrl_lr.innerHTML = window.i18n.KEYBOARD_CTRL_LR

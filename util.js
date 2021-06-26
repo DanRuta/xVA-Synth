@@ -282,17 +282,25 @@ window.addEventListener("keydown", event => {
 
     // CTRL+Left/Right arrows: change the sequence-wide pacing
     if ((key=="arrowleft" || key=="arrowright") && event.ctrlKey) {
-        pace_slid.value = parseFloat(pace_slid.value) + (key=="arrowleft"? -0.01 : 0.01)
-        paceNumbInput.value = pace_slid.value
-        const new_lengths = window.pitchEditor.dursNew.map((v,l) => v * pace_slid.value)
-        window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, new_lengths[l]* 10 + 50, null))
-        // if (autoinfer_timer != null) {
-        //     clearTimeout(autoinfer_timer)
-        //     autoinfer_timer = null
-        // }
-        // if (autoplay_ckbx.checked) {
-        //     autoinfer_timer = setTimeout(infer, 500)
-        // }
+        if (event.altKey) {
+            window.pitchEditor.letterFocus.forEach(li => {
+                window.pitchEditor.dursNew[li] = window.pitchEditor.dursNew[li] + (key=="arrowleft"? -0.1 : 0.1)
+                has_been_changed = true
+            })
+            if (autoinfer_timer != null) {
+                clearTimeout(autoinfer_timer)
+                autoinfer_timer = null
+            }
+            if (autoplay_ckbx.checked) {
+                autoinfer_timer = setTimeout(infer, 500)
+            }
+            window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, window.pitchEditor.dursNew[l]* 10 + 50, null))
+        } else {
+            pace_slid.value = parseFloat(pace_slid.value) + (key=="arrowleft"? -0.01 : 0.01)
+            paceNumbInput.value = pace_slid.value
+            const new_lengths = window.pitchEditor.dursNew.map((v,l) => v * pace_slid.value)
+            window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, new_lengths[l]* 10 + 50, null))
+        }
     }
 
     // CTRL+Up/Down arrows: increase/decrease buttons
