@@ -33,6 +33,10 @@ class PluginManager(object):
                 "pre": [],
                 "post": []
             },
+            "batch-synth-line": {
+                "pre": [],
+                "post": []
+            },
             "output-audio": {
                 "pre": [],
                 "post": []
@@ -80,6 +84,8 @@ class PluginManager(object):
                         self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "load-model", "post"], [])
                         self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "synth-line", "pre"], [])
                         self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "synth-line", "post"], [])
+                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "batch-synth-line", "pre"], [])
+                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "batch-synth-line", "post"], [])
                         self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "output-audio", "pre"], [])
                         self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "output-audio", "post"], [])
                         self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "custom-event"], [])

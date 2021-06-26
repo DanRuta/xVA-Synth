@@ -675,9 +675,14 @@ const batchKickOffGeneration = () => {
                 batch_progressNotes.innerHTML = `${window.i18n.SYNTHESIZING} ${linesBatch.length} ${window.i18n.LINES}`
             }
         }
+        const batchPostData = {
+            batchSize: window.userSettings.batch_batchSize,
+            defaultOutFolder: window.userSettings.batchOutFolder,
+            speaker_i, vocoder, linesBatch
+        }
         fetch(`http://localhost:8008/synthesize_batch`, {
             method: "Post",
-            body: JSON.stringify({speaker_i, vocoder, linesBatch})
+            body: JSON.stringify(batchPostData)
         }).then(r=>r.text()).then(async (res) => {
 
             if (res) {

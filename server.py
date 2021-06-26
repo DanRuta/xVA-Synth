@@ -274,6 +274,7 @@ class Handler(BaseHTTPRequestHandler):
                 linesBatch = post_data["linesBatch"]
                 speaker_i = post_data["speaker_i"]
                 vocoder = post_data["vocoder"]
+                plugin_manager.run_plugins(plist=plugin_manager.plugins["batch-synth-line"]["pre"], event="pre batch-synth-line", data=post_data)
                 try:
                     req_response = fastpitch.infer_batch(PROD, user_settings, linesBatch, fastpitch=fastpitch_model, vocoder=vocoder, \
                         speaker_i=speaker_i, logger=logger)
@@ -282,6 +283,8 @@ class Handler(BaseHTTPRequestHandler):
                         req_response = "CUDA OOM"
                     else:
                         req_response = str(e)
+                post_data["req_response"] = req_response
+                plugin_manager.run_plugins(plist=plugin_manager.plugins["batch-synth-line"]["post"], event="post batch-synth-line", data=post_data)
 
 
             if self.path == "/runSpeechToSpeech":
