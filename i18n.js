@@ -374,7 +374,7 @@ window.i18n.updateUI = () => {
     i18n_keyboard_shift_lr_do.innerHTML = window.i18n.KEYBOARD_SHIFT_LR_DO
 
     i18n_keyboard_alt_ctrl_lr.innerHTML = window.i18n.KEYBOARD_ALT_CTRL_LR
-    i18n_keyboard_alt_ctrl_lr_do.innerHTML = window.i18n.KEYBOARD_ALT_CTRL_LR
+    i18n_keyboard_alt_ctrl_lr_do.innerHTML = window.i18n.KEYBOARD_ALT_CTRL_LR_DO
     i18n_keyboard_ctrla.innerHTML = window.i18n.KEYBOARD_CTRLA
     i18n_keyboard_ctrla_do.innerHTML = window.i18n.KEYBOARD_CTRLA_DO
 
