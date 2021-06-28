@@ -75,7 +75,6 @@ def load_and_setup_big_WN(model_name, parser, checkpoint, device, logger, forwar
         status = ''
 
         if 'state_dict' in checkpoint_data:
-            # torch.save(checkpoint_data['state_dict'], f'{"/".join(checkpoint.split("/")[:-1])}/minimal-{checkpoint.split("/")[-1].split("-")[-1]}')
             sd = checkpoint_data['state_dict']
 
             if any(key.startswith('module.') for key in sd):

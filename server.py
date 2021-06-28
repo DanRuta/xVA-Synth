@@ -1,7 +1,7 @@
 import os
 import traceback
 
-APP_VERSION = "1.4.0"
+APP_VERSION = "1.4.1"
 
 PROD = False
 # PROD = True
