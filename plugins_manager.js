@@ -75,6 +75,9 @@ class PluginsManager {
                 "pre": [],
                 "post": []
             },
+            "generate-voice": {
+                "pre": []
+            }
         }
         pluginsCSS.innerHTML = ""
     }
@@ -262,6 +265,7 @@ class PluginsManager {
             if (!enabled) return
             this.loadModuleFns(pluginId, pluginData, "start", "pre")
             this.loadModuleFns(pluginId, pluginData, "start", "post")
+            this.loadModuleFns(pluginId, pluginData, "generate-voice", "pre")
             this.loadModuleFns(pluginId, pluginData, "keep-sample", "pre")
             this.loadModuleFns(pluginId, pluginData, "keep-sample", "post")
 

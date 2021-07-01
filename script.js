@@ -606,11 +606,14 @@ generateVoiceButton.addEventListener("click", () => {
             return
         }
 
-        const sequence = dialogueInput.value.trim().replace("…", "...")
+        let sequence = dialogueInput.value.trim().replace("…", "...")
         if (sequence.length==0) {
             return
         }
         isGenerating = true
+
+        window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["generate-voice"]["pre"], event="pre generate-voice")
+        sequence = dialogueInput.value.trim().replace("…", "...")
 
         const existingSample = samplePlay.querySelector("audio")
         if (existingSample) {
