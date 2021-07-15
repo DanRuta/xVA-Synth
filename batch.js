@@ -28,6 +28,7 @@ window.batch_state = {
     lineIndex: 0,
     status: false,
     outPathsChecked: [],
+    skippedExisting: 0
 }
 
 // https://stackoverflow.com/questions/1293147/example-javascript-code-to-parse-csv-data
@@ -220,6 +221,7 @@ const uploadBatchCSVs = async (eType, event) => {
     if (eType=="drop") {
 
         batchDropZoneNote.innerHTML = window.i18n.PROCESSING_DATA
+        window.batch_state.skippedExisting = 0
 
         const dataTransfer = event.dataTransfer
         const files = Array.from(dataTransfer.files)
@@ -248,6 +250,8 @@ const uploadBatchCSVs = async (eType, event) => {
 
                                 if (!fs.existsSync(outPath)) {
                                     dataLines.push(item)
+                                } else {
+                                    window.batch_state.skippedExisting++
                                 }
 
                             } else {
@@ -282,11 +286,18 @@ const uploadBatchCSVs = async (eType, event) => {
 
                     if (!fs.existsSync(outPath)) {
                         dataLines.push(item)
+                    } else {
+                        window.batch_state.skippedExisting++
                     }
                 } else {
                     dataLines.push(item)
                 }
             })
+        }
+
+        if (dataLines.length==0 && window.batch_state.skippedExisting) {
+            batchDropZoneNote.innerHTML = window.i18n.BATCH_DROPZONE
+            return window.errorModal(window.i18n.BATCH_ERR_SKIPPEDALL.replace("_1", window.batch_state.skippedExisting))
         }
 
         const cleanedData = preProcessCSVData(dataLines)
@@ -630,9 +641,13 @@ const addActionButtons = (records, ri) => {
 
     let audioPreview
     const playButton = createElem("button.smallButton", window.i18n.PLAY)
+    playButton.style.background = `#${window.currentGame[1]}`
     playButton.addEventListener("click", () => {
 
         let audioPreviewPath = records[ri][0].fileOutputPath
+        if (audioPreviewPath.startsWith("./")) {
+            audioPreviewPath = window.userSettings.batchOutFolder + audioPreviewPath.replace("./", "/")
+        }
 
         if (audioPreview==undefined) {
             const audioPreview = createElem("audio", {autoplay: false}, createElem("source", {
@@ -649,6 +664,7 @@ const addActionButtons = (records, ri) => {
         }
     })
     const editButton = createElem("button.smallButton", window.i18n.EDIT)
+    editButton.style.background = `#${window.currentGame[1]}`
     editButton.addEventListener("click", () => {
         audioPreview = undefined
 
@@ -667,7 +683,12 @@ const addActionButtons = (records, ri) => {
         voiceButton.click()
         generateVoiceButton.click()
         dialogueInput.value = records[ri][0].text
-        keepSampleButton.dataset.newFileLocation = "BATCH_EDIT"+records[ri][0].fileOutputPath
+
+        let audioPreviewPath = records[ri][0].fileOutputPath
+        if (audioPreviewPath.startsWith("./")) {
+            audioPreviewPath = window.userSettings.batchOutFolder + audioPreviewPath.replace("./", "/")
+        }
+        keepSampleButton.dataset.newFileLocation = "BATCH_EDIT"+audioPreviewPath
     })
     records[ri][1].children[2].appendChild(playButton)
     records[ri][1].children[2].appendChild(editButton)
@@ -824,7 +845,7 @@ const batchKickOffGeneration = () => {
                     } catch (err) {
                         console.log(err)
                         window.appLogger.log(err)
-                        window.appLogger.log(err)
+                        window.errorModal(err.message)
                         batch_pauseBtn.click()
                     }
                     resolve()
@@ -834,6 +855,11 @@ const batchKickOffGeneration = () => {
             if (e.code=="ECONNREFUSED") {
                 await batchKickOffGeneration()
                 resolve()
+            } else {
+                console.log(e)
+                window.appLogger.log(e)
+                window.errorModal(e.message)
+                batch_pauseBtn.click()
             }
         })
     })

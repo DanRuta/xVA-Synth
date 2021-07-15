@@ -213,7 +213,7 @@ window.i18n.setEnglish = () => {
 
     window.i18n.CHANGING_MODELS = "Changing models..."
     window.i18n.CHANGING_DEVICE = "Changing device..."
-    window.i18n.PROCESSING_DATA = "Procesing data..."
+    window.i18n.PROCESSING_DATA = "Processing data..."
     window.i18n.DELETING_FILE = "Deleting file"
     window.i18n.DELETING_NEW_FILE = "Deleting new file"
     window.i18n.FAILED = "Failed"
@@ -259,6 +259,7 @@ window.i18n.setEnglish = () => {
     window.i18n.BATCH_ERR_CUDA_OOM = "CUDA OOM: There is not enough VRAM to run this. Try lowering the batch size, or shortening very long sentences."
     window.i18n.BATCH_ERR_IN_PROGRESS = "Batch synthesis is in progress. Loading a model in the main app now would break things."
     window.i18n.BATCH_ERR_EDIT = "Batch synthesis is in progress. Pause or stop it first to enable editor."
+    window.i18n.BATCH_ERR_SKIPPEDALL = "No records imported, but _1 were skipped as they already exist."
 
     window.i18n.ERR_LOADING_PLUGIN = "Error loading plugin"
     window.i18n.SUCCESSFULLY_INITIALIZED = "Successfully initialized"
