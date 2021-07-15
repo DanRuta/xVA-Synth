@@ -539,7 +539,9 @@ const makeSample = (src, newSample) => {
         confirmModal(`${window.i18n.SURE_DELETE}<br><br><i>${fileName}</i>`).then(confirmation => {
             if (confirmation) {
                 window.appLogger.log(`${newSample?window.i18n.DELETING_NEW_FILE:window.i18n.DELETING}: ${src}`)
-                fs.unlinkSync(src)
+                if (fs.existsSync(src)) {
+                    fs.unlinkSync(src)
+                }
                 sample.remove()
                 if (fs.existsSync(`${src}.json`)) {
                     fs.unlinkSync(`${src}.json`)
