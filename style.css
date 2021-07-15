@@ -15,6 +15,13 @@ a {
      transition: background-color 500ms;
      min-height: 25px;
  }
+ .smallButton {
+    font-size: 10pt;
+    margin-top: -2px !important;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    min-height: 0px;
+ }
  .voiceType {
      min-height: auto;
      font-size: 15px;
@@ -968,10 +975,10 @@ a {
     min-width: 100px;
     max-width: 100px;
 }
-/*Game*/
+/*Actions*/
 #batchRecordsHeader > div:nth-child(3), #batchRecordsContainer > div > div:nth-child(3) {
-    min-width: 150px;
-    max-width: 150px;
+    min-width: 90px;
+    max-width: 90px;
 }
 /*Voice*/
 #batchRecordsHeader > div:nth-child(4), #batchRecordsContainer > div > div:nth-child(4) {
@@ -983,21 +990,26 @@ a {
     min-width: 500px;
     max-width: 500px;
 }
-/*Vocoder*/
+/*Game*/
 #batchRecordsHeader > div:nth-child(6), #batchRecordsContainer > div > div:nth-child(6) {
+    min-width: 150px;
+    max-width: 150px;
+}
+/*Vocoder*/
+#batchRecordsHeader > div:nth-child(7), #batchRecordsContainer > div > div:nth-child(7) {
     min-width: 100px;
     max-width: 100px;
 }
 /*Out path*/
-#batchRecordsHeader > div:nth-child(7), #batchRecordsContainer > div > div:nth-child(7) {
+#batchRecordsHeader > div:nth-child(8), #batchRecordsContainer > div > div:nth-child(8) {
     min-width: 300px;
     max-width: 300px;
     direction: rtl;
     text-align: left;
 }
 /*Pacing*/
-#batchRecordsHeader > div:nth-child(8), #batchRecordsContainer > div > div:nth-child(8) {
-    min-width: 50px;
+#batchRecordsHeader > div:nth-child(9), #batchRecordsContainer > div > div:nth-child(9) {
+    min-width: 75px;
     /*max-width: 50px;*/
 }
 

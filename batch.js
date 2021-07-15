@@ -379,9 +379,10 @@ const populateRecordsList = records => {
 
         const rNumElem = createElem("div", batchRecordsContainer.children.length.toString())
         const rStatusElem = createElem("div", "Ready")
-        const rGameElem = createElem("div", record.game_id)
+        const rActionsElem = createElem("div")
         const rVoiceElem = createElem("div", record.voice_id)
         const rTextElem = createElem("div", record.text)
+        const rGameElem = createElem("div", record.game_id)
         const rVocoderElem = createElem("div", record.vocoder)
         const rOutPathElem = createElem("div", "&lrm;"+record.out_path+"&lrm;")
         const rPacingElem = createElem("div", (record.pacing||" ").toString())
@@ -389,9 +390,10 @@ const populateRecordsList = records => {
 
         row.appendChild(rNumElem)
         row.appendChild(rStatusElem)
-        row.appendChild(rGameElem)
+        row.appendChild(rActionsElem)
         row.appendChild(rVoiceElem)
         row.appendChild(rTextElem)
+        row.appendChild(rGameElem)
         row.appendChild(rVocoderElem)
         row.appendChild(rOutPathElem)
         row.appendChild(rPacingElem)
@@ -623,6 +625,56 @@ const prepareLinesBatchForSynth = () => {
     return [speaker_i, firstItemVoiceId, firstItemVocoder, linesBatch, records]
 }
 
+
+const addActionButtons = (records, ri) => {
+
+    let audioPreview
+    const playButton = createElem("button.smallButton", window.i18n.PLAY)
+    playButton.addEventListener("click", () => {
+
+        let audioPreviewPath = records[ri][0].fileOutputPath
+
+        if (audioPreview==undefined) {
+            const audioPreview = createElem("audio", {autoplay: false}, createElem("source", {
+                src: audioPreviewPath
+            }))
+            audioPreview.addEventListener("play", () => {
+                if (window.ctrlKeyIsPressed) {
+                    audioPreview.setSinkId(window.userSettings.alt_speaker)
+                } else {
+                    audioPreview.setSinkId(window.userSettings.base_speaker)
+                }
+            })
+            audioPreview.setSinkId(window.userSettings.base_speaker)
+        }
+    })
+    const editButton = createElem("button.smallButton", window.i18n.EDIT)
+    editButton.addEventListener("click", () => {
+        audioPreview = undefined
+
+
+        if (window.batch_state.state) {
+            window.errorModal(window.i18n.BATCH_ERR_EDIT)
+            return
+        }
+
+        // Change app theme to the voice's game
+        window.changeGame(window.gameAssets[records[ri][0].game_id])
+
+        // Simulate voice loading through the UI
+        const voiceName = window.games[records[ri][0].game_id].models.find(model => model.voiceId==records[ri][0].voice_id).voiceName
+        const voiceButton = Array.from(voiceTypeContainer.children).find(button => button.innerHTML==voiceName)
+        voiceButton.click()
+        generateVoiceButton.click()
+        dialogueInput.value = records[ri][0].text
+        keepSampleButton.dataset.newFileLocation = "BATCH_EDIT"+records[ri][0].fileOutputPath
+    })
+    records[ri][1].children[2].appendChild(playButton)
+    records[ri][1].children[2].appendChild(editButton)
+
+}
+
+
 const batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, body) => {
     return new Promise((resolve, reject) => {
         fetch(`http://localhost:8008/outputAudio`, {
@@ -645,6 +697,7 @@ const batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, bod
                 records[ri][1].children[1].innerHTML = window.i18n.DONE
                 records[ri][1].children[1].style.background = "green"
                 fs.unlinkSync(tempFileLocation)
+                addActionButtons(records, ri)
                 resolve()
             }
         }).catch(e => {
@@ -661,9 +714,10 @@ const batchKickOffGeneration = () => {
     return new Promise((resolve) => {
 
         const [speaker_i, voice_id, vocoder, linesBatch, records] = prepareLinesBatchForSynth()
-        records.forEach(record => {
+        records.forEach((record, ri) => {
             record[1].children[1].innerHTML = window.i18n.RUNNING
             record[1].children[1].style.background = "goldenrod"
+            record[0].fileOutputPath = linesBatch[ri][5]
         })
 
         const record = window.batch_state.lines[window.batch_state.lineIndex]
@@ -762,7 +816,10 @@ const batchKickOffGeneration = () => {
                         fs.copyFileSync(tempFileLocation, outPath)
                         records[li][1].children[1].innerHTML = window.i18n.DONE
                         records[li][1].children[1].style.background = "green"
+
                         window.batch_state.lineIndex += 1
+
+                        addActionButtons(records, li)
 
                     } catch (err) {
                         console.log(err)

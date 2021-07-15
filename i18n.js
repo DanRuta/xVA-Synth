@@ -146,6 +146,7 @@ window.i18n.setEnglish = () => {
 
     window.i18n.BATCHH_NUM = "#"
     window.i18n.BATCHH_STATUS = "Status"
+    window.i18n.BATCHH_ACTIONS = "Actions"
     window.i18n.BATCHH_GAME = "Game"
     window.i18n.BATCHH_VOICE = "Voice"
     window.i18n.BATCHH_TEXT = "Text"
@@ -221,6 +222,8 @@ window.i18n.setEnglish = () => {
     window.i18n.RUNNING = "Running"
     window.i18n.PAUSED = "Paused"
     window.i18n.PAUSE = "Pause"
+    window.i18n.PLAY = "Play"
+    window.i18n.EDIT = "Edit"
     window.i18n.RESUME = "Resume"
     window.i18n.STOPPED = "Stopped"
     window.i18n.SYNTHESIZING = "Synthesizing"
@@ -255,6 +258,7 @@ window.i18n.setEnglish = () => {
     window.i18n.BATCH_ERR_VOCODER2 = "(or leaving it blank)"
     window.i18n.BATCH_ERR_CUDA_OOM = "CUDA OOM: There is not enough VRAM to run this. Try lowering the batch size, or shortening very long sentences."
     window.i18n.BATCH_ERR_IN_PROGRESS = "Batch synthesis is in progress. Loading a model in the main app now would break things."
+    window.i18n.BATCH_ERR_EDIT = "Batch synthesis is in progress. Pause or stop it first to enable editor."
 
     window.i18n.ERR_LOADING_PLUGIN = "Error loading plugin"
     window.i18n.SUCCESSFULLY_INITIALIZED = "Successfully initialized"
@@ -406,6 +410,7 @@ window.i18n.updateUI = () => {
 
     i18n_batchh_num.innerHTML = window.i18n.BATCHH_NUM
     i18n_batchh_status.innerHTML = window.i18n.BATCHH_STATUS
+    i18n_batchh_actions.innerHTML = window.i18n.BATCHH_ACTIONS
     i18n_batchh_game.innerHTML = window.i18n.BATCHH_GAME
     i18n_batchh_voice.innerHTML = window.i18n.BATCHH_VOICE
     i18n_batchh_text.innerHTML = window.i18n.BATCHH_TEXT

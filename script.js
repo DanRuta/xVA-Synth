@@ -681,7 +681,10 @@ generateVoiceButton.addEventListener("click", () => {
             setPitchEditorValues(cleanedSequence.replace(/\s/g, "_").split(""), pitchData, durationsData, isFreshRegen, pace)
 
             toggleSpinnerButtons()
-            keepSampleButton.dataset.newFileLocation = `${window.userSettings[`outpath_${game}`]}/${voiceType}/${outputFileName}.wav`
+            if (keepSampleButton.dataset.newFileLocation && keepSampleButton.dataset.newFileLocation.startsWith("BATCH_EDIT")) {
+            } else {
+                keepSampleButton.dataset.newFileLocation = `${window.userSettings[`outpath_${game}`]}/${voiceType}/${outputFileName}.wav`
+            }
             keepSampleButton.disabled = false
             samplePlay.dataset.tempFileLocation = tempFileLocation
             samplePlay.innerHTML = ""
@@ -714,7 +717,7 @@ generateVoiceButton.addEventListener("click", () => {
     }
 })
 
-const saveFile = (from, to) => {
+const saveFile = (from, to, skipUIRecord=false) => {
     to = to.split("%20").join(" ")
     to = to.replace(".wav", `.${window.userSettings.audio.format}`)
 
@@ -774,7 +777,9 @@ const saveFile = (from, to) => {
                     if (window.userSettings.outputJSON) {
                         fs.writeFileSync(`${to}.json`, JSON.stringify({inputSequence: dialogueInput.value.trim(), pitchEditor: window.pitchEditor, pacing: parseFloat(pace_slid.value)}, null, 4))
                     }
-                    voiceSamples.appendChild(makeSample(to, true))
+                    if (!skipUIRecord) {
+                        voiceSamples.appendChild(makeSample(to, true))
+                    }
                     window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["post"], event="post keep-sample", pluginData)
                 }
             })
@@ -800,7 +805,9 @@ const saveFile = (from, to) => {
                 if (window.userSettings.outputJSON) {
                     fs.writeFileSync(`${to}.json`, JSON.stringify({inputSequence: dialogueInput.value.trim(), pitchEditor: window.pitchEditor, pacing: parseFloat(pace_slid.value)}, null, 4))
                 }
-                voiceSamples.appendChild(makeSample(to, true))
+                if (!skipUIRecord) {
+                    voiceSamples.appendChild(makeSample(to, true))
+                }
                 window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["post"], event="post keep-sample", pluginData)
             }
         })
@@ -810,12 +817,15 @@ const saveFile = (from, to) => {
 window.keepSampleFunction = shiftClick => {
     if (keepSampleButton.dataset.newFileLocation) {
 
+        const skipUIRecord = keepSampleButton.dataset.newFileLocation.includes("BATCH_EDIT")
         let fromLocation = samplePlay.dataset.tempFileLocation
-        let toLocation = keepSampleButton.dataset.newFileLocation
+        let toLocation = keepSampleButton.dataset.newFileLocation.replace("BATCH_EDIT", "")
 
-        toLocation = toLocation.split("/")
-        toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/[\/\\:\*?<>"|]*/g, "")
-        toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/\.wav$/, "").slice(0, 75).replace(/\.$/, "")
+        if (!skipUIRecord) {
+            toLocation = toLocation.split("/")
+            toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/[\/\\:\*?<>"|]*/g, "")
+            toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/\.wav$/, "").slice(0, 75).replace(/\.$/, "")
+        }
 
 
         // Numerical file name counter
@@ -847,8 +857,10 @@ window.keepSampleFunction = shiftClick => {
         }
 
 
-        toLocation[toLocation.length-1] += ".wav"
-        toLocation = toLocation.join("/")
+        if (!skipUIRecord) {
+            toLocation[toLocation.length-1] += ".wav"
+            toLocation = toLocation.join("/")
+        }
 
 
         const outFolder = toLocation.split("/").reverse().slice(2, 100).reverse().join("/")
@@ -903,19 +915,19 @@ window.keepSampleFunction = shiftClick => {
                                 window.appLogger.log(err)
                             }
                             console.log(fromLocation, "finalOutLocation", finalOutLocation)
-                            saveFile(fromLocation, finalOutLocation)
+                            saveFile(fromLocation, finalOutLocation, skipUIRecord)
                         })
                         return
                     } else {
-                        saveFile(fromLocation, toLocationOut.join("/"))
+                        saveFile(fromLocation, toLocationOut.join("/"), skipUIRecord)
                         return
                     }
                 }
-                saveFile(fromLocation, toLocationOut.join("/"))
+                saveFile(fromLocation, toLocationOut.join("/"), skipUIRecord)
             })
 
         } else {
-            saveFile(fromLocation, toLocation)
+            saveFile(fromLocation, toLocation, skipUIRecord)
         }
     }
 }
@@ -1521,6 +1533,8 @@ window.setupModal(settingsCog, settingsContainer)
 // ===========
 window.setupModal(changeGameButton, gameSelectionContainer)
 
+window.gameAssets = {}
+
 fs.readdir(`${path}/assets`, (err, fileNames) => {
 
     let totalVoices = 0
@@ -1555,6 +1569,7 @@ fs.readdir(`${path}/assets`, (err, fileNames) => {
 
         gameSelection.appendChild(gameSelectionContent)
 
+        window.gameAssets[gameId] = fileName
         gameSelectionContent.addEventListener("click", () => {
             changeGame(fileName)
             closeModal(gameSelectionContainer)
