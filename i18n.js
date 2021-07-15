@@ -51,6 +51,8 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_FFMPEG_BITDEPTH = "Audio bit depth"
     window.i18n.SETTINGS_FFMPEG_AMPLITUDE = "Amplitude multiplier"
     window.i18n.SETTINGS_BATCH_FASTMODE = "Use fast mode for Batch synth"
+    window.i18n.SETTINGS_BATCH_USEMULTIP = "Use multi-processing for batch mode ffmpeg output"
+    window.i18n.SETTINGS_BATCH_MULTIPCOUNT = "Number of processes (0 for cpu threads count -1)"
     window.i18n.SETTINGS_MICROPHONE = "Microphone"
     window.i18n.SETTINGS_S2S_VOICE = "Speech-to-Speech voice"
     window.i18n.SETTINGS_AUTOGENERATEVOICE = "Automatically generate voice"
@@ -321,6 +323,8 @@ window.i18n.updateUI = () => {
     i18n_setting_ffmpeg_bitdepth.innerHTML = window.i18n.SETTINGS_FFMPEG_BITDEPTH
     i18n_setting_ffmpeg_amplitude.innerHTML = window.i18n.SETTINGS_FFMPEG_AMPLITUDE
     i18n_setting_batch_fastmode.innerHTML = window.i18n.SETTINGS_BATCH_FASTMODE
+    i18n_setting_batch_multip.innerHTML = window.i18n.SETTINGS_BATCH_USEMULTIP
+    i18n_setting_batch_multip_count.innerHTML = window.i18n.SETTINGS_BATCH_MULTIPCOUNT
     i18n_setting_microphone.innerHTML = window.i18n.SETTINGS_MICROPHONE
     i18n_setting_s2s_voice.innerHTML = window.i18n.SETTINGS_S2S_VOICE
     i18n_setting_autogeneratevoice.innerHTML = window.i18n.SETTINGS_AUTOGENERATEVOICE

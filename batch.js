@@ -696,13 +696,58 @@ const addActionButtons = (records, ri) => {
 }
 
 
+const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
+    return new Promise((resolve, reject) => {
+        fetch(`http://localhost:8008/batchOutputAudio`, {
+            method: "Post",
+            body: JSON.stringify({
+                input_paths: tempPaths,
+                output_paths: outPaths,
+                processes: window.userSettings.batch_MPCount,
+                options: JSON.stringify(options)
+            })
+        }).then(r=>r.text()).then(res => {
+            res = res.split("\n")
+            res.forEach((resItem, ri) => {
+                if (resItem.length && resItem!="-") {
+                    console.log("resItem", resItem, resItem.length, resItem.length!="-")
+                    window.appLogger.log("resItem", resItem)
+                    if (window.batch_state.state) {
+                        batch_pauseBtn.click()
+                    }
+
+                    records[ri][1].children[1].innerHTML = window.i18n.FAILED
+                    records[ri][1].children[1].style.background = "red"
+
+                } else {
+
+                    records[ri][1].children[1].innerHTML = window.i18n.DONE
+                    records[ri][1].children[1].style.background = "green"
+                    fs.unlinkSync(tempPaths[ri])
+                    addActionButtons(records, ri)
+                }
+
+                window.batch_state.lineIndex += 1
+            })
+            resolve()
+
+        }).catch(e => {
+            console.log("e")
+            console.log(e)
+        })
+    })
+}
+
+
+
+
 const batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, body) => {
     return new Promise((resolve, reject) => {
         fetch(`http://localhost:8008/outputAudio`, {
             method: "Post",
             body
         }).then(r=>r.text()).then(res => {
-            if (res.length) {
+            if (res.length && res!="-") {
                 window.appLogger.log("res", res)
                 if (window.batch_state.state) {
                     batch_pauseBtn.click()
@@ -798,34 +843,44 @@ const batchKickOffGeneration = () => {
                     batch_progressNotes.innerHTML = window.i18n.BATCH_OUTPUTTING_FFMPEG
                 }
 
-                for (let ri=0; ri<linesBatch.length; ri++) {
-                    let tempFileLocation = linesBatch[ri][4]
-                    let outPath = linesBatch[ri][5].includes(":") || linesBatch[ri][5].includes("./") ? linesBatch[ri][5] : `${linesBatch[ri][6]}/${linesBatch[ri][5]}`
+                const tempPaths = linesBatch.map(line => line[4])
+                const outPaths = linesBatch.map((line, li) => {
+                    let outPath = linesBatch[li][5].includes(":") || linesBatch[li][5].includes("./") ? linesBatch[li][5] : `${linesBatch[li][6]}/${linesBatch[li][5]}`
                     if (outPath.startsWith("./")) {
                         outPath = window.userSettings.batchOutFolder + outPath.slice(1,100000)
                     }
-                    try {
-                        if (window.batch_state.state) {
-                            records[ri][1].children[1].innerHTML = window.i18n.OUTPUTTING
-                            if (window.userSettings.batch_fastMode) {
-                                batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
-                                    input_path: tempFileLocation,
-                                    output_path: outPath,
-                                    options: JSON.stringify(options)
-                                }))
-                            } else {
-                                await batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
-                                    input_path: tempFileLocation,
-                                    output_path: outPath,
-                                    options: JSON.stringify(options)
-                                }))
+                    return outPath
+                })
+
+                if (window.userSettings.batch_useMP) {
+                    await batchKickOffMPffmpegOutput(records, tempPaths, outPaths, options)
+                } else {
+                    for (let ri=0; ri<linesBatch.length; ri++) {
+                        let tempFileLocation = tempPaths[ri]
+                        let outPath = outPaths[ri]
+                        try {
+                            if (window.batch_state.state) {
+                                records[ri][1].children[1].innerHTML = window.i18n.OUTPUTTING
+                                if (window.userSettings.batch_fastMode) {
+                                    batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
+                                        input_path: tempFileLocation,
+                                        output_path: outPath,
+                                        options: JSON.stringify(options)
+                                    }))
+                                } else {
+                                    await batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
+                                        input_path: tempFileLocation,
+                                        output_path: outPath,
+                                        options: JSON.stringify(options)
+                                    }))
+                                }
+                                window.batch_state.lineIndex += 1
                             }
-                            window.batch_state.lineIndex += 1
+                        } catch (e) {
+                            console.log(e)
+                            window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}:<br><br>`+e)
+                            resolve()
                         }
-                    } catch (e) {
-                        console.log(e)
-                        window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}:<br><br>`+e)
-                        resolve()
                     }
                 }
                 resolve()

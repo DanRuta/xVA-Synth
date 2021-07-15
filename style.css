@@ -382,7 +382,7 @@ a {
  }
  #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal, #patreonContainer > .modal, #pluginsContainer > .modal, #s2sSelectContainer > .modal {
      height: 65vh;
-     width: 45vw;
+     width: 50vw;
      min-height: 500px;
      min-width: 750px;
  }

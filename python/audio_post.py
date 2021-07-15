@@ -4,6 +4,31 @@ import traceback
 import subprocess
 from pydub import AudioSegment
 
+
+import multiprocessing as mp
+def mp_ffmpeg_output (logger, processes, input_paths, output_paths, options):
+
+    workItems = []
+    for ip, path in enumerate(input_paths):
+        workItems.append([None, path, output_paths[ip], options])
+
+    workers = processes if processes>0 else max(1, mp.cpu_count()-1)
+    workers = min(len(workItems), workers)
+
+    logger.info("[mp ffmpeg] workers: "+str(workers))
+
+    pool = mp.Pool(workers)
+    results = pool.map(processingTask, workItems)
+    pool.close()
+    pool.join()
+
+    return "\n".join(results)
+
+def processingTask(data):
+    return run_audio_post(data[0], data[1], data[2], data[3])
+
+
+
 def run_audio_post(logger, input, output, options=None):
 
     try:
@@ -33,19 +58,22 @@ def run_audio_post(logger, input, output, options=None):
 
         stream = ffmpeg.output(stream, output, **ffmpeg_options)
 
-        logger.info("audio options: "+str(options))
-        logger.info("ffmpeg command: "+ " ".join(stream.compile()))
+        if logger!=None:
+            logger.info("audio options: "+str(options))
+            logger.info("ffmpeg command: "+ " ".join(stream.compile()))
 
         out, err = (ffmpeg.run(stream, capture_stdout=True, capture_stderr=True, overwrite_output=True))
 
     except ffmpeg.Error as e:
-        logger.info("ffmpeg err: "+ e.stderr.decode('utf8'))
+        if logger!=None:
+            logger.info("ffmpeg err: "+ e.stderr.decode('utf8'))
         return e.stderr.decode('utf8')
     except:
-        logger.info(traceback.format_exc())
+        if logger!=None:
+            logger.info(traceback.format_exc())
         return traceback.format_exc()
 
-    return ""
+    return "-"
 
 
 def prepare (PROD, logger, inputPath, outputPath, removeNoise, removeNoiseStrength):

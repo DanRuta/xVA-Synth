@@ -86,6 +86,12 @@ if (!Object.keys(window.userSettings).includes("batch_clearDirFirst")) { // For 
 if (!Object.keys(window.userSettings).includes("batch_fastMode")) { // For backwards compatibility
     window.userSettings.batch_fastMode = false
 }
+if (!Object.keys(window.userSettings).includes("batch_useMP")) { // For backwards compatibility
+    window.userSettings.batch_useMP = true
+}
+if (!Object.keys(window.userSettings).includes("batch_MPCount")) { // For backwards compatibility
+    window.userSettings.batch_MPCount = 0
+}
 if (!Object.keys(window.userSettings).includes("batch_skipExisting")) { // For backwards compatibility
     window.userSettings.batch_skipExisting = true
 }
@@ -159,6 +165,8 @@ const updateUIWithSettings = () => {
     setting_s2s_noiseRemStrength.value = window.userSettings.s2s_noiseRemStrength
 
     setting_batch_fastmode.checked = window.userSettings.batch_fastMode
+    setting_batch_multip.checked = window.userSettings.batch_useMP
+    setting_batch_multip_count.value = window.userSettings.batch_MPCount
 
     batch_batchSizeInput.value = parseInt(window.userSettings.batch_batchSize)
     batch_skipExisting.checked = window.userSettings.batch_skipExisting
@@ -302,6 +310,8 @@ initMenuSetting(setting_prompt_fontSize, "prompt_fontSize", "number", setPromptF
 initMenuSetting(setting_bg_gradient_opacity, "bg_gradient_opacity", "number", updateBackground)
 
 initMenuSetting(setting_batch_fastmode, "batch_fastMode", "checkbox")
+initMenuSetting(setting_batch_multip, "batch_useMP", "checkbox")
+initMenuSetting(setting_batch_multip_count, "batch_MPCount", "number", undefined, parseInt)
 
 
 initMenuSetting(setting_external_audio_editor, "externalAudioEditor", "text")
