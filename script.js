@@ -998,7 +998,7 @@ if (dialogueInputCache) {
 // Pitch/Duration editor
 // =====================
 
-window.setLetterFocus = (l, ctrlKey, altKey) => {
+window.setLetterFocus = (l, ctrlKey, altKey, shiftKey) => {
     // On alt key modifier, make a selection on the whole whole word
     if (altKey) {
         window.pitchEditor.letterFocus.push(l)
@@ -1026,11 +1026,26 @@ window.setLetterFocus = (l, ctrlKey, altKey) => {
         }
 
     } else {
-        if (window.pitchEditor.letterFocus.length && !ctrlKey) {
-            window.pitchEditor.letterFocus.forEach(li => letterElems[li].style.color = "black")
-            window.pitchEditor.letterFocus = []
+
+        if (shiftKey && window.pitchEditor.letterFocus.length) {
+            const lastSelected = window.pitchEditor.letterFocus[window.pitchEditor.letterFocus.length-1]
+
+            if (l>lastSelected) {
+                for (let i=lastSelected; i<=l; i++) {
+                    window.pitchEditor.letterFocus.push(i)
+                }
+            } else {
+                for (let i=l; i<=window.pitchEditor.letterFocus[0]; i++) {
+                    window.pitchEditor.letterFocus.push(i)
+                }
+            }
+        } else {
+            if (window.pitchEditor.letterFocus.length && !ctrlKey) {
+                window.pitchEditor.letterFocus.forEach(li => letterElems[li].style.color = "black")
+                window.pitchEditor.letterFocus = []
+            }
+            window.pitchEditor.letterFocus.push(l)
         }
-        window.pitchEditor.letterFocus.push(l)
     }
 
     window.pitchEditor.letterFocus = Array.from(new Set(window.pitchEditor.letterFocus.sort()))
@@ -1130,7 +1145,7 @@ const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen, pac
         sliders.push(slider)
         letterDiv.appendChild(slider)
 
-        letterLabel.addEventListener("click", event => setLetterFocus(l, event.ctrlKey, event.altKey))
+        letterLabel.addEventListener("click", event => setLetterFocus(l, event.ctrlKey, event.altKey, event.shiftKey))
         let multiLetterPitchDelta = undefined
         let multiLetterStartPitchVals = []
         slider.addEventListener("mousedown", () => {

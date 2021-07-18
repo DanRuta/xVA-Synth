@@ -533,6 +533,7 @@ a {
      height: 145px;
      height: 200px;
      background: rgba(255,255,255,0.2);
+     user-select: none;
  }
  .letter > div:first-child {
      height: 10px;
