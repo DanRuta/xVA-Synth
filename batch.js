@@ -393,9 +393,11 @@ const populateRecordsList = records => {
         const rActionsElem = createElem("div")
         const rVoiceElem = createElem("div", record.voice_id)
         const rTextElem = createElem("div", record.text)
+        rTextElem.title = record.text
         const rGameElem = createElem("div", record.game_id)
         const rVocoderElem = createElem("div", record.vocoder)
         const rOutPathElem = createElem("div", "&lrm;"+record.out_path+"&lrm;")
+        rOutPathElem.title = record.out_path
         const rPacingElem = createElem("div", (record.pacing||" ").toString())
 
 
