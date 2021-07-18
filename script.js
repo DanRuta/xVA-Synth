@@ -773,7 +773,7 @@ const saveFile = (from, to, skipUIRecord=false) => {
             })
         }).then(r=>r.text()).then(res => {
             closeModal().then(() => {
-                if (res.length) {
+                if (res.length && res!="-") {
                     console.log("res", res)
                     window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${window.i18n.INPUT}: ${from}<br>${window.i18n.OUTPUT}: ${to}<br><br>${res}`)
                 } else {
