@@ -104,11 +104,12 @@ def init (PROD, use_gpu, vocoder, logger):
     fastpitch.wg_type = None
     fastpitch.ckpt_path = None
 
-    try:
-        os.remove(f'{"./resources/app" if PROD else "."}/FASTPITCH_LOADING')
-    except:
-        logger.info(traceback.format_exc())
-        pass
+    if os.path.exists(f'{"./resources/app" if PROD else "."}/FASTPITCH_LOADING'):
+        try:
+            os.remove(f'{"./resources/app" if PROD else "."}/FASTPITCH_LOADING')
+        except:
+            logger.info(traceback.format_exc())
+            pass
 
     if vocoder=="qnd":
         fastpitch.waveglow = None

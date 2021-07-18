@@ -171,11 +171,12 @@ if __name__ == '__main__':
 
     print("Models ready")
     logger.info("Models ready")
-    try:
-        os.remove(f'{"./resources/app" if PROD else "."}/WAVEGLOW_LOADING')
-    except:
-        logger.info(traceback.format_exc())
-        pass
+    if os.path.exists(f'{"./resources/app" if PROD else "."}/WAVEGLOW_LOADING'):
+        try:
+            os.remove(f'{"./resources/app" if PROD else "."}/WAVEGLOW_LOADING')
+        except:
+            logger.info(traceback.format_exc())
+            pass
 
 
     def setDevice (use_gpu):
@@ -375,11 +376,12 @@ if __name__ == '__main__':
         with open("./DEBUG_server_error.txt", "w+") as f:
             f.write(traceback.format_exc())
         logger.info(traceback.format_exc())
-    try:
-        os.remove(f'{"./resources/app" if PROD else "."}/SERVER_STARTING')
-    except:
-        logger.info(traceback.format_exc())
-        pass
+    if os.path.exists(f'{"./resources/app" if PROD else "."}/SERVER_STARTING'):
+        try:
+            os.remove(f'{"./resources/app" if PROD else "."}/SERVER_STARTING')
+        except:
+            logger.info(traceback.format_exc())
+            pass
     try:
         plugin_manager.run_plugins(plist=plugin_manager.plugins["start"]["post"], event="post start", data=None)
         print("Server ready")
