@@ -168,6 +168,7 @@ setting_models_path_input.addEventListener("change", () => {
             changeGame(window.currentGame.join("-"))
         })
     }
+    window.updateGameList()
 })
 
 // Change game
@@ -1537,85 +1538,89 @@ window.setupModal(changeGameButton, gameSelectionContainer)
 
 window.gameAssets = {}
 
-fs.readdir(`${path}/assets`, (err, fileNames) => {
+window.updateGameList = () => {
+    gameSelectionListContainer.innerHTML = ""
+    fs.readdir(`${path}/assets`, (err, fileNames) => {
 
-    let totalVoices = 0
-    let totalGames = new Set()
+        let totalVoices = 0
+        let totalGames = new Set()
 
-    const itemsToSort = []
+        const itemsToSort = []
 
-    fileNames.filter(fn=>(fn.endsWith(".jpg")||fn.endsWith(".png")) && (fn.split("-").length==4 || fn.split("-").length==5)).forEach(fileName => {
-        const gameSelection = createElem("div.gameSelection")
-        gameSelection.style.background = `url("assets/${fileName}")`
+        fileNames.filter(fn=>(fn.endsWith(".jpg")||fn.endsWith(".png")) && (fn.split("-").length==4 || fn.split("-").length==5)).forEach(fileName => {
+            const gameSelection = createElem("div.gameSelection")
+            gameSelection.style.background = `url("assets/${fileName}")`
 
-        const gameId = fileName.split("-")[0]
-        const gameName = fileName.split("-").reverse()[0].split(".")[0]
-        const gameSelectionContent = createElem("div.gameSelectionContent")
+            const gameId = fileName.split("-")[0]
+            const gameName = fileName.split("-").reverse()[0].split(".")[0]
+            const gameSelectionContent = createElem("div.gameSelectionContent")
 
-        let numVoices = 0
-        const modelsPath = window.userSettings[`modelspath_${gameId}`]
-        if (fs.existsSync(modelsPath)) {
-            const files = fs.readdirSync(modelsPath)
-            numVoices = files.filter(fn => fn.includes(".json")).length
-            totalVoices += numVoices
-        }
-        if (numVoices==0) {
-            gameSelectionContent.style.background = "rgba(150,150,150,0.7)"
-        } else {
-            gameSelectionContent.classList.add("gameSelectionContentToHover")
-            totalGames.add(gameId)
-        }
+            let numVoices = 0
+            const modelsPath = window.userSettings[`modelspath_${gameId}`]
+            if (fs.existsSync(modelsPath)) {
+                const files = fs.readdirSync(modelsPath)
+                numVoices = files.filter(fn => fn.includes(".json")).length
+                totalVoices += numVoices
+            }
+            if (numVoices==0) {
+                gameSelectionContent.style.background = "rgba(150,150,150,0.7)"
+            } else {
+                gameSelectionContent.classList.add("gameSelectionContentToHover")
+                totalGames.add(gameId)
+            }
 
-        gameSelectionContent.appendChild(createElem("div", `${numVoices} ${(numVoices>1||numVoices==0)?window.i18n.VOICE_PLURAL:window.i18n.VOICE}`))
-        gameSelectionContent.appendChild(createElem("div", gameName))
+            gameSelectionContent.appendChild(createElem("div", `${numVoices} ${(numVoices>1||numVoices==0)?window.i18n.VOICE_PLURAL:window.i18n.VOICE}`))
+            gameSelectionContent.appendChild(createElem("div", gameName))
 
-        gameSelection.appendChild(gameSelectionContent)
+            gameSelection.appendChild(gameSelectionContent)
 
-        window.gameAssets[gameId] = fileName
-        gameSelectionContent.addEventListener("click", () => {
-            changeGame(fileName)
-            closeModal(gameSelectionContainer)
-        })
-
-        itemsToSort.push([numVoices, gameSelection])
-
-        const modelsDir = window.userSettings[`modelspath_${gameId}`]
-        if (!window.watchedModelsDirs.includes(modelsDir)) {
-            window.watchedModelsDirs.push(modelsDir)
-
-            try {
-                fs.watch(modelsDir, {recursive: false, persistent: true}, (eventType, filename) => {
-                    if (window.userSettings.autoReloadVoices) {
-                        window.appLogger.log(`${eventType}: ${filename}`)
-                        loadAllModels().then(() => changeGame(fileName))
-                    }
-                })
-            } catch (e) {}
-        }
-    })
-
-    itemsToSort.sort((a,b) => a[0]<b[0]?1:-1).forEach(([numVoices, elem]) => {
-        gameSelectionListContainer.appendChild(elem)
-    })
-
-    searchGameInput.addEventListener("keyup", () => {
-        const voiceElems = Array.from(gameSelectionListContainer.children)
-        if (searchGameInput.value.length) {
-            voiceElems.forEach(elem => {
-                if (elem.children[0].children[1].innerHTML.toLowerCase().includes(searchGameInput.value)) {
-                    elem.style.display="flex"
-                } else {
-                    elem.style.display="none"
-                }
+            window.gameAssets[gameId] = fileName
+            gameSelectionContent.addEventListener("click", () => {
+                changeGame(fileName)
+                closeModal(gameSelectionContainer)
             })
 
-        } else {
-            voiceElems.forEach(elem => elem.style.display="block")
-        }
-    })
+            itemsToSort.push([numVoices, gameSelection])
 
-    searchGameInput.placeholder = window.i18n.SEARCH_N_GAMES_WITH_N2_VOICES.replace("_1", Array.from(totalGames).length).replace("_2", totalVoices)
-})
+            const modelsDir = window.userSettings[`modelspath_${gameId}`]
+            if (!window.watchedModelsDirs.includes(modelsDir)) {
+                window.watchedModelsDirs.push(modelsDir)
+
+                try {
+                    fs.watch(modelsDir, {recursive: false, persistent: true}, (eventType, filename) => {
+                        if (window.userSettings.autoReloadVoices) {
+                            window.appLogger.log(`${eventType}: ${filename}`)
+                            loadAllModels().then(() => changeGame(fileName))
+                        }
+                    })
+                } catch (e) {}
+            }
+        })
+
+        itemsToSort.sort((a,b) => a[0]<b[0]?1:-1).forEach(([numVoices, elem]) => {
+            gameSelectionListContainer.appendChild(elem)
+        })
+
+        searchGameInput.addEventListener("keyup", () => {
+            const voiceElems = Array.from(gameSelectionListContainer.children)
+            if (searchGameInput.value.length) {
+                voiceElems.forEach(elem => {
+                    if (elem.children[0].children[1].innerHTML.toLowerCase().includes(searchGameInput.value)) {
+                        elem.style.display="flex"
+                    } else {
+                        elem.style.display="none"
+                    }
+                })
+
+            } else {
+                voiceElems.forEach(elem => elem.style.display="block")
+            }
+        })
+
+        searchGameInput.placeholder = window.i18n.SEARCH_N_GAMES_WITH_N2_VOICES.replace("_1", Array.from(totalGames).length).replace("_2", totalVoices)
+    })
+}
+window.updateGameList()
 
 
 
