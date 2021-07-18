@@ -87,7 +87,7 @@ if (!Object.keys(window.userSettings).includes("batch_fastMode")) { // For backw
     window.userSettings.batch_fastMode = false
 }
 if (!Object.keys(window.userSettings).includes("batch_useMP")) { // For backwards compatibility
-    window.userSettings.batch_useMP = true
+    window.userSettings.batch_useMP = false
 }
 if (!Object.keys(window.userSettings).includes("batch_MPCount")) { // For backwards compatibility
     window.userSettings.batch_MPCount = 0
