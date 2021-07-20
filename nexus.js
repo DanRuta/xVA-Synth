@@ -91,49 +91,55 @@ window.installDownloadedModel = ([game, zipName]) => {
     console.log("installDownloadedModel", game, zipName)
     nexusDownloadLog.appendChild(createElem("div", `Installing: ${zipName}`))
     return new Promise(resolve => {
-        const modelsFolder = window.userSettings[`modelspath_${game}`]
+        try {
+            const modelsFolder = window.userSettings[`modelspath_${game}`]
 
-        const unzipper = require('unzipper')
-        const zipPath = `./downloads/${zipName}.zip`
+            const unzipper = require('unzipper')
+            const zipPath = `${window.path}/downloads/${zipName}.zip`
 
-        window.deleteFolderRecursive(`${window.path}/downloads/temp_install`)
-        if (!fs.existsSync(`${window.path}/downloads`)) {
-            fs.mkdirSync(`${window.path}/downloads`)
-        }
-        if (!fs.existsSync(`${window.path}/downloads/temp_install`)) {
-            fs.mkdirSync(`${window.path}/downloads/temp_install`)
-        }
-
-
-        fs.createReadStream(zipPath).pipe(unzipper.Parse()).on("entry", entry => {
-            const fileName = entry.path
-            const dirOrFile = entry.type
-
-            if (/\/$/.test(fileName)) { // It's a directory
-                return
+            window.deleteFolderRecursive(`${window.path}/downloads/temp_install`)
+            if (!fs.existsSync(`${window.path}/downloads`)) {
+                fs.mkdirSync(`${window.path}/downloads`)
+            }
+            if (!fs.existsSync(`${window.path}/downloads/temp_install`)) {
+                fs.mkdirSync(`${window.path}/downloads/temp_install`)
             }
 
-            let fileContainerFolderPath = fileName.split("/").reverse()
-            const justFileName = fileContainerFolderPath[0]
 
-            entry.pipe(fs.createWriteStream(`${modelsFolder}/${justFileName}`))
-        })
-        .promise()
-        .then(() => {
-            console.log()
-            window.appLogger.log(`Done installing ${zipName}`)
+            fs.createReadStream(zipPath).pipe(unzipper.Parse()).on("entry", entry => {
+                const fileName = entry.path
+                const dirOrFile = entry.type
 
-            const queueIndex = window.nexusState.installQueue.findIndex(it => it[1]==zipName)
-            window.nexusState.installQueue.splice(queueIndex, 1)
-            nexusInstallingCount.innerHTML = window.nexusState.installQueue.length
+                if (/\/$/.test(fileName)) { // It's a directory
+                    return
+                }
 
-            nexusDownloadLog.appendChild(createElem("div", `Finished: ${zipName}`))
-            resolve()
-        }, e => {
+                let fileContainerFolderPath = fileName.split("/").reverse()
+                const justFileName = fileContainerFolderPath[0]
+
+                entry.pipe(fs.createWriteStream(`${modelsFolder}/${justFileName}`))
+            })
+            .promise()
+            .then(() => {
+                window.appLogger.log(`Done installing ${zipName}`)
+
+                const queueIndex = window.nexusState.installQueue.findIndex(it => it[1]==zipName)
+                window.nexusState.installQueue.splice(queueIndex, 1)
+                nexusInstallingCount.innerHTML = window.nexusState.installQueue.length
+
+                nexusDownloadLog.appendChild(createElem("div", `Finished: ${zipName}`))
+                resolve()
+            }, e => {
+                console.log(e)
+                window.appLogger.log(e)
+                window.errorModal(e.message)
+            })
+        } catch (e) {
             console.log(e)
             window.appLogger.log(e)
             window.errorModal(e.message)
-        })
+            resolve()
+        }
     })
 }
 
@@ -267,73 +273,79 @@ nexusSearchBar.addEventListener("keyup", () => {
 
 
 window.getLatestModelsList = async () => {
+    try {
+        window.spinnerModal("Checking Nexus.com...")
+        window.nexusModelsList = []
 
-    window.spinnerModal("Checking Nexus.com...")
-    window.nexusModelsList = []
-
-    const idToGame = {}
-    Object.keys(window.gameAssets).forEach(gameId => {
-        const id = window.gameAssets[gameId].split("-").reverse()[1].toLowerCase()
-        idToGame[id] = gameId
-    })
-
-
-    console.log("window.nexusState.repoLinks", window.nexusState.repoLinks)
-    for (let li=0; li<window.nexusState.repoLinks.length; li++) {
-        if (!window.nexusState.repoLinks[li][1]) {
-            continue
-        }
-        const link = window.nexusState.repoLinks[li][0].replace("\r","")
-        const repoInfo = await getData(`${link.split(".com/")[1]}.json`)
-        console.log("repoInfo", repoInfo)
-        const author = repoInfo.author
-        const nexusRepoId = repoInfo.mod_id
-        const nexusRepoVersion = repoInfo.version
-        const nexusGameId = repoInfo.domain_name
-
-        const files = await getData(`${link.split(".com/")[1]}/files.json`)
-        console.log(files)
-        files["files"].forEach(file => {
-
-            if (file.category_name=="OPTIONAL") {
-
-                const description = file.description
-                const parts = description.split("<br />")
-                let voiceId = parts.filter(line => line.startsWith("Voice ID:") || line.startsWith("VoiceID:"))[0]
-                voiceId = voiceId.includes("Voice ID: ") ? voiceId.split("Voice ID: ")[1].split(" ")[0] : voiceId.split("VoiceID: ")[1].split(" ")[0]
-                const game = idToGame[voiceId.split("_")[0]]
-                const name = parts.filter(line => line.startsWith("Voice model"))[0].split(" - ")[1]
-                const date = file.uploaded_time
-                const nexus_file_id = file.file_id
-
-                if (repoInfo.endorsement.endorse_status=="Endorsed") {
-                    window.endorsedRepos.add(game)
-                }
-
-                const hasT2 = description.includes("Tacotron2")
-                const hasHiFi = description.includes("HiFi-GAN")
-                const version = file.version
-                let type = description.includes("Model:") ? parts.filter(line => line.startsWith("Model: "))[0].split(" - ")[1] : "FastPitch"
-                if (type=="FastPitch") {
-                    if (hasT2) {
-                        type += "+T2"
-                    }
-                }
-                if (hasHiFi) {
-                    type += "+HiFi"
-                }
-                const notes = description.includes("Notes:") ? parts.filter(line => line.startsWith("Notes: "))[0].split("Notes: ")[1] : ""
-
-                const meta = {author, description, version, voiceId, game, name, type, notes, date, nexusRepoId, nexusRepoVersion, nexusGameId, nexus_file_id, repoLink: link}
-                // console.log(meta)
-                window.nexusModelsList.push(meta)
-            }
+        const idToGame = {}
+        Object.keys(window.gameAssets).forEach(gameId => {
+            const id = window.gameAssets[gameId].split("-").reverse()[1].toLowerCase()
+            idToGame[id] = gameId
         })
+
+
+        console.log("window.nexusState.repoLinks", window.nexusState.repoLinks)
+        for (let li=0; li<window.nexusState.repoLinks.length; li++) {
+            if (!window.nexusState.repoLinks[li][1]) {
+                continue
+            }
+            const link = window.nexusState.repoLinks[li][0].replace("\r","")
+            const repoInfo = await getData(`${link.split(".com/")[1]}.json`)
+            console.log("repoInfo", repoInfo)
+            const author = repoInfo.author
+            const nexusRepoId = repoInfo.mod_id
+            const nexusRepoVersion = repoInfo.version
+            const nexusGameId = repoInfo.domain_name
+
+            const files = await getData(`${link.split(".com/")[1]}/files.json`)
+            console.log(files)
+            files["files"].forEach(file => {
+
+                if (file.category_name=="OPTIONAL") {
+
+                    const description = file.description
+                    const parts = description.split("<br />")
+                    let voiceId = parts.filter(line => line.startsWith("Voice ID:") || line.startsWith("VoiceID:"))[0]
+                    voiceId = voiceId.includes("Voice ID: ") ? voiceId.split("Voice ID: ")[1].split(" ")[0] : voiceId.split("VoiceID: ")[1].split(" ")[0]
+                    const game = idToGame[voiceId.split("_")[0]]
+                    const name = parts.filter(line => line.startsWith("Voice model"))[0].split(" - ")[1]
+                    const date = file.uploaded_time
+                    const nexus_file_id = file.file_id
+
+                    if (repoInfo.endorsement.endorse_status=="Endorsed") {
+                        window.endorsedRepos.add(game)
+                    }
+
+                    const hasT2 = description.includes("Tacotron2")
+                    const hasHiFi = description.includes("HiFi-GAN")
+                    const version = file.version
+                    let type = description.includes("Model:") ? parts.filter(line => line.startsWith("Model: "))[0].split(" - ")[1] : "FastPitch"
+                    if (type=="FastPitch") {
+                        if (hasT2) {
+                            type += "+T2"
+                        }
+                    }
+                    if (hasHiFi) {
+                        type += "+HiFi"
+                    }
+                    const notes = description.includes("Notes:") ? parts.filter(line => line.startsWith("Notes: "))[0].split("Notes: ")[1] : ""
+
+                    const meta = {author, description, version, voiceId, game, name, type, notes, date, nexusRepoId, nexusRepoVersion, nexusGameId, nexus_file_id, repoLink: link}
+                    // console.log(meta)
+                    window.nexusModelsList.push(meta)
+                }
+            })
+        }
+
+        window.displayAllModels()
+        closeModal(undefined, nexusContainer)
+
+    } catch (e) {
+        console.log(e)
+        window.appLogger.log(e)
+        window.errorModal(e.message)
+        resolve()
     }
-
-
-    window.displayAllModels()
-    closeModal(undefined, nexusContainer)
 }
 
 window.displayAllModels = () => {
@@ -468,8 +480,13 @@ window.displayAllModels = () => {
         nameElem.title = modelMeta.name
         const authorElem = createElem("div", modelMeta.author)
         authorElem.title = modelMeta.author
-        const yoursVersion = String(existingModel.modelVersion).includes(".") ? existingModel.modelVersion : existingModel.modelVersion+".0"
-        const versionElemText = existingModel ? `${modelMeta.version} (Yours: ${yoursVersion})` : modelMeta.version
+        let versionElemText
+        if (existingModel) {
+            const yoursVersion = String(existingModel.modelVersion).includes(".") ? existingModel.modelVersion : existingModel.modelVersion+".0"
+            versionElemText = `${modelMeta.version} (Yours: ${yoursVersion})`
+        } else {
+            versionElemText = modelMeta.version
+        }
         const versionElem = createElem("div", versionElemText)
         versionElem.title = versionElemText
 
