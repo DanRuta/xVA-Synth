@@ -1489,7 +1489,7 @@ window.setupModal(patreonIcon, patreonContainer, () => {
 patreonButton.addEventListener("click", () => {
     shell.openExternal("https://patreon.com")
 })
-fetch("http://danruta.co.uk/patreon.txt").then(r=>r.text()).then(data => fs.writeFileSync(`${path}/patreon.txt`, data, "utf8"))
+fetch("http://danruta.co.uk/patreon.txt").then(r=>r.text()).then(data => fs.writeFileSync(`${path}/patreon.txt`, data, "utf8")).catch(e => {})
 
 
 // Updates
