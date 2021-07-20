@@ -25,6 +25,8 @@ window.i18n.setEnglish = () => {
     window.i18n.RAISE = "Raise"
     window.i18n.LOWER = "Lower"
     window.i18n.PACING = "Pacing"
+    window.i18n.OPEN = "Open"
+    window.i18n.DOWNLOAD = "Download"
 
     window.i18n.SETTINGS = "Settings"
     window.i18n.SETTINGS_GPU = "Use GPU (requires CUDA)"
