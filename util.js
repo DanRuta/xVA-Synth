@@ -348,3 +348,88 @@ window.setupModal = (openingButton, modalContainerElem, callback) => {
         }
     })
 }
+
+window.checkVersionRequirements = (requirements, appVersion, checkMax=false) => {
+
+    if (!requirements) {
+        return true
+    }
+
+    const appVersionRequirement = requirements.toString().split(".").map(v=>parseInt(v))
+    const appVersionInts = appVersion.replace("v", "").split(".").map(v=>parseInt(v))
+    let appVersionOk = true
+
+    if (checkMax) {
+
+        if (appVersionRequirement[0] >= appVersionInts[0] ) {
+            if (appVersionRequirement.length>1 && parseInt(appVersionRequirement[0]) == appVersionInts[0]) {
+                if (appVersionRequirement[1] >= appVersionInts[1] ) {
+                    if (appVersionRequirement.length>2 && parseInt(appVersionRequirement[1]) == appVersionInts[1]) {
+                        if (appVersionRequirement[2] >= appVersionInts[2] ) {
+                        } else {
+                            appVersionOk = false
+                        }
+                    }
+                } else {
+                    appVersionOk = false
+                }
+            }
+        } else {
+            appVersionOk = false
+        }
+
+
+    } else {
+        if (appVersionRequirement[0] <= appVersionInts[0] ) {
+            if (appVersionRequirement.length>1 && parseInt(appVersionRequirement[0]) == appVersionInts[0]) {
+                if (appVersionRequirement[1] <= appVersionInts[1] ) {
+                    if (appVersionRequirement.length>2 && parseInt(appVersionRequirement[1]) == appVersionInts[1]) {
+                        if (appVersionRequirement[2] <= appVersionInts[2] ) {
+                        } else {
+                            appVersionOk = false
+                        }
+                    }
+                } else {
+                    appVersionOk = false
+                }
+            }
+        } else {
+            appVersionOk = false
+        }
+    }
+    return appVersionOk
+}
+
+
+// https://stackoverflow.com/questions/18052762/remove-directory-which-is-not-empty
+const path = require('path')
+window.deleteFolderRecursive = function (directoryPath, keepRoot=false) {
+if (fs.existsSync(directoryPath)) {
+    fs.readdirSync(directoryPath).forEach((file, index) => {
+      const curPath = path.join(directoryPath, file);
+      if (fs.lstatSync(curPath).isDirectory()) {
+       // recurse
+        window.deleteFolderRecursive(curPath);
+      } else {
+        // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    if (!keepRoot) {
+        fs.rmdirSync(directoryPath);
+    }
+  }
+};
+
+window.createFolderRecursive = (pathToMake) => {
+    console.log("createFolderRecursive", pathToMake)
+    pathToMake.split('/').reduce((directories, directory) => {
+        directories += `${directory}/`
+
+        if (!fs.existsSync(directories)) {
+          fs.mkdirSync(directories)
+        }
+
+        return directories
+      }, '')
+}

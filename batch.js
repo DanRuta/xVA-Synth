@@ -1,25 +1,6 @@
 "use strict"
 
-// https://stackoverflow.com/questions/18052762/remove-directory-which-is-not-empty
-const path = require('path');
-const deleteFolderRecursive = function (directoryPath, keepRoot=false) {
-if (fs.existsSync(directoryPath)) {
-    fs.readdirSync(directoryPath).forEach((file, index) => {
-      const curPath = path.join(directoryPath, file);
-      if (fs.lstatSync(curPath).isDirectory()) {
-       // recurse
-        deleteFolderRecursive(curPath);
-      } else {
-        // delete file
-        fs.unlinkSync(curPath);
-      }
-    });
-    if (!keepRoot) {
-        fs.rmdirSync(directoryPath);
-    }
-  }
-};
-
+const path = require('path')
 
 window.batch_state = {
     lines: [],
@@ -494,7 +475,7 @@ const startBatch = () => {
          }, '');
     }
     if (batch_clearDirFirstCkbx.checked) {
-        deleteFolderRecursive(window.userSettings.batchOutFolder, true)
+        window.deleteFolderRecursive(window.userSettings.batchOutFolder, true)
     }
 
     batch_synthesizeBtn.style.display = "none"
