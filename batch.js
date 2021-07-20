@@ -550,14 +550,24 @@ const batchChangeVoice = (game, voice) => {
             body: JSON.stringify({"outputs": null, "model": `${window.userSettings[`modelspath_${game}`]}/${voice}`, "model_speakers": model.emb_size})
         }).then(r=>r.text()).then(res => {
             resolve()
-        }).catch(e => {
+        }).catch(async e => {
             console.log(e)
-            window.appLogger.log(e)
-            batch_pauseBtn.click()
-            if (e.code =="ENOENT") {
-                closeModal().then(() => {
+            if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
+                await batchChangeVoice(game, voice)
+                resolve()
+            } else {
+                window.appLogger.log(e)
+                batch_pauseBtn.click()
+
+                if (document.getElementById("activeModal")) {
+                    activeModal.remove()
+                }
+                if (e.code=="ENOENT") {
                     createModal("error", window.i18n.ERR_SERVER)
-                })
+                } else {
+                    createModal("error", e.message)
+                }
+                resolve()
             }
         })
     })
@@ -576,11 +586,25 @@ const batchChangeVocoder = (vocoder, game, voice) => {
             body: JSON.stringify({vocoder: vocoderMappings.find(record => record[0]==vocoder)[1]})
         }).then(() => {
             resolve()
-        }).catch(e => {
+        }).catch(async e => {
             console.log(e)
-            window.appLogger.log(e)
-            window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}:<br><br>`+e)
-            batch_pauseBtn.click()
+            if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
+                await batchChangeVocoder(vocoder, game, voice)
+                resolve()
+            } else {
+                window.appLogger.log(e)
+                batch_pauseBtn.click()
+
+                if (document.getElementById("activeModal")) {
+                    activeModal.remove()
+                }
+                if (e.code=="ENOENT") {
+                    createModal("error", window.i18n.ERR_SERVER)
+                } else {
+                    createModal("error", e.message)
+                }
+                resolve()
+            }
         })
     })
 }
@@ -733,9 +757,19 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
             })
             resolve()
 
-        }).catch(e => {
-            console.log("e")
+        }).catch(async e => {
             console.log(e)
+            if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
+                await batchKickOffMPffmpegOutput(records, tempPaths, outPaths, options)
+                resolve()
+            } else {
+                window.appLogger.log(e)
+                if (document.getElementById("activeModal")) {
+                    activeModal.remove()
+                }
+                createModal("error", e.message)
+                resolve()
+            }
         })
     })
 }
@@ -768,14 +802,22 @@ const batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, bod
                 addActionButtons(records, ri)
                 resolve()
             }
-        }).catch(e => {
-            if (e.code=="ECONNREFUSED") {
-                batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, body)
+        }).catch(async e => {
+            console.log(e)
+            if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
+                await batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, body)
+                resolve()
+            } else {
+                window.appLogger.log(e)
+                batch_pauseBtn.click()
+                if (document.getElementById("activeModal")) {
+                    activeModal.remove()
+                }
+                createModal("error", e.message)
+                resolve()
             }
         })
-
     })
-
 }
 
 const batchKickOffGeneration = () => {
@@ -807,7 +849,7 @@ const batchKickOffGeneration = () => {
             body: JSON.stringify(batchPostData)
         }).then(r=>r.text()).then(async (res) => {
 
-            if (res) {
+            if (res && res!="-") {
                 if (res=="CUDA OOM") {
                     window.errorModal(window.i18n.BATCH_ERR_CUDA_OOM)
                 } else {
@@ -909,14 +951,18 @@ const batchKickOffGeneration = () => {
                 })
             }
         }).catch(async e => {
-            if (e.code=="ECONNREFUSED") {
+            console.log(e)
+            if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
                 await batchKickOffGeneration()
                 resolve()
             } else {
-                console.log(e)
                 window.appLogger.log(e)
-                window.errorModal(e.message)
                 batch_pauseBtn.click()
+                if (document.getElementById("activeModal")) {
+                    activeModal.remove()
+                }
+                createModal("error", e.message)
+                resolve()
             }
         })
     })
