@@ -16,6 +16,7 @@ process.on(`uncaughtException`, data => window.appLogger.log(data))
 window.onerror = (err, url, lineNum) => window.appLogger.log(err)
 require("./i18n.js")
 require("./util.js")
+require("./nexus.js")
 const {saveUserSettings, deleteFolderRecursive} = require("./settingsMenu.js")
 const xVASpeech = require("./xVASpeech.js")
 const {startBatch} = require("./batch.js")
@@ -143,7 +144,7 @@ window.loadAllModels = () => {
                     }
                 })
             } catch (e) {
-                console.log(e)
+                // console.log(e)
                 window.appLogger.log(`${window.i18n.ERR_LOADING_MODELS_FOR_GAME}: `+ gameFolder)
                 window.appLogger.log(e)
             }
@@ -213,6 +214,9 @@ window.changeGame = (meta) => {
     setting_out_path_input.value = window.userSettings[`outpath_${gameFolder}`]
 
     window.setTheme(window.currentGame)
+    try {
+        window.displayAllModels()
+    } catch (e) {console.log(e)}
 
     try {fs.mkdirSync(`${path}/output/${meta[0]}`)} catch (e) {/*Do nothing*/}
     localStorage.setItem("lastGame", window.currentGame.join("-"))

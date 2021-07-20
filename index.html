@@ -15,6 +15,10 @@
     a {
         color: rgb(204, 204, 204);
     }
+    .invertedButton {
+       background: none;
+       border: 2px solid #ccc;
+    }
 </style>
 <style id="css_hack_pitch_editor">.slider::-webkit-slider-thumb {height: 50px;}</style>
 <body>
@@ -36,7 +40,10 @@
                 <input type="text" id="voiceSearchInput" name="" placeholder="Search voices...">
             </div>
             <div class="content">
-                <div id="voiceTypeContainer"></div>
+                <div id="voiceTypeContainer" style="height: calc(95vh - 107px)"></div>
+                <div style="height: 35px;width: 100%;display: flex;justify-content: center;">
+                    <button id="nexusMenuButton" class="invertedButton" style="width: 280px;max-width: 300px;">Get more voices</button>
+                </div>
             </div>
         </div>
         <div id="right">
@@ -118,7 +125,7 @@
             </div>
 
         </div>
-        <div id="settingsContainer"  style="display:none">
+        <div id="settingsContainer" style="display:none">
             <div class="modal">
                 <h2 id="i18n_settings">Settings</h2>
                 <div id="settingsOptionsContainer" class="flexTable">
@@ -695,6 +702,79 @@
 
             </div>
         </div>
+
+        <div id="nexusContainer" style="display:none">
+            <div class="modal">
+                <div style="height: 100px;display: flex;margin-top: -50px;margin-bottom: -30px;align-items: center;width: 100%;justify-content: flex-end;padding-right: 40px;">
+                    <div id="nexusNameDisplay" style="opacity: 0;margin-right: 10px;">Logged in as: <span id="nexusUserName"></span></div>
+                    <div id="nexusAvatar"></div>
+                </div>
+                <div style="display: flex;height: 60vh;">
+                    <div style="width: 15vw;margin-left: 2vw;">
+                        <div style="display: flex;justify-content:center;align-items: center;height: 5vh;font-size: 16pt;">Games</div>
+                        <div style="background: rgb(75,75,75);overflow-y: auto;width: 100%;height: 55vh;padding-bottom: 10px;" id="nexusGamesList"></div>
+                    </div>
+                    <div style="width: 70vw;display: flex;flex-direction: column;align-items: center;">
+                        <div style="display: flex;justify-content: space-between;align-items: center;height: 5vh;font-size: 16pt;width: 95%;">
+                            <div>Models</div>
+                            <div style="width: 50vw;">
+                                <input id="nexusSearchBar" placeholder="Search voices..." style="height: 25px;width: calc(100% - 300px);">
+                                <button id="nexusCheckNow">Check now</button>
+                                <button id="nexusManageReposButton">Manage repos</button>
+                            </div>
+                        </div>
+                        <div style="display: block;background: rgb(75,75,75);overflow-y: auto;width: 95%;height: 55vh;" id="nexus_main">
+                            <div id="nexusRecordsHeader">
+                                <div id="i18n_batchh_actions">Actions</div>
+                                <div id="i18n_batchh_game">Game</div>
+                                <div id="">Name</div>
+                                <div id="">Author</div>
+                                <div id="">Version</div>
+                                <div id="">Date</div>
+                                <div id="">Type</div>
+                                <div id="">Notes</div>
+                            </div>
+                            <div id="nexusRecordsContainer">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="width: 83vw;display: flex;justify-content: center;">
+                    <div style="width: 40%;display: flex;font-size: 16pt;">
+                        <div style="width: 50%;display: flex;align-items: center;">
+                            <div style="margin-right: 10px;">Downloading:</div>
+                            <div id="nexusDownloadingCount">0</div>
+                        </div>
+                        <div style="width: 50%;display: flex;align-items: center;">
+                            <div style="margin-right: 10px;">Installing:</div>
+                            <div id="nexusInstallingCount">0</div>
+                        </div>
+                        <div style="width: 50%;display: flex;align-items: center;">
+                            <div style="margin-right: 10px;">Finished:</div>
+                            <div id="nexusFinishedCount">0</div>
+                        </div>
+                    </div>
+                    <div style="height:50px;overflow-y: auto;flex-grow: 1;background: rgb(75,75,75);text-align: left;" id="nexusDownloadLog"></div>
+                    <div style="width: 150px;display: flex;justify-content: flex-end;">
+                        <button>Download All</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="nexusReposContainer" style="display:none">
+            <div class="modal" style="width: 35vw;">
+                <h1>Repositories</h1>
+                <div id="nexusReposList">
+
+                </div>
+                <div>
+                    <button id="nexusReposAddButton">Add</button>
+                    <!-- <button id="nexusReposDeleteButton">Delete</button> -->
+                </div>
+            </div>
+        </div>
+
 
         <div id="modalContainer" style="display:none"></div>
     </div>
