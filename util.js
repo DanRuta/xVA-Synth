@@ -118,19 +118,22 @@ window.setTheme = (meta) => {
     try {
         Array.from(pluginsRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${primaryColour}`)
     } catch (e) {}
+    try {
+        Array.from(nexusRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${primaryColour}`)
+    } catch (e) {}
 
     const background = `linear-gradient(0deg, rgba(128,128,128,${window.userSettings.bg_gradient_opacity}) 0px, rgba(0,0,0,0)), url("assets/${meta.join("-")}")`
-    Array.from(document.querySelectorAll("button")).forEach(e => e.style.background = `#${primaryColour}`)
+    Array.from(document.querySelectorAll("button:not(.fixedColour)")).forEach(e => e.style.background = `#${primaryColour}`)
     Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.background = `#${primaryColour}`)
     Array.from(document.querySelectorAll(".spinner")).forEach(e => e.style.borderLeftColor = `#${primaryColour}`)
 
     if (secondaryColour) {
-        Array.from(document.querySelectorAll("button")).forEach(e => e.style.color = `#${secondaryColour}`)
+        Array.from(document.querySelectorAll("button:not(.fixedColour)")).forEach(e => e.style.color = `#${secondaryColour}`)
         Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.color = `#${secondaryColour}`)
         Array.from(document.querySelectorAll("button")).forEach(e => e.style.textShadow  = `none`)
         Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.textShadow  = `none`)
     } else {
-        Array.from(document.querySelectorAll("button")).forEach(e => e.style.color = `white`)
+        Array.from(document.querySelectorAll("button:not(.fixedColour)")).forEach(e => e.style.color = `white`)
         Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.color = `white`)
         Array.from(document.querySelectorAll("button")).forEach(e => e.style.textShadow = `0 0 2px black`)
         Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.textShadow = `0 0 2px black`)
@@ -156,6 +159,12 @@ window.setTheme = (meta) => {
     a {color: #${primaryColour}};
     #batchRecordsHeader > div {background-color: #${primaryColour} !important;}
     #pluginsRecordsHeader > div {background-color: #${primaryColour} !important;}
+
+    .invertedButton {
+       background: none !important;
+       border: 2px solid #${primaryColour} !important;
+    }
+
     `
     if (secondaryColour) {
         cssHack.innerHTML += `

@@ -22,6 +22,10 @@ a {
     padding-bottom: 1px;
     min-height: 0px;
  }
+ .invertedButton {
+    background: none;
+    border: 2px solid #ccc;
+ }
  .voiceType {
      min-height: auto;
      font-size: 15px;
@@ -120,7 +124,7 @@ a {
     justify-content: center;
     height: 20px;
 }
- #voiceSearchInput, #searchGameInput {
+ #voiceSearchInput, #searchGameInput, #nexusSearchBar {
     width: calc(100% - 25px);
     text-align: center;
     background: none;
@@ -132,7 +136,7 @@ a {
     width: 50vw;
     font-size: 16pt;
  }
- #voiceSearchInput:focus, #voiceSearchInput:active, #searchGameInput:focus, #searchGameInput:active {
+ #voiceSearchInput:focus, #voiceSearchInput:active, #searchGameInput:focus, #searchGameInput:active, #nexusSearchBar:focus, #nexusSearchBar:active {
     outline: none;
  }
  .content {
@@ -325,7 +329,7 @@ a {
  }
 
 
- #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer, #EULAContainer, #patreonContainer, #pluginsContainer, #s2sSelectContainer {
+ #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer, #EULAContainer, #patreonContainer, #pluginsContainer, #s2sSelectContainer, #nexusContainer , #nexusReposContainer {
      display: flex;
      justify-content: center;
      align-items: center;
@@ -380,13 +384,13 @@ a {
      width: 25vw;
      text-align: center;
  }
- #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal, #patreonContainer > .modal, #pluginsContainer > .modal, #s2sSelectContainer > .modal {
+ #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal, #patreonContainer > .modal, #pluginsContainer > .modal, #s2sSelectContainer > .modal, #nexusContainer > .modal, #nexusReposContainer > .modal {
      height: 65vh;
      width: 50vw;
      min-height: 500px;
      min-width: 750px;
  }
- #gameSelectionContainer > .modal, #batchGenerationContainer > .modal, #EULAContainer > .modal {
+ #gameSelectionContainer > .modal, #batchGenerationContainer > .modal, #EULAContainer > .modal, #nexusContainer > .modal {
     height: 75vh;
     width: 85vw;
     min-height: 500px;
@@ -867,7 +871,7 @@ a {
     flex-direction: column;
     align-items: center;
 }
-#batch_main, #plugins_main {
+#batch_main, #plugins_main, #nexus_main {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -935,11 +939,11 @@ a {
     justify-content: center;
     padding: 5px;
 }
-#batchRecordsHeader, #pluginsRecordsHeader {
+#batchRecordsHeader, #pluginsRecordsHeader, #nexusRecordsHeader {
     position: sticky;
     top: 0;
 }
-#batchRecordsHeader > div, #pluginsRecordsHeader > div {
+#batchRecordsHeader > div, #pluginsRecordsHeader > div, #nexusRecordsHeader > div {
     background-color: rgb(75,75,75);
     box-shadow: 0 1px 5px 1px rgba(0,0,0,0.3);
     text-shadow: 0 0 2px black;
@@ -948,13 +952,13 @@ a {
 #pluginsRecordsContainer > div {
     cursor: pointer;
 }
-#batchRecordsHeader, #batchRecordsContainer > div, #pluginsRecordsHeader, #pluginsRecordsContainer > div {
+#batchRecordsHeader, #batchRecordsContainer > div, #pluginsRecordsHeader, #pluginsRecordsContainer > div, #nexusRecordsHeader, #nexusRecordsContainer > div {
     width: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
 }
-#batchRecordsHeader > div, #batchRecordsContainer > div > div, #pluginsRecordsHeader > div, #pluginsRecordsContainer > div > div {
+#batchRecordsHeader > div, #batchRecordsContainer > div > div, #pluginsRecordsHeader > div, #pluginsRecordsContainer > div > div, #nexusRecordsHeader > div, #nexusRecordsContainer > div > div {
     padding: 2px;
     border: 1px solid;
     color: white;
@@ -1080,6 +1084,73 @@ a {
     max-width: 150px;
 }
 
+
+/*Nexus*/
+/*Actions*/
+#nexusRecordsHeader > div:nth-child(1), #nexusRecordsContainer > div > div:nth-child(1) {
+    min-width: 240px;
+    max-width: 240px;
+}
+/*Game*/
+#nexusRecordsHeader > div:nth-child(2), #nexusRecordsContainer > div > div:nth-child(2) {
+    min-width: 150px;
+    max-width: 150px;
+}
+/*Name*/
+#nexusRecordsHeader > div:nth-child(3), #nexusRecordsContainer > div > div:nth-child(3) {
+    min-width: 250px;
+    max-width: 250px;
+}
+/*Author*/
+#nexusRecordsHeader > div:nth-child(4), #nexusRecordsContainer > div > div:nth-child(4) {
+    min-width: 175px;
+    max-width: 175px;
+}
+/*Version*/
+#nexusRecordsHeader > div:nth-child(5), #nexusRecordsContainer > div > div:nth-child(5) {
+    min-width: 120px;
+    max-width: 120px;
+}
+/*Date*/
+#nexusRecordsHeader > div:nth-child(6), #nexusRecordsContainer > div > div:nth-child(6) {
+    min-width: 80px;
+    max-width: 80px;
+}
+/*Type*/
+#nexusRecordsHeader > div:nth-child(7), #nexusRecordsContainer > div > div:nth-child(7) {
+    min-width: 140px;
+    max-width: 140px;
+}
+/*Notes*/
+#nexusRecordsHeader > div:nth-child(8), #nexusRecordsContainer > div > div:nth-child(8) {
+    min-width: 200px;
+    max-width: 200px;
+}
+#nexusDownloadLog > div {
+    padding-left: 10px;
+    padding-top: 2px;
+}
+#nexusReposList {
+    background: rgb(75,75,75);
+    width: 600px;
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+#nexusReposList > div {
+    display: flex;
+    padding: 10px;
+}
+#nexusReposList > div > div:nth-child(1) {
+    width: 30px;
+}
+#nexusReposList > div > div:nth-child(2) {
+    flex-grow: 1;
+    display: flex;
+    text-align: center;
+    align-items: center;
+}
 
 
 
