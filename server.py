@@ -3,7 +3,7 @@ import traceback
 
 if __name__ == '__main__':
 
-    APP_VERSION = "1.4.2"
+    APP_VERSION = "1.4.3"
 
     PROD = False
     # PROD = True
