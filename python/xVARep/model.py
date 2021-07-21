@@ -48,6 +48,33 @@ def extract_features(file_name):
 
     return features
 
+
+import multiprocessing as mp
+def mp_preprocess_extract_features(logger, norm_stats, sampleWAVs):
+    workers = max(1, mp.cpu_count()-1)
+    workers = min(len(sampleWAVs), workers)
+
+    workItems = [[norm_stats, sampleWAV] for si, sampleWAV in enumerate(sampleWAVs)]
+
+    logger.info("[mp embeddings feature extraction] workers: "+str(workers))
+
+    pool = mp.Pool(workers)
+    results = pool.map(processingTask, workItems)
+    pool.close()
+    pool.join()
+
+
+    return results
+
+def processingTask(data):
+    norm_stats = data[0]
+    wavPath = data[1]
+
+    audio_feats = extract_features(wavPath)
+    audio_feats = [(val-norm_stats["mean"][vi]) / norm_stats["std"][vi] for vi,val in enumerate(audio_feats)]
+    return audio_feats
+
+
 class xVARep(object):
     def __init__(self, logger, PROD, device):
         super(xVARep, self).__init__()
@@ -131,19 +158,49 @@ class xVARep(object):
                     non_installed_voices.append({"voiceId": mapping.split("=")[0], "voiceName": mapping.split("=")[2], "gender": mapping.split("=")[3], "gameId": mapping.split("=")[4]})
 
 
-        audio_feats_batch = []
+        # Prepare audio data
+        audio_feats_batch = {}
 
-        for api, audio_path in enumerate(sampleWAVs):
-            # Prepare audio data
+        DO_MP = True
+        if DO_MP:
+            files_to_extract = {}
 
-            if voiceIds[api] in self.cached_audio_feats.keys():
-                audio_feats = self.cached_audio_feats[voiceIds[api]]
-            else:
-                audio_feats = extract_features(audio_path)
-                audio_feats = [(val-self.norm_stats["mean"][vi]) / self.norm_stats["std"][vi] for vi,val in enumerate(audio_feats)]
-                self.cached_audio_feats[voiceIds[api]] = audio_feats
+            for api, audio_path in enumerate(sampleWAVs):
 
-            audio_feats_batch.append(audio_feats)
+                if voiceIds[api] in self.cached_audio_feats.keys():
+                    audio_feats = self.cached_audio_feats[voiceIds[api]]
+                    audio_feats_batch[voiceIds[api]] = audio_feats
+                else:
+                    files_to_extract[voiceIds[api]] = audio_path
+
+
+            voiceIds_to_extract = list(files_to_extract.keys())
+            paths_to_extract = [files_to_extract[voiceIds] for voiceIds in voiceIds_to_extract]
+
+
+
+            extracted_feats = mp_preprocess_extract_features(self.logger, self.norm_stats, paths_to_extract)
+
+            for fi, audio_feats in enumerate(extracted_feats):
+                voiceId = voiceIds_to_extract[fi]
+                if voiceId not in self.cached_audio_feats.keys():
+                    self.cached_audio_feats[voiceId] = audio_feats
+                audio_feats_batch[voiceId] = audio_feats
+
+        else:
+            for api, audio_path in enumerate(sampleWAVs):
+                if voiceIds[api] in self.cached_audio_feats.keys():
+                    audio_feats = self.cached_audio_feats[voiceIds[api]]
+                else:
+                    audio_feats = extract_features(audio_path)
+                    audio_feats = [(val-self.norm_stats["mean"][vi]) / self.norm_stats["std"][vi] for vi,val in enumerate(audio_feats)]
+                    self.cached_audio_feats[voiceIds[api]] = audio_feats
+                audio_feats_batch[voiceIds[api]] = audio_feats
+
+
+        audio_feats_batch = [audio_feats_batch[key] for key in voiceIds]
+
+
 
 
         # Compute embedding using the model
@@ -209,6 +266,3 @@ class xVARep(object):
 
         return "\n".join(string_formatted_dict)
 
-
-
-# TODO, parallelize the emb model using batch
