@@ -17,6 +17,7 @@ window.onerror = (err, url, lineNum) => window.appLogger.log(err)
 require("./i18n.js")
 require("./util.js")
 require("./nexus.js")
+require("./embeddings.js")
 const {saveUserSettings, deleteFolderRecursive} = require("./settingsMenu.js")
 const xVASpeech = require("./xVASpeech.js")
 const {startBatch} = require("./batch.js")
@@ -1642,6 +1643,19 @@ window.updateGameList = () => {
 window.updateGameList()
 
 
+// Embeddings
+// ==========
+window.setupModal(embeddingsIcon, embeddingsContainer, () => {
+    if (!window.embeddingsState.ready) {
+        setTimeout(() => {
+            window.embeddingsState.ready = true
+            window.initEmbeddingsScene()
+            setTimeout(() => {
+                window.computeEmbsAndDimReduction(true)
+            }, 300)
+        }, 100)
+    }
+})
 
 // Plugins
 // =======

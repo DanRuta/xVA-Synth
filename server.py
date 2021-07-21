@@ -93,7 +93,6 @@ if __name__ == '__main__':
     # ========================
 
 
-
     try:
         from plugins_manager import PluginManager
         plugin_manager = PluginManager(APP_VERSION, PROD, CPU_ONLY, logger)
@@ -103,7 +102,6 @@ if __name__ == '__main__':
         logger.info(traceback.format_exc())
 
     plugin_manager.run_plugins(plist=plugin_manager.plugins["start"]["pre"], event="pre start", data=None)
-
 
 
 
@@ -133,6 +131,17 @@ if __name__ == '__main__':
     use_gpu = user_settings["use_gpu"]
     print(f'user_settings, {user_settings}')
     # =============
+
+
+    # ======================== Models manager
+    try:
+        from python.models_manager import ModelsManager
+        models_manager = ModelsManager(logger, PROD, torch.device("cuda:0") if use_gpu else torch.device("cpu"))
+    except:
+        logger.info("Models manager failed to initialize")
+        logger.info(traceback.format_exc())
+    # ========================
+
 
 
     # FastPitch setup
@@ -358,6 +367,13 @@ if __name__ == '__main__':
                     logger.info("status")
                     logger.info(status)
                     req_response = ",".join(status)
+
+
+                if self.path == "/computeEmbsAndDimReduction":
+                    models_manager.init_model("xVARep")
+                    embs = models_manager.models["xVARep"].reduce_data_dimension(post_data["mappings"], post_data["includeAllVoices"], post_data["onlyInstalled"])
+                    req_response = embs
+
 
 
                 self._set_response()

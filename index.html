@@ -776,8 +776,100 @@
         </div>
 
 
+
+        <div id="embeddingsContainer" style="display:none">
+            <div class="modal" style="flex-direction: row;height: 85vh;">
+                <!-- left -->
+                <div style="height: calc(70vh + 100px);width: 20vw;">
+                    <div class="sectionTitle" style="height: 50px;display: flex;align-items: flex-end;margin-bottom: 10px;margin-top: -10px;">Games</div>
+                    <div id="embeddingsGamesListContainer" class="listContainer"></div>
+                    <div class="sectionTitle" style="margin-top: 30px;margin-bottom: 10px;">Voices</div>
+                    <div id="embeddings_main" class="listContainer" style="display: block;width: 100%;height: 32vh;">
+
+                        <div id="embeddingsRecordsHeader">
+                            <div id=""></div>
+                            <div id="">Show</div>
+                            <div id="">Name</div>
+                            <div id="">Game</div>
+                            <div id="">Gender</div>
+                        </div>
+                        <div id="embeddingsRecordsContainer">
+                        </div>
+
+                    </div>
+                    <div style="height: 50px;">
+                        <input id="embeddingsSearchBar" placeholder="Search voices..." style="height: 30px;width: 100%;">
+                    </div>
+                </div>
+                <!-- Right -->
+                <div style="height: calc(70vh + 100px);">
+                    <div id="embeddingsTopRightBar">
+                        <div>
+                            <div>
+                                <div>Voice Name:</div>
+                                <div id="embeddingsVoiceNameDisplay"></div>
+                            </div>
+                            <div>
+                                <div>Gender:</div>
+                                <div id="embeddingsVoiceGenderDisplay"></div>
+                            </div>
+                            <div>
+                                <div>Game:</div>
+                                <div id="embeddingsVoiceGameDisplay"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <button id="embeddingsPreviewButton">Preview</button>
+                            <button id="embeddingsLoadButton">Load</button>
+                        </div>
+                    </div>
+                    <div id="embeddingsSceneContainer"></div>
+                    <div style="height: 50px;display: flex;justify-content: space-between;">
+                        <div id="embeddingsSceneGenderFilters">
+                            <div>
+                                <div>
+                                    <input id="embeddingsMalesCkbx" type="checkbox" checked>
+                                </div>
+                                <div>Males</div>
+                            </div>
+                            <div>
+                                <div>
+                                    <input id="embeddingsFemalesCkbx" type="checkbox" checked>
+                                </div>
+                                <div>Females</div>
+                            </div>
+                            <div>
+                                <div>
+                                    <input id="embeddingsOtherGendersCkbx" type="checkbox" checked>
+                                </div>
+                                <div>Other</div>
+                            </div>
+                            <div style="width: 15vw;">
+                                <div>
+                                    <input id="embeddingsOnlyInstalledCkbx" type="checkbox">
+
+                                </div>
+                                <div>Show only installed voices</div>
+                            </div>
+                        </div>
+                        <div style="width: 10vw;display: flex;align-items: center;justify-content: space-between;">
+                            <div>Key:</div>
+                            <select id="embeddingsKey">
+                                <option value="embsKey_game">Game</option>
+                                <option value="embsKey_gender">Gender</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <div id="modalContainer" style="display:none"></div>
     </div>
+</div>
+<div id="embeddingsIcon">
+    <svg width="25" height="25" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0, 0, 400,400"><g id="svgg"><path id="path0" d="M150.000 20.230 C 65.534 26.594,5.904 105.137,22.679 187.932 C 41.869 282.642,149.542 329.959,232.409 280.098 L 237.105 277.272 288.552 328.719 L 340.000 380.166 360.083 360.083 L 380.166 340.000 328.719 288.552 L 277.272 237.105 280.098 232.409 C 316.949 171.163,301.885 92.110,245.067 48.568 C 218.394 28.128,183.443 17.709,150.000 20.230 M166.667 70.498 C 215.683 73.046,254.682 119.552,249.348 169.093 C 244.601 213.185,208.627 247.470,164.854 249.622 C 102.308 252.696,55.953 193.244,74.215 133.374 C 85.585 96.097,124.114 68.164,161.333 70.215 C 162.342 70.271,164.742 70.398,166.667 70.498 " stroke="none" fill="#ffffff" fill-rule="evenodd"></path></g></svg>
 </div>
 <div id="pluginsIcon">
     <svg width="25" height="25" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" fill-opacity="1" color-rendering="auto" color-interpolation="auto" text-rendering="auto" stroke="white" stroke-linecap="square" stroke-miterlimit="10" shape-rendering="auto" stroke-opacity="1" fill="#ffffff" stroke-dasharray="none" font-weight="normal" stroke-width="1" font-family="'Dialog'" font-style="normal" stroke-linejoin="miter" font-size="12" stroke-dashoffset="0" image-rendering="auto" viewBox="0, 150, 300, 250">
@@ -867,4 +959,9 @@ chromeQuit.addEventListener("click", () => remote.getCurrentWindow().close())
 <style id="pluginsCSS" type="text/css"></style>
 <script src="recorder.js"></script>
 <script src="script.js"></script>
+<script type="text/javascript" src="lib/Three.min.js"></script>
+<script type="text/javascript" src="lib/OrbitControls.js"></script>
+<script type="text/javascript" src="lib/TrackballControls.js"></script>
+<script type="text/javascript" src="lib/Three.texture.js"></script>
+<script type="text/javascript" src="lib/Three.sprite.js"></script>
 </html>
