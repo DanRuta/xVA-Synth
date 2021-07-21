@@ -83,6 +83,7 @@ class xVARep(object):
         self.PROD = PROD
         self.device = device
         self.path = "./resources/app" if PROD else "."
+        self.ckpt_path = None
         self.embeddings = []
 
         layers = []
@@ -117,7 +118,8 @@ class xVARep(object):
 
 
 
-    def load_state_dict (self, sd):
+    def load_state_dict (self, ckpt_path, sd):
+        self.ckpt_path = ckpt_path
         self.model.load_state_dict(sd["state_dict"])
 
 

@@ -1,7 +1,6 @@
 import os
 import json
 import argparse
-# import models
 from python import models
 import sys
 import warnings
@@ -17,13 +16,6 @@ from python import model as glow
 from python import waveglowsmall as small_glow
 from python.denoiser import Denoiser
 sys.modules['glow'] = glow
-
-from python.hifi_gan import Generator
-class AttrDict(dict):
-    def __init__(self, *args, **kwargs):
-        super(AttrDict, self).__init__(*args, **kwargs)
-        self.__dict__ = self
-
 
 
 def load_and_setup_model(model_name, parser, checkpoint, device, logger, forward_is_infer=False, ema=True, jitable=False):
@@ -116,40 +108,6 @@ def init (PROD, use_gpu, vocoder, logger):
     else:
         fastpitch = init_waveglow(use_gpu, fastpitch, vocoder, logger)
 
-    fastpitch.hifi_gan_path = None
-    fastpitch = init_hifigan(PROD, fastpitch, use_gpu, vocoder)
-
-    return fastpitch
-
-
-def init_hifigan (PROD, fastpitch, use_gpu, vocoder):
-
-    device = torch.device('cuda' if use_gpu else 'cpu')
-
-    if "waveglow" in vocoder:
-        vocoder = "qnd"
-
-    if vocoder == "qnd" or fastpitch.ckpt_path is None:
-        model_path = f'{"./resources/app" if PROD else "."}/python/hifi.pt'
-    else:
-        model_path = fastpitch.ckpt_path+".hg.pt"
-
-
-
-    if fastpitch.hifi_gan_path is None or fastpitch.hifi_gan_path!=model_path:
-        # Hi-Fi GAN
-        config_file = os.path.join(f'{"./resources/app" if PROD else "."}/python/config.json')
-        with open(config_file) as f:
-            data = f.read()
-
-        json_config = json.loads(data)
-        h = AttrDict(json_config)
-        fastpitch.hifi_gan = Generator(h).to(device)
-        hifigan_ckpt = torch.load(model_path, map_location=device)
-        fastpitch.hifi_gan.load_state_dict(hifigan_ckpt['generator'])
-        fastpitch.hifi_gan = fastpitch.hifi_gan.to(device)
-        fastpitch.hifi_gan_path = model_path
-
     return fastpitch
 
 
@@ -189,10 +147,6 @@ def loadModel (fastpitch, ckpt, n_speakers, device):
     if 'state_dict' in checkpoint_data:
         checkpoint_data = checkpoint_data['state_dict']
 
-    if "hifi_gan" in dir(fastpitch):
-        hifi_gan = fastpitch.hifi_gan
-        del fastpitch.hifi_gan
-
     symbols_embedding_dim = 384
     if n_speakers is not None:
         fastpitch.speaker_emb = nn.Embedding(n_speakers, symbols_embedding_dim).to(device)
@@ -205,13 +159,11 @@ def loadModel (fastpitch, ckpt, n_speakers, device):
     fastpitch.ckpt_path = ckpt
     fastpitch = fastpitch.float()
 
-    fastpitch.hifi_gan = hifi_gan
-
     fastpitch.eval()
     del checkpoint_data
     return fastpitch
 
-def infer_batch(PROD, user_settings, linesBatch, fastpitch, vocoder, speaker_i, logger=None, old_sequence=None):
+def infer_batch(PROD, user_settings, models_manager, linesBatch, fastpitch, vocoder, speaker_i, logger=None, old_sequence=None):
     print(f'Inferring batch of {len(linesBatch)} lines')
 
     sigma_infer = 0.9
@@ -245,7 +197,7 @@ def infer_batch(PROD, user_settings, linesBatch, fastpitch, vocoder, speaker_i, 
                 write(output, sampling_rate, audio.cpu().numpy())
             del audios
         else:
-            init_hifigan(PROD, fastpitch, user_settings["use_gpu"], vocoder)
+            models_manager.load_model("hifigan", f'{"./resources/app" if PROD else "."}/python/hifigan/hifi.pt' if vocoder=="qnd" else fastpitch.ckpt_path+".hg.pt")
             y_g_hat = fastpitch.hifi_gan(mel)
             audios = y_g_hat.view((y_g_hat.shape[0], y_g_hat.shape[2]))
             # audio = audio * 2.3026  # This brings it to the same volume, but makes it clip in places
@@ -263,7 +215,7 @@ def infer_batch(PROD, user_settings, linesBatch, fastpitch, vocoder, speaker_i, 
 
 
 
-def infer(PROD, user_settings, text, output, fastpitch, vocoder, speaker_i, pace=1.0, pitch_data=None, logger=None, old_sequence=None):
+def infer(PROD, user_settings, models_manager, text, output, fastpitch, vocoder, speaker_i, pace=1.0, pitch_data=None, logger=None, old_sequence=None):
 
     print(f'Inferring: "{text}" ({len(text)})')
 
@@ -298,8 +250,9 @@ def infer(PROD, user_settings, text, output, fastpitch, vocoder, speaker_i, pace
                 write(output, sampling_rate, audio.cpu().numpy())
             del audios
         else:
-            init_hifigan(PROD, fastpitch, user_settings["use_gpu"], vocoder)
-            y_g_hat = fastpitch.hifi_gan(mel)
+            models_manager.load_model("hifigan", f'{"./resources/app" if PROD else "."}/python/hifigan/hifi.pt' if vocoder=="qnd" else fastpitch.ckpt_path+".hg.pt")
+
+            y_g_hat = models_manager.models["hifigan"].model(mel)
             audio = y_g_hat.squeeze()
             audio = audio * 32768.0
             # audio = audio * 2.3026  # This brings it to the same volume, but makes it clip in places

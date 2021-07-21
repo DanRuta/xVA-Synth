@@ -197,15 +197,10 @@ if __name__ == '__main__':
             if fastpitch_model.waveglow is not None:
                 fastpitch_model.waveglow.set_device(fastpitch_model.device)
                 fastpitch_model.denoiser.set_device(fastpitch_model.device)
-            fastpitch_model.hifi_gan.to(fastpitch_model.device)
+            models_manager.set_device(fastpitch_model.device)
         except:
             logger.info(traceback.format_exc())
     setDevice(user_settings["use_gpu"])
-
-
-    # def initializer(*arguments):
-    #     global progress, total, args, lock
-    #     progress, total, args, lock = arguments
 
 
     # Server
@@ -242,11 +237,9 @@ if __name__ == '__main__':
                     hifi_gan = "waveglow" not in vocoder
                     write_settings()
 
-                    if vocoder not in ["qnd", "256_waveglow", "big_waveglow"]:
-                        use_gpu = user_settings["use_gpu"]
-                        fastpitch_model = fastpitch.init_hifigan(PROD, fastpitch_model, use_gpu, vocoder)
-
-                    if not hifi_gan:
+                    if vocoder=="qnd":
+                        models_manager.load_model("hifigan", f'{"./resources/app" if PROD else "."}/python/hifigan/hifi.pt')
+                    elif not hifi_gan:
                         use_gpu = user_settings["use_gpu"]
                         fastpitch_model = fastpitch.init_waveglow(use_gpu, fastpitch_model, vocoder, logger)
 
@@ -281,7 +274,7 @@ if __name__ == '__main__':
                     old_sequence = post_data["old_sequence"] if "old_sequence" in post_data else None
 
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["pre"], event="pre synth-line", data=post_data)
-                    req_response = fastpitch.infer(PROD, user_settings, text, out_path, fastpitch=fastpitch_model, vocoder=vocoder, \
+                    req_response = fastpitch.infer(PROD, user_settings, models_manager, text, out_path, fastpitch=fastpitch_model, vocoder=vocoder, \
                         speaker_i=speaker_i, pitch_data=pitch_data, logger=logger, pace=pace, old_sequence=old_sequence)
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["post"], event="post synth-line", data=post_data)
 
@@ -291,7 +284,7 @@ if __name__ == '__main__':
                     vocoder = post_data["vocoder"]
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["batch-synth-line"]["pre"], event="pre batch-synth-line", data=post_data)
                     try:
-                        req_response = fastpitch.infer_batch(PROD, user_settings, linesBatch, fastpitch=fastpitch_model, vocoder=vocoder, \
+                        req_response = fastpitch.infer_batch(PROD, user_settings, models_manager, linesBatch, fastpitch=fastpitch_model, vocoder=vocoder, \
                             speaker_i=speaker_i, logger=logger)
                     except RuntimeError as e:
                         if "CUDA out of memory" in str(e):
