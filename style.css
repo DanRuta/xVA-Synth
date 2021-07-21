@@ -1190,12 +1190,24 @@ a {
     font-size: 16pt;
     text-align: left;
 }
+
+#embeddingsSceneOptions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#embeddingsSceneOptions > * {
+    margin-left: 10px;
+}
+
+
 #embeddingsSceneGenderFilters {
     display: flex;
-    width: 40vw;
+    width: 35vw;
 }
 #embeddingsSceneGenderFilters > div {
-    width: 10vw;
+    width: 7vw;
+    min-width: 100px;
     display: flex;
     align-items: center;
 }

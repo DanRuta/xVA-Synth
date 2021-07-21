@@ -847,16 +847,20 @@
                             <div style="width: 15vw;">
                                 <div>
                                     <input id="embeddingsOnlyInstalledCkbx" type="checkbox">
-
                                 </div>
                                 <div>Show only installed voices</div>
                             </div>
                         </div>
-                        <div style="width: 10vw;display: flex;align-items: center;justify-content: space-between;">
+                        <div id="embeddingsSceneOptions">
                             <div>Key:</div>
                             <select id="embeddingsKey">
                                 <option value="embsKey_game">Game</option>
                                 <option value="embsKey_gender">Gender</option>
+                            </select>
+                            <div>Algorithm</div>
+                            <select id="embeddingsAlgorithm">
+                                <option value="embsAlgo_pca">PCA</option>
+                                <option value="embsAlgo_tsne">tSNE</option>
                             </select>
                         </div>
                     </div>

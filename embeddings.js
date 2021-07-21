@@ -590,6 +590,7 @@ embeddingsMalesCkbx.addEventListener("change", () => window.computeEmbsAndDimRed
 embeddingsFemalesCkbx.addEventListener("change", () => window.computeEmbsAndDimReduction())
 embeddingsOtherGendersCkbx.addEventListener("change", () => window.computeEmbsAndDimReduction())
 embeddingsOnlyInstalledCkbx.addEventListener("change", () => window.computeEmbsAndDimReduction())
+embeddingsAlgorithm.addEventListener("change", () => window.computeEmbsAndDimReduction())
 
 
 window.computeEmbsAndDimReduction = (includeAllVoices=false) => {
@@ -667,6 +668,7 @@ window.computeEmbsAndDimReduction = (includeAllVoices=false) => {
         body: JSON.stringify({
             mappings: mappings.join("\n"),
             onlyInstalled: embeddingsOnlyInstalledCkbx.checked,
+            algorithm: embeddingsAlgorithm.value.split("_")[1],
             includeAllVoices
         })
     }).then(r=>r.text()).then(res => {
