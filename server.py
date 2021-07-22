@@ -193,10 +193,6 @@ if __name__ == '__main__':
         try:
             fastpitch_model.device = torch.device('cuda' if use_gpu else 'cpu')
             fastpitch_model = fastpitch_model.to(fastpitch_model.device)
-
-            if fastpitch_model.waveglow is not None:
-                fastpitch_model.waveglow.set_device(fastpitch_model.device)
-                fastpitch_model.denoiser.set_device(fastpitch_model.device)
             models_manager.set_device(fastpitch_model.device)
         except:
             logger.info(traceback.format_exc())
@@ -240,8 +236,8 @@ if __name__ == '__main__':
                     if vocoder=="qnd":
                         models_manager.load_model("hifigan", f'{"./resources/app" if PROD else "."}/python/hifigan/hifi.pt')
                     elif not hifi_gan:
-                        use_gpu = user_settings["use_gpu"]
-                        fastpitch_model = fastpitch.init_waveglow(use_gpu, fastpitch_model, vocoder, logger)
+                        models_manager.init_model(vocoder)
+
 
                 if self.path == "/customEvent":
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["custom-event"], event="custom-event", data=post_data)

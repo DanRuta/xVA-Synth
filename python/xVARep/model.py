@@ -164,7 +164,7 @@ class xVARep(object):
         audio_feats_batch = {}
 
         DO_MP = True
-        if DO_MP:
+        if DO_MP and includeAllVoices:
             files_to_extract = {}
 
             for api, audio_path in enumerate(sampleWAVs):
@@ -198,7 +198,6 @@ class xVARep(object):
                     audio_feats = [(val-self.norm_stats["mean"][vi]) / self.norm_stats["std"][vi] for vi,val in enumerate(audio_feats)]
                     self.cached_audio_feats[voiceIds[api]] = audio_feats
                 audio_feats_batch[voiceIds[api]] = audio_feats
-
 
         audio_feats_batch = [audio_feats_batch[key] for key in voiceIds]
 

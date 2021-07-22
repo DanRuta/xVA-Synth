@@ -1,9 +1,6 @@
 import os
-import json
 import argparse
-from python import models
-import sys
-import warnings
+from python import models_fp as models
 
 import traceback
 import torch
@@ -12,10 +9,6 @@ import torch.nn as nn
 from torch.nn.utils.rnn import pad_sequence
 
 from python.common.text import text_to_sequence, sequence_to_text
-from python import model as glow
-from python import waveglowsmall as small_glow
-from python.denoiser import Denoiser
-sys.modules['glow'] = glow
 
 
 def load_and_setup_model(model_name, parser, checkpoint, device, logger, forward_is_infer=False, ema=True, jitable=False):
@@ -53,37 +46,6 @@ def load_and_setup_model(model_name, parser, checkpoint, device, logger, forward
     model.device = device
     return model.to(device)
 
-def load_and_setup_big_WN(model_name, parser, checkpoint, device, logger, forward_is_infer=False, ema=True, jitable=False):
-
-    model_parser = models.parse_model_args(model_name, parser, add_help=False)
-    model_args, model_unk_args = model_parser.parse_known_args()
-
-    model_config = models.get_model_config(model_name, model_args)
-
-    model = models.get_model(model_name, model_config, device, logger, forward_is_infer=forward_is_infer, jitable=jitable)
-
-    if checkpoint is not None:
-        checkpoint_data = torch.load(checkpoint, map_location="cpu")
-        status = ''
-
-        if 'state_dict' in checkpoint_data:
-            sd = checkpoint_data['state_dict']
-
-            if any(key.startswith('module.') for key in sd):
-                sd = {k.replace('module.', ''): v for k,v in sd.items()}
-            status += ' ' + str(model.load_state_dict(sd, strict=True))
-        else:
-            model = checkpoint_data['model']
-        print(f'Loaded {model_name}{status}')
-
-    if model_name == "WaveGlow":
-        model = model.remove_weightnorm(model)
-
-    model.device = device
-    model.eval()
-    return model.to(device)
-
-
 
 def init (PROD, use_gpu, vocoder, logger):
     torch.backends.cudnn.benchmark = True
@@ -92,7 +54,6 @@ def init (PROD, use_gpu, vocoder, logger):
 
     fastpitch = load_and_setup_model('FastPitch', parser, None, device, logger, forward_is_infer=True, jitable=False)
     fastpitch.device = device
-    fastpitch.waveglow = None
     fastpitch.wg_type = None
     fastpitch.ckpt_path = None
 
@@ -103,42 +64,7 @@ def init (PROD, use_gpu, vocoder, logger):
             logger.info(traceback.format_exc())
             pass
 
-    if vocoder=="qnd":
-        fastpitch.waveglow = None
-    else:
-        fastpitch = init_waveglow(use_gpu, fastpitch, vocoder, logger)
-
     return fastpitch
-
-
-def init_waveglow (use_gpu, fastpitch, wg_type, logger):
-
-    if fastpitch.waveglow is not None and fastpitch.wg_type==wg_type:
-        return fastpitch
-
-    device = torch.device('cuda' if use_gpu else 'cpu')
-    parser = argparse.ArgumentParser(description='PyTorch FastPitch Inference', allow_abbrev=False)
-
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        wg_ckpt_path = "./resources/app/models/nvidia_waveglowpyt_fp32_20190427.pt" if wg_type=="big_waveglow" else "./resources/app/models/waveglow_256channels_universal_v4.pt"
-        if not os.path.exists(wg_ckpt_path):
-            wg_ckpt_path = "./models/nvidia_waveglowpyt_fp32_20190427.pt" if wg_type=="big_waveglow" else "./models/waveglow_256channels_universal_v4.pt"
-        if wg_type=="big_waveglow":
-            sys.modules['glow'] = glow
-            waveglow = load_and_setup_big_WN('WaveGlow', parser, wg_ckpt_path, device, logger, forward_is_infer=True).to(device)
-        elif wg_type=="256_waveglow":
-            sys.modules['glow'] = small_glow
-            waveglow = load_and_setup_model('WaveGlow', parser, wg_ckpt_path, device, logger, forward_is_infer=True).to(device)
-        else:
-            return fastpitch
-        denoiser = Denoiser(waveglow, device).to(device)
-
-    fastpitch.waveglow = waveglow
-    fastpitch.denoiser = denoiser
-    fastpitch.wg_type = wg_type
-    return fastpitch
-
 
 def loadModel (fastpitch, ckpt, n_speakers, device):
     print(f'Loading FastPitch model: {ckpt}')
@@ -185,10 +111,10 @@ def infer_batch(PROD, user_settings, models_manager, linesBatch, fastpitch, voco
         mel, mel_lens, dur_pred, pitch_pred = fastpitch.infer_advanced(logger, text_sequences, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=None)
 
         if "waveglow" in vocoder:
-            init_waveglow(user_settings["use_gpu"], fastpitch, vocoder, logger=logger)
 
-            audios = fastpitch.waveglow.infer(mel, sigma=sigma_infer)
-            audios = fastpitch.denoiser(audios.float(), strength=denoising_strength).squeeze(1)
+            models_manager.init_model(vocoder)
+            audios = models_manager.models[vocoder].model.infer(mel, sigma=sigma_infer)
+            audios = models_manager.models[vocoder].denoiser(audios.float(), strength=denoising_strength).squeeze(1)
 
             for i, audio in enumerate(audios):
                 audio = audio[:mel_lens[i].item() * stft_hop_length]
@@ -198,7 +124,8 @@ def infer_batch(PROD, user_settings, models_manager, linesBatch, fastpitch, voco
             del audios
         else:
             models_manager.load_model("hifigan", f'{"./resources/app" if PROD else "."}/python/hifigan/hifi.pt' if vocoder=="qnd" else fastpitch.ckpt_path+".hg.pt")
-            y_g_hat = fastpitch.hifi_gan(mel)
+
+            y_g_hat = models_manager.models["hifigan"].model(mel)
             audios = y_g_hat.view((y_g_hat.shape[0], y_g_hat.shape[2]))
             # audio = audio * 2.3026  # This brings it to the same volume, but makes it clip in places
             for i, audio in enumerate(audios):
@@ -239,10 +166,10 @@ def infer(PROD, user_settings, models_manager, text, output, fastpitch, vocoder,
         mel, mel_lens, dur_pred, pitch_pred = fastpitch.infer_advanced(logger, text, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=old_sequence)
 
         if "waveglow" in vocoder:
-            init_waveglow(user_settings["use_gpu"], fastpitch, vocoder, logger=logger)
 
-            audios = fastpitch.waveglow.infer(mel, sigma=sigma_infer)
-            audios = fastpitch.denoiser(audios.float(), strength=denoising_strength).squeeze(1)
+            models_manager.init_model(vocoder)
+            audios = models_manager.models[vocoder].model.infer(mel, sigma=sigma_infer)
+            audios = models_manager.models[vocoder].denoiser(audios.float(), strength=denoising_strength).squeeze(1)
 
             for i, audio in enumerate(audios):
                 audio = audio[:mel_lens[i].item() * stft_hop_length]

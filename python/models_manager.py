@@ -13,8 +13,8 @@ class ModelsManager(object):
 
     def init_model (self, model_key):
         try:
-            if model_key in self.models.keys() and self.models[model_key].isReady:
-                pass
+            if model_key in list(self.models.keys()) and self.models[model_key].isReady:
+                return
             self.logger.info(f'ModelsManager: Initializing model: {model_key}')
 
             if model_key=="xVARep":
@@ -26,6 +26,20 @@ class ModelsManager(object):
                 from python.hifigan.model import HiFi_GAN
                 self.models[model_key] = HiFi_GAN(self.logger, self.PROD, self.device)
 
+            elif model_key=="big_waveglow":
+                from python.big_waveglow.model import BIG_WaveGlow
+                self.models[model_key] = BIG_WaveGlow(self.logger, self.PROD, self.device)
+                self.load_model(model_key, ("./resources/app" if self.PROD else ".")+"/models/nvidia_waveglowpyt_fp32_20190427.pt")
+                self.models[model_key].denoiser = self.models[model_key].denoiser.to(self.device)
+
+            elif model_key=="256_waveglow":
+                from python.waveglow.model import WaveGlow
+                self.models[model_key] = WaveGlow(self.logger, self.PROD, self.device)
+                self.load_model(model_key, ("./resources/app" if self.PROD else ".")+"/models/waveglow_256channels_universal_v4.pt")
+                self.models[model_key].denoiser = self.models[model_key].denoiser.to(self.device)
+
+
+            self.models[model_key].model = self.models[model_key].model.to(self.device)
         except:
             self.logger.info(traceback.format_exc())
 
@@ -36,7 +50,7 @@ class ModelsManager(object):
 
         if self.models[model_key].ckpt_path != ckpt_path:
             self.logger.info(f'ModelsManager: Loading model checkpoint: {model_key}, {ckpt_path}')
-            ckpt = torch.load(ckpt_path)
+            ckpt = torch.load(ckpt_path, map_location="cpu")
             self.models[model_key].load_state_dict(ckpt_path, ckpt)
 
     def set_device (self, device):

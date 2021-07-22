@@ -34,12 +34,12 @@ import torch
 # enabling modules discovery from global entrypoint
 sys.path.append(abspath(dirname(__file__)+'/'))
 from python.fastpitch.model import FastPitch as _FastPitch
-from python.model import WaveGlow
+from python.model_fp import WaveGlow
 
 
 def parse_model_args(model_name, parser, add_help=False):
     if model_name == 'WaveGlow':
-        from python.arg_parser import parse_waveglow_args
+        from python.big_waveglow.arg_parser import parse_waveglow_args
         return parse_waveglow_args(parser, add_help)
     elif model_name == 'FastPitch':
         from python.fastpitch.arg_parser import parse_fastpitch_args
