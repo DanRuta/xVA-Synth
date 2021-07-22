@@ -1671,20 +1671,14 @@ window.setupModal(s2s_settingsRecNoiseBtn, s2sSelectContainer, () => window.popu
 
 // Other
 // =====
-if (fs.existsSync(`${path}/models/nvidia_waveglowpyt_fp32_20190427.pt`)) {
-    loadAllModels().then(() => {
-        // Load the last selected game
-        const lastGame = localStorage.getItem("lastGame")
+loadAllModels().then(() => {
+    // Load the last selected game
+    const lastGame = localStorage.getItem("lastGame")
 
-        if (lastGame) {
-            changeGame(lastGame)
-        }
-    })
-} else {
-    setTimeout(() => {
-        window.errorModal(window.i18n.WAVEGLOW_NOT_FOUND)
-    }, 1500)
-}
+    if (lastGame) {
+        changeGame(lastGame)
+    }
+})
 
 voiceSearchInput.addEventListener("keyup", () => {
     const voiceElems = Array.from(voiceTypeContainer.children)
