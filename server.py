@@ -198,14 +198,17 @@ if __name__ == '__main__':
                 if self.path == "/setVocoder":
                     logger.info(post_data)
                     vocoder = post_data["vocoder"]
+                    modelPath = post_data["modelPath"]
                     user_settings["vocoder"] = vocoder
                     hifi_gan = "waveglow" not in vocoder
                     write_settings()
 
                     if vocoder=="qnd":
-                        models_manager.load_model("hifigan", f'{"./resources/app" if PROD else "."}/python/hifigan/hifi.pt')
+                        req_response = models_manager.load_model("hifigan", f'{"./resources/app" if PROD else "."}/python/hifigan/hifi.pt')
                     elif not hifi_gan:
-                        models_manager.init_model(vocoder)
+                        req_response = models_manager.load_model(vocoder, modelPath)
+
+                    req_response = "" if req_response is None else req_response
 
 
                 if self.path == "/customEvent":

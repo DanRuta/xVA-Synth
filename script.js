@@ -1443,15 +1443,25 @@ autoplay_ckbx.addEventListener("change", () => {
 
 vocoder_select.value = window.userSettings.vocoder.includes(".hg.") ? "qnd" : window.userSettings.vocoder
 const changeVocoder = vocoder => {
-    window.userSettings.vocoder = vocoder
-    window.batch_state.lastVocoder = vocoder
     spinnerModal(window.i18n.CHANGING_MODELS)
     fetch(`http://localhost:8008/setVocoder`, {
         method: "Post",
-        body: JSON.stringify({vocoder})
-    }).then(() => {
+        body: JSON.stringify({
+            vocoder,
+            modelPath: vocoder=="256_waveglow" ? window.userSettings.waveglow_path : window.userSettings.bigwaveglow_path
+        })
+    }).then(r=>r.text()).then((res) => {
         closeModal().then(() => {
-            saveUserSettings()
+            setTimeout(() => {
+                if (res=="ENOENT") {
+                    vocoder_select.value = window.userSettings.vocoder
+                    window.errorModal(`Model not found.${vocoder.includes("waveglow")?" Download WaveGlow files separately if you haven't, or check the path in the settings.":""}`)
+                } else {
+                    window.batch_state.lastVocoder = vocoder
+                    window.userSettings.vocoder = vocoder
+                    saveUserSettings()
+                }
+            }, 300)
         })
     })
 }

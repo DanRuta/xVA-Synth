@@ -1,3 +1,5 @@
+import os
+
 import torch
 import traceback
 
@@ -30,14 +32,10 @@ class ModelsManager(object):
             elif model_key=="big_waveglow":
                 from python.big_waveglow.model import BIG_WaveGlow
                 self.models_bank[model_key] = BIG_WaveGlow(self.logger, self.PROD, self.device, self)
-                self.load_model(model_key, ("./resources/app" if self.PROD else ".")+"/models/nvidia_waveglowpyt_fp32_20190427.pt")
-                self.models_bank[model_key].denoiser = self.models_bank[model_key].denoiser.to(self.device)
 
             elif model_key=="256_waveglow":
                 from python.waveglow.model import WaveGlow
                 self.models_bank[model_key] = WaveGlow(self.logger, self.PROD, self.device, self)
-                self.load_model(model_key, ("./resources/app" if self.PROD else ".")+"/models/waveglow_256channels_universal_v4.pt")
-                self.models_bank[model_key].denoiser = self.models_bank[model_key].denoiser.to(self.device)
 
             elif model_key=="fastpitch":
                 from python.fastpitch.model import FastPitch
@@ -51,6 +49,9 @@ class ModelsManager(object):
 
         if model_key not in self.models_bank.keys():
             self.init_model(model_key)
+
+        if not os.path.exists(ckpt_path):
+            return "ENOENT"
 
         if self.models_bank[model_key].ckpt_path != ckpt_path:
             self.logger.info(f'ModelsManager: Loading model checkpoint: {model_key}, {ckpt_path}')
