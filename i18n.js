@@ -13,7 +13,7 @@ window.i18n.setEnglish = () => {
 
     window.i18n.LENGTH = "Length:"
     window.i18n.RESET_LETTER = "Reset Letter"
-    window.i18n.AUTO_REGEN = "Auto regenerate:"
+    window.i18n.AUTO_REGEN = "Auto regenerate"
     window.i18n.VOCODER = "Vocoder:"
 
     window.i18n.SEARCH_GAMES = "Search games..."
