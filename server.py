@@ -10,10 +10,6 @@ if __name__ == '__main__':
     CPU_ONLY = False
     # CPU_ONLY = True
 
-    with open(f'{"./resources/app" if PROD else "."}/FASTPITCH_LOADING', "w+") as f:
-        f.write("")
-    with open(f'{"./resources/app" if PROD else "."}/WAVEGLOW_LOADING', "w+") as f:
-        f.write("")
     with open(f'{"./resources/app" if PROD else "."}/SERVER_STARTING', "w+") as f:
         f.write("")
 
@@ -143,23 +139,6 @@ if __name__ == '__main__':
     # ========================
 
 
-
-    # FastPitch setup
-    # ===============
-    fastpitch_model = 0
-    try:
-        import fastpitch
-    except:
-        print(traceback.format_exc())
-        logger.info(traceback.format_exc())
-    try:
-        fastpitch_model = fastpitch.init(PROD, use_gpu=use_gpu, vocoder=user_settings["vocoder"], logger=logger)
-    except:
-        print(traceback.format_exc())
-        logger.info(traceback.format_exc())
-    # ===============
-
-
     # xVASpeech setup
     # ===============
     xVASpeechModel = 0
@@ -180,20 +159,11 @@ if __name__ == '__main__':
 
     print("Models ready")
     logger.info("Models ready")
-    if os.path.exists(f'{"./resources/app" if PROD else "."}/WAVEGLOW_LOADING'):
-        try:
-            os.remove(f'{"./resources/app" if PROD else "."}/WAVEGLOW_LOADING')
-        except:
-            logger.info(traceback.format_exc())
-            pass
 
 
     def setDevice (use_gpu):
-        global fastpitch_model
         try:
-            fastpitch_model.device = torch.device('cuda' if use_gpu else 'cpu')
-            fastpitch_model = fastpitch_model.to(fastpitch_model.device)
-            models_manager.set_device(fastpitch_model.device)
+            models_manager.set_device(torch.device('cuda' if use_gpu else 'cpu'))
         except:
             logger.info(traceback.format_exc())
     setDevice(user_settings["use_gpu"])
@@ -215,7 +185,6 @@ if __name__ == '__main__':
         def do_POST(self):
             post_data = ""
             try:
-                global fastpitch_model
                 logger.info("POST {}".format(self.path))
 
                 content_length = int(self.headers['Content-Length'])
@@ -254,8 +223,9 @@ if __name__ == '__main__':
                     logger.info(post_data)
                     ckpt = post_data["model"]
                     n_speakers = post_data["model_speakers"] if "model_speakers" in post_data else None
+
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["pre"], event="pre load-model", data=ckpt)
-                    fastpitch_model = fastpitch.loadModel(fastpitch_model, ckpt=ckpt, n_speakers=n_speakers, device=fastpitch_model.device)
+                    models_manager.load_model("fastpitch", ckpt+".pt", n_speakers=n_speakers)
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["post"], event="post load-model", data=ckpt)
 
                 if self.path == "/synthesize":
@@ -270,8 +240,8 @@ if __name__ == '__main__':
                     old_sequence = post_data["old_sequence"] if "old_sequence" in post_data else None
 
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["pre"], event="pre synth-line", data=post_data)
-                    req_response = fastpitch.infer(PROD, user_settings, models_manager, text, out_path, fastpitch=fastpitch_model, vocoder=vocoder, \
-                        speaker_i=speaker_i, pitch_data=pitch_data, logger=logger, pace=pace, old_sequence=old_sequence)
+                    req_response = models_manager.models("fastpitch").infer(user_settings, text, out_path, vocoder=vocoder, \
+                        speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence)
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["post"], event="post synth-line", data=post_data)
 
                 if self.path == "/synthesize_batch":
@@ -280,8 +250,7 @@ if __name__ == '__main__':
                     vocoder = post_data["vocoder"]
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["batch-synth-line"]["pre"], event="pre batch-synth-line", data=post_data)
                     try:
-                        req_response = fastpitch.infer_batch(PROD, user_settings, models_manager, linesBatch, fastpitch=fastpitch_model, vocoder=vocoder, \
-                            speaker_i=speaker_i, logger=logger)
+                        req_response = models_manager.models("fastpitch").infer_batch(user_settings, linesBatch, vocoder=vocoder, speaker_i=speaker_i)
                     except RuntimeError as e:
                         if "CUDA out of memory" in str(e):
                             req_response = "CUDA OOM"
@@ -360,7 +329,7 @@ if __name__ == '__main__':
 
                 if self.path == "/computeEmbsAndDimReduction":
                     models_manager.init_model("xVARep")
-                    embs = models_manager.models["xVARep"].reduce_data_dimension(post_data["mappings"], post_data["includeAllVoices"], post_data["onlyInstalled"], post_data["algorithm"])
+                    embs = models_manager.models("xVARep").reduce_data_dimension(post_data["mappings"], post_data["includeAllVoices"], post_data["onlyInstalled"], post_data["algorithm"])
                     req_response = embs
 
 

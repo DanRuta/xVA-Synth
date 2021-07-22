@@ -4,7 +4,7 @@ from python.big_waveglow import models
 from python.big_waveglow.denoiser import Denoiser
 
 class BIG_WaveGlow(object):
-    def __init__(self, logger, PROD, device):
+    def __init__(self, logger, PROD, device, models_manager):
         super(BIG_WaveGlow, self).__init__()
 
         import python.big_waveglow.waveglow as glow
@@ -12,6 +12,7 @@ class BIG_WaveGlow(object):
 
         self.logger = logger
         self.PROD = PROD
+        self.models_manager = models_manager
         self.device = device
         self.ckpt_path = None
 

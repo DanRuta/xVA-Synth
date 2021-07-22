@@ -40,6 +40,7 @@ def parse_fastpitch_args(parent, add_help=False):
     io.add_argument('--n-mel-channels', default=80, type=int, help='Number of bins in mel-spectrograms')
     io.add_argument('--max-seq-len', default=2048, type=int, help='')
     global symbols
+    from python.common.text import symbols
     len_symbols = len(symbols)
     symbols = parser.add_argument_group('symbols parameters')
     symbols.add_argument('--n-symbols', default=len_symbols, type=int, help='Number of symbols in dictionary')

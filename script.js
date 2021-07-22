@@ -949,17 +949,7 @@ let startingSplashInterval
 let loadingStage = 0
 let hasRunPostStartPlugins = false
 startingSplashInterval = setInterval(() => {
-    if (fs.existsSync(`${path}/FASTPITCH_LOADING`)) {
-        if (loadingStage==0) {
-            spinnerModal(`${window.i18n.LOADING}...<br>${window.i18n.MAY_TAKE_A_MINUTE}<br><br>${window.i18n.BUILDING_FASTPITCH}...`)
-            loadingStage = 1
-        }
-    } else if (fs.existsSync(`${path}/WAVEGLOW_LOADING`)) {
-        if (loadingStage==1) {
-            activeModal.children[0].innerHTML = `${window.i18n.LOADING}...<br>${window.i18n.MAY_TAKE_A_MINUTE}<br><br>${window.i18n.LOADING_WAVEGLOW}...`
-            loadingStage = 2
-        }
-    } else if (fs.existsSync(`${path}/SERVER_STARTING`)) {
+    if (fs.existsSync(`${path}/SERVER_STARTING`)) {
         if (loadingStage==2) {
             activeModal.children[0].innerHTML = `${window.i18n.LOADING}...<br>${window.i18n.MAY_TAKE_A_MINUTE}<br><br>${window.i18n.STARTING_PYTHON}...`
             loadingStage = 3

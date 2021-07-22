@@ -301,11 +301,12 @@ class AttrDict(dict):
         self.__dict__ = self
 
 class HiFi_GAN(object):
-    def __init__(self, logger, PROD, device):
+    def __init__(self, logger, PROD, device, models_manager):
         super(HiFi_GAN, self).__init__()
 
         self.logger = logger
         self.PROD = PROD
+        self.models_manager = models_manager
         self.device = device
         self.ckpt_path = None
 

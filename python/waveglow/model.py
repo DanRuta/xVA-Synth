@@ -4,7 +4,7 @@ from python.waveglow import models
 from python.waveglow.denoiser import Denoiser
 
 class WaveGlow(object):
-    def __init__(self, logger, PROD, device):
+    def __init__(self, logger, PROD, device, models_manager):
         super(WaveGlow, self).__init__()
 
         import python.waveglow.waveglow as glow
@@ -12,6 +12,7 @@ class WaveGlow(object):
 
         self.logger = logger
         self.PROD = PROD
+        self.models_manager = models_manager
         self.device = device
         self.ckpt_path = None
 
