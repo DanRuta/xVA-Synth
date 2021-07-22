@@ -95,6 +95,9 @@ if (!Object.keys(window.userSettings).includes("batch_MPCount")) { // For backwa
 if (!Object.keys(window.userSettings).includes("batch_skipExisting")) { // For backwards compatibility
     window.userSettings.batch_skipExisting = true
 }
+if (!Object.keys(window.userSettings).includes("batch_delimiter")) { // For backwards compatibility
+    window.userSettings.batch_delimiter = ","
+}
 if (!Object.keys(window.userSettings).includes("defaultToHiFi")) { // For backwards compatibility
     window.userSettings.defaultToHiFi = true
 }
@@ -173,6 +176,7 @@ const updateUIWithSettings = () => {
     setting_batch_fastmode.checked = window.userSettings.batch_fastMode
     setting_batch_multip.checked = window.userSettings.batch_useMP
     setting_batch_multip_count.value = window.userSettings.batch_MPCount
+    setting_batch_delimiter.value = window.userSettings.batch_delimiter
 
     batch_batchSizeInput.value = parseInt(window.userSettings.batch_batchSize)
     batch_skipExisting.checked = window.userSettings.batch_skipExisting
@@ -347,6 +351,7 @@ initMenuSetting(setting_s2s_noiseRemStrength, "s2s_noiseRemStrength", "number", 
 initMenuSetting(batch_clearDirFirstCkbx, "batch_clearDirFirst", "checkbox")
 initMenuSetting(batch_skipExisting, "batch_skipExisting", "checkbox")
 initMenuSetting(batch_batchSizeInput, "batch_batchSize", "text", undefined, parseInt)
+initMenuSetting(setting_batch_delimiter, "batch_delimiter")
 
 initMenuSetting(setting_256waveglow_path, "waveglow_path", "text")
 initMenuSetting(setting_bigwaveglow_path, "bigwaveglow_path", "text")

@@ -167,11 +167,11 @@ const readFile = (file) => {
         reader.readAsText(file)
         reader.onloadend = () => {
             const lines = reader.result.replace(/\r\n/g, "\n").split("\n")
-            const header = lines.shift().split(",").map(head => head.replace(/\r/, ""))
+            const header = lines.shift().split(window.userSettings.batch_delimiter).map(head => head.replace(/\r/, ""))
             lines.forEach(line => {
                 const record = {}
                 if (line.trim().length) {
-                    const parts = CSVToArray(line)[0]
+                    const parts = CSVToArray(line, window.userSettings.batch_delimiter)[0]
                     parts.forEach((val, vi) => {
                         record[header[vi].replace(/^"/, "").replace(/"$/, "")] = val
                     })
