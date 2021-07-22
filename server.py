@@ -242,10 +242,21 @@ if __name__ == '__main__':
                     pitch_data = [pitch, duration]
                     old_sequence = post_data["old_sequence"] if "old_sequence" in post_data else None
 
-                    plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["pre"], event="pre synth-line", data=post_data)
-                    req_response = models_manager.models("fastpitch").infer(user_settings, text, out_path, vocoder=vocoder, \
-                        speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence)
-                    plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["post"], event="post synth-line", data=post_data)
+                    # Handle the case where the vocoder remains selected on app start-up, with auto-HiFi turned off, but no setVocoder call is made before synth
+                    continue_synth = True
+                    if "waveglow" in vocoder:
+                        waveglowPath = post_data["waveglowPath"]
+                        req_response = models_manager.load_model(vocoder, waveglowPath)
+                        if req_response=="ENOENT":
+                            continue_synth = False
+
+                    if continue_synth:
+                        plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["pre"], event="pre synth-line", data=post_data)
+                        req_response = models_manager.models("fastpitch").infer(user_settings, text, out_path, vocoder=vocoder, \
+                            speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence)
+                        plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["post"], event="post synth-line", data=post_data)
+
+
 
                 if self.path == "/synthesize_batch":
                     linesBatch = post_data["linesBatch"]

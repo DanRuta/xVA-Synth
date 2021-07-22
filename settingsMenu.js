@@ -134,6 +134,12 @@ if (!Object.keys(window.userSettings).includes("s2s_removeNoise")) { // For back
 if (!Object.keys(window.userSettings).includes("s2s_noiseRemStrength")) { // For backwards compatibility
     window.userSettings.s2s_noiseRemStrength = 0.25
 }
+if (!Object.keys(window.userSettings).includes("waveglow_path")) { // For backwards compatibility
+    window.userSettings.waveglow_path = `${__dirname.replace(/\\/g,"/")}/models/waveglow_256channels_universal_v4.pt`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
+}
+if (!Object.keys(window.userSettings).includes("bigwaveglow_path")) { // For backwards compatibility
+    window.userSettings.bigwaveglow_path = `${__dirname.replace(/\\/g,"/")}/models/nvidia_waveglowpyt_fp32_20190427.pt`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
+}
 
 const updateUIWithSettings = () => {
     useGPUCbx.checked = window.userSettings.useGPU
@@ -171,6 +177,9 @@ const updateUIWithSettings = () => {
     batch_batchSizeInput.value = parseInt(window.userSettings.batch_batchSize)
     batch_skipExisting.checked = window.userSettings.batch_skipExisting
     batch_clearDirFirstCkbx.checked = window.userSettings.batch_clearDirFirst
+
+    setting_256waveglow_path.value = window.userSettings.waveglow_path
+    setting_bigwaveglow_path.value = window.userSettings.bigwaveglow_path
 
     const [height, width] = window.userSettings.customWindowSize.split(",").map(v => parseInt(v))
     ipcRenderer.send("resize", {height, width})
@@ -338,6 +347,10 @@ initMenuSetting(setting_s2s_noiseRemStrength, "s2s_noiseRemStrength", "number", 
 initMenuSetting(batch_clearDirFirstCkbx, "batch_clearDirFirst", "checkbox")
 initMenuSetting(batch_skipExisting, "batch_skipExisting", "checkbox")
 initMenuSetting(batch_batchSizeInput, "batch_batchSize", "text", undefined, parseInt)
+
+initMenuSetting(setting_256waveglow_path, "waveglow_path", "text")
+initMenuSetting(setting_bigwaveglow_path, "bigwaveglow_path", "text")
+
 
 setPromptTheme()
 setPromptFontSize()

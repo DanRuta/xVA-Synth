@@ -668,9 +668,17 @@ generateVoiceButton.addEventListener("click", () => {
                 sequence, pitch, duration, speaker_i, pace,
                 old_sequence, // For partial re-generation
                 outfile: tempFileLocation,
-                vocoder: window.userSettings.vocoder
+                vocoder: window.userSettings.vocoder,
+                waveglowPath: vocoder_select.value=="256_waveglow" ? window.userSettings.waveglow_path : window.userSettings.bigwaveglow_path
             })
         }).then(r=>r.text()).then(res => {
+
+            if (res=="ENOENT") {
+                window.errorModal(`Model not found.${vocoder_select.value.includes("waveglow")?" Download WaveGlow files separately if you haven't, or check the path in the settings.":""}`)
+                toggleSpinnerButtons()
+                return
+            }
+
             isGenerating = false
             res = res.split("\n")
             let pitchData = res[0]
