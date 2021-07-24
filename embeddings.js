@@ -18,7 +18,10 @@ window.embeddingsState = {
     gendersOn: false,
     voiceCheckboxes: [],
     isReady: false,
-    sceneData: {}
+    isOpen: false,
+    sceneData: {},
+    mouseIsDown: false,
+    mousePos: {x: 0, y: 0}
 }
 
 
@@ -182,19 +185,39 @@ window.initDataMappings = () => {
 }
 
 
+
+
 window.initEmbeddingsScene = () => {
     window.initDataMappings()
     window.populateGamesList()
     window.populateVoicesList()
 
+    embeddingsSceneContainer.addEventListener("mousedown", (event) => {
+        window.embeddingsState.mousePos.x = parseInt(event.layerX)
+        window.embeddingsState.mousePos.y = parseInt(event.layerY)
+    })
+    embeddingsSceneContainer.addEventListener("mouseup", (event) => {
+        const mouseX = parseInt(event.layerX)
+        const mouseY = parseInt(event.layerY)
+
+        if (event.button==0) {
+            if (Math.abs(mouseX-window.embeddingsState.mousePos.x)<10 && Math.abs(mouseY-window.embeddingsState.mousePos.y)<10) {
+                window.embeddingsState.mouseIsDown = true
+                setTimeout(() => {window.embeddingsState.mouseIsDown = false}, 100)
+            }
+        }
+    })
+    window.embeddingsState.isReady = false
+    embeddingsSceneContainer.innerHTML = ""
+
     const SPHERE_RADIUS = 3
     const SPHERE_V_COUNT = 50
 
     // Renderer
-    const renderer = new THREE.WebGLRenderer({alpha: true, antialias: true})
-    renderer.setPixelRatio( window.devicePixelRatio )
-    renderer.setSize(embeddingsSceneContainer.offsetWidth, embeddingsSceneContainer.offsetHeight)
-    embeddingsSceneContainer.appendChild(renderer.domElement)
+    window.embeddingsState.renderer = new THREE.WebGLRenderer({alpha: true, antialias: true})
+    window.embeddingsState.renderer.setPixelRatio( window.devicePixelRatio )
+    window.embeddingsState.renderer.setSize(embeddingsSceneContainer.offsetWidth, embeddingsSceneContainer.offsetHeight)
+    embeddingsSceneContainer.appendChild(window.embeddingsState.renderer.domElement)
 
     // Scene and camera
     const scene = new THREE.Scene()
@@ -202,8 +225,8 @@ window.initEmbeddingsScene = () => {
     window.embeddingsState.sceneData.camera.position.set( -100, 0, 0 )
 
     // Controls
-    window.embeddingsState.sceneData.controls = new THREE.OrbitControls(window.embeddingsState.sceneData.camera, renderer.domElement)
-    window.embeddingsState.sceneData.controls2 = new THREE.TrackballControls(window.embeddingsState.sceneData.camera, renderer.domElement)
+    window.embeddingsState.sceneData.controls = new THREE.OrbitControls(window.embeddingsState.sceneData.camera, window.embeddingsState.renderer.domElement)
+    window.embeddingsState.sceneData.controls2 = new THREE.TrackballControls(window.embeddingsState.sceneData.camera, window.embeddingsState.renderer.domElement)
     window.embeddingsState.sceneData.controls.target.set(window.embeddingsState.sceneData.camera.position.x+0.15, window.embeddingsState.sceneData.camera.position.y, window.embeddingsState.sceneData.camera.position.z)
 
 
@@ -231,7 +254,7 @@ window.initEmbeddingsScene = () => {
     // Mouse event ray caster
     const raycaster = new THREE.Raycaster()
     const mouse = new THREE.Vector2()
-    renderer.domElement.addEventListener("mousemove", event => {
+    window.embeddingsState.renderer.domElement.addEventListener("mousemove", event => {
         const sizeY = event.target.height
         const sizeX = event.target.width
         mouse.x = event.offsetX / sizeX * 2 - 1
@@ -386,27 +409,11 @@ window.initEmbeddingsScene = () => {
     let hoveredObject = undefined
     let clickedObject = undefined
 
-
-
-    let mouseIsDown = false
-    let mousePos = {x:0, y:0}
-    embeddingsSceneContainer.addEventListener("mousedown", (event) => {
-        mousePos.x = parseInt(event.layerX)
-        mousePos.y = parseInt(event.layerY)
-    })
-    embeddingsSceneContainer.addEventListener("mouseup", (event) => {
-        const mouseX = parseInt(event.layerX)
-        const mouseY = parseInt(event.layerY)
-
-        if (event.button==0) {
-            if (Math.abs(mouseX-mousePos.x)<10 && Math.abs(mouseY-mousePos.y)<10) {
-                mouseIsDown = true
-                setTimeout(() => {mouseIsDown = false}, 100)
-            }
-        }
-    })
-
     const render = () => {
+        if (!window.embeddingsState.isReady) {
+            console.log("stopping rendering")
+            return
+        }
         requestAnimationFrame(render)
 
         const target = window.embeddingsState.sceneData.controls.target
@@ -444,11 +451,11 @@ window.initEmbeddingsScene = () => {
                 intersects = [intersects.find(it => it.object.data.type=="point")]
             }
             if (intersects.length==0 || intersects[0]==undefined || intersects[0].object==undefined || intersects[0].object.data.type=="text") {
-                renderer.render(scene, window.embeddingsState.sceneData.camera)
+                window.embeddingsState.renderer.render(scene, window.embeddingsState.sceneData.camera)
                 return
             }
 
-            renderer.domElement.style.cursor = "pointer"
+            window.embeddingsState.renderer.domElement.style.cursor = "pointer"
 
             if (hoveredObject != undefined && hoveredObject.object.data.voiceId!=intersects[0].object.data.voiceId) {
                 const colour = window.embeddingsState.gendersOn ? hoveredObject.object.data.genderColour : hoveredObject.object.data.gameColour
@@ -463,7 +470,7 @@ window.initEmbeddingsScene = () => {
             hoveredObject.object.material.color.g = Math.min(1, colour.g/255*1.5)
             hoveredObject.object.material.color.b = Math.min(1, colour.b/255*1.5)
 
-            if (mouseIsDown) {
+            if (window.embeddingsState.mouseIsDown) {
                 if (window.embeddingsState.clickedObject==undefined || window.embeddingsState.clickedObject.voiceId!=hoveredObject.object.data.voiceId) {
                     if (window.embeddingsState.clickedObject!=undefined) {
                         window.embeddingsState.clickedObject.object.material.emissive.setRGB(0,0,0)
@@ -490,14 +497,14 @@ window.initEmbeddingsScene = () => {
 
 
         } else {
-            renderer.domElement.style.cursor = "default"
+            window.embeddingsState.renderer.domElement.style.cursor = "default"
             if (hoveredObject != undefined) {
                 const colour = window.embeddingsState.gendersOn ? hoveredObject.object.data.genderColour : hoveredObject.object.data.gameColour
                 hoveredObject.object.material.color.r = Math.min(1, colour.r/255)
                 hoveredObject.object.material.color.g = Math.min(1, colour.g/255)
                 hoveredObject.object.material.color.b = Math.min(1, colour.b/255)
             }
-            if (mouseIsDown && window.embeddingsState.clickedObject!=undefined) {
+            if (window.embeddingsState.mouseIsDown && window.embeddingsState.clickedObject!=undefined) {
                 window.embeddingsState.clickedObject.object.material.emissive.setRGB(0,0,0)
                 window.embeddingsState.clickedObject = undefined
 
@@ -507,8 +514,9 @@ window.initEmbeddingsScene = () => {
             }
         }
 
-        renderer.render(scene, window.embeddingsState.sceneData.camera)
+        window.embeddingsState.renderer.render(scene, window.embeddingsState.sceneData.camera)
     }
+    window.embeddingsState.isReady = true
     render()
 
 
@@ -528,6 +536,16 @@ window.initEmbeddingsScene = () => {
             point.material.color.b = Math.min(1, colour.b/255)
         })
     }
+    window.addEventListener("resize", () => {
+        if (window.embeddingsState.isOpen) {
+            window.embeddings_updateSize()
+        }
+    })
+}
+window.embeddings_updateSize = () => {
+    window.embeddingsState.sceneData.camera.aspect = embeddingsSceneContainer.offsetWidth/embeddingsSceneContainer.offsetHeight
+    window.embeddingsState.sceneData.camera.updateProjectionMatrix()
+    window.embeddingsState.renderer.setSize(embeddingsSceneContainer.offsetWidth, embeddingsSceneContainer.offsetHeight)
 }
 
 

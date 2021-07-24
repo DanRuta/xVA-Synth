@@ -352,7 +352,7 @@ window.addEventListener("keydown", event => {
 
 
 
-window.setupModal = (openingButton, modalContainerElem, callback) => {
+window.setupModal = (openingButton, modalContainerElem, callback, exitCallback) => {
     openingButton.addEventListener("click", () => {
         if (callback) {
             callback()
@@ -366,6 +366,9 @@ window.setupModal = (openingButton, modalContainerElem, callback) => {
     })
     modalContainerElem.addEventListener("click", event => {
         if (event.target==modalContainerElem) {
+            if (exitCallback) {
+                exitCallback()
+            }
             window.closeModal(modalContainerElem)
         }
     })

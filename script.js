@@ -1491,6 +1491,13 @@ window.updateGameList()
 // Embeddings
 // ==========
 window.setupModal(embeddingsIcon, embeddingsContainer, () => {
+    setTimeout(() => {
+        if (window.embeddingsState.isReady) {
+            window.embeddings_updateSize()
+        }
+    }, 100)
+    window.embeddings_updateSize
+    window.embeddingsState.isOpen = true
     if (!window.embeddingsState.ready) {
         setTimeout(() => {
             window.embeddingsState.ready = true
@@ -1500,6 +1507,8 @@ window.setupModal(embeddingsIcon, embeddingsContainer, () => {
             }, 300)
         }, 100)
     }
+}, () => {
+    window.embeddingsState.isOpen = false
 })
 
 // Plugins

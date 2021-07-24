@@ -274,7 +274,7 @@ nexusSearchBar.addEventListener("keyup", () => {
 
 window.getLatestModelsList = async () => {
     try {
-        window.spinnerModal("Checking Nexus.com...")
+        window.spinnerModal("Checking nexusmods.com...")
         window.nexusModelsList = []
 
         const idToGame = {}
@@ -553,7 +553,7 @@ if (fs.existsSync(`${window.path}/repositories.txt`)) {
     })
 }
 nexusReposAddButton.addEventListener("click", () => {
-    window.createModal("prompt", {prompt: "Enter the Nexus.com link to use as a repository", value: ""}).then(link => {
+    window.createModal("prompt", {prompt: "Enter the nexusmods.com link to use as a repository", value: ""}).then(link => {
 
         let alreadyExists = false
         window.nexusState.repoLinks.forEach(linkAndEnabled => {

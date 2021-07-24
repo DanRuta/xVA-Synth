@@ -76,11 +76,12 @@ def processingTask(data):
 
 
 class xVARep(object):
-    def __init__(self, logger, PROD, device):
+    def __init__(self, logger, PROD, device, models_manager):
         super(xVARep, self).__init__()
 
         self.logger = logger
         self.PROD = PROD
+        self.models_manager = models_manager
         self.device = device
         self.path = "./resources/app" if PROD else "."
         self.ckpt_path = None
@@ -180,14 +181,14 @@ class xVARep(object):
             paths_to_extract = [files_to_extract[voiceIds] for voiceIds in voiceIds_to_extract]
 
 
+            if len(paths_to_extract):
+                extracted_feats = mp_preprocess_extract_features(self.logger, self.norm_stats, paths_to_extract)
 
-            extracted_feats = mp_preprocess_extract_features(self.logger, self.norm_stats, paths_to_extract)
-
-            for fi, audio_feats in enumerate(extracted_feats):
-                voiceId = voiceIds_to_extract[fi]
-                if voiceId not in self.cached_audio_feats.keys():
-                    self.cached_audio_feats[voiceId] = audio_feats
-                audio_feats_batch[voiceId] = audio_feats
+                for fi, audio_feats in enumerate(extracted_feats):
+                    voiceId = voiceIds_to_extract[fi]
+                    if voiceId not in self.cached_audio_feats.keys():
+                        self.cached_audio_feats[voiceId] = audio_feats
+                    audio_feats_batch[voiceId] = audio_feats
 
         else:
             for api, audio_path in enumerate(sampleWAVs):

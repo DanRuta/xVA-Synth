@@ -1178,7 +1178,7 @@ a {
     justify-content: space-between;
     height: 50px;
 }
-#embeddingsTopRightBar > div:nth-child(1) {
+#embeddingsTopRightBar > div:nth-child(1), #embeddingsTopRightBar > div:nth-child(1) > div {
     display: flex;
     align-items: center;
 }
