@@ -617,11 +617,11 @@ generateVoiceButton.addEventListener("click", () => {
 
             if (window.userSettings.defaultToHiFi && window.currentModel.hifi) {
                 vocoder_select.value = Array.from(vocoder_select.children).find(opt => opt.innerHTML=="Bespoke HiFi GAN").value
-                changeVocoder(vocoder_select.value)
+                changeVocoder(vocoder_select.value).then(() => dialogueInput.focus())
             } else if (window.userSettings.vocoder.includes(".hg.pt")) {
-                changeVocoder("qnd")
+                changeVocoder("qnd").then(() => dialogueInput.focus())
             } else {
-                closeModal()
+                closeModal().then(() => dialogueInput.focus())
             }
         }).catch(e => {
             console.log(e)
@@ -701,6 +701,7 @@ generateVoiceButton.addEventListener("click", () => {
                 toggleSpinnerButtons()
                 return
             }
+            dialogueInput.focus()
 
 
 
@@ -1057,25 +1058,29 @@ if (dialogueInputCache) {
 
 vocoder_select.value = window.userSettings.vocoder.includes(".hg.") ? "qnd" : window.userSettings.vocoder
 const changeVocoder = vocoder => {
-    spinnerModal(window.i18n.CHANGING_MODELS)
-    fetch(`http://localhost:8008/setVocoder`, {
-        method: "Post",
-        body: JSON.stringify({
-            vocoder,
-            modelPath: vocoder=="256_waveglow" ? window.userSettings.waveglow_path : window.userSettings.bigwaveglow_path
-        })
-    }).then(r=>r.text()).then((res) => {
-        closeModal().then(() => {
-            setTimeout(() => {
-                if (res=="ENOENT") {
-                    vocoder_select.value = window.userSettings.vocoder
-                    window.errorModal(`Model not found.${vocoder.includes("waveglow")?" Download WaveGlow files separately if you haven't, or check the path in the settings.":""}`)
-                } else {
-                    window.batch_state.lastVocoder = vocoder
-                    window.userSettings.vocoder = vocoder
-                    saveUserSettings()
-                }
-            }, 300)
+    return new Promise(resolve => {
+        spinnerModal(window.i18n.CHANGING_MODELS)
+        fetch(`http://localhost:8008/setVocoder`, {
+            method: "Post",
+            body: JSON.stringify({
+                vocoder,
+                modelPath: vocoder=="256_waveglow" ? window.userSettings.waveglow_path : window.userSettings.bigwaveglow_path
+            })
+        }).then(r=>r.text()).then((res) => {
+            closeModal().then(() => {
+                setTimeout(() => {
+                    if (res=="ENOENT") {
+                        vocoder_select.value = window.userSettings.vocoder
+                        window.errorModal(`Model not found.${vocoder.includes("waveglow")?" Download WaveGlow files separately if you haven't, or check the path in the settings.":""}`)
+                        resolve()
+                    } else {
+                        window.batch_state.lastVocoder = vocoder
+                        window.userSettings.vocoder = vocoder
+                        saveUserSettings()
+                        resolve()
+                    }
+                }, 300)
+            })
         })
     })
 }

@@ -10,6 +10,7 @@ window.confirmModal = message => new Promise(resolve => resolve(createModal("con
 window.spinnerModal = message => new Promise(resolve => resolve(createModal("spinner", message)))
 window.errorModal = message => new Promise(resolve => resolve(createModal("error", message)))
 window.createModal = (type, message) => {
+    dialogueInput.blur()
     return new Promise(resolve => {
         modalContainer.innerHTML = ""
         const displayMessage = message.prompt ? message.prompt : message
@@ -209,6 +210,17 @@ window.addEventListener("keydown", event => {
     if (event.key=="Enter" && modalContainer.style.display!="none" && event.target.tagName=="INPUT") {
         activeModal.querySelector("button").click()
     }
+    const key = event.key.toLowerCase()
+
+    // CTRL-S: Keep sample
+    if (key=="s" && event.ctrlKey && !event.shiftKey) {
+        console.log("here")
+        keepSampleFunction(false)
+    }
+    // CTRL-SHIFT-S: Keep sample (but with rename prompt)
+    if (key=="s" && event.ctrlKey && event.shiftKey) {
+        keepSampleFunction(true)
+    }
 
     // Disable keyboard controls while in a text input
     if (event.target.tagName=="INPUT" && event.target.tagName!=dialogueInput) {
@@ -224,8 +236,6 @@ window.addEventListener("keydown", event => {
         return
     }
 
-    const key = event.key.toLowerCase()
-
     // Escape: close modals
     if (key=="escape") {
         closeModal()
@@ -233,14 +243,6 @@ window.addEventListener("keydown", event => {
     // Space: bring focus to the input textarea
     if (key==" ") {
         setTimeout(() => dialogueInput.focus(), 0)
-    }
-    // CTRL-S: Keep sample
-    if (key=="s" && event.ctrlKey && !event.shiftKey) {
-        keepSampleFunction(false)
-    }
-    // CTRL-SHIFT-S: Keep sample (but with rename prompt)
-    if (key=="s" && event.ctrlKey && event.shiftKey) {
-        keepSampleFunction(true)
     }
     // Create selection for all of the editor letters
     if (key=="a" && event.ctrlKey && !event.shiftKey) {
