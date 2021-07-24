@@ -185,8 +185,6 @@ if __name__ == '__main__':
         def do_POST(self):
             post_data = ""
             try:
-                logger.info("POST {}".format(self.path))
-
                 content_length = int(self.headers['Content-Length'])
                 post_data = json.loads(self.rfile.read(content_length).decode('utf-8'))
                 req_response = "POST request for {}".format(self.path)
@@ -196,6 +194,7 @@ if __name__ == '__main__':
 
 
                 if self.path == "/setVocoder":
+                    logger.info("POST {}".format(self.path))
                     logger.info(post_data)
                     vocoder = post_data["vocoder"]
                     modelPath = post_data["modelPath"]
@@ -212,9 +211,11 @@ if __name__ == '__main__':
 
 
                 if self.path == "/customEvent":
+                    logger.info("POST {}".format(self.path))
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["custom-event"], event="custom-event", data=post_data)
 
                 if self.path == "/setDevice":
+                    logger.info("POST {}".format(self.path))
                     logger.info(post_data)
                     use_gpu = post_data["device"]=="gpu"
                     setDevice(use_gpu)
@@ -223,6 +224,7 @@ if __name__ == '__main__':
                     write_settings()
 
                 if self.path == "/loadModel":
+                    logger.info("POST {}".format(self.path))
                     logger.info(post_data)
                     ckpt = post_data["model"]
                     n_speakers = post_data["model_speakers"] if "model_speakers" in post_data else None
@@ -232,6 +234,7 @@ if __name__ == '__main__':
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["post"], event="post load-model", data=ckpt)
 
                 if self.path == "/synthesize":
+                    logger.info("POST {}".format(self.path))
                     text = post_data["sequence"]
                     pace = float(post_data["pace"])
                     out_path = post_data["outfile"]
@@ -275,6 +278,7 @@ if __name__ == '__main__':
 
 
                 if self.path == "/runSpeechToSpeech":
+                    logger.info("POST {}".format(self.path))
                     logger.info("post_data")
                     logger.info(post_data)
                     input_path = post_data["input_path"]
@@ -309,6 +313,7 @@ if __name__ == '__main__':
 
 
                 if self.path == "/batchOutputAudio":
+                    logger.info("POST {}".format(self.path))
                     input_paths = post_data["input_paths"]
                     output_paths = post_data["output_paths"]
                     processes = post_data["processes"]
@@ -318,6 +323,10 @@ if __name__ == '__main__':
 
 
                 if self.path == "/outputAudio":
+                    isBatchMode = post_data["isBatchMode"]
+                    if not isBatchMode:
+                        logger.info("POST {}".format(self.path))
+
                     input_path = post_data["input_path"]
                     output_path = post_data["output_path"]
                     options = json.loads(post_data["options"])
@@ -331,10 +340,11 @@ if __name__ == '__main__':
                         extraInfo["ffmpeg"] = ffmpeg
 
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["output-audio"]["pre"], event="pre output-audio", data=extraInfo)
-                    req_response = run_audio_post(logger, input_path, output_path, options)
+                    req_response = run_audio_post(None if isBatchMode else logger, input_path, output_path, options)
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["output-audio"]["post"], event="post output-audio", data=extraInfo)
 
                 if self.path == "/refreshPlugins":
+                    logger.info("POST {}".format(self.path))
                     status = plugin_manager.refresh_active_plugins()
                     logger.info("status")
                     logger.info(status)
@@ -342,6 +352,7 @@ if __name__ == '__main__':
 
 
                 if self.path == "/computeEmbsAndDimReduction":
+                    logger.info("POST {}".format(self.path))
                     models_manager.init_model("xvarep")
                     embs = models_manager.models("xvarep").reduce_data_dimension(post_data["mappings"], post_data["includeAllVoices"], post_data["onlyInstalled"], post_data["algorithm"])
                     req_response = embs

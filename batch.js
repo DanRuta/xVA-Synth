@@ -734,6 +734,7 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
             body: JSON.stringify({
                 input_paths: tempPaths,
                 output_paths: outPaths,
+                isBatchMode: true,
                 processes: window.userSettings.batch_MPCount,
                 options: JSON.stringify(options)
             })
@@ -811,11 +812,11 @@ const batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, bod
                 resolve()
             }
         }).catch(async e => {
-            console.log(e)
             if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
                 await batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, body)
                 resolve()
             } else {
+                console.log(e)
                 window.appLogger.log(e)
                 batch_pauseBtn.click()
                 if (document.getElementById("activeModal")) {
@@ -919,12 +920,14 @@ const batchKickOffGeneration = () => {
                                     batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
                                         input_path: tempFileLocation,
                                         output_path: outPath,
+                                        isBatchMode: true,
                                         options: JSON.stringify(options)
                                     }))
                                 } else {
                                     await batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
                                         input_path: tempFileLocation,
                                         output_path: outPath,
+                                        isBatchMode: true,
                                         options: JSON.stringify(options)
                                     }))
                                 }

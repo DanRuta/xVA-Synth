@@ -280,6 +280,7 @@ window.changeGame = (meta) => {
                             method: "Post",
                             body: JSON.stringify({
                                 input_path: `./output/${files[0]}`,
+                                isBatchMode: false,
                                 output_path: `${modelsPath}/${voiceId}.wav`,
                                 options: JSON.stringify(options)
                             })
@@ -829,6 +830,7 @@ const saveFile = (from, to, skipUIRecord=false) => {
             body: JSON.stringify({
                 input_path: from,
                 output_path: to,
+                isBatchMode: false,
                 extraInfo: JSON.stringify(pluginData),
                 options: JSON.stringify(options)
             })
