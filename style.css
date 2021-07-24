@@ -124,7 +124,7 @@ a {
     justify-content: center;
     height: 20px;
 }
- #voiceSearchInput, #searchGameInput, #nexusSearchBar, #embeddingsSearchBar {
+ #voiceSearchInput, #searchGameInput, #nexusSearchBar, #embeddingsSearchBar, #voiceSamplesSearch {
     width: calc(100% - 25px);
     text-align: center;
     background: none;
@@ -136,7 +136,10 @@ a {
     width: 50vw;
     font-size: 16pt;
  }
- #voiceSearchInput:focus, #voiceSearchInput:active, #searchGameInput:focus, #searchGameInput:active, #nexusSearchBar:focus, #nexusSearchBar:active, #embeddingsSearchBar:focus, #embeddingsSearchBar:active {
+ #voiceSamplesSearch::placeholder {
+    color: rgba(200,200,200,0.7);
+ }
+ #voiceSearchInput:focus, #voiceSearchInput:active, #searchGameInput:focus, #searchGameInput:active, #nexusSearchBar:focus, #nexusSearchBar:active, #embeddingsSearchBar:focus, #embeddingsSearchBar:active, #voiceSamplesSearch:focus, #voiceSamplesSearch:active {
     outline: none;
  }
  .content {
@@ -222,23 +225,24 @@ a {
  }
  #voiceSamples {
      width: calc(95vw - 300px);
-     height: calc(91vh - 185px - 290px);
+     height: calc(91vh - 185px - 290px - 45px);
      background: rgba(255,255,255,0.1);
      margin-left: 2.5vw;
      margin-right: 2.5vw;
      margin-top: 70px;
      overflow-y: auto;
  }
- .sample {
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
-     margin: 5px;
-     background: white;
-     padding: 2px;
-     padding-left: 15px;
-     border-radius: 3px;
- }
+.sample {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px;
+    background: white;
+    padding: 2px;
+    padding-left: 15px;
+    border-radius: 3px;
+    height: 30px;
+}
  .sample > div:first-child {
      display: -webkit-box;
      -webkit-box-orient: vertical;

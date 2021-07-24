@@ -398,17 +398,7 @@ window.changeGame = (meta) => {
 
             // Voice samples
             voiceSamples.innerHTML = ""
-            fs.readdir(`${window.userSettings[`outpath_${meta[0]}`]}/${button.dataset.modelId}`, (err, files) => {
-
-                if (err) return
-
-                files.forEach(file => {
-                    if (file.endsWith(".json")) {
-                        return
-                    }
-                    voiceSamples.appendChild(makeSample(`${window.userSettings[`outpath_${meta[0]}`]}/${button.dataset.modelId}/${file}`))
-                })
-            })
+            refreshRecordsList(`${window.userSettings[`outpath_${meta[0]}`]}/${button.dataset.modelId}`)
         })
         buttons.push(button)
     })
@@ -417,6 +407,7 @@ window.changeGame = (meta) => {
         .forEach(button => voiceTypeContainer.appendChild(button))
 
 }
+
 
 const makeSample = (src, newSample) => {
     const fileName = src.split("/").reverse()[0].split("%20").join(" ")
@@ -514,22 +505,9 @@ const makeSample = (src, newSample) => {
                     fs.renameSync(oldPathComposed+".json", newPathComposed+".json")
                 }
 
-                sample.querySelector("div").innerHTML = newFileName
-                if (samplePlay.style.display!="none") {
-                    samplePlay.removeChild(samplePlay.children[0])
-                    samplePlay.appendChild(createElem("audio", {controls: true}, createElem("source", {
-                        src: newPathComposed,
-                        type: `audio/${fileFormat}`
-                    })))
-                    samplePlay.addEventListener("play", () => {
-                        if (window.ctrlKeyIsPressed) {
-                            samplePlay.setSinkId(window.userSettings.alt_speaker)
-                        } else {
-                            samplePlay.setSinkId(window.userSettings.base_speaker)
-                        }
-                    })
-                    samplePlay.setSinkId(window.userSettings.base_speaker)
-                }
+                oldPath.reverse()
+                oldPath.splice(0,1)
+                refreshRecordsList(oldPath.reverse().join("/"))
             }
         })
     })
@@ -769,6 +747,48 @@ generateVoiceButton.addEventListener("click", () => {
     }
 })
 
+
+const refreshRecordsList = (directory) => {
+
+    if (!fs.existsSync(directory)) {
+        return
+    }
+
+    const records = []
+    const reverse = window.userSettings.voiceRecordsOrderByOrder=="ascending"
+    const sortBy = window.userSettings.voiceRecordsOrderBy//"name"
+
+    const files = fs.readdirSync(directory)
+    files.forEach(file => {
+        if (file.endsWith(".json")) {
+            return
+        }
+        const record = {}
+
+        if (!file.toLowerCase().includes(voiceSamplesSearch.value.toLowerCase().trim())) {
+            return
+        }
+
+        record.fileName = file
+        record.lastChanged = fs.statSync(`${directory}/${file}`).mtime
+        record.jsonPath = `${directory}/${file}`
+        records.push(record)
+    })
+
+    voiceSamples.innerHTML = ""
+    records.sort((a,b) => {
+        if (sortBy=="name") {
+            return a.fileName.toLowerCase()<b.fileName.toLowerCase() ? (reverse?-1:1) : (reverse?1:-1)
+        } else if (sortBy=="time") {
+            return a.lastChanged<b.lastChanged ? (reverse?-1:1) : (reverse?1:-1)
+        } else {
+            console.warn("sort by type not recognised", sortBy)
+        }
+    }).forEach(record => {
+        voiceSamples.appendChild(makeSample(record.jsonPath))
+    })
+}
+
 const saveFile = (from, to, skipUIRecord=false) => {
     to = to.split("%20").join(" ")
     to = to.replace(".wav", `.${window.userSettings.audio.format}`)
@@ -845,8 +865,9 @@ const saveFile = (from, to, skipUIRecord=false) => {
                         fs.writeFileSync(`${to}.json`, JSON.stringify(jsonDataOut, null, 4))
                     }
                     if (!skipUIRecord) {
-                        voiceSamples.appendChild(makeSample(to, true))
+                        refreshRecordsList(containerFolderPath)
                     }
+                    dialogueInput.focus()
                     window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["post"], event="post keep-sample", pluginData)
                 }
             })
@@ -876,7 +897,7 @@ const saveFile = (from, to, skipUIRecord=false) => {
                     fs.writeFileSync(`${to}.json`, JSON.stringify(jsonDataOut, null, 4))
                 }
                 if (!skipUIRecord) {
-                    voiceSamples.appendChild(makeSample(to, true))
+                    refreshRecordsList(containerFolderPath)
                 }
                 window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["post"], event="post keep-sample", pluginData)
             }
@@ -1038,6 +1059,9 @@ modalContainer.addEventListener("click", event => {
     } catch (e) {}
 })
 
+
+// Cached UI stuff
+// =========
 dialogueInput.addEventListener("keyup", () => {
     localStorage.setItem("dialogueInput", dialogueInput.value)
     window.sequenceEditor.hasChanged = true
@@ -1048,6 +1072,62 @@ const dialogueInputCache = localStorage.getItem("dialogueInput")
 if (dialogueInputCache) {
     dialogueInput.value = dialogueInputCache
 }
+
+if (Object.keys(window.userSettings).includes("voiceRecordsOrderBy")) {
+    const labels = {
+        "name": "Name",
+        "time": "Time"
+    }
+    voiceRecordsOrderByButton.innerHTML = labels[window.userSettings.voiceRecordsOrderBy]
+} else {
+    window.userSettings.voiceRecordsOrderBy = "name"
+    saveUserSettings()
+}
+if (Object.keys(window.userSettings).includes("voiceRecordsOrderByOrder")) {
+    const labels = {
+        "ascending": "Ascending",
+        "descending": "Descending"
+    }
+    voiceRecordsOrderByOrderButton.innerHTML = labels[window.userSettings.voiceRecordsOrderByOrder]
+} else {
+    window.userSettings.voiceRecordsOrderByOrder = "ascending"
+    saveUserSettings()
+}
+// =========
+
+
+voiceRecordsOrderByButton.addEventListener("click", () => {
+    window.userSettings.voiceRecordsOrderBy = window.userSettings.voiceRecordsOrderBy=="name" ? "time" : "name"
+    saveUserSettings()
+    const labels = {
+        "name": "Name",
+        "time": "Time"
+    }
+    voiceRecordsOrderByButton.innerHTML = labels[window.userSettings.voiceRecordsOrderBy]
+    if (window.currentModel) {
+        const voiceRecordsList = window.userSettings[`outpath_${window.currentGame[0]}`]+`/${window.currentModel.voiceId}`
+        refreshRecordsList(voiceRecordsList)
+    }
+})
+voiceRecordsOrderByOrderButton.addEventListener("click", () => {
+    window.userSettings.voiceRecordsOrderByOrder = window.userSettings.voiceRecordsOrderByOrder=="ascending" ? "descending" : "ascending"
+    saveUserSettings()
+    const labels = {
+        "ascending": "Ascending",
+        "descending": "Descending"
+    }
+    voiceRecordsOrderByOrderButton.innerHTML = labels[window.userSettings.voiceRecordsOrderByOrder]
+    if (window.currentModel) {
+        const voiceRecordsList = window.userSettings[`outpath_${window.currentGame[0]}`]+`/${window.currentModel.voiceId}`
+        refreshRecordsList(voiceRecordsList)
+    }
+})
+voiceSamplesSearch.addEventListener("keyup", () => {
+    if (window.currentModel) {
+        const voiceRecordsList = window.userSettings[`outpath_${window.currentGame[0]}`]+`/${window.currentModel.voiceId}`
+        refreshRecordsList(voiceRecordsList)
+    }
+})
 
 
 
