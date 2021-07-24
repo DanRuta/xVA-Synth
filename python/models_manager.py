@@ -61,8 +61,7 @@ class ModelsManager(object):
     def set_device (self, device):
         self.logger.info(f'ModelsManager: Changing device to: {device}')
         for model_key in list(self.models_bank.keys()):
-            self.models_bank[model_key].model = self.models_bank[model_key].model.to(device)
-            self.models_bank[model_key].model.device = device
+            self.models_bank[model_key].set_device(device)
 
     def models (self, key):
         return self.models_bank[key.lower()]

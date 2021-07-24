@@ -53,3 +53,10 @@ class WaveGlow(object):
         self.model.device = self.device
         self.model.eval()
         self.denoiser = Denoiser(self.model, self.device).to(self.device)
+
+    def set_device (self, device):
+        self.device = device
+        self.model = self.model.to(device)
+        self.model.device = device
+        self.model.set_device(device)
+        self.denoiser.set_device(device)

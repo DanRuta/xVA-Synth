@@ -323,3 +323,8 @@ class HiFi_GAN(object):
     def load_state_dict (self, ckpt_path, sd):
         self.ckpt_path = ckpt_path
         self.model.load_state_dict(sd["generator"])
+
+    def set_device (self, device):
+        self.device = device
+        self.model = self.model.to(device)
+        self.model.device = device

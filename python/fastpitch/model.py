@@ -152,4 +152,9 @@ class FastPitch(object):
         del pitch_pred, dur_pred, text, sequence
         return pitch_durations_text +"\n"+cleaned_text
 
+    def set_device (self, device):
+        self.device = device
+        self.model = self.model.to(device)
+        self.model.device = device
+
 

@@ -267,3 +267,8 @@ class xVARep(object):
 
         return "\n".join(string_formatted_dict)
 
+    def set_device (self, device):
+        self.device = device
+        self.model = self.model.to(device)
+        self.model.device = device
+
