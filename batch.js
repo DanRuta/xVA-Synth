@@ -7,7 +7,7 @@ window.batch_state = {
     lastModel: undefined,
     lastVocoder: undefined,
     lineIndex: 0,
-    status: false,
+    state: false,
     outPathsChecked: [],
     skippedExisting: 0
 }
@@ -502,7 +502,9 @@ const startBatch = () => {
 
 const batchChangeVoice = (game, voice) => {
     return new Promise((resolve) => {
-
+        if (!window.batch_state.state) {
+            return resolve()
+        }
         // Update the main app with any changes, if a voice has already been selected
         if (window.currentModel) {
             generateVoiceButton.innerHTML = window.i18n.LOAD_MODEL
@@ -555,18 +557,37 @@ const batchChangeVoice = (game, voice) => {
 }
 const batchChangeVocoder = (vocoder, game, voice) => {
     return new Promise((resolve) => {
+        if (!window.batch_state.state) {
+            return resolve()
+        }
         console.log("Changing vocoder: ", vocoder)
         if (window.batch_state.state) {
             batch_progressNotes.innerHTML = `${window.i18n.BATCH_CHANGING_VOCODER_TO}: ${vocoder}`
         }
 
         const vocoderMappings = [["waveglow", "256_waveglow"], ["waveglowBIG", "big_waveglow"], ["quickanddirty", "qnd"], ["hifi", `${game}/${voice}.hg.pt`]]
+        const vocoderId = vocoderMappings.find(record => record[0]==vocoder)[1]
 
         fetch(`http://localhost:8008/setVocoder`, {
             method: "Post",
-            body: JSON.stringify({vocoder: vocoderMappings.find(record => record[0]==vocoder)[1]})
-        }).then(() => {
-            resolve()
+            body: JSON.stringify({
+                vocoder: vocoderId,
+                modelPath: vocoderId=="256_waveglow" ? window.userSettings.waveglow_path : window.userSettings.bigwaveglow_path,
+            })
+        }).then(r=>r.text()).then((res) => {
+            if (res=="ENOENT") {
+                closeModal(undefined, batchGenerationContainer).then(() => {
+                    setTimeout(() => {
+                        vocoder_select.value = window.userSettings.vocoder
+                        window.errorModal(`Model not found.${vocoderId.includes("waveglow")?" Download WaveGlow files separately if you haven't, or check the path in the settings.":""}`)
+                        batch_pauseBtn.click()
+                        resolve()
+                    }, 300)
+                })
+            } else {
+                window.batch_state.lastVocoder = vocoder
+                resolve()
+            }
         }).catch(async e => {
             console.log(e)
             if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
@@ -705,6 +726,9 @@ const addActionButtons = (records, ri) => {
 
 const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
     return new Promise((resolve, reject) => {
+        if (!window.batch_state.state) {
+            return resolve()
+        }
         fetch(`http://localhost:8008/batchOutputAudio`, {
             method: "Post",
             body: JSON.stringify({
@@ -760,6 +784,9 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
 
 const batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, body) => {
     return new Promise((resolve, reject) => {
+        if (!window.batch_state.state) {
+            return resolve()
+        }
         fetch(`http://localhost:8008/outputAudio`, {
             method: "Post",
             body
@@ -803,7 +830,9 @@ const batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, bod
 
 const batchKickOffGeneration = () => {
     return new Promise((resolve) => {
-
+        if (!window.batch_state.state) {
+            return resolve()
+        }
         const [speaker_i, voice_id, vocoder, linesBatch, records] = prepareLinesBatchForSynth()
         records.forEach((record, ri) => {
             record[1].children[1].innerHTML = window.i18n.RUNNING
@@ -942,8 +971,7 @@ const batchKickOffGeneration = () => {
                 if (document.getElementById("activeModal")) {
                     activeModal.remove()
                 }
-                createModal("error", e.message)
-                resolve()
+                window.errorModal("error", e.message).then(() => resolve())
             }
         })
     })
@@ -971,7 +999,6 @@ const performSynthesis = async () => {
     // Change the vocoder if the next line uses a different one
     if (window.batch_state.lastVocoder!=record[0].vocoder) {
         await batchChangeVocoder(record[0].vocoder, record[0].game_id, record[0].voice_id)
-        window.batch_state.lastVocoder = record[0].vocoder
     }
 
     await batchKickOffGeneration()
