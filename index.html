@@ -301,6 +301,12 @@
                             <input id="setting_batch_delimiter">
                         </div>
                     </div>
+                    <div>
+                        <div>Pagination size</div>
+                        <div>
+                            <input id="setting_batch_paginationSize" type="number">
+                        </div>
+                    </div>
 
 
 
@@ -604,7 +610,7 @@
             </div>
         </div>
         <div id="batchGenerationContainer" style="display:none">
-            <div class="modal">
+            <div class="modal" style="height: 85vh;">
                 <h2 id="i18n_batch_synthesis">Batch synthesis</h2>
                 <div id="batch_container">
                     <div id="batch_intro">
@@ -639,7 +645,17 @@
 
                         </div>
                     </div>
-                    <div id="batch_footer">
+                    <div id="batch_footer" style="padding-bottom: 0;padding-top: 0;">
+                        <div>
+                            <div style="display: flex;justify-content: center;align-items: center;">
+                                <div><button id="batch_paginationPrev">Previous</button></div>
+                                <div style="display: flex;align-items: center;">
+                                    <div>Page:</div>
+                                    <input id="batch_pageNum" type="number" min="1" step="1" style="height: 25px;width: 50px;margin: 10px;">
+                                </div>
+                                <div><button id="batch_paginationNext">Next</button></div>
+                            </div>
+                        </div>
                         <div style="max-height: 35px;display: flex;justify-content: center;">
                             <input type="text" id="batch_outputFolderInput" placeholder="Complete absolute directory path to output">
                             <div style="display: none;" id="batch_progressBar"></div>

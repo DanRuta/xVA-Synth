@@ -98,6 +98,9 @@ if (!Object.keys(window.userSettings).includes("batch_skipExisting")) { // For b
 if (!Object.keys(window.userSettings).includes("batch_delimiter")) { // For backwards compatibility
     window.userSettings.batch_delimiter = ","
 }
+if (!Object.keys(window.userSettings).includes("batch_paginationSize")) { // For backwards compatibility
+    window.userSettings.batch_paginationSize = 100
+}
 if (!Object.keys(window.userSettings).includes("defaultToHiFi")) { // For backwards compatibility
     window.userSettings.defaultToHiFi = true
 }
@@ -177,6 +180,7 @@ const updateUIWithSettings = () => {
     setting_batch_multip.checked = window.userSettings.batch_useMP
     setting_batch_multip_count.value = window.userSettings.batch_MPCount
     setting_batch_delimiter.value = window.userSettings.batch_delimiter
+    setting_batch_paginationSize.value = window.userSettings.batch_paginationSize
 
     batch_batchSizeInput.value = parseInt(window.userSettings.batch_batchSize)
     batch_skipExisting.checked = window.userSettings.batch_skipExisting
@@ -252,7 +256,7 @@ useGPUCbx.addEventListener("change", () => {
     }).catch(e => {
         console.log(e)
         if (e.code =="ENOENT") {
-            window.closeModal().then(() => {
+            window.closeModal(undefined, settingsContainer).then(() => {
                 createModal("error", window.i18n.THERE_WAS_A_PROBLEM)
             })
         }
@@ -352,6 +356,8 @@ initMenuSetting(batch_clearDirFirstCkbx, "batch_clearDirFirst", "checkbox")
 initMenuSetting(batch_skipExisting, "batch_skipExisting", "checkbox")
 initMenuSetting(batch_batchSizeInput, "batch_batchSize", "text", undefined, parseInt)
 initMenuSetting(setting_batch_delimiter, "batch_delimiter")
+initMenuSetting(setting_batch_paginationSize, "batch_paginationSize", "number", undefined, parseInt)
+
 
 initMenuSetting(setting_256waveglow_path, "waveglow_path", "text")
 initMenuSetting(setting_bigwaveglow_path, "bigwaveglow_path", "text")

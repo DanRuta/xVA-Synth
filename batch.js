@@ -9,7 +9,8 @@ window.batch_state = {
     lineIndex: 0,
     state: false,
     outPathsChecked: [],
-    skippedExisting: 0
+    skippedExisting: 0,
+    paginationIndex: 0
 }
 
 // https://stackoverflow.com/questions/1293147/example-javascript-code-to-parse-csv-data
@@ -281,10 +282,15 @@ const uploadBatchCSVs = async (eType, event) => {
             return window.errorModal(window.i18n.BATCH_ERR_SKIPPEDALL.replace("_1", window.batch_state.skippedExisting))
         }
 
+        window.batch_state.paginationIndex = 0
+        batch_pageNum.value = 1
+
         const cleanedData = preProcessCSVData(dataLines)
         if (cleanedData.length) {
             populateRecordsList(cleanedData)
-            refreshRecordsList()
+            const finalOrder = groupLines()
+            refreshRecordsList(finalOrder)
+            window.batch_state.lines = finalOrder
         } else {
             batch_clearBtn.click()
         }
@@ -396,14 +402,18 @@ const populateRecordsList = records => {
     })
 }
 
-const refreshRecordsList = () => {
+const refreshRecordsList = (finalOrder) => {
     batchRecordsContainer.innerHTML = ""
-    const finalOrder = groupLines()
-    finalOrder.forEach(recordAndElem => {
-        recordAndElem[1].children[0].innerHTML = batchRecordsContainer.children.length.toString()
+    finalOrder = finalOrder ? finalOrder : window.batch_state.lines
+
+    const startIndex = (window.batch_state.paginationIndex*window.userSettings.batch_paginationSize)
+    const endIndex = Math.min(startIndex+window.userSettings.batch_paginationSize, finalOrder.length)
+
+    for (let ri=startIndex; ri<endIndex; ri++) {
+        const recordAndElem = finalOrder[ri]
+        recordAndElem[1].children[0].innerHTML = (ri+1)//batchRecordsContainer.children.length.toString()
         batchRecordsContainer.appendChild(recordAndElem[1])
-    })
-    window.batch_state.lines = finalOrder
+    }
 }
 
 // Sort the lines by voice_id, and then by vocoder used
@@ -534,11 +544,11 @@ const batchChangeVoice = (game, voice) => {
         }).then(r=>r.text()).then(res => {
             resolve()
         }).catch(async e => {
-            console.log(e)
             if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
                 await batchChangeVoice(game, voice)
                 resolve()
             } else {
+                console.log(e)
                 window.appLogger.log(e)
                 batch_pauseBtn.click()
 
@@ -589,11 +599,11 @@ const batchChangeVocoder = (vocoder, game, voice) => {
                 resolve()
             }
         }).catch(async e => {
-            console.log(e)
             if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
                 await batchChangeVocoder(vocoder, game, voice)
                 resolve()
             } else {
+                console.log(e)
                 window.appLogger.log(e)
                 batch_pauseBtn.click()
 
@@ -726,9 +736,6 @@ const addActionButtons = (records, ri) => {
 
 const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
     return new Promise((resolve, reject) => {
-        if (!window.batch_state.state) {
-            return resolve()
-        }
         fetch(`http://localhost:8008/batchOutputAudio`, {
             method: "Post",
             body: JSON.stringify({
@@ -764,11 +771,11 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
             resolve()
 
         }).catch(async e => {
-            console.log(e)
             if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
                 await batchKickOffMPffmpegOutput(records, tempPaths, outPaths, options)
                 resolve()
             } else {
+                console.log(e)
                 window.appLogger.log(e)
                 if (document.getElementById("activeModal")) {
                     activeModal.remove()
@@ -781,13 +788,8 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
 }
 
 
-
-
 const batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, body) => {
     return new Promise((resolve, reject) => {
-        if (!window.batch_state.state) {
-            return resolve()
-        }
         fetch(`http://localhost:8008/outputAudio`, {
             method: "Post",
             body
@@ -964,11 +966,11 @@ const batchKickOffGeneration = () => {
                 })
             }
         }).catch(async e => {
-            console.log(e)
             if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
                 await batchKickOffGeneration()
                 resolve()
             } else {
+                console.log(e)
                 window.appLogger.log(e)
                 batch_pauseBtn.click()
                 if (document.getElementById("activeModal")) {
@@ -1055,6 +1057,32 @@ const stopBatch = () => {
 const openOutput = () => {
     shell.showItemInFolder(window.userSettings.batchOutFolder+"/dummy.txt")
 }
+
+
+batch_paginationPrev.addEventListener("click", () => {
+    batch_pageNum.value = Math.max(1, parseInt(batch_pageNum.value)-1)
+    window.batch_state.paginationIndex = batch_pageNum.value-1
+    refreshRecordsList()
+})
+batch_paginationNext.addEventListener("click", () => {
+    const numPages = Math.ceil(window.batch_state.lines.length/window.userSettings.batch_paginationSize)
+    batch_pageNum.value = Math.min(parseInt(batch_pageNum.value)+1, numPages)
+    window.batch_state.paginationIndex = batch_pageNum.value-1
+    refreshRecordsList()
+})
+batch_pageNum.addEventListener("change", () => {
+    const numPages = Math.ceil(window.batch_state.lines.length/window.userSettings.batch_paginationSize)
+    batch_pageNum.value = Math.max(1, Math.min(parseInt(batch_pageNum.value), numPages))
+    window.batch_state.paginationIndex = batch_pageNum.value-1
+    refreshRecordsList()
+})
+setting_batch_paginationSize.addEventListener("change", () => {
+    const numPages = Math.ceil(window.batch_state.lines.length/window.userSettings.batch_paginationSize)
+    batch_pageNum.value = Math.max(1, Math.min(parseInt(batch_pageNum.value), numPages))
+    window.batch_state.paginationIndex = batch_pageNum.value-1
+    refreshRecordsList()
+})
+
 
 batch_main.addEventListener("dragenter", event => uploadBatchCSVs("dragenter", event), false)
 batch_main.addEventListener("dragleave", event => uploadBatchCSVs("dragleave", event), false)
