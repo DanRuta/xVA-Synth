@@ -374,7 +374,7 @@ setting_audio_bitdepth.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_amplitude.disabled = !window.userSettings.audio.ffmpeg
 
 // Output path
-fs.readdir(`${path}/models`, (err, gameDirs) => {
+fs.readdir(`${window.path}/models`, (err, gameDirs) => {
     gameDirs.filter(name => !name.includes(".")).forEach(gameFolder => {
         // Initialize the default output directory setting for this game
         if (!Object.keys(window.userSettings).includes(`outpath_${gameFolder}`)) {
@@ -394,7 +394,7 @@ setting_out_path_input.addEventListener("change", () => {
     }
 })
 // Models path
-fs.readdir(`${path}/assets`, (err, assetFiles) => {
+fs.readdir(`${window.path}/assets`, (err, assetFiles) => {
     assetFiles.filter(fn=>(fn.endsWith(".jpg")||fn.endsWith(".png"))&&fn.split("-").length==4).forEach(assetFileName => {
         const gameId = assetFileName.split("-")[0]
         const gameName = assetFileName.split("-").reverse()[0].split(".")[0]
@@ -458,7 +458,7 @@ reset_paths_btn.addEventListener("click", () => {
                 delete window.userSettings[key]
             })
 
-            const currGame = window.currentGame[0]
+            const currGame = window.currentGame ? window.currentGame[0] : undefined
 
             // Models paths
             const assetFiles = fs.readdirSync(`${path}/assets`)
@@ -486,7 +486,11 @@ reset_paths_btn.addEventListener("click", () => {
             window.userSettings.batchOutFolder = `${__dirname.replace(/\\/g,"/")}/batch`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
             batch_outputFolderInput.value = window.userSettings.batchOutFolder
 
-            window.loadAllModels().then(() => window.changeGame(window.currentGame.join("-")))
+            window.loadAllModels().then(() => {
+                if (currGame) {
+                    window.changeGame(window.currentGame.join("-"))
+                }
+            })
             saveUserSettings()
         }
     })
