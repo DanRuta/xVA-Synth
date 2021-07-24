@@ -1,9 +1,9 @@
 "use strict"
 
-window.appVersion = "v1.4.3"
+window.appVersion = "v2.0.0"
 
-const PRODUCTION = process.mainModule.filename.includes("resources")
-const path = PRODUCTION ? "./resources/app" : "."
+window.PRODUCTION = process.mainModule.filename.includes("resources")
+const path = window.PRODUCTION ? "./resources/app" : "."
 window.path = path
 
 const fs = require("fs")
@@ -25,6 +25,12 @@ const {startBatch} = require("./batch.js")
 window.electronBrowserWindow = require("electron").remote.getCurrentWindow()
 const child = require("child_process").execFile
 const spawn = require("child_process").spawn
+
+
+// Start the server
+if (window.PRODUCTION) {
+    window.pythonProcess = spawn(`${path}/cpython_${window.userSettings.installation}/server.exe`, {stdio: "ignore"})
+}
 
 const {PluginsManager} = require("./plugins_manager.js")
 window.pluginsManager = new PluginsManager(window.path, window.appLogger, window.appVersion)
@@ -1026,29 +1032,57 @@ keepSampleButton.addEventListener("click", event => keepSampleFunction(event.shi
 
 
 
+// Weird recursive intermittent promises to repeatedly check if the server is up yet - but it works!
+window.doWeirdServerStartupCheck = (startUpMessage) => {
+    let serverIsUp = false
+    const check = () => {
+        return new Promise(topResolve => {
+            if (serverIsUp) {
+                topResolve()
+            } else {
+                console.log("checking");
+                (new Promise((resolve, reject) => {
+                    fetch(`http://localhost:8008/checkReady`, {
+                        method: "Post",
+                        body: JSON.stringify({})
+                    }).then(r => r.text()).then(r => {
+                        console.log("r", r)
+                        closeModal().then(() => {
+                            if (!window.pluginsManager.hasRunPostStartPlugins) {
+                                window.pluginsManager.hasRunPostStartPlugins = true
+                                window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["start"]["post"], event="post start")
+                            }
+                        })
+                        serverIsUp = true
+                        if (window.userSettings.installation=="cpu") {
 
+                            if (useGPUCbx.checked) {
+                                fetch(`http://localhost:8008/setDevice`, {
+                                    method: "Post",
+                                    body: JSON.stringify({device: "cpu"})
+                                })
+                            }
+                            useGPUCbx.checked = false
+                            useGPUCbx.disabled = true
+                            window.userSettings.useGPU = false
+                            saveUserSettings()
+                        }
 
-let startingSplashInterval
-let loadingStage = 0
-let hasRunPostStartPlugins = false
-startingSplashInterval = setInterval(() => {
-    if (fs.existsSync(`${path}/SERVER_STARTING`)) {
-        if (loadingStage==2) {
-            activeModal.children[0].innerHTML = `${window.i18n.LOADING}...<br>${window.i18n.MAY_TAKE_A_MINUTE}<br><br>${window.i18n.STARTING_PYTHON}...`
-            loadingStage = 3
-        }
-    } else {
-        closeModal().then(() => {
-            clearInterval(startingSplashInterval)
-            if (!hasRunPostStartPlugins) {
-                hasRunPostStartPlugins = true
-                window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["start"]["post"], event="post start")
+                        resolve()
+                    }).catch(() => reject())
+                })).catch(() => {
+                    setTimeout(async () => {
+                        await check()
+                        topResolve()
+                    }, 100)
+                })
             }
         })
     }
-}, 100)
-
-
+    spinnerModal(startUpMessage)
+    check()
+}
+window.doWeirdServerStartupCheck(`${window.i18n.LOADING}...<br>${window.i18n.MAY_TAKE_A_MINUTE}<br><br>${window.i18n.STARTING_PYTHON}...`)
 
 
 modalContainer.addEventListener("click", event => {
@@ -1259,7 +1293,7 @@ window.gameAssets = {}
 
 window.updateGameList = () => {
     gameSelectionListContainer.innerHTML = ""
-    const fileNames = fs.readdir(`${path}/assets`)
+    const fileNames = fs.readdirSync(`${window.path}/assets`)
 
     let totalVoices = 0
     let totalGames = new Set()
@@ -1372,6 +1406,7 @@ window.setupModal(embeddingsIcon, embeddingsContainer, () => {
 }, () => {
     window.embeddingsState.isOpen = false
 })
+
 
 // Plugins
 // =======

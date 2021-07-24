@@ -1,18 +1,17 @@
 import os
+import sys
 import traceback
+import multiprocessing
 
 if __name__ == '__main__':
+    multiprocessing.freeze_support()
 
-    APP_VERSION = "1.4.3"
+    APP_VERSION = "2.0.0"
 
     PROD = False
-    # PROD = True
+    PROD = True
     CPU_ONLY = False
-    # CPU_ONLY = True
-
-    with open(f'{"./resources/app" if PROD else "."}/SERVER_STARTING', "w+") as f:
-        f.write("")
-
+    CPU_ONLY = True
 
 
 
@@ -61,7 +60,7 @@ if __name__ == '__main__':
         ch.setFormatter(formatter)
         logger.addHandler(fh)
         logger.addHandler(ch)
-        logger.info("New session")
+        logger.info(f'New session. Version: {APP_VERSION}. Installation: {"CPU" if CPU_ONLY else "CPU+GPU"}')
 
         logger.orig_info = logger.info
 
@@ -165,6 +164,7 @@ if __name__ == '__main__':
         try:
             models_manager.set_device(torch.device('cuda' if use_gpu else 'cpu'))
         except:
+            logger.info("MODELS MANAGER FAILED TO LOAD")
             logger.info(traceback.format_exc())
     setDevice(user_settings["use_gpu"])
 
@@ -209,6 +209,11 @@ if __name__ == '__main__':
 
                     req_response = "" if req_response is None else req_response
 
+
+                if self.path == "/stopServer":
+                    logger.info("POST {}".format(self.path))
+                    logger.info("STOPPING SERVER")
+                    sys.exit()
 
                 if self.path == "/customEvent":
                     logger.info("POST {}".format(self.path))
@@ -357,6 +362,9 @@ if __name__ == '__main__':
                     embs = models_manager.models("xvarep").reduce_data_dimension(post_data["mappings"], post_data["includeAllVoices"], post_data["onlyInstalled"], post_data["algorithm"])
                     req_response = embs
 
+                if self.path == "/checkReady":
+                    req_response = "ready"
+
 
                 self._set_response()
                 self.wfile.write(req_response.encode("utf-8"))
@@ -374,12 +382,6 @@ if __name__ == '__main__':
         with open("./DEBUG_server_error.txt", "w+") as f:
             f.write(traceback.format_exc())
         logger.info(traceback.format_exc())
-    if os.path.exists(f'{"./resources/app" if PROD else "."}/SERVER_STARTING'):
-        try:
-            os.remove(f'{"./resources/app" if PROD else "."}/SERVER_STARTING')
-        except:
-            logger.info(traceback.format_exc())
-            pass
     try:
         plugin_manager.run_plugins(plist=plugin_manager.plugins["start"]["post"], event="post start", data=None)
         print("Server ready")

@@ -35,6 +35,9 @@ window.userSettings = localStorage.getItem("userSettings") ||
 if ((typeof window.userSettings)=="string") {
     window.userSettings = JSON.parse(window.userSettings)
 }
+if (!Object.keys(window.userSettings).includes("installation")) { // For backwards compatibility
+    window.userSettings.installation = "cpu"
+}
 if (!Object.keys(window.userSettings).includes("audio")) { // For backwards compatibility
     window.userSettings.audio = {format: "wav", hz: 22050, padStart: 0, padEnd: 0}
 }
@@ -195,6 +198,64 @@ const updateUIWithSettings = () => {
 updateUIWithSettings()
 saveUserSettings()
 
+// Installation sever handling
+// =========================
+settings_installation.innerHTML = window.userSettings.installation=="cpu" ? `CPU` : "CPU+GPU"
+setting_change_installation.innerHTML = window.userSettings.installation=="cpu" ? `Change to CPU+GPU` : `Change to CPU`
+
+
+setting_change_installation.addEventListener("click", () => {
+    spinnerModal("Changing installation sever...")
+    fetch(`http://localhost:8008/stopServer`, {
+        method: "Post",
+        body: JSON.stringify({})
+    }).then(r=>r.text()).then(console.log) // The server stopping should mean this never runs
+    .catch(() => {
+
+        if (window.userSettings.installation=="cpu") {
+            window.userSettings.installation = "gpu"
+            useGPUCbx.disabled = false
+            settings_installation.innerHTML = `GPU`
+            setting_change_installation.innerHTML = `Change to CPU`
+        } else {
+            fetch(`http://localhost:8008/setDevice`, {
+                method: "Post",
+                body: JSON.stringify({device: "cpu"})
+            })
+
+            window.userSettings.installation = "cpu"
+            useGPUCbx.checked = false
+            useGPUCbx.disabled = true
+            window.userSettings.useGPU = false
+            settings_installation.innerHTML = `CPU`
+            setting_change_installation.innerHTML = `Change to CPU+GPU`
+        }
+        saveUserSettings()
+
+        // Start the new server
+        if (window.PRODUCTION) {
+            window.appLogger.log(window.userSettings.installation)
+            window.pythonProcess = spawn(`${path}/cpython_${window.userSettings.installation}/server.exe`, {stdio: "ignore"})
+        } else {
+            window.pythonProcess = spawn("python", [`${path}/server.py`], {stdio: "ignore"})
+        }
+
+        window.currentModel = undefined
+        title.innerHTML = window.i18n.SELECT_VOICE_TYPE
+        keepSampleButton.style.display = "none"
+        samplePlay.style.display = "none"
+        generateVoiceButton.dataset.modelQuery = "null"
+        generateVoiceButton.dataset.modelIDLoaded = undefined
+        generateVoiceButton.innerHTML = window.i18n.LOAD_MODEL
+        generateVoiceButton.disabled = true
+        window.doWeirdServerStartupCheck(`${window.i18n.LOADING}...<br>${window.i18n.MAY_TAKE_A_MINUTE}<br><br>${window.i18n.STARTING_PYTHON}...`)
+    })
+})
+
+// =========================
+
+
+
 
 // Audio hardware
 // ==============
@@ -250,7 +311,7 @@ useGPUCbx.addEventListener("change", () => {
         method: "Post",
         body: JSON.stringify({device: useGPUCbx.checked ? "gpu" : "cpu"})
     }).then(r=>r.text()).then(res => {
-        window.closeModal()
+        window.closeModal(undefined, settingsContainer)
         window.userSettings.useGPU = useGPUCbx.checked
         saveUserSettings()
     }).catch(e => {

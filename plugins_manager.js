@@ -11,6 +11,7 @@ class PluginsManager {
         this.appLogger = appLogger
         this.plugins = []
         this.selectedPlugin = undefined
+        this.hasRunPostStartPlugins = false
         this.changesToApply = {
             ticked: [],
             unticked: []

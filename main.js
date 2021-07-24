@@ -9,7 +9,7 @@ const {spawn} = require("child_process")
 let pythonProcess
 
 if (PRODUCTION) {
-    pythonProcess = spawn(`${path}/cpython/server.exe`, {stdio: "ignore"})
+    // pythonProcess = spawn(`${path}/cpython/server.exe`, {stdio: "ignore"})
 } else {
     pythonProcess = spawn("python", [`${path}/server.py`], {stdio: "ignore"})
 }

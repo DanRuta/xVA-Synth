@@ -164,9 +164,10 @@ class xVARep(object):
         # Prepare audio data
         audio_feats_batch = {}
 
-        DO_MP = True
+        DO_MP = False # TODO, figure out why this doesn't work in prod
         if DO_MP and includeAllVoices:
             files_to_extract = {}
+
 
             for api, audio_path in enumerate(sampleWAVs):
 
@@ -179,6 +180,7 @@ class xVARep(object):
 
             voiceIds_to_extract = list(files_to_extract.keys())
             paths_to_extract = [files_to_extract[voiceIds] for voiceIds in voiceIds_to_extract]
+
 
 
             if len(paths_to_extract):

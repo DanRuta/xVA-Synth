@@ -15,7 +15,9 @@
     "electron": "2.0.0"
   },
   "dependencies": {
+    "fs-extra": "^9.1.0",
     "node-fetch": "^2.1.2",
+    "unzipper": "^0.10.11",
     "zip-dir": "^2.0.0"
   }
 }
