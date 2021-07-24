@@ -342,8 +342,8 @@ if __name__ == '__main__':
 
 
                 if self.path == "/computeEmbsAndDimReduction":
-                    models_manager.init_model("xVARep")
-                    embs = models_manager.models("xVARep").reduce_data_dimension(post_data["mappings"], post_data["includeAllVoices"], post_data["onlyInstalled"], post_data["algorithm"])
+                    models_manager.init_model("xvarep")
+                    embs = models_manager.models("xvarep").reduce_data_dimension(post_data["mappings"], post_data["includeAllVoices"], post_data["onlyInstalled"], post_data["algorithm"])
                     req_response = embs
 
 

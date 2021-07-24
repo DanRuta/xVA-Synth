@@ -20,7 +20,7 @@ class ModelsManager(object):
                 return
             self.logger.info(f'ModelsManager: Initializing model: {model_key}')
 
-            if model_key=="xVARep":
+            if model_key=="xvarep":
                 from python.xVARep.model import xVARep
                 self.models_bank[model_key] = xVARep(self.logger, self.PROD, self.device, self)
                 self.load_model(model_key, ("./resources/app" if self.PROD else ".")+"/python/xVARep/xVARep.pt")
