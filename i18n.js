@@ -277,6 +277,15 @@ window.i18n.setEnglish = () => {
     window.i18n.CANT_IMPORT_FILE_FOR_HOOK_TASK_ENTRYPOINT = "Cannot import _1 file for _2 _3 entry-point"
     window.i18n.ONLY_JS = "Only JavaScript files are supported right now."
     window.i18n.PLUGIN_RUN_ERROR = "Plugin run error at event"
+
+    window.i18n.MONDAY = "Monday"
+    window.i18n.TUESDAY = "Tuesday"
+    window.i18n.WEDNESDAY = "Wednesday"
+    window.i18n.THURSDAY = "Thursday"
+    window.i18n.FRIDAY = "Friday"
+    window.i18n.SATURDAY = "Saturday"
+    window.i18n.SUNDAY = "Sunday"
+
 }
 
 

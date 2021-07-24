@@ -1022,6 +1022,14 @@ a {
     /*max-width: 50px;*/
 }
 
+#batch_ETA_container {
+    display: flex;
+    margin-top: 5px;
+    opacity: 0;
+}
+#batch_ETA_container > div {
+    margin-left: 5px;
+}
 
 
 

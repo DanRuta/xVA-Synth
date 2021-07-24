@@ -10,7 +10,10 @@ window.batch_state = {
     state: false,
     outPathsChecked: [],
     skippedExisting: 0,
-    paginationIndex: 0
+    paginationIndex: 0,
+    startTime: undefined,
+    linesDoneSinceStart: 0,
+    batchesDoneSinceStart: 0
 }
 
 // https://stackoverflow.com/questions/1293147/example-javascript-code-to-parse-csv-data
@@ -507,6 +510,9 @@ const startBatch = () => {
     window.batch_state.lineIndex = 0
     window.batch_state.state = true
     window.batch_state.outPathsChecked = []
+    window.batch_state.startTime = new Date()
+    window.batch_state.linesDoneSinceStart = 0
+    window.batch_state.batchesDoneSinceStart = 0
     performSynthesis()
 }
 
@@ -837,6 +843,7 @@ const batchKickOffGeneration = () => {
             return resolve()
         }
         const [speaker_i, voice_id, vocoder, linesBatch, records] = prepareLinesBatchForSynth()
+
         records.forEach((record, ri) => {
             record[1].children[1].innerHTML = window.i18n.RUNNING
             record[1].children[1].style.background = "goldenrod"
@@ -942,6 +949,9 @@ const batchKickOffGeneration = () => {
                         }
                     }
                 }
+                window.batch_state.linesDoneSinceStart += linesBatch.length
+                window.batch_state.batchesDoneSinceStart += 1
+                adjustETA()
                 resolve()
             } else {
                 linesBatch.forEach((lineRecord, li) => {
@@ -962,6 +972,9 @@ const batchKickOffGeneration = () => {
                         window.errorModal(err.message)
                         batch_pauseBtn.click()
                     }
+                    window.batch_state.linesDoneSinceStart += linesBatch.length
+                    window.batch_state.batchesDoneSinceStart += 1
+                    adjustETA()
                     resolve()
                 })
             }
@@ -1025,6 +1038,12 @@ const pauseResumeBatch = () => {
     batch_pauseBtn.innerHTML = isRunning ? window.i18n.RESUME : window.i18n.PAUSE
     window.batch_state.state = !isRunning
 
+    if (window.batch_state.state) {
+        window.batch_state.startTime = new Date()
+        window.batch_state.linesDoneSinceStart = 0
+    }
+
+
     if (!isRunning) {
         performSynthesis()
     }
@@ -1035,6 +1054,7 @@ const stopBatch = () => {
     window.batch_state.state = false
     window.batch_state.lineIndex = 0
 
+    batch_ETA_container.style.opacity = 0
     batch_synthesizeBtn.style.display = "inline-block"
     batch_clearBtn.style.display = "inline-block"
     batch_outputFolderInput.style.display = "inline-block"
@@ -1051,6 +1071,52 @@ const stopBatch = () => {
             record[1].children[1].style.background = "none"
         }
     })
+}
+
+const adjustETA = () => {
+    if (window.batch_state.state && window.batch_state.batchesDoneSinceStart>=2) {
+        batch_ETA_container.style.opacity = 1
+
+        // Lines per second
+        const timeNow = new Date()
+        const timeSinceStart = timeNow - window.batch_state.startTime
+        const avgMSTimePerLine = timeSinceStart / window.batch_state.linesDoneSinceStart
+        batch_eta_lps.innerHTML = parseInt((1000/avgMSTimePerLine)*100)/100
+
+
+        const remainingLines = window.batch_state.lines.length - window.batch_state.linesDoneSinceStart
+        let estTimeRemaining = avgMSTimePerLine*remainingLines
+
+        // Estimated finish time
+        const finishTime = new Date(timeNow.getTime() + estTimeRemaining)
+        let etaFinishTime = `${finishTime.getHours()}:${String(finishTime.getMinutes()).padStart(2, "0")}:${String(finishTime.getSeconds()).padStart(2, "0")}`
+        const days = [window.i18n.SUNDAY, window.i18n.MONDAY, window.i18n.TUESDAY, window.i18n.WEDNESDAY, window.i18n.THURSDAY, window.i18n.FRIDAY, window.i18n.SATURDAY]
+        etaFinishTime = `${days[finishTime.getDay()]} ${etaFinishTime}`
+
+        batch_eta_eta.innerHTML = etaFinishTime
+
+        // Time remaining
+        let etaTimeDisplay = []
+        if (estTimeRemaining > (1000*60*60)) { // hours
+            const hours = parseInt(estTimeRemaining/(1000*60*60))
+            etaTimeDisplay.push(hours+"h")
+            estTimeRemaining -= hours*(1000*60*60)
+        }
+        if (estTimeRemaining > (1000*60)) { // minutes
+            const minutes = parseInt(estTimeRemaining/(1000*60))
+            etaTimeDisplay.push(String(minutes).padStart(2, "0")+"m")
+            estTimeRemaining -= minutes*(1000*60)
+        }
+        if (estTimeRemaining > (1000)) { // seconds
+            const seconds = parseInt(estTimeRemaining/(1000))
+            etaTimeDisplay.push(String(seconds).padStart(2, "0")+"s")
+            estTimeRemaining -= seconds*(1000)
+        }
+        batch_eta_time.innerHTML = etaTimeDisplay.join(" ")
+
+    } else {
+        batch_ETA_container.style.opacity = 0
+    }
 }
 
 
