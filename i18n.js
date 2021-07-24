@@ -305,7 +305,7 @@ window.i18n.updateUI = () => {
     i18n_setting_autoplay.innerHTML = window.i18n.SETTINGS_AUTOPLAY
     i18n_setting_defaulthifi.innerHTML = window.i18n.SETTINGS_DEFAULT_HIFI
     i18n_setting_keeppacing.innerHTML = window.i18n.SETTINGS_KEEP_PACING
-    i18n_setting_tooltip.innerHTML = window.i18n.SETTINGS_TOOLTIP
+    // i18n_setting_tooltip.innerHTML = window.i18n.SETTINGS_TOOLTIP
 
     i18n_setting_darkmode.innerHTML = window.i18n.SETTINGS_DARKMODE
     i18n_setting_promptfontsize.innerHTML = window.i18n.SETTINGS_PROMPTSIZE

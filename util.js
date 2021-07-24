@@ -124,6 +124,9 @@ window.setTheme = (meta) => {
     try {
         Array.from(embeddingsRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${primaryColour}`)
     } catch (e) {}
+    try {
+        window.sequenceEditor.grabbers.forEach(grabber => grabber.fillStyle = `#${primaryColour}`)
+    } catch (e) {}
 
     const background = `linear-gradient(0deg, rgba(128,128,128,${window.userSettings.bg_gradient_opacity}) 0px, rgba(0,0,0,0)), url("assets/${meta.join("-")}")`
     Array.from(document.querySelectorAll("button:not(.fixedColour)")).forEach(e => e.style.background = `#${primaryColour}`)
@@ -241,10 +244,10 @@ window.addEventListener("keydown", event => {
     }
     // Create selection for all of the editor letters
     if (key=="a" && event.ctrlKey && !event.shiftKey) {
-        window.pitchEditor.letterFocus = []
-        window.pitchEditor.dursNew.forEach((_,i) => {
-            window.pitchEditor.letterFocus.push(i)
-            setLetterFocus(i, true)
+        window.sequenceEditor.letterFocus = []
+        window.sequenceEditor.dursNew.forEach((_,i) => {
+            window.sequenceEditor.letterFocus.push(i)
+            window.sequenceEditor.setLetterFocus(i, true)
         })
         event.preventDefault()
     }
@@ -263,17 +266,17 @@ window.addEventListener("keydown", event => {
     // SHIFT-Left/Right: multi-letter create selection range
     if ((key=="arrowleft" || key=="arrowright") && !event.ctrlKey) {
         event.preventDefault()
-        if (window.pitchEditor.letterFocus.length==0) {
-            setLetterFocus(0)
-        } else if (window.pitchEditor.letterFocus.length==1) {
-            const curr_l = window.pitchEditor.letterFocus[0]
-            const newIndex = key=="arrowleft" ? Math.max(0, curr_l-1) : Math.min(curr_l+1, window.pitchEditor.letters.length-1)
-            setLetterFocus(newIndex, event.shiftKey)
+        if (window.sequenceEditor.letterFocus.length==0) {
+            window.sequenceEditor.setLetterFocus(0)
+        } else if (window.sequenceEditor.letterFocus.length==1) {
+            const curr_l = window.sequenceEditor.letterFocus[0]
+            const newIndex = key=="arrowleft" ? Math.max(0, curr_l-1) : Math.min(curr_l+1, window.sequenceEditor.letters.length-1)
+            window.sequenceEditor.setLetterFocus(newIndex, event.shiftKey)
         } else {
             if (key=="arrowleft") {
-                setLetterFocus(Math.max(0, Math.min(...window.pitchEditor.letterFocus)-1), event.shiftKey)
+                window.sequenceEditor.setLetterFocus(Math.max(0, Math.min(...window.sequenceEditor.letterFocus)-1), event.shiftKey)
             } else {
-                setLetterFocus(Math.min(Math.max(...window.pitchEditor.letterFocus)+1, window.pitchEditor.letters.length-1), event.shiftKey)
+                window.sequenceEditor.setLetterFocus(Math.min(Math.max(...window.sequenceEditor.letterFocus)+1, window.sequenceEditor.letters.length-1), event.shiftKey)
             }
         }
     }
@@ -281,22 +284,22 @@ window.addEventListener("keydown", event => {
     // Up/Down arrows: Move pitch up/down for the letter(s) selected
     if ((key=="arrowup" || key=="arrowdown") && !event.ctrlKey) {
         event.preventDefault()
-        if (window.pitchEditor.letterFocus.length) {
-            window.pitchEditor.letterFocus.forEach(li => {
-                sliders[li].value = parseFloat(sliders[li].value) + (key=="arrowup" ? 0.1 : -0.1)
-                window.pitchEditor.pitchNew[li] = parseFloat(sliders[li].value)
-                has_been_changed = true
+        if (window.sequenceEditor.letterFocus.length) {
+            window.sequenceEditor.letterFocus.forEach(li => {
+                window.sequenceEditor.pitchNew[li] += (key=="arrowup" ? 0.1 : -0.1)
+                window.sequenceEditor.grabbers[li].setValueFromValue(window.sequenceEditor.pitchNew[li])
+                window.sequenceEditor.hasChanged = true
             })
-            if (autoinfer_timer != null) {
-                clearTimeout(autoinfer_timer)
-                autoinfer_timer = null
+            if (window.sequenceEditor.autoInferTimer != null) {
+                clearTimeout(window.sequenceEditor.autoInferTimer)
+                window.sequenceEditor.autoInferTimer = null
             }
             if (autoplay_ckbx.checked) {
-                autoinfer_timer = setTimeout(infer, 500)
+                window.sequenceEditor.autoInferTimer = setTimeout(infer, 500)
             }
 
-            if (window.pitchEditor.letterFocus.length==1) {
-                letterPitchNumb.value = sliders[window.pitchEditor.letterFocus[0]].value
+            if (window.sequenceEditor.letterFocus.length==1) {
+                letterPitchNumb.value = window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]
             }
         }
     }
@@ -304,23 +307,30 @@ window.addEventListener("keydown", event => {
     // CTRL+Left/Right arrows: change the sequence-wide pacing
     if ((key=="arrowleft" || key=="arrowright") && event.ctrlKey) {
         if (event.altKey) {
-            window.pitchEditor.letterFocus.forEach(li => {
-                window.pitchEditor.dursNew[li] = window.pitchEditor.dursNew[li] + (key=="arrowleft"? -0.1 : 0.1)
-                has_been_changed = true
+            window.sequenceEditor.letterFocus.forEach(li => {
+                window.sequenceEditor.dursNew[li] = window.sequenceEditor.dursNew[li] + (key=="arrowleft"? -0.1 : 0.1)
+                window.sequenceEditor.hasChanged = true
             })
-            if (autoinfer_timer != null) {
-                clearTimeout(autoinfer_timer)
-                autoinfer_timer = null
+            if (window.sequenceEditor.autoInferTimer != null) {
+                clearTimeout(window.sequenceEditor.autoInferTimer)
+                window.sequenceEditor.autoInferTimer = null
             }
             if (autoplay_ckbx.checked) {
-                autoinfer_timer = setTimeout(infer, 500)
+                window.sequenceEditor.autoInferTimer = setTimeout(infer, 500)
             }
-            window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, window.pitchEditor.dursNew[l]* 10 + 50, null))
+            window.sequenceEditor.sliderBoxes.forEach((box, i) => box.setValueFromValue(window.sequenceEditor.dursNew[i]))
+
+            if (window.sequenceEditor.letterFocus.length==1) {
+                letterLengthNumb.value = parseInt(window.sequenceEditor.dursNew[window.sequenceEditor.letterFocus[0]]*100)/100
+            }
         } else {
             pace_slid.value = parseFloat(pace_slid.value) + (key=="arrowleft"? -0.01 : 0.01)
             paceNumbInput.value = pace_slid.value
-            const new_lengths = window.pitchEditor.dursNew.map((v,l) => v * pace_slid.value)
-            window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, new_lengths[l]* 10 + 50, null))
+            const new_lengths = window.sequenceEditor.dursNew.map((v,l) => v * pace_slid.value)
+            window.sequenceEditor.sliderBoxes.forEach((box, i) => box.setValueFromValue(window.sequenceEditor.dursNew[i]))
+            window.sequenceEditor.pacing = parseFloat(pace_slid.value)
+            window.sequenceEditor.init()
+
         }
     }
 

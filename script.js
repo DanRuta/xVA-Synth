@@ -18,6 +18,7 @@ require("./i18n.js")
 require("./util.js")
 require("./nexus.js")
 require("./embeddings.js")
+const {Editor} = require("./editor.js")
 const {saveUserSettings, deleteFolderRecursive} = require("./settingsMenu.js")
 const xVASpeech = require("./xVASpeech.js")
 const {startBatch} = require("./batch.js")
@@ -42,7 +43,7 @@ window.addEventListener('unhandledrejection', function (e) {window.appLogger.log
 
 window.games = {}
 window.models = {}
-window.pitchEditor = {letters: [], currentVoice: null, resetPitch: null, resetDurs: null, letterFocus: [], hasChanged: false}
+window.sequenceEditor = new Editor()
 window.currentModel = undefined
 window.currentModelButton = undefined
 window.watchedModelsDirs = []
@@ -445,10 +446,31 @@ const makeSample = (src, newSample) => {
         editButton.addEventListener("click", () => {
             let editData = fs.readFileSync(`${src}.json`, "utf8")
             editData = JSON.parse(editData)
-            window.pitchEditor = editData.pitchEditor
+
+            window.sequenceEditor.inputSequence = editData.inputSequence
+            window.sequenceEditor.pacing = editData.pacing
+            window.sequenceEditor.letters = editData.pitchEditor ? editData.pitchEditor.letters : editData.letters
+            window.sequenceEditor.currentVoice = editData.pitchEditor ? editData.pitchEditor.currentVoice : editData.currentVoice
+            window.sequenceEditor.resetPitch = editData.pitchEditor ? editData.pitchEditor.resetPitch : editData.resetPitch
+            window.sequenceEditor.resetDurs = editData.pitchEditor ? editData.pitchEditor.resetDurs : editData.resetDurs
+            window.sequenceEditor.letterFocus = []
+            window.sequenceEditor.ampFlatCounter = 0
+            window.sequenceEditor.hasChanged = false
+            window.sequenceEditor.sequence = editData.pitchEditor ? editData.pitchEditor.sequence : editData.sequence
+            window.sequenceEditor.pitchNew = editData.pitchEditor ? editData.pitchEditor.pitchNew : editData.pitchNew
+            window.sequenceEditor.dursNew = editData.pitchEditor ? editData.pitchEditor.dursNew : editData.dursNew
+
+
+            window.sequenceEditor.init()
+            window.sequenceEditor.update()
+            window.sequenceEditor.autoInferTimer = null
+
             dialogueInput.value = editData.inputSequence
-            setPitchEditorValues(undefined, undefined, undefined, true)
+            paceNumbInput.value = editData.pacing
             pace_slid.value = editData.pacing
+
+            window.sequenceEditor.sliderBoxes.forEach((box, i) => {box.setValueFromValue(window.sequenceEditor.dursNew[i])})
+            window.sequenceEditor.update()
 
             if (samplePlay.style.display!="none") {
                 samplePlay.removeChild(samplePlay.children[0])
@@ -643,18 +665,18 @@ generateVoiceButton.addEventListener("click", () => {
         let isFreshRegen = true
         let old_sequence = undefined
 
-        if (editor.innerHTML && editor.innerHTML.length && generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice) {
-            if (window.pitchEditor.audioInput || window.pitchEditor.sequence && sequence!=window.pitchEditor.inputSequence) {
-                old_sequence = window.pitchEditor.inputSequence
+        if (editorContainer.innerHTML && editorContainer.innerHTML.length && generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice) {
+            if (window.sequenceEditor.audioInput || window.sequenceEditor.sequence && sequence!=window.sequenceEditor.inputSequence) {
+                old_sequence = window.sequenceEditor.inputSequence
             }
         }
 
-        if (editor.innerHTML && editor.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.pitchEditor.currentVoice)) {
-            pitch = window.pitchEditor.pitchNew.map(v=> v==undefined?0:v)
-            duration = window.pitchEditor.dursNew.map(v => v*pace_slid.value).map(v=> v==undefined?0:v)
+        if (editorContainer.innerHTML && editorContainer.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice)) {
+            pitch = window.sequenceEditor.pitchNew.map(v=> v==undefined?0:v)
+            duration = window.sequenceEditor.dursNew.map(v => v*pace_slid.value).map(v=> v==undefined?0:v)
             isFreshRegen = false
         }
-        window.pitchEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
+        window.sequenceEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
 
         const speaker_i = window.currentModel.games[0].emb_i
         const pace = (window.userSettings.keepPaceOnNew && isFreshRegen)?pace_slid.value:1
@@ -679,6 +701,8 @@ generateVoiceButton.addEventListener("click", () => {
                 return
             }
 
+
+
             isGenerating = false
             res = res.split("\n")
             let pitchData = res[0]
@@ -686,15 +710,25 @@ generateVoiceButton.addEventListener("click", () => {
             let cleanedSequence = res[2]
             pitchData = pitchData.split(",").map(v => parseFloat(v))
             durationsData = durationsData.split(",").map(v => isFreshRegen ? parseFloat(v) : parseFloat(v)/pace_slid.value)
-            window.pitchEditor.inputSequence = sequence
-            window.pitchEditor.sequence = cleanedSequence
+            window.sequenceEditor.inputSequence = sequence
+            window.sequenceEditor.sequence = cleanedSequence
 
             if (pitch.length==0 || isFreshRegen) {
-                window.pitchEditor.resetPitch = pitchData
-                window.pitchEditor.resetDurs = durationsData
+                window.sequenceEditor.resetPitch = pitchData
+                window.sequenceEditor.resetDurs = durationsData
             }
 
-            setPitchEditorValues(cleanedSequence.replace(/\s/g, "_").split(""), pitchData, durationsData, isFreshRegen, pace)
+
+            window.sequenceEditor.letters = cleanedSequence.replace(/\s/g, "_").split("")
+            window.sequenceEditor.pitchNew = pitchData.map(p=>p)
+            window.sequenceEditor.dursNew = durationsData.map(v=>v)
+            window.sequenceEditor.init()
+            window.sequenceEditor.update()
+
+            window.sequenceEditor.sliderBoxes.forEach((box, i) => {box.setValueFromValue(window.sequenceEditor.dursNew[i])})
+            window.sequenceEditor.autoInferTimer = null
+            window.sequenceEditor.hasChanged = false
+
 
             toggleSpinnerButtons()
             if (keepSampleButton.dataset.newFileLocation && keepSampleButton.dataset.newFileLocation.startsWith("BATCH_EDIT")) {
@@ -748,10 +782,10 @@ const saveFile = (from, to, skipUIRecord=false) => {
         game: window.currentGame[0],
         voiceId: window.currentModel.voiceId,
         voiceName: window.currentModel.voiceName,
-        inputSequence: window.pitchEditor.inputSequence,
-        letters: window.pitchEditor.letters,
-        pitch: window.pitchEditor.pitchNew,
-        durations: window.pitchEditor.dursNew,
+        inputSequence: window.sequenceEditor.inputSequence,
+        letters: window.sequenceEditor.letters,
+        pitch: window.sequenceEditor.pitchNew,
+        durations: window.sequenceEditor.dursNew,
         vocoder: vocoder_select.value,
         from, to
     }
@@ -776,6 +810,20 @@ const saveFile = (from, to, skipUIRecord=false) => {
             voiceName: window.currentModel.voiceName
         }
 
+        const jsonDataOut = {
+            inputSequence: dialogueInput.value.trim(),
+            pacing: parseFloat(pace_slid.value),
+            letters: window.sequenceEditor.letters,
+            currentVoice: window.sequenceEditor.currentVoice,
+            resetPitch: window.sequenceEditor.resetPitch,
+            resetDurs: window.sequenceEditor.resetDurs,
+            ampFlatCounter: window.sequenceEditor.ampFlatCounter,
+            inputSequence: window.sequenceEditor.inputSequence,
+            sequence: window.sequenceEditor.sequence,
+            pitchNew: window.sequenceEditor.pitchNew,
+            dursNew: window.sequenceEditor.dursNew,
+        }
+
         fetch(`http://localhost:8008/outputAudio`, {
             method: "Post",
             body: JSON.stringify({
@@ -791,7 +839,7 @@ const saveFile = (from, to, skipUIRecord=false) => {
                     window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${window.i18n.INPUT}: ${from}<br>${window.i18n.OUTPUT}: ${to}<br><br>${res}`)
                 } else {
                     if (window.userSettings.outputJSON) {
-                        fs.writeFileSync(`${to}.json`, JSON.stringify({inputSequence: dialogueInput.value.trim(), pitchEditor: window.pitchEditor, pacing: parseFloat(pace_slid.value)}, null, 4))
+                        fs.writeFileSync(`${to}.json`, JSON.stringify(jsonDataOut, null, 4))
                     }
                     if (!skipUIRecord) {
                         voiceSamples.appendChild(makeSample(to, true))
@@ -819,7 +867,10 @@ const saveFile = (from, to, skipUIRecord=false) => {
                 }
             } else {
                 if (window.userSettings.outputJSON) {
-                    fs.writeFileSync(`${to}.json`, JSON.stringify({inputSequence: dialogueInput.value.trim(), pitchEditor: window.pitchEditor, pacing: parseFloat(pace_slid.value)}, null, 4))
+                    const dataOut = {
+
+                    }
+                    fs.writeFileSync(`${to}.json`, JSON.stringify(jsonDataOut, null, 4))
                 }
                 if (!skipUIRecord) {
                     voiceSamples.appendChild(makeSample(to, true))
@@ -986,7 +1037,7 @@ modalContainer.addEventListener("click", event => {
 
 dialogueInput.addEventListener("keyup", () => {
     localStorage.setItem("dialogueInput", dialogueInput.value)
-    window.pitchEditor.hasChanged = true
+    window.sequenceEditor.hasChanged = true
 })
 
 const dialogueInputCache = localStorage.getItem("dialogueInput")
@@ -1000,443 +1051,227 @@ if (dialogueInputCache) {
 
 // Pitch/Duration editor
 // =====================
-
-window.setLetterFocus = (l, ctrlKey, altKey, shiftKey) => {
-    // On alt key modifier, make a selection on the whole whole word
-    if (altKey) {
-        window.pitchEditor.letterFocus.push(l)
-        let l2 = l
-        // Looking backwards
-        while (l2>=0) {
-            let prevLetter = window.pitchEditor.letters[l2]
-            if (prevLetter!="_") {
-                window.pitchEditor.letterFocus.push(l2)
-            } else {
-                break
-            }
-            l2--
-        }
-        l2 = l
-        // Looking forward
-        while (l2<window.pitchEditor.letters.length) {
-            let nextLetter = window.pitchEditor.letters[l2]
-            if (nextLetter!="_") {
-                window.pitchEditor.letterFocus.push(l2)
-            } else {
-                break
-            }
-            l2++
-        }
-
-    } else {
-
-        if (shiftKey && window.pitchEditor.letterFocus.length) {
-            const lastSelected = window.pitchEditor.letterFocus[window.pitchEditor.letterFocus.length-1]
-
-            if (l>lastSelected) {
-                for (let i=lastSelected; i<=l; i++) {
-                    window.pitchEditor.letterFocus.push(i)
-                }
-            } else {
-                for (let i=l; i<=window.pitchEditor.letterFocus[0]; i++) {
-                    window.pitchEditor.letterFocus.push(i)
-                }
-            }
-        } else {
-            if (window.pitchEditor.letterFocus.length && !ctrlKey) {
-                window.pitchEditor.letterFocus.forEach(li => letterElems[li].style.color = "black")
-                window.pitchEditor.letterFocus = []
-            }
-            window.pitchEditor.letterFocus.push(l)
-        }
-    }
-
-    window.pitchEditor.letterFocus = Array.from(new Set(window.pitchEditor.letterFocus.sort()))
-    window.pitchEditor.letterFocus.forEach(li => letterElems[li].style.color = "red")
-
-
-    if (window.pitchEditor.letterFocus.length==1) {
-        letterLength.value = parseFloat(window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]])
-        letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*100)/100
-        letterLengthNumb.value = letterLength.value
-
-        letterLength.disabled = false
-        letterPitchNumb.disabled = false
-        letterLengthNumb.disabled = false
-    } else {
-        letterPitchNumb.disabled = true
-        letterPitchNumb.value = ""
-        letterLengthNumb.disabled = true
-        letterLengthNumb.value = ""
-    }
-}
-
-let sliders = []
-let letterElems = []
-let autoinfer_timer = null
-let has_been_changed = false
 let css_hack_items = []
 let elemsWidths = []
 const infer = () => {
-    has_been_changed = false
+    window.sequenceEditor.hasChanged = false
     if (!isGenerating) {
         generateVoiceButton.click()
     }
 }
 const kickOffAutoInferTimer = () => {
-    if (autoinfer_timer != null) {
-        clearTimeout(autoinfer_timer)
-        autoinfer_timer = null
+    if (window.sequenceEditor.autoInferTimer != null) {
+        clearTimeout(window.sequenceEditor.autoInferTimer)
+        window.sequenceEditor.autoInferTimer = null
     }
     if (autoplay_ckbx.checked) {
-        autoinfer_timer = setTimeout(infer, 500)
+        window.sequenceEditor.autoInferTimer = setTimeout(infer, 500)
     }
 }
-const set_letter_display = (elem, elem_i, length=null, value=null) => {
-    if (length != null && elem) {
-        const elem_length = length/2
-        elem.style.width = `${parseInt(elem_length/2)}px`
-        elem.children[1].style.height = `${elem_length}px`
-        elem.children[1].style.marginTop = `${-parseInt(elem_length/2)+90}px`
-        css_hack_items[elem_i].innerHTML = `#slider_${elem_i}::-webkit-slider-thumb {height: ${elem_length}px;}`
-        elemsWidths[elem_i] = elem_length
-        elem.style.paddingLeft = `${parseInt(elem_length/2)}px`
-        editor.style.width = `${parseInt(elemsWidths.reduce((p,c)=>p+c,1)*1.25)}px`
-    }
 
-    if (value != null) {
-        elem.children[1].value = value
-    }
-}
-const setPitchEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen, pace=1) => {
 
-    Array.from(editor.children).forEach(child => editor.removeChild(child))
+const setSequenceEditorValues = (letters, pitchOrig, lengthsOrig, isFreshRegen, pace=1) => {
 
-    letters = letters ? letters : window.pitchEditor.letters
-    pitchOrig = pitchOrig ? pitchOrig : window.pitchEditor.pitchNew
-    lengthsOrig = lengthsOrig ? lengthsOrig : window.pitchEditor.dursNew
+    window.sequenceEditor.hasChanged = false
+
+    letters = letters ? letters : window.sequenceEditor.letters
+    pitchOrig = pitchOrig ? pitchOrig : window.sequenceEditor.pitchNew
+    lengthsOrig = lengthsOrig ? lengthsOrig : window.sequenceEditor.dursNew
 
     if (isFreshRegen) {
-        window.pitchEditor.letterFocus = []
-        pace_slid.value = pace
         paceNumbInput.value = pace
     }
-
-    window.pitchEditor.letters = letters
-    window.pitchEditor.pitchNew = pitchOrig.map(p=>p)
-    window.pitchEditor.dursNew = lengthsOrig.map(v=>v)
-
-    sliders = []
-    letterElems = []
-    autoinfer_timer = null
-    has_been_changed = false
-    css_hack_items = []
-    elemsWidths = []
-
-    letters.forEach((letter, l) => {
-
-        const letterLabel = createElem("div.letterElem", letter)
-        const letterDiv = createElem("div.letter", letterLabel)
-        const slider = createElem(`input.slider#slider_${l}`, {
-            type: "range",
-            orient: "vertical",
-            step: 0.01,
-            min: -3,
-            max:  3,
-            value: pitchOrig[l]
-        })
-        sliders.push(slider)
-        letterDiv.appendChild(slider)
-
-        letterLabel.addEventListener("click", event => setLetterFocus(l, event.ctrlKey, event.altKey, event.shiftKey))
-        let multiLetterPitchDelta = undefined
-        let multiLetterStartPitchVals = []
-        slider.addEventListener("mousedown", () => {
-            if (window.pitchEditor.letterFocus.length <= 1 || (!event.ctrlKey && !window.pitchEditor.letterFocus.includes(l))) {
-                setLetterFocus(l)
-            }
-
-            if (window.pitchEditor.letterFocus.length>1) {
-                multiLetterPitchDelta = slider.value
-                multiLetterStartPitchVals = sliders.map(slider => parseFloat(slider.value))
-            }
-
-            // Tooltip
-            if (window.userSettings.sliderTooltip) {
-                const sliderRect = slider.getClientRects()[0]
-                editorTooltip.style.display = "flex"
-                const tooltipRect = editorTooltip.getClientRects()[0]
-                editorTooltip.style.left = `${parseInt(sliderRect.left)-parseInt(tooltipRect.width) - 15}px`
-                editorTooltip.style.top = `${parseInt(sliderRect.top)+parseInt(sliderRect.height/2) - parseInt(tooltipRect.height*0.75)}px`
-                editorTooltip.innerHTML = slider.value
-            }
-        })
-        slider.addEventListener("mouseup", () => editorTooltip.style.display = "none")
-        slider.addEventListener("input", () => {
-            editorTooltip.innerHTML = slider.value
-
-            if (window.pitchEditor.letterFocus.length>1) {
-                window.pitchEditor.letterFocus.forEach(li => {
-                    if (li!=l) {
-                        sliders[li].value = multiLetterStartPitchVals[li]+(slider.value-multiLetterPitchDelta)
-                    }
-                    window.pitchEditor.pitchNew[li] = parseFloat(sliders[li].value)
-                })
-            } else if (window.pitchEditor.letterFocus.length==1) {
-                letterPitchNumb.value = parseInt(slider.value*100)/100
-            }
-        })
-
-
-        slider.addEventListener("change", () => {
-            if (window.pitchEditor.letterFocus.length==1) {
-                window.pitchEditor.pitchNew[l] = parseFloat(slider.value)
-                letterPitchNumb.value = parseInt(slider.value*100)/100
-            }
-            has_been_changed = true
-            if (autoplay_ckbx.checked) {
-                generateVoiceButton.click()
-            }
-            editorTooltip.style.display = "none"
-        })
-
-        if (window.pitchEditor.letterFocus.includes(l)) {
-            letterDiv.style.color = "red"
-        }
-
-
-        let length = window.pitchEditor.dursNew[l] * pace_slid.value * 10 + 50
-
-        letterDiv.style.width = `${parseInt(length/2)}px`
-        slider.style.height = `${length}px`
-
-        slider.style.marginLeft = `${-100}px`
-        letterDiv.style.paddingLeft = `${parseInt(length/2)}px`
-
-        const css_hack_elem = createElem("style", `#slider_${l}::-webkit-slider-thumb {height: ${length}px;}`)
-        css_hack_items.push(css_hack_elem)
-        css_hack_pitch_editor.appendChild(css_hack_elem)
-        elemsWidths.push(length)
-        editor.style.width = `${parseInt(elemsWidths.reduce((p,c)=>p+c,1)*1.15)}px`
-
-        editor.appendChild(letterDiv)
-        letterElems.push(letterDiv)
-
-        set_letter_display(letterDiv, l, length, pitchOrig[l])
-    })
 }
+
 
 // Un-select letters when clicking anywhere else
 right.addEventListener("click", event => {
-    if (event.target.nodeName=="BUTTON" || event.target.nodeName=="INPUT" || event.target.nodeName=="SVG" || event.target.nodeName=="IMG" || event.target.nodeName=="path" ||
-        ["letterElem", "infoContainer"].includes(event.target.className) || event.target==editor ) {
+    if (event.target.nodeName=="BUTTON" || event.target.nodeName=="INPUT" || event.target.nodeName=="SVG" || event.target.nodeName=="IMG" || event.target.nodeName=="path" || event.target == window.sequenceEditor.canvas) {
         return
     }
-
-    window.pitchEditor.letterFocus = []
-    letterElems.forEach((letterDiv, l) => {
-        letterDiv.style.color = "black"
+    window.sequenceEditor.letterFocus.forEach(li => {
+        window.sequenceEditor.letterClasses[li].colour = "black"
     })
+    window.sequenceEditor.letterFocus = []
+
     letterPitchNumb.disabled = true
     letterPitchNumb.value = ""
-    letterLength.disabled = true
     letterLengthNumb.disabled = true
     letterLengthNumb.value = ""
 })
 
 letterPitchNumb.addEventListener("input", () => {
     const lpnValue = parseFloat(letterPitchNumb.value) || 0
-    if (window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]!=lpnValue) {
-        has_been_changed = true
+    if (window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
+        window.sequenceEditor.hasChanged = true
     }
-    window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]] = lpnValue
-    sliders[window.pitchEditor.letterFocus[0]].value = letterPitchNumb.value
+    window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]] = lpnValue
+    window.sequenceEditor.grabbers[window.sequenceEditor.letterFocus[0]].setValueFromValue(letterPitchNumb.value)
     kickOffAutoInferTimer()
 })
 letterPitchNumb.addEventListener("change", () => {
     const lpnValue = parseFloat(letterPitchNumb.value) || 0
-    if (window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]!=lpnValue) {
-        has_been_changed = true
+    if (window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
+        window.sequenceEditor.hasChanged = true
     }
-    window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]] = lpnValue
-    sliders[window.pitchEditor.letterFocus[0]].value = letterPitchNumb.value
+    window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]] = lpnValue
+    window.sequenceEditor.grabbers[window.sequenceEditor.letterFocus[0]].setValueFromValue(letterPitchNumb.value)
     kickOffAutoInferTimer()
 })
 
 resetLetter_btn.addEventListener("click", () => {
-    if (window.pitchEditor.letterFocus.length==0) {
+    if (window.sequenceEditor.letterFocus.length==0) {
         return
     }
 
-    window.pitchEditor.letterFocus.forEach(l => {
-        if (window.pitchEditor.dursNew[l] != window.pitchEditor.resetDurs[l]) {
-            has_been_changed = true
+    window.sequenceEditor.letterFocus.forEach(l => {
+        if (window.sequenceEditor.dursNew[l] != window.sequenceEditor.resetDurs[l]) {
+            window.sequenceEditor.hasChanged = true
         }
-        window.pitchEditor.dursNew[l] = window.pitchEditor.resetDurs[l]
-        window.pitchEditor.pitchNew[l] = window.pitchEditor.resetPitch[l]
-        set_letter_display(letterElems[l], l, window.pitchEditor.resetDurs[l]* pace_slid.value*10+50, window.pitchEditor.pitchNew[l])
+        window.sequenceEditor.dursNew[l] = window.sequenceEditor.resetDurs[l]
+        window.sequenceEditor.pitchNew[l] = window.sequenceEditor.resetPitch[l]
+
+        window.sequenceEditor.grabbers[l].setValueFromValue(window.sequenceEditor.resetPitch[l])
+        window.sequenceEditor.sliderBoxes[l].setValueFromValue(window.sequenceEditor.resetDurs[l])
     })
 
-    if (window.pitchEditor.letterFocus.length==1) {
-        letterLength.value = parseFloat(window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]])
-        letterLengthNumb.value = parseFloat(window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]])
-        letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*100)/100
+    if (window.sequenceEditor.letterFocus.length==1) {
+        letterLengthNumb.value = parseFloat(window.sequenceEditor.dursNew[window.sequenceEditor.letterFocus[0]])
+        letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
     }
 })
 const updateLetterLengthFromInput = () => {
-    if (window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]] != letterLength.value) {
-        has_been_changed = true
+    if (window.sequenceEditor.dursNew[window.sequenceEditor.letterFocus[0]] != letterLengthNumb.value) {
+        window.sequenceEditor.hasChanged = true
     }
-    window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]] = parseFloat(letterLength.value)
+    window.sequenceEditor.dursNew[window.sequenceEditor.letterFocus[0]] = parseFloat(letterLengthNumb.value)
 
-    window.pitchEditor.letterFocus.forEach(l => {
-        const letterElem = letterElems[l]
-        const newWidth = window.pitchEditor.dursNew[l] * pace_slid.value //* 100
-        set_letter_display(letterElem, l, newWidth * 10 + 50)
+    window.sequenceEditor.letterFocus.forEach(l => {
+        window.sequenceEditor.sliderBoxes[l].setValueFromValue(window.sequenceEditor.dursNew[l])
     })
 }
 let multiLetterLengthDelta = undefined
 let multiLetterStartLengthVals = []
-letterLength.addEventListener("mousedown", () => {
-    if (window.pitchEditor.letterFocus.length>1) {
-        multiLetterLengthDelta = letterLength.value
-        multiLetterStartLengthVals = window.pitchEditor.dursNew.map(v=>v)
-    }
-})
-letterLength.addEventListener("input", () => {
-    if (window.pitchEditor.letterFocus.length>1) {
-        window.pitchEditor.letterFocus.forEach(li => {
-            window.pitchEditor.dursNew[li] = multiLetterStartLengthVals[li]+(parseFloat(letterLength.value)-multiLetterLengthDelta)
-        })
-        updateLetterLengthFromInput()
-        return
-    }
-
-    letterLengthNumb.value = letterLength.value
-    updateLetterLengthFromInput()
-
-    // Tooltip
-    if (window.userSettings.sliderTooltip) {
-        const sliderRect = letterLength.getClientRects()[0]
-        editorTooltip.style.display = "flex"
-        const tooltipRect = editorTooltip.getClientRects()[0]
-
-        editorTooltip.style.left = `${parseInt(sliderRect.left)+parseInt(sliderRect.width/2) - parseInt(tooltipRect.width*0.75)}px`
-        editorTooltip.style.top = `${parseInt(sliderRect.top)-parseInt(tooltipRect.height) - 15}px`
-        editorTooltip.innerHTML = letterLength.value
-    }
-})
-letterLength.addEventListener("mouseup", () => {
-    if (has_been_changed) {
-        kickOffAutoInferTimer()
-    }
-    editorTooltip.style.display = "none"
-})
 letterLengthNumb.addEventListener("input", () => {
-    letterLength.value = letterLengthNumb.value
     updateLetterLengthFromInput()
 })
 letterLengthNumb.addEventListener("change", () => {
-    letterLength.value = letterLengthNumb.value
     updateLetterLengthFromInput()
 })
 
 // Reset button
 reset_btn.addEventListener("click", () => {
-    window.pitchEditor.dursNew = window.pitchEditor.resetDurs
-    window.pitchEditor.pitchNew = window.pitchEditor.resetPitch.map(p=>p)
-    window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, window.pitchEditor.resetDurs[l]*10+50, window.pitchEditor.pitchNew[l]))
-    letterLength.value = parseFloat(window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]])
-    if (window.pitchEditor.letterFocus.length==1) {
-        letterLengthNumb.value = parseFloat(window.pitchEditor.dursNew[window.pitchEditor.letterFocus[0]])
-        letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*100)/100
+    window.sequenceEditor.dursNew = window.sequenceEditor.resetDurs.map(v => v)
+    window.sequenceEditor.pitchNew = window.sequenceEditor.resetPitch.map(p=>p)
+
+    // Update the editor pitch values
+    window.sequenceEditor.grabbers.forEach((slider, i) => {
+        slider.setValueFromValue(window.sequenceEditor.pitchNew[i])
+    })
+
+    // Update the editor lengths
+    window.sequenceEditor.sliderBoxes.forEach((box,i) => {
+        box.setValueFromValue(window.sequenceEditor.dursNew[i])
+    })
+
+    if (window.sequenceEditor.letterFocus.length==1) {
+        letterLengthNumb.value = parseFloat(window.sequenceEditor.dursNew[window.sequenceEditor.letterFocus[0]])
+        letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
     }
     pace_slid.value = 1
 })
 amplify_btn.addEventListener("click", () => {
-    window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map((p, pi) => {
-        if (window.pitchEditor.letterFocus.length>1 && window.pitchEditor.letterFocus.indexOf(pi)==-1) {
+    window.sequenceEditor.pitchNew = window.sequenceEditor.pitchNew.map((p, pi) => {
+        if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(pi)==-1) {
             return p
         }
         const newVal = p*1.025
         return newVal>0 ? Math.min(3, newVal) : Math.max(-3, newVal)
     })
-    window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
-    if (window.pitchEditor.letterFocus.length==1) {
-        letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*100)/100
+    window.sequenceEditor.grabbers.forEach((slider, l) => {
+        slider.setValueFromValue(window.sequenceEditor.pitchNew[l])
+    })
+    if (window.sequenceEditor.letterFocus.length==1) {
+        letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
     }
     kickOffAutoInferTimer()
 })
 flatten_btn.addEventListener("click", () => {
-    window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map((p,pi) => {
-        if (window.pitchEditor.letterFocus.length>1 && window.pitchEditor.letterFocus.indexOf(pi)==-1) {
+    window.sequenceEditor.pitchNew = window.sequenceEditor.pitchNew.map((p,pi) => {
+        if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(pi)==-1) {
             return p
         }
         return p*(1-0.025)
     })
-    window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
-    if (window.pitchEditor.letterFocus.length==1) {
-        letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*100)/100
+    window.sequenceEditor.grabbers.forEach((slider, l) => {
+        slider.setValueFromValue(window.sequenceEditor.pitchNew[l])
+    })
+    if (window.sequenceEditor.letterFocus.length==1) {
+        letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
     }
     kickOffAutoInferTimer()
 })
 increase_btn.addEventListener("click", () => {
-    window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map((p,pi) => {
-        if (window.pitchEditor.letterFocus.length>1 && window.pitchEditor.letterFocus.indexOf(pi)==-1) {
+    window.sequenceEditor.pitchNew = window.sequenceEditor.pitchNew.map((p,pi) => {
+        if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(pi)==-1) {
             return p
         }
         return p+0.025
     })
-    window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
-    if (window.pitchEditor.letterFocus.length==1) {
-        letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*100)/100
+    window.sequenceEditor.grabbers.forEach((slider, l) => {
+        slider.setValueFromValue(window.sequenceEditor.pitchNew[l])
+    })
+    if (window.sequenceEditor.letterFocus.length==1) {
+        letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
     }
     kickOffAutoInferTimer()
 })
 decrease_btn.addEventListener("click", () => {
-    window.pitchEditor.pitchNew = window.pitchEditor.pitchNew.map((p,pi) => {
-        if (window.pitchEditor.letterFocus.length>1 && window.pitchEditor.letterFocus.indexOf(pi)==-1) {
+    window.sequenceEditor.pitchNew = window.sequenceEditor.pitchNew.map((p,pi) => {
+        if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(pi)==-1) {
             return p
         }
         return p-0.025
     })
-    window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, null, window.pitchEditor.pitchNew[l]))
-    if (window.pitchEditor.letterFocus.length==1) {
-        letterPitchNumb.value = parseInt(window.pitchEditor.pitchNew[window.pitchEditor.letterFocus[0]]*100)/100
+    window.sequenceEditor.grabbers.forEach((slider, l) => {
+        slider.setValueFromValue(window.sequenceEditor.pitchNew[l])
+    })
+    if (window.sequenceEditor.letterFocus.length==1) {
+        letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
     }
     kickOffAutoInferTimer()
 })
+
 pace_slid.addEventListener("change", () => {
     editorTooltip.style.display = "none"
     if (autoplay_ckbx.checked) {
         generateVoiceButton.click()
     }
     paceNumbInput.value = pace_slid.value
+    window.sequenceEditor.pacing = parseFloat(pace_slid.value)
+    window.sequenceEditor.init()
 })
 
 pace_slid.addEventListener("input", () => {
-    const new_lengths = window.pitchEditor.dursNew.map((v,l) => v * pace_slid.value)
-    window.pitchEditor.letters.forEach((_, l) => set_letter_display(letterElems[l], l, new_lengths[l]* 10 + 50, null))
-
-    // Tooltip
-    if (window.userSettings.sliderTooltip) {
-        const sliderRect = pace_slid.getClientRects()[0]
-        editorTooltip.style.display = "flex"
-        const tooltipRect = editorTooltip.getClientRects()[0]
-
-        editorTooltip.style.left = `${parseInt(sliderRect.left)+parseInt(sliderRect.width/2) - parseInt(tooltipRect.width*0.75)}px`
-        editorTooltip.style.top = `${parseInt(sliderRect.top)-parseInt(tooltipRect.height) - 15}px`
-        editorTooltip.innerHTML = pace_slid.value
-    }
+    window.sequenceEditor.pacing = parseFloat(pace_slid.value)
+    window.sequenceEditor.sliderBoxes.forEach((box, i) => {
+        box.setValueFromValue(window.sequenceEditor.dursNew[i])
+    })
 })
 paceNumbInput.addEventListener("change", () => {
     pace_slid.value = paceNumbInput.value
     if (autoplay_ckbx.checked) {
         generateVoiceButton.click()
     }
+    window.sequenceEditor.sliderBoxes.forEach((box, i) => {box.setValueFromValue(window.sequenceEditor.dursNew[i])})
+    window.sequenceEditor.pacing = parseFloat(pace_slid.value)
+    window.sequenceEditor.init()
 })
 paceNumbInput.addEventListener("keyup", () => {
     pace_slid.value = paceNumbInput.value
+    window.sequenceEditor.sliderBoxes.forEach((box, i) => {box.setValueFromValue(window.sequenceEditor.dursNew[i])})
+    window.sequenceEditor.pacing = parseFloat(pace_slid.value)
+    window.sequenceEditor.init()
 })
 autoplay_ckbx.addEventListener("change", () => {
     window.userSettings.autoplay = autoplay_ckbx.checked

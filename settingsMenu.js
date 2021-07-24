@@ -147,7 +147,7 @@ if (!Object.keys(window.userSettings).includes("bigwaveglow_path")) { // For bac
 const updateUIWithSettings = () => {
     useGPUCbx.checked = window.userSettings.useGPU
     autoplay_ckbx.checked = window.userSettings.autoplay
-    setting_slidersTooltip.checked = window.userSettings.sliderTooltip
+    // setting_slidersTooltip.checked = window.userSettings.sliderTooltip
     setting_defaultToHiFi.checked = window.userSettings.defaultToHiFi
     setting_keepPaceOnNew.checked = window.userSettings.keepPaceOnNew
     setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
@@ -311,7 +311,7 @@ const updateBackground = () => {
 }
 
 initMenuSetting(setting_autoplaygenCbx, "autoPlayGen", "checkbox")
-initMenuSetting(setting_slidersTooltip, "sliderTooltip", "checkbox")
+// initMenuSetting(setting_slidersTooltip, "sliderTooltip", "checkbox")
 initMenuSetting(setting_defaultToHiFi, "defaultToHiFi", "checkbox")
 initMenuSetting(setting_keepPaceOnNew, "keepPaceOnNew", "checkbox")
 initMenuSetting(setting_areload_voices, "autoReloadVoices", "checkbox")
