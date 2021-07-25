@@ -21,6 +21,7 @@ window.embeddingsState = {
     isOpen: false,
     sceneData: {},
     mouseIsDown: false,
+    rightMouseIsDown: false,
     mousePos: {x: 0, y: 0}
 }
 
@@ -204,6 +205,11 @@ window.initEmbeddingsScene = () => {
             if (Math.abs(mouseX-window.embeddingsState.mousePos.x)<10 && Math.abs(mouseY-window.embeddingsState.mousePos.y)<10) {
                 window.embeddingsState.mouseIsDown = true
                 setTimeout(() => {window.embeddingsState.mouseIsDown = false}, 100)
+            }
+        } else if (event.button==2) {
+            if (Math.abs(mouseX-window.embeddingsState.mousePos.x)<10 && Math.abs(mouseY-window.embeddingsState.mousePos.y)<10) {
+                window.embeddingsState.rightMouseIsDown = true
+                setTimeout(() => {window.embeddingsState.rightMouseIsDown = false}, 100)
             }
         }
     })
@@ -470,6 +476,26 @@ window.initEmbeddingsScene = () => {
             hoveredObject.object.material.color.g = Math.min(1, colour.g/255*1.5)
             hoveredObject.object.material.color.b = Math.min(1, colour.b/255*1.5)
 
+
+            // Right click does voice audio preview
+            if (window.embeddingsState.rightMouseIsDown) {
+                window.embeddingsState.rightMouseIsDown = false
+                const voiceId = hoveredObject.object.data.voiceId
+                const gameId = hoveredObject.object.data.game
+                const modelsPathForGame = window.userSettings[`modelspath_${gameId}`]
+                const audioPreviewPath = `${modelsPathForGame}/${voiceId}.wav`
+
+                if (fs.existsSync(audioPreviewPath)) {
+                    const audioPreview = createElem("audio", {autoplay: false}, createElem("source", {
+                        src: audioPreviewPath
+                    }))
+                    audioPreview.setSinkId(window.userSettings.base_speaker)
+                } else {
+                    window.errorModal("No preview audio file available")
+                }
+            }
+
+            // Left click does voice click
             if (window.embeddingsState.mouseIsDown) {
                 if (window.embeddingsState.clickedObject==undefined || window.embeddingsState.clickedObject.voiceId!=hoveredObject.object.data.voiceId) {
                     if (window.embeddingsState.clickedObject!=undefined) {
