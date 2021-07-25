@@ -1,7 +1,8 @@
 "use strict"
 
 const fetch = require("node-fetch")
-const KEY = fs.readFileSync(`${window.path}/key.txt`, "utf8")
+// const KEY = fs.readFileSync(`${window.path}/key.txt`, "utf8")
+const KEY = fs.readFileSync(`${window.path}/key_test.txt`, "utf8")
 
 
 window.nexusModelsList = []
@@ -590,3 +591,25 @@ nexusOnlyNewUpdatedCkbx.addEventListener("change", () => window.displayAllModels
 
 window.showUserName()
 
+// Temp
+// const repoLinks = [
+//     "https://www.nexusmods.com/skyrimspecialedition/mods/44184",
+//     "https://www.nexusmods.com/fallout4/mods/49340",
+//     "https://www.nexusmods.com/newvegas/mods/70815",
+//     "https://www.nexusmods.com/oblivion/mods/50697",
+//     "https://www.nexusmods.com/fallout3/mods/24502",
+//     "https://www.nexusmods.com/morrowind/mods/49210",
+//     "https://www.nexusmods.com/fallout76/mods/928",
+//     "https://www.nexusmods.com/masseffect3/mods/930",
+//     "https://www.nexusmods.com/cyberpunk2077/mods/2162",
+//     "https://www.nexusmods.com/civilisationvi/mods/109",
+//     "https://www.nexusmods.com/witcher3/mods/5676",
+// ]
+
+
+// TODO, the download/install loop for the Download all button
+// TODO, message Nexus, and ask for API login permissions
+    // TODO, implement authorisation via the login system
+
+// ?? TODO, find a way to pre-populate the list on app start-up
+// nexusCheckNow.click()

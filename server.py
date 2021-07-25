@@ -19,7 +19,7 @@ if __name__ == '__main__':
     # ========================
     try:
         import numpy
-        import pyinstaller_imports
+        import python.pyinstaller_imports
 
         import logging
         from logging.handlers import RotatingFileHandler
@@ -89,7 +89,7 @@ if __name__ == '__main__':
 
 
     try:
-        from plugins_manager import PluginManager
+        from python.plugins_manager import PluginManager
         plugin_manager = PluginManager(APP_VERSION, PROD, CPU_ONLY, logger)
         logger.info("Plugin manager loaded.")
     except:
@@ -142,7 +142,7 @@ if __name__ == '__main__':
     # ===============
     xVASpeechModel = 0
     try:
-        import xVASpeech
+        from python import xVASpeech
     except:
         print(traceback.format_exc())
         logger.info(traceback.format_exc())
