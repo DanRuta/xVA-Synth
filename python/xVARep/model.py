@@ -113,11 +113,6 @@ class xVARep(object):
         else:
             self.embeddings = {}
 
-        # TODO, make sure the cache is invalidated if the .wav file is changed, detect that somehow
-        self.cached_audio_feats = {}
-
-
-
 
     def load_state_dict (self, ckpt_path, sd):
         self.ckpt_path = ckpt_path
@@ -164,10 +159,9 @@ class xVARep(object):
         # Prepare audio data
         audio_feats_batch = {}
 
-        DO_MP = False # TODO, figure out why this doesn't work in prod
+        DO_MP = False # TODO, figure out why this doesn't work in prod - also, I need to update the code, having changed the caching strategy
         if DO_MP and includeAllVoices:
             files_to_extract = {}
-
 
             for api, audio_path in enumerate(sampleWAVs):
 
@@ -194,25 +188,35 @@ class xVARep(object):
 
         else:
             for api, audio_path in enumerate(sampleWAVs):
-                if voiceIds[api] in self.cached_audio_feats.keys():
-                    audio_feats = self.cached_audio_feats[voiceIds[api]]
-                else:
+                if voiceIds[api] not in self.embeddings.keys():
                     audio_feats = extract_features(audio_path)
                     audio_feats = [(val-self.norm_stats["mean"][vi]) / self.norm_stats["std"][vi] for vi,val in enumerate(audio_feats)]
-                    self.cached_audio_feats[voiceIds[api]] = audio_feats
-                audio_feats_batch[voiceIds[api]] = audio_feats
-
-        audio_feats_batch = [audio_feats_batch[key] for key in voiceIds]
+                    audio_feats_batch[voiceIds[api]] = audio_feats
 
 
+        audio_feats_batch = [audio_feats_batch[key] for key in audio_feats_batch]
+
+
+        for api, audio_path in enumerate(sampleWAVs):
+            if voiceIds[api] in self.embeddings.keys():
+                embeddings[voiceIds[api]] = {}
+                embeddings[voiceIds[api]]["emb"] = self.embeddings[voiceIds[api]]["emb"]
+                embeddings[voiceIds[api]]["name"] = self.embeddings[voiceIds[api]]["name"]
+                embeddings[voiceIds[api]]["gender"] = self.embeddings[voiceIds[api]]["gender"]
+                embeddings[voiceIds[api]]["gameId"] = self.embeddings[voiceIds[api]]["gameId"]
+                voiceIds.append(voiceIds[api])
+                voiceNames.append(self.embeddings[voiceIds[api]]["name"])
+                voiceGenders.append(self.embeddings[voiceIds[api]]["gender"])
+                gameIds.append(self.embeddings[voiceIds[api]]["gameId"])
 
 
         # Compute embedding using the model
-        embs = self.forward(audio_feats_batch)
-        embs = list(embs.cpu().detach().numpy())
-        for ei, emb in enumerate(embs):
-            embeddings[voiceIds[ei]] = {"emb": emb, "name": voiceNames[ei], "gender": voiceGenders[ei], "gameId": gameIds[ei]}
-            self.embeddings[voiceIds[ei]] = {"emb": emb, "name": voiceNames[ei], "gender": voiceGenders[ei], "gameId": gameIds[ei]}
+        if len(audio_feats_batch):
+            embs = self.forward(audio_feats_batch)
+            embs = list(embs.cpu().detach().numpy())
+            for ei, emb in enumerate(embs):
+                embeddings[voiceIds[ei]] = {"emb": emb, "name": voiceNames[ei], "gender": voiceGenders[ei], "gameId": gameIds[ei]}
+                self.embeddings[voiceIds[ei]] = {"emb": emb, "name": voiceNames[ei], "gender": voiceGenders[ei], "gameId": gameIds[ei]}
 
 
 
@@ -253,7 +257,7 @@ class xVARep(object):
 
         voiceIds, voiceNames, voiceGenders, gameIds, embeddings = self.compile_emb_bank(mappings, includeAllVoices, onlyInstalled)
 
-        tsne_input_data = [embeddings[voiceId]["emb"] for voiceId in voiceIds]
+        tsne_input_data = [embeddings[voiceId]["emb"] for voiceId in voiceIds] # if voiceId in embeddings.keys()
 
         if algorithm=="tsne":
             reduced_data = TSNE(n_components=3, random_state=0, perplexity=30).fit_transform(np.array(tsne_input_data))
