@@ -215,7 +215,13 @@ const uploadBatchCSVs = async (eType, event) => {
             if (!file.name.endsWith(".csv")) {
                 if (file.name.toLowerCase().endsWith(".txt")) {
                     if (window.currentModel) {
+                        window.appLogger.log(`Reading file: ${file.name}`)
                         const records = await readFileTxt(file)
+                        if (window.userSettings.batch_skipExisting) {
+                            window.appLogger.log("Checking existing files before adding to queue")
+                        } else {
+                            window.appLogger.log("Adding files to queue")
+                        }
                         records.forEach(item => {
                             if (window.userSettings.batch_skipExisting) {
                                 let outPath
@@ -250,7 +256,13 @@ const uploadBatchCSVs = async (eType, event) => {
                 }
             }
 
+            window.appLogger.log(`Reading file: ${file.name}`)
             const records = await readFile(file)
+            if (window.userSettings.batch_skipExisting) {
+                window.appLogger.log("Checking existing files before adding to queue")
+            } else {
+                window.appLogger.log("Adding files to queue")
+            }
             records.forEach(item => {
 
                 if (window.userSettings.batch_skipExisting) {
@@ -289,15 +301,18 @@ const uploadBatchCSVs = async (eType, event) => {
         batch_pageNum.value = 1
 
 
+        window.appLogger.log("Preprocessing data...")
         const cleanedData = preProcessCSVData(dataLines)
         if (cleanedData.length) {
             populateRecordsList(cleanedData)
+            window.appLogger.log("Grouping up lines...")
             const finalOrder = groupLines()
             refreshRecordsList(finalOrder)
             window.batch_state.lines = finalOrder
         } else {
             batch_clearBtn.click()
         }
+        window.appLogger.log("batch import done")
 
         const numPages = Math.ceil(window.batch_state.lines.length/window.userSettings.batch_paginationSize)
         batch_total_pages.innerHTML = `of ${numPages}`
