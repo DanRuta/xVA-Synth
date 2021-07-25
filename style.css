@@ -889,6 +889,9 @@ a {
     color: gray;
     overflow: auto;
 }
+#batch_main {
+    height: 55vh;
+}
 #plugins_main {
     width: 75vw;
 }
