@@ -666,11 +666,12 @@
                     </div>
                     <div id="batch_footer" style="padding-bottom: 0;padding-top: 0;">
                         <div>
-                            <div style="display: flex;justify-content: center;align-items: center;">
+                            <div style="height: 40px;display: flex;justify-content: center;align-items: center;">
                                 <div><button id="batch_paginationPrev">Previous</button></div>
                                 <div style="display: flex;align-items: center;">
                                     <div>Page:</div>
                                     <input id="batch_pageNum" type="number" min="1" step="1" style="height: 25px;width: 50px;margin: 10px;">
+                                    <div id="batch_total_pages" style="margin-right: 10px;"></div>
                                 </div>
                                 <div><button id="batch_paginationNext">Next</button></div>
                             </div>
@@ -688,7 +689,7 @@
                             <div>|</div>
                             <div id="batch_eta_eta"></div>
                         </div>
-                        <div id="batch_out_opts">
+                        <div id="batch_out_opts" style="padding-top: 0;padding-bottom: 0;">
                             <span></span>
                             <span id="batch_clearDirOpts">
                                 <input type="checkbox" id="batch_clearDirFirstCkbx">

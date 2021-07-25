@@ -288,6 +288,7 @@ const uploadBatchCSVs = async (eType, event) => {
         window.batch_state.paginationIndex = 0
         batch_pageNum.value = 1
 
+
         const cleanedData = preProcessCSVData(dataLines)
         if (cleanedData.length) {
             populateRecordsList(cleanedData)
@@ -298,6 +299,8 @@ const uploadBatchCSVs = async (eType, event) => {
             batch_clearBtn.click()
         }
 
+        const numPages = Math.ceil(window.batch_state.lines.length/window.userSettings.batch_paginationSize)
+        batch_total_pages.innerHTML = `of ${numPages}`
         batchDropZoneNote.innerHTML = window.i18n.BATCH_DROPZONE
     }
 }
@@ -1146,6 +1149,8 @@ setting_batch_paginationSize.addEventListener("change", () => {
     const numPages = Math.ceil(window.batch_state.lines.length/window.userSettings.batch_paginationSize)
     batch_pageNum.value = Math.max(1, Math.min(parseInt(batch_pageNum.value), numPages))
     window.batch_state.paginationIndex = batch_pageNum.value-1
+    batch_total_pages.innerHTML = `of ${numPages}`
+
     refreshRecordsList()
 })
 
