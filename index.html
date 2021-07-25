@@ -780,8 +780,10 @@
                     <div style="width: 70vw;display: flex;flex-direction: column;align-items: center;">
                         <div style="display: flex;justify-content: space-between;align-items: center;height: 5vh;font-size: 16pt;width: 95%;">
                             <div>Models</div>
-                            <div style="width: 50vw;">
-                                <input id="nexusSearchBar" placeholder="Search voices..." style="height: 25px;width: calc(100% - 300px);">
+                            <div style="width: 50vw;display: flex;align-items: center;">
+                                <input id="nexusSearchBar" placeholder="Search voices..." style="height: 25px;width: calc(100% - 500px);">
+                                <span style="font-size: 12pt;margin-left: 5px;margin-right: 5px;">Show only new/updated</span>
+                                <input id="nexusOnlyNewUpdatedCkbx" type="checkbox">
                                 <button id="nexusCheckNow">Check now</button>
                                 <button id="nexusManageReposButton">Manage repos</button>
                             </div>

@@ -379,8 +379,12 @@ window.displayAllModels = () => {
             return
         }
 
-        const recordRow = createElem("div")
         const existingModel = Object.keys(window.games).includes(modelMeta.game) ? window.games[modelMeta.game].models.find(model => model.voiceId==modelMeta.voiceId) : undefined
+        if (existingModel && nexusOnlyNewUpdatedCkbx.checked && (window.checkVersionRequirements(modelMeta.version, String(existingModel.modelVersion)) || (modelMeta.version.replace(".0","")==String(existingModel.modelVersion))) ){
+            return
+        }
+
+        const recordRow = createElem("div")
 
         const actionsElem = createElem("div")
 

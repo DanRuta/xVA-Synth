@@ -1124,8 +1124,11 @@ a {
 }
 /*Version*/
 #nexusRecordsHeader > div:nth-child(5), #nexusRecordsContainer > div > div:nth-child(5) {
-    min-width: 120px;
-    max-width: 120px;
+    min-width: 130px;
+    max-width: 130px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 /*Date*/
 #nexusRecordsHeader > div:nth-child(6), #nexusRecordsContainer > div > div:nth-child(6) {
