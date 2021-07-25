@@ -439,35 +439,42 @@ const refreshRecordsList = (finalOrder) => {
 
 // Sort the lines by voice_id, and then by vocoder used
 const groupLines = () => {
-    const voices_order = []
+    if (window.userSettings.batch_doGrouping) {
+        const voices_order = []
 
-    const lines = window.batch_state.lines.sort((a,b) => {
-        return a.voice_id - b.voice_id
-    })
+        const lines = window.batch_state.lines.sort((a,b) => {
+            return a.voice_id - b.voice_id
+        })
 
-    const voices_groups = {}
+        const voices_groups = {}
 
-    // Get the order of the voice_id, and group them up
-    window.batch_state.lines.forEach(record => {
-        if (!voices_order.includes(record[0].voice_id)) {
-            voices_order.push(record[0].voice_id)
-            voices_groups[record[0].voice_id] = []
+        // Get the order of the voice_id, and group them up
+        window.batch_state.lines.forEach(record => {
+            if (!voices_order.includes(record[0].voice_id)) {
+                voices_order.push(record[0].voice_id)
+                voices_groups[record[0].voice_id] = []
+            }
+            voices_groups[record[0].voice_id].push(record)
+        })
+
+        // Go through the voice groups and sort them by vocoder
+        if (window.userSettings.batch_doVocoderGrouping) {
+            voices_order.forEach(voice_id => {
+                voices_groups[voice_id] = voices_groups[voice_id].sort((a,b) => a[0].vocoder<b[0].vocoder?1:-1)
+            })
         }
-        voices_groups[record[0].voice_id].push(record)
-    })
 
-    // Go through the voice groups and sort them by vocoder
-    voices_order.forEach(voice_id => {
-        voices_groups[voice_id] = voices_groups[voice_id].sort((a,b) => a[0].vocoder<b[0].vocoder?1:-1)
-    })
+        // Collate everything back into the final order
+        const finalOrder = []
+        voices_order.forEach(voice_id => {
+            voices_groups[voice_id].forEach(record => finalOrder.push(record))
+        })
 
-    // Collate everything back into the final order
-    const finalOrder = []
-    voices_order.forEach(voice_id => {
-        voices_groups[voice_id].forEach(record => finalOrder.push(record))
-    })
+        return finalOrder
 
-    return finalOrder
+    } else {
+        return window.batch_state.lines
+    }
 }
 
 

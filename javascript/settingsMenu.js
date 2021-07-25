@@ -98,6 +98,12 @@ if (!Object.keys(window.userSettings).includes("batch_MPCount")) { // For backwa
 if (!Object.keys(window.userSettings).includes("batch_skipExisting")) { // For backwards compatibility
     window.userSettings.batch_skipExisting = true
 }
+if (!Object.keys(window.userSettings).includes("batch_doGrouping")) { // For backwards compatibility
+    window.userSettings.batch_doGrouping = true
+}
+if (!Object.keys(window.userSettings).includes("batch_doVocoderGrouping")) { // For backwards compatibility
+    window.userSettings.batch_doVocoderGrouping = false
+}
 if (!Object.keys(window.userSettings).includes("batch_delimiter")) { // For backwards compatibility
     window.userSettings.batch_delimiter = ","
 }
@@ -184,6 +190,8 @@ const updateUIWithSettings = () => {
     setting_batch_multip_count.value = window.userSettings.batch_MPCount
     setting_batch_delimiter.value = window.userSettings.batch_delimiter
     setting_batch_paginationSize.value = window.userSettings.batch_paginationSize
+    setting_batch_doGrouping.checked = window.userSettings.batch_doGrouping
+    setting_batch_doVocoderGrouping.checked = window.userSettings.batch_doVocoderGrouping
 
     batch_batchSizeInput.value = parseInt(window.userSettings.batch_batchSize)
     batch_skipExisting.checked = window.userSettings.batch_skipExisting
@@ -390,6 +398,8 @@ initMenuSetting(setting_bg_gradient_opacity, "bg_gradient_opacity", "number", up
 initMenuSetting(setting_batch_fastmode, "batch_fastMode", "checkbox")
 initMenuSetting(setting_batch_multip, "batch_useMP", "checkbox")
 initMenuSetting(setting_batch_multip_count, "batch_MPCount", "number", undefined, parseInt)
+initMenuSetting(setting_batch_doGrouping, "batch_doGrouping", "checkbox")
+initMenuSetting(setting_batch_doVocoderGrouping, "batch_doVocoderGrouping", "checkbox")
 
 
 initMenuSetting(setting_external_audio_editor, "externalAudioEditor", "text")

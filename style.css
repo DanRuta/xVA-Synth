@@ -983,8 +983,8 @@ a {
 }
 /*Index*/
 #batchRecordsHeader > div:first-child, #batchRecordsContainer > div > div:first-child {
-    min-width: 50px;
-    max-width: 50px;
+    min-width: 70px;
+    max-width: 70px;
 }
 /*Status*/
 #batchRecordsHeader > div:nth-child(2), #batchRecordsContainer > div > div:nth-child(2) {
