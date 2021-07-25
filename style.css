@@ -890,7 +890,7 @@ a {
     overflow: auto;
 }
 #plugins_main {
-    width: 60vw;
+    width: 75vw;
 }
 #batchDropZoneNote {
     font-size: 30pt;
@@ -1069,33 +1069,38 @@ a {
     min-width: 125px;
     max-width: 125px;
 }
-/*Version*/
+/*Endorse*/
 #pluginsRecordsHeader > div:nth-child(5), #pluginsRecordsContainer > div > div:nth-child(5) {
+    min-width: 100px;
+    max-width: 100px;
+}
+/*Version*/
+#pluginsRecordsHeader > div:nth-child(6), #pluginsRecordsContainer > div > div:nth-child(6) {
     min-width: 90px;
     max-width: 90px;
 }
 /*Type*/
-#pluginsRecordsHeader > div:nth-child(6), #pluginsRecordsContainer > div > div:nth-child(6) {
+#pluginsRecordsHeader > div:nth-child(7), #pluginsRecordsContainer > div > div:nth-child(7) {
     min-width: 60px;
     max-width: 60px;
 }
 /*Min App Version*/
-#pluginsRecordsHeader > div:nth-child(7), #pluginsRecordsContainer > div > div:nth-child(7) {
-    min-width: 80px;
-    max-width: 80px;
-}
-/*Max App Version*/
 #pluginsRecordsHeader > div:nth-child(8), #pluginsRecordsContainer > div > div:nth-child(8) {
     min-width: 80px;
     max-width: 80px;
 }
-/*Plugin short descriptions*/
+/*Max App Version*/
 #pluginsRecordsHeader > div:nth-child(9), #pluginsRecordsContainer > div > div:nth-child(9) {
+    min-width: 80px;
+    max-width: 80px;
+}
+/*Plugin short descriptions*/
+#pluginsRecordsHeader > div:nth-child(10), #pluginsRecordsContainer > div > div:nth-child(10) {
     min-width: 450px;
     /*max-width: 450px;*/
 }
 /*Plugin ID*/
-#pluginsRecordsHeader > div:nth-child(10), #pluginsRecordsContainer > div > div:nth-child(10) {
+#pluginsRecordsHeader > div:nth-child(11), #pluginsRecordsContainer > div > div:nth-child(11) {
     min-width: 150px;
     max-width: 150px;
 }

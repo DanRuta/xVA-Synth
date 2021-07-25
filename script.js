@@ -1040,14 +1040,15 @@ window.doWeirdServerStartupCheck = (startUpMessage) => {
             if (serverIsUp) {
                 topResolve()
             } else {
-                console.log("checking");
+                // console.log("checking");
                 (new Promise((resolve, reject) => {
                     fetch(`http://localhost:8008/checkReady`, {
                         method: "Post",
                         body: JSON.stringify({})
                     }).then(r => r.text()).then(r => {
-                        console.log("r", r)
+                        // console.log("r", r)
                         closeModal().then(() => {
+                            window.pluginsManager.updateUI()
                             if (!window.pluginsManager.hasRunPostStartPlugins) {
                                 window.pluginsManager.hasRunPostStartPlugins = true
                                 window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["start"]["post"], event="post start")

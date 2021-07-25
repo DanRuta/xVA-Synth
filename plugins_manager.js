@@ -20,7 +20,6 @@ class PluginsManager {
 
 
         this.scanPlugins()
-        this.updateUI()
         this.savePlugins()
         this.appLogger.log(`${this.path}/plugins`)
         if (fs.existsSync(`${this.path}/plugins`)) {
@@ -128,6 +127,7 @@ class PluginsManager {
     }
 
     updateUI () {
+
         pluginsRecordsContainer.innerHTML = ""
 
         this.plugins.forEach(([pluginId, pluginData, isEnabled, minVersionOk, maxVersionOk], pi) => {
@@ -139,13 +139,69 @@ class PluginsManager {
             record.appendChild(createElem("div", pluginData["plugin-name"]))
             record.appendChild(createElem("div", pluginData["author"]||""))
 
+            const endorseButtonContainer = createElem("div")
+            record.appendChild(endorseButtonContainer)
+            if (pluginData["nexus-link"]) {
+
+                window.nexus_getData(`${pluginData["nexus-link"].split(".com/")[1]}.json`).then(repoInfo => {
+                    const endorseButton = createElem("button.smallButton", "Endorse")
+                    const gameId = repoInfo.game_id
+                    const nexusRepoId = repoInfo.mod_id
+
+                    if (repoInfo.endorsement.endorse_status=="Endorsed") {
+                        window.endorsedRepos.add(`plugin:${pluginId}`)
+                        endorseButton.innerHTML = "Unendorse"
+                        endorseButton.style.background = "none"
+                        endorseButton.style.border = `2px solid #${currentGame[1]}`
+                    } else {
+                        endorseButton.style.setProperty("background-color", `#${currentGame[1]}`, "important")
+                    }
+
+                    endorseButtonContainer.appendChild(endorseButton)
+                    endorseButton.addEventListener("click", async () => {
+                        let response
+                        if (window.endorsedRepos.has(`plugin:${pluginId}`)) {
+                            response = await window.nexus_getData(`${gameId}/mods/${nexusRepoId}/abstain.json`, {
+                                game_domain_name: gameId,
+                                id: nexusRepoId,
+                                version: repoInfo.version
+                            }, "POST")
+                        } else {
+                            response = await window.nexus_getData(`${gameId}/mods/${nexusRepoId}/endorse.json`, {
+                                game_domain_name: gameId,
+                                id: nexusRepoId,
+                                version: repoInfo.version
+                            }, "POST")
+                        }
+                        if (response && response.message && response.status=="Error") {
+                            if (response.message=="NOT_DOWNLOADED_MOD") {
+                                response.message = "You need to first download something from this repo to be able to endorse it."
+                            } else if (response.message=="TOO_SOON_AFTER_DOWNLOAD") {
+                                response.message = "Nexus requires you to wait at least 15 mins (at the time of writing) before you can endorse."
+                            } else if (response.message=="IS_OWN_MOD") {
+                                response.message = "Nexus does not allow you to rate your own content."
+                            }
+
+                            window.errorModal(response.message)
+                        } else {
+
+                            if (window.endorsedRepos.has(`plugin:${pluginId}`)) {
+                                window.endorsedRepos.delete(`plugin:${pluginId}`)
+                            } else {
+                                window.endorsedRepos.add(`plugin:${pluginId}`)
+                            }
+                            this.updateUI()
+                        }
+                    })
+                })
+            }
+
+
             const hasBackendScript = !!Object.keys(pluginData["back-end-hooks"]).find(key => {
                 return (key=="custom-event" && pluginData["back-end-hooks"]["custom-event"]["file"]) || pluginData["back-end-hooks"][key]["pre"]["file"] || pluginData["back-end-hooks"][key]["post"]["file"]
             })
             const hasFrontendScript = !!pluginData["front-end-hooks"]
             const type =  hasFrontendScript && hasBackendScript ? "Both": (!hasFrontendScript && !hasBackendScript ? "None" : (hasFrontendScript ? "Front" : "Back"))
-
-            // console.log(pluginId, pluginData)
 
             record.appendChild(createElem("div", pluginData["plugin-version"]))
             record.appendChild(createElem("div", type))
@@ -178,7 +234,7 @@ class PluginsManager {
 
             record.addEventListener("click", (e) => {
 
-                if (e.target==enabledCkbx) {
+                if (e.target==enabledCkbx || e.target.nodeName=="BUTTON") {
                     return
                 }
 

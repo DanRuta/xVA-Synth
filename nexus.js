@@ -209,6 +209,7 @@ const getData = (url, data, type="GET") => {
         })
     })
 }
+window.nexus_getData = getData
 // ==========================
 
 
@@ -584,6 +585,8 @@ nexusReposAddButton.addEventListener("click", () => {
         fs.writeFileSync(`${window.path}/repositories.txt`, fileText.join("\n"), "utf8")
     })
 })
+
+nexusOnlyNewUpdatedCkbx.addEventListener("change", () => window.displayAllModels())
 
 window.showUserName()
 
