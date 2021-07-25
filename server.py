@@ -99,39 +99,10 @@ if __name__ == '__main__':
     plugin_manager.run_plugins(plist=plugin_manager.plugins["start"]["pre"], event="pre start", data=None)
 
 
-
-    # User settings
-    # =============
-    user_settings = {"use_gpu": not CPU_ONLY, "vocoder": "256_waveglow"}
-    try:
-        with open(f'{"./resources/app" if PROD else "."}/usersettings.csv', "r") as f:
-            data = f.read().split("\n")
-            head = data[0].split(",")
-            values = data[1].split(",")
-            for h, hv in enumerate(head):
-                user_settings[hv] = values[h]=="True" if values[h] in ["True", "False"] else values[h]
-        if CPU_ONLY:
-            user_settings["use_gpu"] = False
-        logger.info(str(user_settings))
-    except:
-        logger.info(traceback.format_exc())
-        pass
-
-    def write_settings ():
-        with open(f'{"./resources/app" if PROD else "."}/usersettings.csv', "w+") as f:
-            head = list(user_settings.keys())
-            vals = ",".join([str(user_settings[h]) for h in head])
-            f.write("\n".join([",".join(head), vals]))
-
-    use_gpu = user_settings["use_gpu"]
-    print(f'user_settings, {user_settings}')
-    # =============
-
-
     # ======================== Models manager
     try:
         from python.models_manager import ModelsManager
-        models_manager = ModelsManager(logger, PROD, torch.device("cuda:0") if use_gpu else torch.device("cpu"))
+        models_manager = ModelsManager(logger, PROD, device="cpu")
     except:
         logger.info("Models manager failed to initialize")
         logger.info(traceback.format_exc())
@@ -148,7 +119,7 @@ if __name__ == '__main__':
         logger.info(traceback.format_exc())
     try:
         print(xVASpeech)
-        xVASpeechModel = xVASpeech.init(PROD, use_gpu, logger)
+        xVASpeechModel = xVASpeech.init(PROD, False, logger)
     except:
         print(traceback.format_exc())
         logger.info(traceback.format_exc())
@@ -158,15 +129,6 @@ if __name__ == '__main__':
 
     print("Models ready")
     logger.info("Models ready")
-
-
-    def setDevice (use_gpu):
-        try:
-            models_manager.set_device(torch.device('cuda' if use_gpu else 'cpu'))
-        except:
-            logger.info("MODELS MANAGER FAILED TO LOAD")
-            logger.info(traceback.format_exc())
-    setDevice(user_settings["use_gpu"])
 
 
     # Server
@@ -198,9 +160,7 @@ if __name__ == '__main__':
                     logger.info(post_data)
                     vocoder = post_data["vocoder"]
                     modelPath = post_data["modelPath"]
-                    user_settings["vocoder"] = vocoder
                     hifi_gan = "waveglow" not in vocoder
-                    write_settings()
 
                     if vocoder=="qnd":
                         req_response = models_manager.load_model("hifigan", f'{"./resources/app" if PROD else "."}/python/hifigan/hifi.pt')
@@ -223,10 +183,7 @@ if __name__ == '__main__':
                     logger.info("POST {}".format(self.path))
                     logger.info(post_data)
                     use_gpu = post_data["device"]=="gpu"
-                    setDevice(use_gpu)
-
-                    user_settings["use_gpu"] = use_gpu
-                    write_settings()
+                    models_manager.set_device('cuda' if use_gpu else 'cpu')
 
                 if self.path == "/loadModel":
                     logger.info("POST {}".format(self.path))
@@ -258,12 +215,13 @@ if __name__ == '__main__':
                         if req_response=="ENOENT":
                             continue_synth = False
 
+                    models_manager.set_device(models_manager.device_label)
+
                     if continue_synth:
                         plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["pre"], event="pre synth-line", data=post_data)
-                        req_response = models_manager.models("fastpitch").infer(user_settings, text, out_path, vocoder=vocoder, \
+                        req_response = models_manager.models("fastpitch").infer(text, out_path, vocoder=vocoder, \
                             speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence)
                         plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["post"], event="post synth-line", data=post_data)
-
 
 
                 if self.path == "/synthesize_batch":
@@ -272,7 +230,7 @@ if __name__ == '__main__':
                     vocoder = post_data["vocoder"]
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["batch-synth-line"]["pre"], event="pre batch-synth-line", data=post_data)
                     try:
-                        req_response = models_manager.models("fastpitch").infer_batch(user_settings, linesBatch, vocoder=vocoder, speaker_i=speaker_i)
+                        req_response = models_manager.models("fastpitch").infer_batch(linesBatch, vocoder=vocoder, speaker_i=speaker_i)
                     except RuntimeError as e:
                         if "CUDA out of memory" in str(e):
                             req_response = "CUDA OOM"
@@ -307,7 +265,7 @@ if __name__ == '__main__':
                             return
 
 
-                    text, pitch, durs = xVASpeech.infer(logger, xVASpeechModel, final_path, use_gpu=user_settings["use_gpu"], doPitchShift=doPitchShift)
+                    text, pitch, durs = xVASpeech.infer(logger, xVASpeechModel, final_path, use_gpu="cuda" in models_manager.device_label, doPitchShift=doPitchShift)
 
                     pitch_durations_text = ""
                     pitch_durations_text += ",".join([str(v) for v in pitch])+"\n"
@@ -363,6 +321,8 @@ if __name__ == '__main__':
                     req_response = embs
 
                 if self.path == "/checkReady":
+                    use_gpu = post_data["device"]=="gpu"
+                    models_manager.set_device('cuda' if use_gpu else 'cpu')
                     req_response = "ready"
 
 

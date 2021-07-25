@@ -47,7 +47,7 @@ class FastPitch(object):
         self.model.eval()
 
 
-    def infer_batch(self, user_settings, linesBatch, vocoder, speaker_i, old_sequence=None):
+    def infer_batch(self, linesBatch, vocoder, speaker_i, old_sequence=None):
         print(f'Inferring batch of {len(linesBatch)} lines')
 
         sigma_infer = 0.9
@@ -61,6 +61,7 @@ class FastPitch(object):
             sequence = text_to_sequence(text, ['english_cleaners'])
             text = torch.LongTensor(sequence)
             text_sequences.append(text)
+
         text_sequences = pad_sequence(text_sequences, batch_first=True).to(self.device)
 
         with torch.no_grad():
@@ -98,7 +99,7 @@ class FastPitch(object):
 
         return ""
 
-    def infer(self, user_settings, text, output, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None):
+    def infer(self, text, output, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None):
 
         print(f'Inferring: "{text}" ({len(text)})')
 

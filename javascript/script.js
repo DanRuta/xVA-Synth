@@ -1044,7 +1044,7 @@ window.doWeirdServerStartupCheck = (startUpMessage) => {
                 (new Promise((resolve, reject) => {
                     fetch(`http://localhost:8008/checkReady`, {
                         method: "Post",
-                        body: JSON.stringify({})
+                        body: JSON.stringify({device: (window.userSettings.useGPU&&window.userSettings.installation=="gpu")?"gpu":"cpu"})
                     }).then(r => r.text()).then(r => {
                         // console.log("r", r)
                         closeModal().then(() => {

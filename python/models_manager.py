@@ -5,13 +5,14 @@ import traceback
 
 class ModelsManager(object):
 
-    def __init__(self, logger, PROD, device):
+    def __init__(self, logger, PROD, device="cpu"):
         super(ModelsManager, self).__init__()
 
         self.models_bank = {}
         self.logger = logger
         self.PROD = PROD
-        self.device = device
+        self.device_label = device
+        self.device = torch.device(device)
 
     def init_model (self, model_key):
         model_key = model_key.lower()
@@ -59,9 +60,15 @@ class ModelsManager(object):
             self.models_bank[model_key].load_state_dict(ckpt_path, ckpt, **kwargs)
 
     def set_device (self, device):
+        if device=="gpu":
+            device = "cuda"
+        if self.device_label==device:
+            return
+        self.device_label = device
+        self.device = torch.device(device)
         self.logger.info(f'ModelsManager: Changing device to: {device}')
         for model_key in list(self.models_bank.keys()):
-            self.models_bank[model_key].set_device(device)
+            self.models_bank[model_key].set_device(self.device)
 
     def models (self, key):
         return self.models_bank[key.lower()]
