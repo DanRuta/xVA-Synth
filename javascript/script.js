@@ -744,7 +744,7 @@ generateVoiceButton.addEventListener("click", () => {
             }
 
 
-            if (setting_audio_ffmpeg_preview.checked) {
+            if (window.userSettings.audio.ffmpeg && setting_audio_ffmpeg_preview.checked) {
                 const options = {
                     hz: window.userSettings.audio.hz,
                     padStart: window.userSettings.audio.padStart,

@@ -69,7 +69,7 @@ if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.u
     window.userSettings.audio.ffmpeg = false
 }
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("ffmpeg_preview")) { // For backwards compatibility
-    window.userSettings.audio.ffmpeg_preview = false
+    window.userSettings.audio.ffmpeg_preview = true
 }
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("bitdepth")) { // For backwards compatibility
     window.userSettings.audio.bitdepth = "pcm_s32le"
