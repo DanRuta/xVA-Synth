@@ -194,7 +194,8 @@ class xVARep(object):
                     audio_feats_batch[voiceIds[api]] = audio_feats
 
 
-        audio_feats_batch = [audio_feats_batch[key] for key in audio_feats_batch]
+        todo_keys = [key for key in audio_feats_batch.keys()]
+        audio_feats_batch = [audio_feats_batch[key] for key in audio_feats_batch.keys()]
 
 
         for api, audio_path in enumerate(sampleWAVs):
@@ -210,13 +211,15 @@ class xVARep(object):
                 gameIds.append(self.embeddings[voiceIds[api]]["gameId"])
 
 
+
         # Compute embedding using the model
         if len(audio_feats_batch):
             embs = self.forward(audio_feats_batch)
             embs = list(embs.cpu().detach().numpy())
             for ei, emb in enumerate(embs):
-                embeddings[voiceIds[ei]] = {"emb": emb, "name": voiceNames[ei], "gender": voiceGenders[ei], "gameId": gameIds[ei]}
-                self.embeddings[voiceIds[ei]] = {"emb": emb, "name": voiceNames[ei], "gender": voiceGenders[ei], "gameId": gameIds[ei]}
+                voiceId = todo_keys[ei]
+                embeddings[voiceId] = {"emb": emb, "name": voiceNames[ei], "gender": voiceGenders[ei], "gameId": gameIds[ei]}
+                self.embeddings[voiceId] = {"emb": emb, "name": voiceNames[ei], "gender": voiceGenders[ei], "gameId": gameIds[ei]}
 
 
 
