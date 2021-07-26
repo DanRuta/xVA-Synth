@@ -644,7 +644,7 @@ generateVoiceButton.addEventListener("click", () => {
 
         // For some reason, the samplePlay audio element does not update the source when the file name is the same
         const tempFileNum = `${Math.random().toString().split(".")[1]}`
-        const tempFileLocation = `${path}/output/temp-${tempFileNum}.wav`
+        let tempFileLocation = `${path}/output/temp-${tempFileNum}.wav`
         let pitch = []
         let duration = []
         let isFreshRegen = true
@@ -685,65 +685,101 @@ generateVoiceButton.addEventListener("click", () => {
                 toggleSpinnerButtons()
                 return
             }
-            dialogueInput.focus()
 
+            const doTheRest = () => {
+                dialogueInput.focus()
+                isGenerating = false
+                res = res.split("\n")
+                let pitchData = res[0]
+                let durationsData = res[1]
+                let cleanedSequence = res[2]
+                pitchData = pitchData.split(",").map(v => parseFloat(v))
+                durationsData = durationsData.split(",").map(v => isFreshRegen ? parseFloat(v) : parseFloat(v)/pace_slid.value)
+                window.sequenceEditor.inputSequence = sequence
+                window.sequenceEditor.sequence = cleanedSequence
 
-
-            isGenerating = false
-            res = res.split("\n")
-            let pitchData = res[0]
-            let durationsData = res[1]
-            let cleanedSequence = res[2]
-            pitchData = pitchData.split(",").map(v => parseFloat(v))
-            durationsData = durationsData.split(",").map(v => isFreshRegen ? parseFloat(v) : parseFloat(v)/pace_slid.value)
-            window.sequenceEditor.inputSequence = sequence
-            window.sequenceEditor.sequence = cleanedSequence
-
-            if (pitch.length==0 || isFreshRegen) {
-                window.sequenceEditor.resetPitch = pitchData
-                window.sequenceEditor.resetDurs = durationsData
-            }
-
-
-            window.sequenceEditor.letters = cleanedSequence.replace(/\s/g, "_").split("")
-            window.sequenceEditor.pitchNew = pitchData.map(p=>p)
-            window.sequenceEditor.dursNew = durationsData.map(v=>v)
-            window.sequenceEditor.init()
-            window.sequenceEditor.update()
-
-            window.sequenceEditor.sliderBoxes.forEach((box, i) => {box.setValueFromValue(window.sequenceEditor.dursNew[i])})
-            window.sequenceEditor.autoInferTimer = null
-            window.sequenceEditor.hasChanged = false
-
-
-            toggleSpinnerButtons()
-            if (keepSampleButton.dataset.newFileLocation && keepSampleButton.dataset.newFileLocation.startsWith("BATCH_EDIT")) {
-            } else {
-                keepSampleButton.dataset.newFileLocation = `${window.userSettings[`outpath_${game}`]}/${voiceType}/${outputFileName}.wav`
-            }
-            keepSampleButton.disabled = false
-            samplePlay.dataset.tempFileLocation = tempFileLocation
-            samplePlay.innerHTML = ""
-
-            const finalOutSrc = `./output/temp-${tempFileNum}.wav`.replace("..", ".")
-
-            const audio = createElem("audio", {controls: true, style: {width:"150px"}}, createElem("source", {src: finalOutSrc, type: "audio/wav"}))
-            audio.setSinkId(window.userSettings.base_speaker)
-            audio.addEventListener("play", () => {
-                if (window.ctrlKeyIsPressed) {
-                    audio.setSinkId(window.userSettings.alt_speaker)
-                } else {
-                    audio.setSinkId(window.userSettings.base_speaker)
+                if (pitch.length==0 || isFreshRegen) {
+                    window.sequenceEditor.resetPitch = pitchData
+                    window.sequenceEditor.resetDurs = durationsData
                 }
-            })
-            samplePlay.appendChild(audio)
-            audio.load()
-            if (window.userSettings.autoPlayGen) {
-                audio.play()
+
+
+                window.sequenceEditor.letters = cleanedSequence.replace(/\s/g, "_").split("")
+                window.sequenceEditor.pitchNew = pitchData.map(p=>p)
+                window.sequenceEditor.dursNew = durationsData.map(v=>v)
+                window.sequenceEditor.init()
+                window.sequenceEditor.update()
+
+                window.sequenceEditor.sliderBoxes.forEach((box, i) => {box.setValueFromValue(window.sequenceEditor.dursNew[i])})
+                window.sequenceEditor.autoInferTimer = null
+                window.sequenceEditor.hasChanged = false
+
+
+                toggleSpinnerButtons()
+                if (keepSampleButton.dataset.newFileLocation && keepSampleButton.dataset.newFileLocation.startsWith("BATCH_EDIT")) {
+                } else {
+                    keepSampleButton.dataset.newFileLocation = `${window.userSettings[`outpath_${game}`]}/${voiceType}/${outputFileName}.wav`
+                }
+                keepSampleButton.disabled = false
+                samplePlay.dataset.tempFileLocation = tempFileLocation
+                samplePlay.innerHTML = ""
+
+                const audio = createElem("audio", {controls: true, style: {width:"150px"}}, createElem("source", {src: tempFileLocation, type: "audio/wav"}))
+                audio.setSinkId(window.userSettings.base_speaker)
+                audio.addEventListener("play", () => {
+                    if (window.ctrlKeyIsPressed) {
+                        audio.setSinkId(window.userSettings.alt_speaker)
+                    } else {
+                        audio.setSinkId(window.userSettings.base_speaker)
+                    }
+                })
+                samplePlay.appendChild(audio)
+                audio.load()
+                if (window.userSettings.autoPlayGen) {
+                    audio.play()
+                }
+
+                // Persistance across sessions
+                localStorage.setItem("tempFileLocation", tempFileLocation)
             }
 
-            // Persistance across sessions
-            localStorage.setItem("tempFileLocation", tempFileLocation)
+
+            if (setting_audio_ffmpeg_preview.checked) {
+                const options = {
+                    hz: window.userSettings.audio.hz,
+                    padStart: window.userSettings.audio.padStart,
+                    padEnd: window.userSettings.audio.padEnd,
+                    bit_depth: window.userSettings.audio.bitdepth,
+                    amplitude: window.userSettings.audio.amplitude
+                }
+
+                fetch(`http://localhost:8008/outputAudio`, {
+                    method: "Post",
+                    body: JSON.stringify({
+                        input_path: tempFileLocation,
+                        output_path: tempFileLocation.replace(".wav", `_ffmpeg.${window.userSettings.audio.format}`),
+                        isBatchMode: false,
+                        options: JSON.stringify(options)
+                    })
+                }).then(r=>r.text()).then(res => {
+                    if (res.length && res!="-") {
+                        console.log("res", res)
+                        window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${res}`).then(() => toggleSpinnerButtons())
+                    } else {
+                        tempFileLocation = tempFileLocation.replace(".wav", `_ffmpeg.${window.userSettings.audio.format}`)
+                        doTheRest()
+                    }
+                }).catch(res => {
+                    window.appLogger.log(res)
+                    closeModal().then(() => {
+                        window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${res}`)
+                    })
+                })
+            } else {
+                doTheRest()
+            }
+
+
         }).catch(res => {
             isGenerating = false
             console.log(res)
@@ -827,7 +863,21 @@ const saveFile = (from, to, skipUIRecord=false) => {
     pluginData.audioOptions = options
     window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["pre"], event="pre keep-sample", pluginData)
 
-    if (window.userSettings.audio.ffmpeg) {
+    const jsonDataOut = {
+        inputSequence: dialogueInput.value.trim(),
+        pacing: parseFloat(pace_slid.value),
+        letters: window.sequenceEditor.letters,
+        currentVoice: window.sequenceEditor.currentVoice,
+        resetPitch: window.sequenceEditor.resetPitch,
+        resetDurs: window.sequenceEditor.resetDurs,
+        ampFlatCounter: window.sequenceEditor.ampFlatCounter,
+        inputSequence: window.sequenceEditor.inputSequence,
+        sequence: window.sequenceEditor.sequence,
+        pitchNew: window.sequenceEditor.pitchNew,
+        dursNew: window.sequenceEditor.dursNew,
+    }
+
+    if (!setting_audio_ffmpeg_preview.checked && window.userSettings.audio.ffmpeg) {
         spinnerModal(window.i18n.SAVING_AUDIO_FILE)
 
         window.appLogger.log(`${window.i18n.ABOUT_TO_SAVE_FROM_N1_TO_N2_WITH_OPTIONS}: ${JSON.stringify(options)}`.replace("_1", from).replace("_2", to))
@@ -836,20 +886,6 @@ const saveFile = (from, to, skipUIRecord=false) => {
             game: window.currentGame[0],
             voiceId: window.currentModel.voiceId,
             voiceName: window.currentModel.voiceName
-        }
-
-        const jsonDataOut = {
-            inputSequence: dialogueInput.value.trim(),
-            pacing: parseFloat(pace_slid.value),
-            letters: window.sequenceEditor.letters,
-            currentVoice: window.sequenceEditor.currentVoice,
-            resetPitch: window.sequenceEditor.resetPitch,
-            resetDurs: window.sequenceEditor.resetDurs,
-            ampFlatCounter: window.sequenceEditor.ampFlatCounter,
-            inputSequence: window.sequenceEditor.inputSequence,
-            sequence: window.sequenceEditor.sequence,
-            pitchNew: window.sequenceEditor.pitchNew,
-            dursNew: window.sequenceEditor.dursNew,
         }
 
         fetch(`http://localhost:8008/outputAudio`, {
@@ -897,9 +933,6 @@ const saveFile = (from, to, skipUIRecord=false) => {
                 }
             } else {
                 if (window.userSettings.outputJSON) {
-                    const dataOut = {
-
-                    }
                     fs.writeFileSync(`${to}.json`, JSON.stringify(jsonDataOut, null, 4))
                 }
                 if (!skipUIRecord) {

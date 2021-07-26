@@ -68,6 +68,9 @@ if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.u
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("ffmpeg")) { // For backwards compatibility
     window.userSettings.audio.ffmpeg = false
 }
+if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("ffmpeg_preview")) { // For backwards compatibility
+    window.userSettings.audio.ffmpeg_preview = false
+}
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("bitdepth")) { // For backwards compatibility
     window.userSettings.audio.bitdepth = "pcm_s32le"
 }
@@ -173,6 +176,7 @@ const updateUIWithSettings = () => {
 
     setting_external_audio_editor.value = window.userSettings.externalAudioEditor
     setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
+    setting_audio_ffmpeg_preview.checked = window.userSettings.audio.ffmpeg && window.userSettings.audio.ffmpeg_preview
     setting_audio_format.value = window.userSettings.audio.format
     setting_audio_hz.value = window.userSettings.audio.hz
     setting_audio_pad_start.value = window.userSettings.audio.padStart
@@ -404,6 +408,8 @@ initMenuSetting(setting_batch_doVocoderGrouping, "batch_doVocoderGrouping", "che
 
 initMenuSetting(setting_external_audio_editor, "externalAudioEditor", "text")
 initMenuSetting(setting_audio_ffmpeg, "audio.ffmpeg", "checkbox", () => {
+    setting_audio_ffmpeg_preview.checked = window.userSettings.audio.ffmpeg && window.userSettings.audio.ffmpeg_preview
+    setting_audio_ffmpeg_preview.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_format.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_hz.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_pad_start.disabled = !window.userSettings.audio.ffmpeg
@@ -411,6 +417,7 @@ initMenuSetting(setting_audio_ffmpeg, "audio.ffmpeg", "checkbox", () => {
     setting_audio_bitdepth.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_amplitude.disabled = !window.userSettings.audio.ffmpeg
 })
+initMenuSetting(setting_audio_ffmpeg_preview, "audio.ffmpeg_preview", "checkbox")
 initMenuSetting(setting_audio_format, "audio.format", "text")
 initMenuSetting(setting_audio_hz, "audio.hz", "text", undefined, parseInt)
 initMenuSetting(setting_audio_pad_start, "audio.padStart", "text", undefined, parseInt)
