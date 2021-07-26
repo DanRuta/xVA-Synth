@@ -214,7 +214,6 @@ window.initEmbeddingsScene = () => {
         }
     })
     window.embeddingsState.isReady = false
-    embeddingsSceneContainer.innerHTML = ""
 
     const SPHERE_RADIUS = 3
     const SPHERE_V_COUNT = 50
@@ -569,9 +568,11 @@ window.initEmbeddingsScene = () => {
     })
 }
 window.embeddings_updateSize = () => {
-    window.embeddingsState.sceneData.camera.aspect = embeddingsSceneContainer.offsetWidth/embeddingsSceneContainer.offsetHeight
-    window.embeddingsState.sceneData.camera.updateProjectionMatrix()
-    window.embeddingsState.renderer.setSize(embeddingsSceneContainer.offsetWidth, embeddingsSceneContainer.offsetHeight)
+    if (window.embeddingsState.isReady) {
+        window.embeddingsState.sceneData.camera.aspect = embeddingsSceneContainer.offsetWidth/embeddingsSceneContainer.offsetHeight
+        window.embeddingsState.sceneData.camera.updateProjectionMatrix()
+        window.embeddingsState.renderer.setSize(embeddingsSceneContainer.offsetWidth, embeddingsSceneContainer.offsetHeight)
+    }
 }
 
 
@@ -746,4 +747,6 @@ window.computeEmbsAndDimReduction = (includeAllVoices=false) => {
     })
 }
 
-// TODO, see if I can multi-process the audio feature extraction, on the first pass on app startup
+embeddingsCloseHelpUI.addEventListener("click", () => {
+    embeddingsHelpUI.style.display = "none"
+})

@@ -1426,7 +1426,7 @@ window.setupModal(embeddingsIcon, embeddingsContainer, () => {
             window.embeddings_updateSize()
         }
     }, 100)
-    window.embeddings_updateSize
+    window.embeddings_updateSize()
     window.embeddingsState.isOpen = true
     if (!window.embeddingsState.ready) {
         setTimeout(() => {
