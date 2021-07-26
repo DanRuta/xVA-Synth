@@ -74,6 +74,9 @@ if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.u
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("bitdepth")) { // For backwards compatibility
     window.userSettings.audio.bitdepth = "pcm_s32le"
 }
+if (!Object.keys(window.userSettings).includes("showEditorFFMPEGAmplitude")) { // For backwards compatibility
+    window.userSettings.showEditorFFMPEGAmplitude = false
+}
 if (!Object.keys(window.userSettings).includes("vocoder")) { // For backwards compatibility
     window.userSettings.vocoder = "256_waveglow"
 }
@@ -183,6 +186,9 @@ const updateUIWithSettings = () => {
     setting_audio_pad_end.value = window.userSettings.audio.padEnd
     setting_audio_bitdepth.value = window.userSettings.audio.bitdepth
     setting_audio_amplitude.value = window.userSettings.audio.amplitude
+    setting_editor_audio_amplitude.value = window.userSettings.audio.amplitude
+    setting_show_editor_ffmpegamplitude.checked = window.userSettings.showEditorFFMPEGAmplitude
+    editor_amplitude_options.style.display = window.userSettings.showEditorFFMPEGAmplitude ? "flex" : "none"
 
     setting_s2s_autogenerate.checked = window.userSettings.s2s_autogenerate
     setting_s2s_prePitchShift.checked = window.userSettings.s2s_prePitchShift
@@ -416,6 +422,7 @@ initMenuSetting(setting_audio_ffmpeg, "audio.ffmpeg", "checkbox", () => {
     setting_audio_pad_end.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_bitdepth.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_amplitude.disabled = !window.userSettings.audio.ffmpeg
+    setting_editor_audio_amplitude.disabled = !window.userSettings.audio.ffmpeg
 })
 initMenuSetting(setting_audio_ffmpeg_preview, "audio.ffmpeg_preview", "checkbox")
 initMenuSetting(setting_audio_format, "audio.format", "text")
@@ -423,7 +430,16 @@ initMenuSetting(setting_audio_hz, "audio.hz", "text", undefined, parseInt)
 initMenuSetting(setting_audio_pad_start, "audio.padStart", "text", undefined, parseInt)
 initMenuSetting(setting_audio_pad_end, "audio.padEnd", "text", undefined, parseInt)
 initMenuSetting(setting_audio_bitdepth, "audio.bitdepth", "select")
-initMenuSetting(setting_audio_amplitude, "audio.amplitude", "select", parseFloat)
+initMenuSetting(setting_audio_amplitude, "audio.amplitude", "number", () => {
+    setting_editor_audio_amplitude.value = setting_audio_amplitude.value
+}, parseFloat)
+initMenuSetting(setting_editor_audio_amplitude, "audio.amplitude", "number", () => {
+    setting_audio_amplitude.value = setting_editor_audio_amplitude.value
+}, parseFloat)
+initMenuSetting(setting_show_editor_ffmpegamplitude, "showEditorFFMPEGAmplitude", "checkbox", () => {
+    editor_amplitude_options.style.display = window.userSettings.showEditorFFMPEGAmplitude ? "flex" : "none"
+})
+
 
 initMenuSetting(setting_s2s_autogenerate, "s2s_autogenerate", "checkbox")
 initMenuSetting(setting_s2s_prePitchShift, "s2s_prePitchShift", "checkbox")
@@ -450,6 +466,7 @@ setting_audio_pad_start.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_pad_end.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_bitdepth.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_amplitude.disabled = !window.userSettings.audio.ffmpeg
+setting_editor_audio_amplitude.disabled = !window.userSettings.audio.ffmpeg
 
 // Output path
 fs.readdir(`${window.path}/models`, (err, gameDirs) => {
