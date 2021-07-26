@@ -105,7 +105,7 @@ class Editor {
             // Check box length dragger
             const isBetweenBoxes = this.sliderBoxes.find(box => {
                 const boxX = box.getXLeft()
-                return (mouseY>box.topY && mouseY<box.topY+box.height) && (mouseX>boxX+box.width && mouseX<boxX+box.width+5)
+                return (mouseY>box.topY && mouseY<box.topY+box.height) && (mouseX>(boxX+box.width-10) && mouseX<(boxX+box.width+10)+5)
             })
             if (isBetweenBoxes!=undefined) {
                 this.canvas.style.cursor = "w-resize"
@@ -142,7 +142,7 @@ class Editor {
             // Check sideways dragging
             const isBetweenBoxes = this.sliderBoxes.find(box => {
                 const boxX = box.getXLeft()
-                return (mouseY>box.topY && mouseY<box.topY+box.height) && (mouseX>boxX+box.width && mouseX<boxX+box.width+5)
+                return (mouseY>box.topY && mouseY<box.topY+box.height) && (mouseX>(boxX+box.width-10) && mouseX<(boxX+box.width+10)+5)
             })
             if (isBetweenBoxes) {
                 isBetweenBoxes.dragStart.width = isBetweenBoxes.width
