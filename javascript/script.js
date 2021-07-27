@@ -12,8 +12,8 @@ const {shell, ipcRenderer} = require("electron")
 const fetch = require("node-fetch")
 const {xVAAppLogger} = require("./javascript/appLogger.js")
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
-process.on(`uncaughtException`, data => window.appLogger.log(data))
-window.onerror = (err, url, lineNum) => window.appLogger.log(err)
+process.on(`uncaughtException`, data => window.appLogger.log(`uncaughtException: ${data}`))
+window.onerror = (err, url, lineNum) => window.appLogger.log(`onerror: ${err}`)
 require("./javascript/i18n.js")
 require("./javascript/util.js")
 require("./javascript/nexus.js")
@@ -44,8 +44,8 @@ console.error = (data) => {
     oldCError(arguments)
 }
 
-window.addEventListener("error", function (e) {window.appLogger.log(e.error.stack)})
-window.addEventListener('unhandledrejection', function (e) {window.appLogger.log(e.reason.stack)})
+window.addEventListener("error", function (e) {window.appLogger.log(`error: ${e.error.stack}`)})
+window.addEventListener('unhandledrejection', function (e) {window.appLogger.log(`unhandledrejection: ${e.reason.stack}`)})
 
 window.games = {}
 window.models = {}
@@ -64,7 +64,7 @@ try {fs.mkdirSync(`${path}/assets`)} catch (e) {/*Do nothing*/}
 // Clean up temp files
 fs.readdir(`${__dirname.replace("/javascript", "")}/output`, (err, files) => {
     if (err) {
-        window.appLogger.log(err)
+        window.appLogger.log(`Error cleaning up temp files: ${err}`)
     }
     if (files && files.length) {
         files.filter(f => f.startsWith("temp-")).forEach(file => {
@@ -724,7 +724,7 @@ generateVoiceButton.addEventListener("click", () => {
                 samplePlay.dataset.tempFileLocation = tempFileLocation
                 samplePlay.innerHTML = ""
 
-                const audio = createElem("audio", {controls: true, style: {width:"150px"}}, createElem("source", {src: tempFileLocation, type: "audio/wav"}))
+                const audio = createElem("audio", {controls: true, style: {width:"150px"}}, createElem("source", {src: `${__dirname.replace("/javascript", "")}/output/${tempFileLocation.split("/").reverse()[0]}`, type: "audio/wav"}))
                 audio.setSinkId(window.userSettings.base_speaker)
                 audio.addEventListener("play", () => {
                     if (window.ctrlKeyIsPressed) {
@@ -770,7 +770,7 @@ generateVoiceButton.addEventListener("click", () => {
                         doTheRest()
                     }
                 }).catch(res => {
-                    window.appLogger.log(res)
+                    window.appLogger.log(`outputAudio error: ${res}`)
                     closeModal().then(() => {
                         window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${res}`)
                     })
@@ -914,7 +914,7 @@ const saveFile = (from, to, skipUIRecord=false) => {
                 }
             })
         }).catch(res => {
-            window.appLogger.log(res)
+            window.appLogger.log(`Error in saveFile->outputAudio[ffmpeg]: ${res}`)
             closeModal().then(() => {
                 window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${window.i18n.INPUT}: ${from}<br>${window.i18n.OUTPUT}: ${to}<br><br>${res}`)
             })
@@ -923,7 +923,7 @@ const saveFile = (from, to, skipUIRecord=false) => {
         fs.copyFile(from, to, err => {
             if (err) {
                 console.log(err)
-                window.appLogger.log(err)
+                window.appLogger.log(`Error in saveFile->outputAudio[no ffmpeg]: ${err}`)
                 if (!fs.existsSync(from)) {
                     window.appLogger.log(`${window.i18n.TEMP_FILE_NOT_EXIST}: ${from}`)
                 }
@@ -1042,7 +1042,7 @@ window.keepSampleFunction = shiftClick => {
                         fs.unlink(finalOutLocation, err => {
                             if (err) {
                                 console.log(err)
-                                window.appLogger.log(err)
+                                window.appLogger.log(`Error in keepSample: ${err}`)
                             }
                             console.log(fromLocation, "finalOutLocation", finalOutLocation)
                             saveFile(fromLocation, finalOutLocation, skipUIRecord)

@@ -141,7 +141,7 @@ class PluginsManager {
 
             const endorseButtonContainer = createElem("div")
             record.appendChild(endorseButtonContainer)
-            if (pluginData["nexus-link"]) {
+            if (pluginData["nexus-link"] && window.nexusState.key) {
 
                 window.nexus_getData(`${pluginData["nexus-link"].split(".com/")[1]}.json`).then(repoInfo => {
                     const endorseButton = createElem("button.smallButton", "Endorse")
