@@ -87,7 +87,7 @@ if (!Object.keys(window.userSettings).includes("keepPaceOnNew")) { // For backwa
     window.userSettings.keepPaceOnNew = true
 }
 if (!Object.keys(window.userSettings).includes("batchOutFolder")) { // For backwards compatibility
-    window.userSettings.batchOutFolder = `${__dirname.replace(/\\/g,"/")}/batch`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
+    window.userSettings.batchOutFolder = `${__dirname.replace(/\\/g,"/")}/batch`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
 }
 if (!Object.keys(window.userSettings).includes("batch_clearDirFirst")) { // For backwards compatibility
     window.userSettings.batch_clearDirFirst = false
@@ -156,10 +156,10 @@ if (!Object.keys(window.userSettings).includes("s2s_noiseRemStrength")) { // For
     window.userSettings.s2s_noiseRemStrength = 0.25
 }
 if (!Object.keys(window.userSettings).includes("waveglow_path")) { // For backwards compatibility
-    window.userSettings.waveglow_path = `${__dirname.replace(/\\/g,"/")}/models/waveglow_256channels_universal_v4.pt`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
+    window.userSettings.waveglow_path = `${__dirname.replace(/\\/g,"/")}/models/waveglow_256channels_universal_v4.pt`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
 }
 if (!Object.keys(window.userSettings).includes("bigwaveglow_path")) { // For backwards compatibility
-    window.userSettings.bigwaveglow_path = `${__dirname.replace(/\\/g,"/")}/models/nvidia_waveglowpyt_fp32_20190427.pt`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
+    window.userSettings.bigwaveglow_path = `${__dirname.replace(/\\/g,"/")}/models/nvidia_waveglowpyt_fp32_20190427.pt`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
 }
 
 const updateUIWithSettings = () => {
@@ -473,7 +473,7 @@ fs.readdir(`${window.path}/models`, (err, gameDirs) => {
     gameDirs.filter(name => !name.includes(".")).forEach(gameFolder => {
         // Initialize the default output directory setting for this game
         if (!Object.keys(window.userSettings).includes(`outpath_${gameFolder}`)) {
-            window.userSettings[`outpath_${gameFolder}`] = `${__dirname.replace(/\\/g,"/")}/output/${gameFolder}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
+            window.userSettings[`outpath_${gameFolder}`] = `${__dirname.replace(/\\/g,"/")}/output/${gameFolder}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
             saveUserSettings()
         }
     })
@@ -495,7 +495,7 @@ fs.readdir(`${window.path}/assets`, (err, assetFiles) => {
         const gameName = assetFileName.split("-").reverse()[0].split(".")[0]
         // Initialize the default models directory setting for this game
         if (!Object.keys(window.userSettings).includes(`modelspath_${gameId}`)) {
-            window.userSettings[`modelspath_${gameId}`] = `${__dirname.replace(/\\/g,"/")}/models/${gameId}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
+            window.userSettings[`modelspath_${gameId}`] = `${__dirname.replace(/\\/g,"/")}/models/${gameId}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
             saveUserSettings()
         }
     })
@@ -559,7 +559,7 @@ reset_paths_btn.addEventListener("click", () => {
             const assetFiles = fs.readdirSync(`${path}/assets`)
             assetFiles.filter(fn=>(fn.endsWith(".jpg")||fn.endsWith(".png"))&&fn.split("-").length==4).forEach(assetFileName => {
                 const gameId = assetFileName.split("-")[0]
-                window.userSettings[`modelspath_${gameId}`] = `${__dirname.replace(/\\/g,"/")}/models/${gameId}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
+                window.userSettings[`modelspath_${gameId}`] = `${__dirname.replace(/\\/g,"/")}/models/${gameId}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
                 if (gameId==currGame) {
                     setting_models_path_input.value = window.userSettings[`modelspath_${gameId}`]
                 }
@@ -568,7 +568,7 @@ reset_paths_btn.addEventListener("click", () => {
             // Output paths
             const gameDirs = fs.readdirSync(`${path}/models`)
             gameDirs.filter(name => !name.includes(".")).forEach(gameId => {
-                window.userSettings[`outpath_${gameId}`] = `${__dirname.replace(/\\/g,"/")}/output/${gameId}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
+                window.userSettings[`outpath_${gameId}`] = `${__dirname.replace(/\\/g,"/")}/output/${gameId}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
                 if (gameId==currGame) {
                     setting_out_path_input.value = window.userSettings[`outpath_${gameId}`]
                 }
@@ -578,7 +578,7 @@ reset_paths_btn.addEventListener("click", () => {
                 window.currentModelButton.click()
             }
 
-            window.userSettings.batchOutFolder = `${__dirname.replace(/\\/g,"/")}/batch`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
+            window.userSettings.batchOutFolder = `${__dirname.replace(/\\/g,"/")}/batch`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
             batch_outputFolderInput.value = window.userSettings.batchOutFolder
 
             window.loadAllModels().then(() => {

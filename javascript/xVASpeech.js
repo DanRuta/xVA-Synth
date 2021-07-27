@@ -182,7 +182,7 @@ window.stopRecord = (cancelled) => {
         clearProgress(0.35)
         mic_progress_SVG.style.animation = "spin 1.5s linear infinite"
         mic_progress_SVG_circle.style.stroke = "white"
-        const fileName = `${__dirname.replace(/\\/g,"/")}/output/recorded_file.wav`
+        const fileName = `${__dirname.replace("/javascript", "").replace(/\\/g,"/")}/output/recorded_file.wav`
         outputRecording(fileName, () => {
             useWavFileForxVASpeech(fileName)
         })
@@ -221,7 +221,7 @@ mic_SVG.addEventListener("contextmenu", () => {
         window.stopRecord(true)
     } else {
         const audioPreview = createElem("audio", {autoplay: false}, createElem("source", {
-            src: `${__dirname.replace(/\\/g,"/")}/output/recorded_file_post${window.userSettings.s2s_prePitchShift?"_praat":""}.wav`
+            src: `${__dirname.replace("/javascript", "").replace(/\\/g,"/")}/output/recorded_file_post${window.userSettings.s2s_prePitchShift?"_praat":""}.wav`
         }))
         audioPreview.setSinkId(window.userSettings.base_speaker)
     }
@@ -312,7 +312,7 @@ if (Object.keys(window.userSettings).includes("s2sVL_other")) {
 }
 
 
-const silenceFileName = `${__dirname.replace(/\\/g,"/")}/output/silence.wav`
+const silenceFileName = `${__dirname.replace("/javascript", "").replace(/\\/g,"/")}/output/silence.wav`
 s2sNoiseRecordSampleBtn.addEventListener("click", () => {
     if (window.xVASpeechState.isReadingMic) {
         return
@@ -383,7 +383,7 @@ s2sVLRecordSampleBtn.addEventListener("click", () => {
             s2sVLRecordSampleBtn.style.background = origButtonColour
             window.xVASpeechState.recorder.stop()
             window.xVASpeechState.stream.getAudioTracks()[0].stop()
-            const fileName = `${__dirname.replace(/\\/g,"/")}/output/temp-recsample.wav`
+            const fileName = `${__dirname.replace("/javascript", "").replace(/\\/g,"/")}/output/temp-recsample.wav`
             outputRecording(fileName, () => {
                 s2sVLVoiceSampleAudioContainer.innerHTML = ""
                 const audioElem = createElem("audio", {controls: true}, createElem("source", {
@@ -441,7 +441,7 @@ const uploadS2SFile = (eType, event) => {
                 mic_progress_SVG.style.animation = "spin 1.5s linear infinite"
                 mic_progress_SVG_circle.style.stroke = "white"
 
-                const fileName = `${__dirname.replace(/\\/g,"/")}/output/recorded_file.wav`
+                const fileName = `${__dirname.replace("/javascript", "").replace(/\\/g,"/")}/output/recorded_file.wav`
                 fs.copyFileSync(file.path, fileName)
                 useWavFileForxVASpeech(fileName)
             } else {

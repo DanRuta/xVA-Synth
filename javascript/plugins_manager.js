@@ -6,7 +6,7 @@ class PluginsManager {
 
     constructor (path, appLogger, appVersion) {
 
-        this.path = `${__dirname.replace(/\\/g,"/")}${path.slice(1, 100000)}/..`.replace("/resources/app/resources/app", "/resources/app")
+        this.path = `${__dirname.replace("/javascript", "").replace(/\\/g,"/")}${path.slice(1, 100000)}/..`.replace("/resources/app/resources/app", "/resources/app")
         this.appVersion = appVersion
         this.appLogger = appLogger
         this.plugins = []

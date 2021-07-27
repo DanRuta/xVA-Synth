@@ -132,7 +132,7 @@ batch_generateSample.addEventListener("click", () => {
         csv.push(Object.values(record).map(v => typeof v =="string" ? `"${v}"` : v).join(","))
     })
 
-    const out_directory = `${__dirname.replace(/\\/g,"/")}/batch`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
+    const out_directory = `${__dirname.replace("/javascript", "").replace(/\\/g,"/")}/batch`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app")
     if (!fs.existsSync(out_directory)){
         fs.mkdirSync(out_directory)
     }

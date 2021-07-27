@@ -62,13 +62,13 @@ try {fs.mkdirSync(`${path}/output`)} catch (e) {/*Do nothing*/}
 try {fs.mkdirSync(`${path}/assets`)} catch (e) {/*Do nothing*/}
 
 // Clean up temp files
-fs.readdir(`${__dirname}/output`, (err, files) => {
+fs.readdir(`${__dirname.replace("/javascript", "")}/output`, (err, files) => {
     if (err) {
         window.appLogger.log(err)
     }
     if (files && files.length) {
         files.filter(f => f.startsWith("temp-")).forEach(file => {
-            fs.unlink(`${__dirname}/output/${file}`, err => err&&console.log(err))
+            fs.unlink(`${__dirname.replace("/javascript", "")}/output/${file}`, err => err&&console.log(err))
         })
     }
 })
@@ -1488,6 +1488,6 @@ if (!Object.keys(window.userSettings).includes("EULA_accepted") || window.userSe
 }
 // Links
 document.querySelectorAll('a[href^="http"]').forEach(a => a.addEventListener("click", e => {
-    event.preventDefault();
-    shell.openExternal(a.href);
+    event.preventDefault()
+    shell.openExternal(a.href)
 }))
