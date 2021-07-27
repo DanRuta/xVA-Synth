@@ -4,6 +4,8 @@
 import numpy
 import traceback
 import numpy.core.multiarray
+import numpy.core
+import numpy.core.overrides
 
 try:
     import scipy

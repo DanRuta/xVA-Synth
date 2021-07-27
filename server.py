@@ -18,8 +18,8 @@ if __name__ == '__main__':
     # Imports and logger setup
     # ========================
     try:
-        import numpy
         import python.pyinstaller_imports
+        import numpy
 
         import logging
         from logging.handlers import RotatingFileHandler
