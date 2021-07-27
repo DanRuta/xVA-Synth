@@ -1,14 +1,15 @@
 "use strict"
 
 const fetch = require("node-fetch")
-// const KEY = fs.readFileSync(`${window.path}/key.txt`, "utf8")
-const KEY = fs.readFileSync(`${window.path}/key_test.txt`, "utf8")
-
 
 window.nexusModelsList = []
 window.endorsedRepos = new Set()
 window.nexusState = {
-    key: KEY,
+    key: null,
+    applicationSlug: "vortex",
+    socket: null,
+    uuid: null,
+    token: null,
     downloadQueue: [],
     installQueue: [],
     finished: 0,
@@ -51,6 +52,55 @@ const download = (url, dest) => {
         })
     })
 }
+
+window.initNexus = () => {
+
+    window.nexusState.socket = new WebSocket("wss://sso.nexusmods.com")
+
+    window.nexusState.socket.onopen = event => {
+
+        window.nexusState.uuid = sessionStorage.getItem("uuid")
+        window.nexusState.token = sessionStorage.getItem("connection_token")
+
+        if (window.nexusState.uuid==null) {
+            window.nexusState.uuid = uuidv4()
+            sessionStorage.setItem('uuid', window.nexusState.uuid)
+        }
+
+
+        const data = {
+            id: window.nexusState.uuid,
+            token: window.nexusState.token,
+            protocol: 2
+        }
+        window.nexusState.socket.send(JSON.stringify(data))
+        shell.openExternal(`https://www.nexusmods.com/sso?id=${window.nexusState.uuid}&application=${window.nexusState.applicationSlug}`)
+    }
+
+    window.nexusState.socket.onclose = event => {
+        console.log("socket closed")
+        setTimeout(window.initNexus(), 5000)
+    }
+
+    window.nexusState.socket.onmessage = event => {
+        const response = JSON.parse(event.data)
+
+        if (response && response.success) {
+            if (response.data.hasOwnProperty('connection_token')) {
+                sessionStorage.setItem('connection_token', response.data.connection_token)
+            } else if (response.data.hasOwnProperty('api_key')) {
+                console.log("API Key Received: " + response.data.api_key)
+                window.nexusState.key = response.data.api_key
+                window.showUserName()
+            }
+        } else {
+            window.errorModal(`Error attempting to log into nexusmods: ${response.error}`)
+        }
+    }
+}
+// window.initNexus()
+
+
 window.downloadFile = ([outputFileName, fileId]) => {
     console.log("downloadFile", outputFileName, fileId)
     nexusDownloadLog.appendChild(createElem("div", `Downloading: ${outputFileName}`))
@@ -60,9 +110,6 @@ window.downloadFile = ([outputFileName, fileId]) => {
         }
 
         const downloadLink = await getData(`skyrimspecialedition/mods/44184/files/${fileId}/download_link.json`)
-        // const downloadLink = await getData(`skyrimspecialedition/mods/44184/files/${fileId}/download_link.json?key=RWUvYVixZ32EnXvfzF60xw&expires=1626876226`)
-        // const downloadLink = await getData(`skyrimspecialedition/mods/44184/files/${alduin_file_id}/download_link.json?key=RWUvYVixZ32EnXvfzF60xw&expires=1626876226`)
-        // download(downloadLink[0].URI.replace("https", "http"), `${window.path}/downloads/alduin.zip`)
         if (!downloadLink.length && downloadLink.code==403) {
 
             window.errorModal(`Nexus requires premium membership for using their API for file downloads<br><br>Original error message:<br>${downloadLink.message}`).then(() => {
@@ -589,7 +636,6 @@ nexusReposAddButton.addEventListener("click", () => {
 
 nexusOnlyNewUpdatedCkbx.addEventListener("change", () => window.displayAllModels())
 
-window.showUserName()
 
 // Temp
 // const repoLinks = [
