@@ -91,7 +91,8 @@ if __name__ == '__main__':
     try:
         from python.plugins_manager import PluginManager
         plugin_manager = PluginManager(APP_VERSION, PROD, CPU_ONLY, logger)
-        logger.info("Plugin manager loaded.")
+        active_plugins = plugin_manager.get_active_plugins_count()
+        logger.info(f'Plugin manager loaded. {active_plugins} active plugins.')
     except:
         logger.info("Plugin manager FAILED.")
         logger.info(traceback.format_exc())
@@ -219,7 +220,7 @@ if __name__ == '__main__':
 
                     if continue_synth:
                         plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["pre"], event="pre synth-line", data=post_data)
-                        req_response = models_manager.models("fastpitch").infer(text, out_path, vocoder=vocoder, \
+                        req_response = models_manager.models("fastpitch").infer(plugin_manager, text, out_path, vocoder=vocoder, \
                             speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence)
                         plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["post"], event="post synth-line", data=post_data)
 
@@ -230,7 +231,7 @@ if __name__ == '__main__':
                     vocoder = post_data["vocoder"]
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["batch-synth-line"]["pre"], event="pre batch-synth-line", data=post_data)
                     try:
-                        req_response = models_manager.models("fastpitch").infer_batch(linesBatch, vocoder=vocoder, speaker_i=speaker_i)
+                        req_response = models_manager.models("fastpitch").infer_batch(plugin_manager, linesBatch, vocoder=vocoder, speaker_i=speaker_i)
                     except RuntimeError as e:
                         if "CUDA out of memory" in str(e):
                             req_response = "CUDA OOM"

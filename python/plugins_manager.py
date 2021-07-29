@@ -23,25 +23,47 @@ class PluginManager(object):
             "custom-event": [],
             "start": {
                 "pre": [],
+                "mid": [],
                 "post": []
             },
             "load-model": {
                 "pre": [],
+                "mid": [],
                 "post": []
             },
             "synth-line": {
                 "pre": [],
+                "mid": [],
                 "post": []
             },
             "batch-synth-line": {
                 "pre": [],
+                "mid": [],
                 "post": []
             },
             "output-audio": {
                 "pre": [],
+                "mid": [],
                 "post": []
             },
         }
+
+    def get_active_plugins_count (self):
+        active_plugins = []
+
+        for _ in self.plugins["custom-event"]:
+            active_plugins.append(["custom-event", None])
+
+        for key in self.plugins.keys():
+            for trigger_type in ["pre", "mid", "post"]:
+                if trigger_type in self.plugins[key]:
+                    for plugin in self.plugins[key][trigger_type]:
+                        active_plugins.append([key, trigger_type])
+        return len(active_plugins)
+
+
+
+
 
     def refresh_active_plugins (self):
 
@@ -76,19 +98,15 @@ class PluginManager(object):
                         maxVersionOk = checkVersionRequirements(plugin_json["max-app-version"] if "max-app-version" in plugin_json else None, self.APP_VERSION, True)
 
                         if not minVersionOk or not maxVersionOk:
+                            self.logger.info(f'minVersionOk {minVersionOk}')
+                            self.logger.info(f'maxVersionOk {maxVersionOk}')
                             continue
 
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "start", "pre"], [])
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "start", "post"], [])
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "load-model", "pre"], [])
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "load-model", "post"], [])
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "synth-line", "pre"], [])
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "synth-line", "post"], [])
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "batch-synth-line", "pre"], [])
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "batch-synth-line", "post"], [])
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "output-audio", "pre"], [])
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "output-audio", "post"], [])
-                        self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "custom-event"], [])
+
+                        for key in self.plugins.keys():
+                            if key!="custom-event":
+                                for trigger_type in ["pre", "mid", "post"]:
+                                    self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", key, trigger_type], [])
 
                         self.enabledPlugins.add(plugin_id)
 

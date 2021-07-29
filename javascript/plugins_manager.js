@@ -73,6 +73,7 @@ class PluginsManager {
             },
             "keep-sample": {
                 "pre": [],
+                "mid": [],
                 "post": []
             },
             "generate-voice": {
@@ -198,7 +199,10 @@ class PluginsManager {
 
 
             const hasBackendScript = !!Object.keys(pluginData["back-end-hooks"]).find(key => {
-                return (key=="custom-event" && pluginData["back-end-hooks"]["custom-event"]["file"]) || pluginData["back-end-hooks"][key]["pre"]["file"] || pluginData["back-end-hooks"][key]["post"]["file"]
+                return (key=="custom-event" && pluginData["back-end-hooks"]["custom-event"]["file"]) ||
+                (pluginData["back-end-hooks"][key]["pre"] && pluginData["back-end-hooks"][key]["pre"]["file"]) ||
+                (pluginData["back-end-hooks"][key]["mid"] && pluginData["back-end-hooks"][key]["mid"]["file"]) ||
+                (pluginData["back-end-hooks"][key]["post"] && pluginData["back-end-hooks"][key]["post"]["file"])
             })
             const hasFrontendScript = !!pluginData["front-end-hooks"]
             const type =  hasFrontendScript && hasBackendScript ? "Both": (!hasFrontendScript && !hasBackendScript ? "None" : (hasFrontendScript ? "Front" : "Back"))
