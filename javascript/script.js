@@ -47,6 +47,20 @@ console.error = (data) => {
 window.addEventListener("error", function (e) {window.appLogger.log(`error: ${e.error.stack}`)})
 window.addEventListener('unhandledrejection', function (e) {window.appLogger.log(`unhandledrejection: ${e.reason.stack}`)})
 
+
+setTimeout(() => {
+    window.electron = require("electron")
+    electron.remote.globalShortcut.register('CommandOrControl+Shift+I', () => {
+        electron.remote.BrowserWindow.getFocusedWindow().webContents.openDevTools()
+    })
+
+    window.addEventListener('beforeunload', () => {
+        electron.remote.globalShortcut.unregisterAll()
+    })
+
+}, 3000)
+
+
 window.games = {}
 window.models = {}
 window.sequenceEditor = new Editor()
