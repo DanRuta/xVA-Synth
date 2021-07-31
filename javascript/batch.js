@@ -782,6 +782,7 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
                 if (resItem.length && resItem!="-") {
                     console.log("resItem", resItem, resItem.length, resItem.length!="-")
                     window.appLogger.log("resItem", resItem)
+                    createModal("error", resItem)
                     if (window.batch_state.state) {
                         batch_pauseBtn.click()
                     }
@@ -807,7 +808,7 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
                 resolve()
             } else {
                 console.log(e)
-                window.appLogger.log(e)
+                window.appLogger.log(e.stack)
                 if (document.getElementById("activeModal")) {
                     activeModal.remove()
                 }
