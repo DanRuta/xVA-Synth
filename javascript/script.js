@@ -48,6 +48,11 @@ window.addEventListener("error", function (e) {window.appLogger.log(`error: ${e.
 window.addEventListener('unhandledrejection', function (e) {window.appLogger.log(`unhandledrejection: ${e.reason.stack}`)})
 
 
+setTimeout(() => {
+    window.electron = require("electron")
+}, 1000)
+
+
 window.games = {}
 window.models = {}
 window.sequenceEditor = new Editor()
