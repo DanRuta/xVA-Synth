@@ -663,8 +663,14 @@
                 <div id="batch_container">
                     <div id="batch_intro">
                         <div>
-                            <span id="i18n_batchsize">Batch size:</span>
-                            <input type="number" id="batch_batchSizeInput" value="1" placeholder="1" min="1" step="1">
+                            <div style="display: flex;align-items: center;justify-content: center;">
+                                <span id="i18n_batchsize">Batch size:</span>
+                                <input type="number" id="batch_batchSizeInput" value="1" placeholder="1" min="1" step="1">
+                            </div>
+                            <div>
+                                <span>VRAM usage:</span>
+                                <span id="vramUsage">22.5/24.0 GB (87%)</span>
+                            </div>
                         </div>
                         <div>
                             <span id="i18n_batch_instr1">Place the .csv batch file(s) into the box below. The mandatory columns are "game_id", "voice_id", and "text", but you can also specify output filename/filepath under "out_path", pacing under "pacing", and vocoder under "vocoder" (Available options: 'hifi', 'quickanddirty', 'waveglow', 'waveglowBIG'). Click the "Generate sample" button to generate an example .csv file if you need one. Watch </span>

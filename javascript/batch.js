@@ -1,6 +1,7 @@
 "use strict"
 
 const path = require('path')
+const smi = require('node-nvidia-smi')
 
 window.batch_state = {
     lines: [],
@@ -91,6 +92,27 @@ function CSVToArray( strData, strDelimiter ){
     // Return the parsed data.
     return( arrData );
 }
+
+
+let smiInterval = setInterval(() => {
+    try {
+        if (window.userSettings.useGPU) {
+            smi((err, data) => {
+                const total = parseInt(data.nvidia_smi_log.gpu.fb_memory_usage.total.split(" ")[0])
+                const used = parseInt(data.nvidia_smi_log.gpu.fb_memory_usage.used.split(" ")[0])
+                const percent = used/total*100
+
+                vramUsage.innerHTML = `${(used/1000).toFixed(1)}/${(total/1000).toFixed(1)} GB (${percent.toFixed(2)}%)`
+            })
+        } else {
+            vramUsage.innerHTML = "Not using GPU"
+        }
+    } catch (e) {
+        console.log(e)
+        window.appLogger.log(e.stack)
+        clearInterval(smiInterval)
+    }
+}, 1000)
 
 
 batch_generateSample.addEventListener("click", () => {

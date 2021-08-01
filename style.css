@@ -910,13 +910,15 @@ a {
 }
 #batch_intro > div:first-child {
     display: flex;
-    align-items: center;
-    width: 250px;
+    height: 50px;
+    width: 350px;
+    justify-content: space-between;
+    flex-direction: column;
 }
 #batch_intro > div:last-child {
     width: 250px;
 }
-#batch_intro > div:first-child > input {
+#batch_intro > div:first-child > div:first-child > input {
     width: 50px;
     margin-left: 10px;
 }
