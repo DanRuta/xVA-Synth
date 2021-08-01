@@ -1066,11 +1066,17 @@ a {
 #pluginsRecordsHeader > div:nth-child(3), #pluginsRecordsContainer > div > div:nth-child(3) {
     min-width: 200px;
     max-width: 200px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 /*Plugin author*/
 #pluginsRecordsHeader > div:nth-child(4), #pluginsRecordsContainer > div > div:nth-child(4) {
     min-width: 125px;
     max-width: 125px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 /*Endorse*/
 #pluginsRecordsHeader > div:nth-child(5), #pluginsRecordsContainer > div > div:nth-child(5) {
@@ -1100,12 +1106,16 @@ a {
 /*Plugin short descriptions*/
 #pluginsRecordsHeader > div:nth-child(10), #pluginsRecordsContainer > div > div:nth-child(10) {
     min-width: 450px;
-    /*max-width: 450px;*/
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 /*Plugin ID*/
 #pluginsRecordsHeader > div:nth-child(11), #pluginsRecordsContainer > div > div:nth-child(11) {
-    min-width: 150px;
-    max-width: 150px;
+    min-width: 200px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 

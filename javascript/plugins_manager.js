@@ -137,8 +137,14 @@ class PluginsManager {
             enabledCkbx.checked = isEnabled
             record.appendChild(createElem("div", enabledCkbx))
             record.appendChild(createElem("div", `${pi}`))
-            record.appendChild(createElem("div", pluginData["plugin-name"]))
-            record.appendChild(createElem("div", pluginData["author"]||""))
+
+            const pluginNameElem = createElem("div", pluginData["plugin-name"])
+            pluginNameElem.title = pluginData["plugin-name"]
+            record.appendChild(pluginNameElem)
+
+            const pluginAuthorElem = createElem("div", pluginData["author"]||"")
+            pluginAuthorElem.title = pluginData["author"]||""
+            record.appendChild(pluginAuthorElem)
 
             const endorseButtonContainer = createElem("div")
             record.appendChild(endorseButtonContainer)
@@ -227,8 +233,14 @@ class PluginsManager {
                 enabledCkbx.disabled = true
             }
 
-            record.appendChild(createElem("div", pluginData["plugin-short-description"]))
-            record.appendChild(createElem("div", pluginId))
+            const shortDescriptionElem = createElem("div", pluginData["plugin-short-description"])
+            shortDescriptionElem.title = pluginData["plugin-short-description"]
+            record.appendChild(shortDescriptionElem)
+
+            const pluginIdElem = createElem("div", pluginId)
+            pluginIdElem.title = pluginId
+            record.appendChild(pluginIdElem)
+
             pluginsRecordsContainer.appendChild(record)
 
             enabledCkbx.addEventListener("click", () => {
