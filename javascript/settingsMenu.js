@@ -542,6 +542,7 @@ fs.readdir(`${window.path}/assets`, (err, assetFiles) => {
         // Initialize the default models directory setting for this game
         if (!Object.keys(window.userSettings).includes(`modelspath_${gameId}`)) {
             window.userSettings[`modelspath_${gameId}`] = `${__dirname.replace(/\\/g,"/")}/models/${gameId}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
+            window.userSettings[`outpath_${gameId}`] = `${__dirname.replace(/\\/g,"/")}/output/${gameId}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
             saveUserSettings()
         }
     })
