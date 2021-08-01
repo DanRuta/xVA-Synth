@@ -625,7 +625,7 @@ generateVoiceButton.addEventListener("click", () => {
             console.log(e)
             if (e.code =="ENOENT") {
                 closeModal(null, modalContainer).then(() => {
-                    createModal("error", window.i18n.ERR_SERVER)
+                    window.errorModal(window.i18n.ERR_SERVER)
                 })
             }
         })
@@ -1099,6 +1099,7 @@ window.doWeirdServerStartupCheck = (startUpMessage) => {
                             if (!window.pluginsManager.hasRunPostStartPlugins) {
                                 window.pluginsManager.hasRunPostStartPlugins = true
                                 window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["start"]["post"], event="post start")
+                                window.electronBrowserWindow.setProgressBar(-1)
                             }
                         })
                         serverIsUp = true

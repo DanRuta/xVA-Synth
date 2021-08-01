@@ -8,7 +8,21 @@ window.toggleSpinnerButtons = () => {
 
 window.confirmModal = message => new Promise(resolve => resolve(createModal("confirm", message)))
 window.spinnerModal = message => new Promise(resolve => resolve(createModal("spinner", message)))
-window.errorModal = message => new Promise(resolve => resolve(createModal("error", message)))
+window.errorModal = message => {
+    if (window.userSettings.useErrorSound) {
+        const audioPreview = createElem("audio", {autoplay: false}, createElem("source", {
+            src: window.userSettings.errorSoundFile
+        }))
+        audioPreview.setSinkId(window.userSettings.base_speaker)
+    }
+    window.electronBrowserWindow.setProgressBar(window.batch_state.taskBarPercent?window.batch_state.taskBarPercent:1, {mode: "error"})
+    return new Promise(topResolve => {
+        createModal("error", message).then(() => {
+            window.electronBrowserWindow.setProgressBar(window.batch_state.taskBarPercent?window.batch_state.taskBarPercent:1, {mode: "normal"})
+            topResolve()
+        })
+    })
+}
 window.createModal = (type, message) => {
     dialogueInput.blur()
     return new Promise(resolve => {

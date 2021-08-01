@@ -12,10 +12,12 @@ window.batch_state = {
     outPathsChecked: [],
     skippedExisting: 0,
     paginationIndex: 0,
+    taskBarPercent: 0,
     startTime: undefined,
     linesDoneSinceStart: 0,
     batchesDoneSinceStart: 0
 }
+
 
 // https://stackoverflow.com/questions/1293147/example-javascript-code-to-parse-csv-data
 function CSVToArray( strData, strDelimiter ){
@@ -609,9 +611,9 @@ const batchChangeVoice = (game, voice) => {
                     activeModal.remove()
                 }
                 if (e.code=="ENOENT") {
-                    createModal("error", window.i18n.ERR_SERVER)
+                    window.errorModal(window.i18n.ERR_SERVER)
                 } else {
-                    createModal("error", e.message)
+                    window.errorModal(e.message)
                 }
                 resolve()
             }
@@ -664,9 +666,9 @@ const batchChangeVocoder = (vocoder, game, voice) => {
                     activeModal.remove()
                 }
                 if (e.code=="ENOENT") {
-                    createModal("error", window.i18n.ERR_SERVER)
+                    window.errorModal(window.i18n.ERR_SERVER)
                 } else {
-                    createModal("error", e.message)
+                    window.errorModal(e.message)
                 }
                 resolve()
             }
@@ -804,7 +806,7 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
                 if (resItem.length && resItem!="-") {
                     console.log("resItem", resItem, resItem.length, resItem.length!="-")
                     window.appLogger.log("resItem", resItem)
-                    createModal("error", resItem)
+                    window.errorModal(resItem)
                     if (window.batch_state.state) {
                         batch_pauseBtn.click()
                     }
@@ -834,7 +836,7 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
                 if (document.getElementById("activeModal")) {
                     activeModal.remove()
                 }
-                createModal("error", e.message)
+                window.errorModal(e.message)
                 resolve()
             }
         })
@@ -878,7 +880,7 @@ const batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, bod
                 if (document.getElementById("activeModal")) {
                     activeModal.remove()
                 }
-                createModal("error", e.message)
+                window.errorModal(e.message)
                 resolve()
             }
         })
@@ -1052,7 +1054,9 @@ const performSynthesis = async () => {
     const percentDone = (window.batch_state.lineIndex) / window.batch_state.lines.length * 100
     batch_progressBar.style.background = `linear-gradient(90deg, green ${parseInt(percentDone)}%, rgba(255,255,255,0) ${parseInt(percentDone)}%)`
     batch_progressBar.innerHTML = `${parseInt(percentDone* 100)/100}%`
-    window.electronBrowserWindow.setProgressBar(percentDone/100)
+    window.batch_state.taskBarPercent = percentDone/100
+    window.electronBrowserWindow.setProgressBar(window.batch_state.taskBarPercent)
+
 
     const record = window.batch_state.lines[window.batch_state.lineIndex]
 

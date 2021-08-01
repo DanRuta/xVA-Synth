@@ -134,6 +134,12 @@ if (!Object.keys(window.userSettings).includes("keepEditorOnVoiceChange")) { // 
 if (!Object.keys(window.userSettings).includes("filenameNumericalSeq")) { // For backwards compatibility
     window.userSettings.filenameNumericalSeq = false
 }
+if (!Object.keys(window.userSettings).includes("useErrorSound")) { // For backwards compatibility
+    window.userSettings.useErrorSound = false
+}
+if (!Object.keys(window.userSettings).includes("errorSoundFile")) { // For backwards compatibility
+    window.userSettings.errorSoundFile = `${__dirname.replace(/\\/g,"/")}/lib/xp_error.mp3`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
+}
 if (!Object.keys(window.userSettings).includes("plugins")) { // For backwards compatibility
     window.userSettings.plugins = {}
 }
@@ -176,6 +182,8 @@ const updateUIWithSettings = () => {
     setting_output_json.checked = window.userSettings.outputJSON
     setting_output_num_seq.checked = window.userSettings.filenameNumericalSeq
     setting_keepEditorOnVoiceChange.checked = window.userSettings.keepEditorOnVoiceChange
+    setting_use_error_sound.checked = window.userSettings.useErrorSound
+    setting_error_sound_file.value = window.userSettings.errorSoundFile
 
     setting_external_audio_editor.value = window.userSettings.externalAudioEditor
     setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
@@ -336,7 +344,7 @@ useGPUCbx.addEventListener("change", () => {
         console.log(e)
         if (e.code =="ENOENT") {
             window.closeModal(undefined, settingsContainer).then(() => {
-                createModal("error", window.i18n.THERE_WAS_A_PROBLEM)
+                window.errorModal(window.i18n.THERE_WAS_A_PROBLEM)
             })
         }
     })
@@ -404,6 +412,9 @@ initMenuSetting(setting_output_num_seq, "filenameNumericalSeq", "checkbox")
 initMenuSetting(setting_darkprompt, "darkPrompt", "checkbox", setPromptTheme)
 initMenuSetting(setting_prompt_fontSize, "prompt_fontSize", "number", setPromptFontSize)
 initMenuSetting(setting_bg_gradient_opacity, "bg_gradient_opacity", "number", updateBackground)
+initMenuSetting(setting_use_error_sound, "useErrorSound", "checkbox")
+initMenuSetting(setting_error_sound_file, "errorSoundFile", "text")
+
 
 initMenuSetting(setting_batch_fastmode, "batch_fastMode", "checkbox")
 initMenuSetting(setting_batch_multip, "batch_useMP", "checkbox")

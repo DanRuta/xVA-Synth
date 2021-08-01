@@ -741,7 +741,7 @@ window.computeEmbsAndDimReduction = (includeAllVoices=false) => {
         console.log(e)
         if (e.code =="ENOENT") {
             closeModal(null, modalContainer).then(() => {
-                createModal("error", window.i18n.ERR_SERVER)
+                window.errorModal(window.i18n.ERR_SERVER)
             })
         }
     })
