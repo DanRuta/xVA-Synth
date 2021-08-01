@@ -137,6 +137,13 @@ if (!Object.keys(window.userSettings).includes("filenameNumericalSeq")) { // For
 if (!Object.keys(window.userSettings).includes("useErrorSound")) { // For backwards compatibility
     window.userSettings.useErrorSound = false
 }
+if (!Object.keys(window.userSettings).includes("showTipOfTheDay")) { // For backwards compatibility
+    window.userSettings.showTipOfTheDay = true
+}
+if (!Object.keys(window.userSettings).includes("showUnseenTipOfTheDay")) { // For backwards compatibility
+    window.userSettings.showUnseenTipOfTheDay = false
+}
+
 if (!Object.keys(window.userSettings).includes("errorSoundFile")) { // For backwards compatibility
     window.userSettings.errorSoundFile = `${__dirname.replace(/\\/g,"/")}/lib/xp_error.mp3`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
 }
@@ -184,6 +191,11 @@ const updateUIWithSettings = () => {
     setting_keepEditorOnVoiceChange.checked = window.userSettings.keepEditorOnVoiceChange
     setting_use_error_sound.checked = window.userSettings.useErrorSound
     setting_error_sound_file.value = window.userSettings.errorSoundFile
+
+    setting_showTipOfTheDay.checked = window.userSettings.showTipOfTheDay
+    totdShowTips.checked = window.userSettings.showTipOfTheDay
+    setting_showUnseenTipOfTheDay.checked = window.userSettings.showUnseenTipOfTheDay
+    totdShowOnlyUnseenTips.checked = window.userSettings.showUnseenTipOfTheDay
 
     setting_external_audio_editor.value = window.userSettings.externalAudioEditor
     setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
@@ -439,6 +451,18 @@ initMenuSetting(setting_use_error_sound, "useErrorSound", "checkbox")
 initMenuSetting(setting_error_sound_file, "errorSoundFile", "text")
 initFilePickerButton(setting_errorSoundFileBtn, setting_error_sound_file, "errorSoundFile", ["openFile"], [{name: "Audio", extensions: ["wav", "mp3", "ogg"]}])
 
+initMenuSetting(setting_showTipOfTheDay, "showTipOfTheDay", "checkbox", () => {
+    totdShowTips.checked = setting_showTipOfTheDay.checked
+})
+initMenuSetting(totdShowTips, "showTipOfTheDay", "checkbox", () => {
+    setting_showTipOfTheDay.checked = totdShowTips.checked
+})
+initMenuSetting(setting_showUnseenTipOfTheDay, "showUnseenTipOfTheDay", "checkbox", () => {
+    totdShowOnlyUnseenTips.checked = setting_showUnseenTipOfTheDay.checked
+})
+initMenuSetting(totdShowOnlyUnseenTips, "showUnseenTipOfTheDay", "checkbox", () => {
+    setting_showUnseenTipOfTheDay.checked = totdShowOnlyUnseenTips.checked
+})
 
 
 initMenuSetting(setting_external_audio_editor, "externalAudioEditor", "text")

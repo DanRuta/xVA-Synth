@@ -339,7 +339,7 @@ a {
  }
 
 
- #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer, #EULAContainer, #patreonContainer, #pluginsContainer, #s2sSelectContainer, #nexusContainer, #nexusReposContainer, #embeddingsContainer {
+ #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer, #EULAContainer, #patreonContainer, #pluginsContainer, #s2sSelectContainer, #nexusContainer, #nexusReposContainer, #embeddingsContainer, #totdContainer {
      display: flex;
      justify-content: center;
      align-items: center;
@@ -394,7 +394,7 @@ a {
      width: 25vw;
      text-align: center;
  }
- #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal, #patreonContainer > .modal, #pluginsContainer > .modal, #s2sSelectContainer > .modal, #nexusContainer > .modal, #nexusReposContainer > .modal, #embeddingsContainer > .modal {
+ #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal, #patreonContainer > .modal, #pluginsContainer > .modal, #s2sSelectContainer > .modal, #nexusContainer > .modal, #nexusReposContainer > .modal, #embeddingsContainer > .modal, #totdContainer > .modal {
      height: 65vh;
      width: 50vw;
      min-height: 500px;
@@ -1300,6 +1300,20 @@ a {
     text-overflow: ellipsis;
     display: inline-block;
 }
+
+
+
+/*Tip of the day*/
+#totdButtons {
+    display: flex;
+    align-items: center;
+}
+#totdButtons > span {
+    display: flex;
+    align-items: center;
+    margin: 5px;
+}
+
 
 
 

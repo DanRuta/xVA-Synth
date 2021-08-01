@@ -18,6 +18,7 @@ require("./javascript/i18n.js")
 require("./javascript/util.js")
 require("./javascript/nexus.js")
 require("./javascript/embeddings.js")
+require("./javascript/totd.js")
 const {Editor} = require("./javascript/editor.js")
 const {saveUserSettings, deleteFolderRecursive} = require("./javascript/settingsMenu.js")
 const xVASpeech = require("./javascript/xVASpeech.js")
@@ -239,14 +240,7 @@ window.changeGame = (meta) => {
     voiceTypeContainer.innerHTML = ""
     voiceSamples.innerHTML = ""
 
-    // No models found
-    if (!Object.keys(window.games).length) {
-        title.innerHTML = window.i18n.NO_MODELS_FOUND
-        return
-    }
-
     const buttons = []
-
     voiceSearchInput.placeholder = window.i18n.SEARCH_N_VOICES.replace("_", window.games[meta[0]] ? window.games[meta[0]].models.length : "0")
     voiceSearchInput.value = ""
 
@@ -1072,8 +1066,9 @@ keepSampleButton.addEventListener("click", event => keepSampleFunction(event.shi
 
 
 // Weird recursive intermittent promises to repeatedly check if the server is up yet - but it works!
-window.doWeirdServerStartupCheck = (startUpMessage) => {
-    let serverIsUp = false
+let serverIsUp = false
+const serverStartingMessage = `${window.i18n.LOADING}...<br>${window.i18n.MAY_TAKE_A_MINUTE}<br><br>${window.i18n.STARTING_PYTHON}...`
+window.doWeirdServerStartupCheck = () => {
     const check = () => {
         return new Promise(topResolve => {
             if (serverIsUp) {
@@ -1086,7 +1081,7 @@ window.doWeirdServerStartupCheck = (startUpMessage) => {
                         body: JSON.stringify({device: (window.userSettings.useGPU&&window.userSettings.installation=="gpu")?"gpu":"cpu"})
                     }).then(r => r.text()).then(r => {
                         // console.log("r", r)
-                        closeModal().then(() => {
+                        closeModal(undefined, totdContainer).then(() => {
                             window.pluginsManager.updateUI()
                             if (!window.pluginsManager.hasRunPostStartPlugins) {
                                 window.pluginsManager.hasRunPostStartPlugins = true
@@ -1120,11 +1115,20 @@ window.doWeirdServerStartupCheck = (startUpMessage) => {
             }
         })
     }
-    spinnerModal(startUpMessage)
+
+    if (window.userSettings.EULA_accepted) {
+        spinnerModal(serverStartingMessage)
+    }
     check()
 }
-window.doWeirdServerStartupCheck(`${window.i18n.LOADING}...<br>${window.i18n.MAY_TAKE_A_MINUTE}<br><br>${window.i18n.STARTING_PYTHON}...`)
-
+window.doWeirdServerStartupCheck()
+if (window.userSettings.EULA_accepted) {
+    window.showTipIfEnabledAndNewDay().then(() => {
+        if (!serverIsUp) {
+            spinnerModal(serverStartingMessage)
+        }
+    })
+}
 
 modalContainer.addEventListener("click", event => {
     try {
@@ -1460,7 +1464,6 @@ window.setupModal(s2s_settingsRecNoiseBtn, s2sSelectContainer, () => window.popu
 
 
 
-
 // Other
 // =====
 voiceSearchInput.addEventListener("keyup", () => {
@@ -1485,13 +1488,22 @@ EULA_closeButon.addEventListener("click", () => {
         closeModal(EULAContainer)
         window.userSettings.EULA_accepted = true
         saveUserSettings()
+
+        if (!window.totd_state.startupChecked) {
+            window.showTipIfEnabledAndNewDay().then(() => {
+                if (!serverIsUp) {
+                    spinnerModal(serverStartingMessage)
+                }
+            })
+        }
+
+        if (!serverIsUp && totdContainer.style.display=="none") {
+            window.spinnerModal(serverStartingMessage)
+        }
     }
 })
-if (!Object.keys(window.userSettings).includes("EULA_accepted") || window.userSettings.EULA_accepted==false) {
-    EULAContainer.style.opacity = 0
-    EULAContainer.style.display = "flex"
-    chrome.style.opacity = 1
-    requestAnimationFrame(() => requestAnimationFrame(() => EULAContainer.style.opacity = 1))
+if (Object.keys(window.userSettings).includes("EULA_accepted") && window.userSettings.EULA_accepted) {
+    closeModal(EULAContainer)
 }
 // Links
 document.querySelectorAll('a[href^="http"]').forEach(a => a.addEventListener("click", e => {

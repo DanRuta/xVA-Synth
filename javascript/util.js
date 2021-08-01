@@ -84,7 +84,7 @@ window.createModal = (type, message) => {
 }
 window.closeModal = (container=undefined, notThisOne=undefined) => {
     return new Promise(resolve => {
-        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, container, pluginsContainer, modalContainer, s2sSelectContainer, nexusContainer, embeddingsContainer]
+        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, container, pluginsContainer, modalContainer, s2sSelectContainer, nexusContainer, embeddingsContainer, totdContainer]
         const containers = container==undefined ? allContainers : [container]
         containers.forEach(cont => {
             if ((notThisOne!=undefined&&notThisOne!=cont) && (notThisOne==undefined || notThisOne!=cont) && cont!=undefined) {
@@ -375,17 +375,19 @@ window.addEventListener("keydown", event => {
 
 
 window.setupModal = (openingButton, modalContainerElem, callback, exitCallback) => {
-    openingButton.addEventListener("click", () => {
-        if (callback) {
-            callback()
-        }
-        closeModal(undefined, modalContainerElem).then(() => {
-            modalContainerElem.style.opacity = 0
-            modalContainerElem.style.display = "flex"
-            requestAnimationFrame(() => requestAnimationFrame(() => modalContainerElem.style.opacity = 1))
-            requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
+    if (openingButton) {
+        openingButton.addEventListener("click", () => {
+            if (callback) {
+                callback()
+            }
+            closeModal(undefined, modalContainerElem).then(() => {
+                modalContainerElem.style.opacity = 0
+                modalContainerElem.style.display = "flex"
+                requestAnimationFrame(() => requestAnimationFrame(() => modalContainerElem.style.opacity = 1))
+                requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
+            })
         })
-    })
+    }
     modalContainerElem.addEventListener("click", event => {
         if (event.target==modalContainerElem) {
             if (exitCallback) {
@@ -486,4 +488,23 @@ window.uuidv4 = () => {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8)
         return v.toString(16)
     })
+}
+
+// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+window.shuffle = (array) => {
+    var currentIndex = array.length,  randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+          array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
 }

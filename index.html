@@ -251,8 +251,19 @@
                             <button id="setting_errorSoundFileBtn" class="svgButton"></button>
                         </div>
                     </div>
-
-
+                    <div>
+                        <div id="">Show tip of the day</div>
+                        <div style="flex-direction: row;">
+                            <input id="setting_showTipOfTheDay" type="checkbox" style="width: 50%;">
+                            <button id="setting_btnShowTOTD">Show now</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div id="">Only show unseen tips</div>
+                        <div>
+                            <input id="setting_showUnseenTipOfTheDay" type="checkbox">
+                        </div>
+                    </div>
 
 
                     <hr style="width:100%">
@@ -613,7 +624,7 @@
                 <div id="gameSelectionListContainer"></div>
             </div>
         </div>
-        <div id="EULAContainer" style="display:none">
+        <div id="EULAContainer">
             <div class="modal">
                 <h1>End User License Agreement</h1>
                 <div>
@@ -998,6 +1009,31 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div id="totdContainer" style="display: none;">
+            <div class="modal" style="height: 30vh;">
+                <h2>Tip of the day <span id="totd_counter"></span></h2>
+
+                <div id="tipMessage" style="display: flex;justify-content: center;align-items: center;height: 100%;margin: 5vw;"></div>
+
+                <div id="totdButtons">
+                    <span>
+                        <input id="totdShowTips" type="checkbox">
+                        <span>Show tip of the day</span>
+                    </span>
+                    <span>
+                        <input id="totdShowOnlyUnseenTips" type="checkbox">
+                        <span>Only show unseen tips</span>
+                    </span>
+                </div>
+                <div>
+                    <button id="totdPrevTipBtn">Previous tip</button>
+                    <button id="totd_close">Close</button>
+                    <button id="totdNextTipBtn">Next tip</button>
+                </div>
+
             </div>
         </div>
 
