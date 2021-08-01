@@ -216,6 +216,12 @@ window.addEventListener("keyup", event => {
 
 window.addEventListener("keydown", event => {
 
+    if (event.ctrlKey && event.shiftKey && event.key.toLowerCase()=="i") {
+        window.electron = require("electron")
+        electron.remote.BrowserWindow.getFocusedWindow().webContents.openDevTools()
+        return
+    }
+
     if (event.ctrlKey) {
         window.ctrlKeyIsPressed = true
     }
