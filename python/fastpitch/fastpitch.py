@@ -238,7 +238,7 @@ class FastPitch(nn.Module):
 
 
 
-    def infer_using_vals (self, logger, pace, enc_out, max_duration, enc_mask, dur_pred_existing=None, pitch_pred_existing=None, old_sequence=None, new_sequence=None):
+    def infer_using_vals (self, logger, plugin_manager, sequence, pace, enc_out, max_duration, enc_mask, dur_pred_existing=None, pitch_pred_existing=None, old_sequence=None, new_sequence=None):
 
         start_index = None
         end_index = None
@@ -322,6 +322,20 @@ class FastPitch(nn.Module):
             dur_pred = torch.tensor(dur_pred_np).to(self.device).unsqueeze(0)
             pitch_pred = torch.tensor(pitch_pred_np).to(self.device).unsqueeze(0)
 
+        if len(plugin_manager.plugins["synth-line"]["mid"]):
+            plugin_data = {
+                "duration": dur_pred.cpu().detach().numpy(),
+                "pitch": pitch_pred.cpu().detach().numpy(),
+                "text": sequence,
+                "is_fresh_synth": pitch_pred_existing is None and dur_pred_existing is None
+            }
+            plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["mid"], event="mid synth-line", data=plugin_data)
+
+            dur_pred = torch.tensor(plugin_data["duration"]).to(self.device)
+            pitch_pred = torch.tensor(plugin_data["pitch"]).to(self.device)
+        else:
+            logger.info("========= NO PLUGINS")
+
         pitch_emb = self.pitch_emb(pitch_pred.unsqueeze(1)).transpose(1, 2)
 
         enc_out = enc_out + pitch_emb
@@ -332,7 +346,7 @@ class FastPitch(nn.Module):
         return mel_out, dec_lens, dur_pred, pitch_pred
 
 
-    def infer_advanced (self, logger, inputs, speaker_i, pace=1.0, pitch_data=None, max_duration=75, old_sequence=None):
+    def infer_advanced (self, logger, plugin_manager, cleaned_text, inputs, speaker_i, pace=1.0, pitch_data=None, max_duration=75, old_sequence=None):
 
         if speaker_i is not None:
             speaker = torch.ones(inputs.size(0)).long().to(inputs.device) * speaker_i
@@ -355,12 +369,12 @@ class FastPitch(nn.Module):
             del spk_emb
             # Try using the provided pitch/duration data, but fall back to using its own, otherwise
             try:
-                return self.infer_using_vals(logger, pace, enc_out, max_duration, enc_mask, dur_pred_existing=dur_pred, pitch_pred_existing=pitch_pred, old_sequence=old_sequence, new_sequence=inputs)
+                return self.infer_using_vals(logger, plugin_manager, cleaned_text, pace, enc_out, max_duration, enc_mask, dur_pred_existing=dur_pred, pitch_pred_existing=pitch_pred, old_sequence=old_sequence, new_sequence=inputs)
             except:
                 print(traceback.format_exc())
-                return self.infer_using_vals(logger, pace, enc_out, max_duration, enc_mask, None, None, None)
+                return self.infer_using_vals(logger, plugin_manager, cleaned_text, pace, enc_out, max_duration, enc_mask, None, None, None)
 
         else:
             del spk_emb
-            return self.infer_using_vals(logger, pace, enc_out, max_duration, enc_mask, None, None, None)
+            return self.infer_using_vals(logger, plugin_manager, cleaned_text, pace, enc_out, max_duration, enc_mask, None, None, None)
 
