@@ -1090,6 +1090,8 @@ const pauseResumeBatch = () => {
     batch_pauseBtn.innerHTML = isRunning ? window.i18n.RESUME : window.i18n.PAUSE
     window.batch_state.state = !isRunning
 
+    window.electronBrowserWindow.setProgressBar(window.batch_state.taskBarPercent?window.batch_state.taskBarPercent:1, {mode: isRunning ? "paused" : "normal"})
+
     if (window.batch_state.state) {
         window.batch_state.startTime = new Date()
         window.batch_state.linesDoneSinceStart = 0

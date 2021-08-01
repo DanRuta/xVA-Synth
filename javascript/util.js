@@ -18,7 +18,7 @@ window.errorModal = message => {
     window.electronBrowserWindow.setProgressBar(window.batch_state.taskBarPercent?window.batch_state.taskBarPercent:1, {mode: "error"})
     return new Promise(topResolve => {
         createModal("error", message).then(() => {
-            window.electronBrowserWindow.setProgressBar(window.batch_state.taskBarPercent?window.batch_state.taskBarPercent:1, {mode: "normal"})
+            window.electronBrowserWindow.setProgressBar(window.batch_state.taskBarPercent?window.batch_state.taskBarPercent:-1, {mode: window.batch_state.state?"normal":"paused"})
             topResolve()
         })
     })
