@@ -828,17 +828,18 @@
                 <div style="display: flex;height: 60vh;">
                     <div style="width: 15vw;margin-left: 2vw;">
                         <div style="display: flex;justify-content:center;align-items: center;height: 5vh;font-size: 16pt;">Games</div>
-                        <div style="background: rgb(75,75,75);overflow-y: auto;width: 100%;height: 55vh;padding-bottom: 10px;" id="nexusGamesList"></div>
+                        <div style="background: rgb(75,75,75);overflow-y: auto;width: calc(100% - 10px);;height: calc(55vh - 10px);padding-bottom: 10px;padding-right: 5px;padding-left: 5px;" id="nexusGamesList"></div>
                     </div>
                     <div style="width: 70vw;display: flex;flex-direction: column;align-items: center;">
                         <div style="display: flex;justify-content: space-between;align-items: center;height: 5vh;font-size: 16pt;width: 95%;">
                             <div>Models</div>
-                            <div style="width: 50vw;display: flex;align-items: center;">
-                                <input id="nexusSearchBar" placeholder="Search voices..." style="height: 25px;width: calc(100% - 500px);">
+                            <div style="width: 55vw;display: flex;align-items: center;justify-content: flex-end;">
+                                <input id="nexusSearchBar" placeholder="Search voices..." style="height: 25px;width: calc(100% - 600px);">
                                 <span style="font-size: 12pt;margin-left: 5px;margin-right: 5px;">Show only new/updated</span>
                                 <input id="nexusOnlyNewUpdatedCkbx" type="checkbox">
                                 <button id="nexusCheckNow">Check now</button>
                                 <button id="nexusManageReposButton">Manage repos</button>
+                                <button id="nexusLogInButton">Log in</button>
                             </div>
                         </div>
                         <div style="display: block;background: rgb(75,75,75);overflow-y: auto;width: 95%;height: 55vh;" id="nexus_main">
@@ -896,99 +897,104 @@
 
 
         <div id="embeddingsContainer" style="display:none">
-            <div class="modal" style="flex-direction: row;height: 85vh;">
-                <!-- left -->
-                <div style="height: calc(70vh + 100px);width: 20vw;">
-                    <div class="sectionTitle" style="height: 50px;display: flex;align-items: flex-end;margin-bottom: 10px;margin-top: -10px;">Games</div>
-                    <div id="embeddingsGamesListContainer" class="listContainer"></div>
-                    <div class="sectionTitle" style="margin-top: 30px;margin-bottom: 10px;">Voices</div>
-                    <div id="embeddings_main" class="listContainer" style="display: block;width: 100%;height: 32vh;">
+            <div class="modal" style="flex-direction: column;height: calc(85vh + 30px);">
 
-                        <div id="embeddingsRecordsHeader">
-                            <div id=""></div>
-                            <div id="">Show</div>
-                            <div id="">Name</div>
-                            <div id="">Game</div>
-                            <div id="">Gender</div>
-                        </div>
-                        <div id="embeddingsRecordsContainer">
-                        </div>
+                <h2 style="margin-top: 10px;margin-bottom: 0px;">Voice embeddings visualiser</h2>
+                <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;margin-top: 0;">
 
-                    </div>
-                    <div style="height: 50px;">
-                        <input id="embeddingsSearchBar" placeholder="Search voices..." style="height: 30px;width: 100%;">
-                    </div>
-                </div>
-                <!-- Right -->
-                <div style="height: calc(70vh + 100px);">
-                    <div id="embeddingsTopRightBar">
-                        <div>
-                            <div>
-                                <div>Voice Name:</div>
-                                <div id="embeddingsVoiceNameDisplay"></div>
+                    <!-- left -->
+                    <div style="height: calc(70vh + 100px);width: 20vw;margin: 10px;">
+                        <div class="sectionTitle" style="height: 50px;display: flex;align-items: flex-end;margin-bottom: 10px;margin-top: -10px;">Games</div>
+                        <div id="embeddingsGamesListContainer" class="listContainer"></div>
+                        <div class="sectionTitle" style="margin-top: 30px;margin-bottom: 10px;">Voices</div>
+                        <div id="embeddings_main" class="listContainer" style="display: block;width: 100%;height: 32vh;">
+
+                            <div id="embeddingsRecordsHeader">
+                                <div id=""></div>
+                                <div id="">Show</div>
+                                <div id="">Name</div>
+                                <div id="">Game</div>
+                                <div id="">Gender</div>
                             </div>
-                            <div>
-                                <div>Gender:</div>
-                                <div id="embeddingsVoiceGenderDisplay"></div>
+                            <div id="embeddingsRecordsContainer">
                             </div>
-                            <div>
-                                <div>Game:</div>
-                                <div id="embeddingsVoiceGameDisplay"></div>
-                            </div>
+
                         </div>
-                        <div>
-                            <button id="embeddingsPreviewButton">Preview</button>
-                            <button id="embeddingsLoadButton">Load</button>
+                        <div style="height: 50px;">
+                            <input id="embeddingsSearchBar" placeholder="Search voices..." style="height: 30px;width: 100%;">
                         </div>
                     </div>
-                    <div id="embeddingsSceneContainer">
-                        <div id="embeddingsHelpUI" style="height: 70vh;width: 60vw;background: rgba(0,0,0,0.5);display: flex;justify-content: center;align-items: center;position: fixed;flex-direction: column;">
-                            <span>Left click drag to rotate</span>
-                            <span>Right click drag to pan</span>
-                            <span>Mouse wheel scroll to zoom</span>
-                            <span>Left click on voice to select</span>
-                            <span>Right click on voice to play sample</span>
-                            <button id="embeddingsCloseHelpUI">Close</button>
-                        </div>
-                    </div>
-                    <div style="height: 50px;display: flex;justify-content: space-between;">
-                        <div id="embeddingsSceneGenderFilters">
+                    <!-- Right -->
+                    <div style="height: calc(70vh + 100px);margin: 10px;">
+                        <div id="embeddingsTopRightBar">
                             <div>
                                 <div>
-                                    <input id="embeddingsMalesCkbx" type="checkbox" checked>
+                                    <div>Voice Name:</div>
+                                    <div id="embeddingsVoiceNameDisplay"></div>
                                 </div>
-                                <div>Males</div>
+                                <div>
+                                    <div>Gender:</div>
+                                    <div id="embeddingsVoiceGenderDisplay"></div>
+                                </div>
+                                <div>
+                                    <div>Game:</div>
+                                    <div id="embeddingsVoiceGameDisplay"></div>
+                                </div>
                             </div>
                             <div>
-                                <div>
-                                    <input id="embeddingsFemalesCkbx" type="checkbox" checked>
-                                </div>
-                                <div>Females</div>
-                            </div>
-                            <div>
-                                <div>
-                                    <input id="embeddingsOtherGendersCkbx" type="checkbox" checked>
-                                </div>
-                                <div>Other</div>
-                            </div>
-                            <div style="width: 15vw;">
-                                <div>
-                                    <input id="embeddingsOnlyInstalledCkbx" type="checkbox">
-                                </div>
-                                <div>Show only installed voices</div>
+                                <button id="embeddingsPreviewButton">Preview</button>
+                                <button id="embeddingsLoadButton">Load</button>
                             </div>
                         </div>
-                        <div id="embeddingsSceneOptions">
-                            <div>Key:</div>
-                            <select id="embeddingsKey">
-                                <option value="embsKey_game">Game</option>
-                                <option value="embsKey_gender">Gender</option>
-                            </select>
-                            <div>Algorithm</div>
-                            <select id="embeddingsAlgorithm">
-                                <option value="embsAlgo_pca">PCA</option>
-                                <option value="embsAlgo_tsne">tSNE</option>
-                            </select>
+                        <div id="embeddingsSceneContainer">
+                            <div id="embeddingsHelpUI" style="height: 70vh;width: 60vw;background: rgba(0,0,0,0.5);display: flex;justify-content: center;align-items: center;position: fixed;flex-direction: column;">
+                                <span>Left click drag to rotate</span>
+                                <span>Right click drag to pan</span>
+                                <span>Mouse wheel scroll to zoom</span>
+                                <span>Left click on voice to select</span>
+                                <span>Right click on voice to play sample</span>
+                                <button id="embeddingsCloseHelpUI">Close</button>
+                            </div>
+                        </div>
+                        <div style="height: 50px;display: flex;justify-content: space-between;">
+                            <div id="embeddingsSceneGenderFilters">
+                                <div>
+                                    <div>
+                                        <input id="embeddingsMalesCkbx" type="checkbox" checked>
+                                    </div>
+                                    <div>Males</div>
+                                </div>
+                                <div>
+                                    <div>
+                                        <input id="embeddingsFemalesCkbx" type="checkbox" checked>
+                                    </div>
+                                    <div>Females</div>
+                                </div>
+                                <div>
+                                    <div>
+                                        <input id="embeddingsOtherGendersCkbx" type="checkbox" checked>
+                                    </div>
+                                    <div>Other</div>
+                                </div>
+                                <div style="width: 15vw;">
+                                    <div>
+                                        <input id="embeddingsOnlyInstalledCkbx" type="checkbox">
+                                    </div>
+                                    <div>Show only installed voices</div>
+                                </div>
+                            </div>
+                            <div id="embeddingsSceneOptions">
+                                <div>Key:</div>
+                                <select id="embeddingsKey">
+                                    <option value="embsKey_game">Game</option>
+                                    <option value="embsKey_gender">Gender</option>
+                                </select>
+                                <div>Algorithm</div>
+                                <select id="embeddingsAlgorithm">
+                                    <option value="embsAlgo_pca">PCA</option>
+                                    <option value="embsAlgo_tsne">tSNE</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
