@@ -54,51 +54,62 @@ const download = (url, dest) => {
 }
 
 window.initNexus = () => {
+    return new Promise((resolve) => {
+        window.nexusState.socket = new WebSocket("wss://sso.nexusmods.com")
 
-    window.nexusState.socket = new WebSocket("wss://sso.nexusmods.com")
+        window.nexusState.socket.onopen = event => {
 
-    window.nexusState.socket.onopen = event => {
+            window.nexusState.uuid = sessionStorage.getItem("uuid")
+            window.nexusState.token = sessionStorage.getItem("connection_token")
 
-        window.nexusState.uuid = sessionStorage.getItem("uuid")
-        window.nexusState.token = sessionStorage.getItem("connection_token")
-
-        if (window.nexusState.uuid==null) {
-            window.nexusState.uuid = uuidv4()
-            sessionStorage.setItem('uuid', window.nexusState.uuid)
-        }
-
-
-        const data = {
-            id: window.nexusState.uuid,
-            token: window.nexusState.token,
-            protocol: 2
-        }
-        window.nexusState.socket.send(JSON.stringify(data))
-        shell.openExternal(`https://www.nexusmods.com/sso?id=${window.nexusState.uuid}&application=${window.nexusState.applicationSlug}`)
-    }
-
-    window.nexusState.socket.onclose = event => {
-        console.log("socket closed")
-        setTimeout(window.initNexus(), 5000)
-    }
-
-    window.nexusState.socket.onmessage = event => {
-        const response = JSON.parse(event.data)
-
-        if (response && response.success) {
-            if (response.data.hasOwnProperty('connection_token')) {
-                sessionStorage.setItem('connection_token', response.data.connection_token)
-            } else if (response.data.hasOwnProperty('api_key')) {
-                console.log("API Key Received: " + response.data.api_key)
-                window.nexusState.key = response.data.api_key
-                window.showUserName()
+            if (window.nexusState.uuid==null) {
+                window.nexusState.uuid = uuidv4()
+                sessionStorage.setItem('uuid', window.nexusState.uuid)
             }
-        } else {
-            window.errorModal(`Error attempting to log into nexusmods: ${response.error}`)
+
+
+            const data = {
+                id: window.nexusState.uuid,
+                token: window.nexusState.token,
+                protocol: 2
+            }
+            window.nexusState.socket.send(JSON.stringify(data))
+            shell.openExternal(`https://www.nexusmods.com/sso?id=${window.nexusState.uuid}&application=${window.nexusState.applicationSlug}`)
         }
-    }
+
+        window.nexusState.socket.onclose = event => {
+            console.log("socket closed")
+            setTimeout(window.initNexus(), 5000)
+        }
+
+        window.nexusState.socket.onmessage = event => {
+            const response = JSON.parse(event.data)
+
+            if (response && response.success) {
+                if (response.data.hasOwnProperty('connection_token')) {
+                    sessionStorage.setItem('connection_token', response.data.connection_token)
+                } else if (response.data.hasOwnProperty('api_key')) {
+                    console.log("API Key Received: " + response.data.api_key)
+                    window.nexusState.key = response.data.api_key
+                    window.showUserName()
+                    resolve()
+                }
+            } else {
+                window.errorModal(`Error attempting to log into nexusmods: ${response.error}`)
+                reject()
+            }
+        }
+    })
 }
-// window.initNexus()
+nexusLogInButton.addEventListener("click", () => {
+    window.spinnerModal("Logging into nexusmods (check your browser)...")
+    window.initNexus().then(() => {
+        nexusLogInButton.style.display = "none"
+        closeModal(undefined, nexusContainer)
+    }).catch(() => {
+        closeModal(undefined, nexusContainer)
+    })
+})
 
 
 window.downloadFile = ([outputFileName, fileId]) => {
@@ -257,7 +268,6 @@ const getData = (url, data, type="GET") => {
         })
     })
 }
-window.nexus_getData = getData
 // ==========================
 
 
@@ -350,7 +360,11 @@ window.getLatestModelsList = async () => {
             console.log(files)
             files["files"].forEach(file => {
 
-                if (file.category_name=="OPTIONAL") {
+                if (file.category_name=="OPTIONAL" || file.category_name=="OPTIONAL") {
+
+                    if (!file.description.includes("Voice model")) {
+                        return
+                    }
 
                     const description = file.description
                     const parts = description.split("<br />")
