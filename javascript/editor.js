@@ -131,7 +131,7 @@ class Editor {
                 const slider = isOnGrabber
 
                 if (this.letterFocus.length <= 1 || (!event.ctrlKey && !this.letterFocus.includes(slider.index))) {
-                    this.setLetterFocus(this.grabbers.indexOf(slider))
+                    this.setLetterFocus(this.grabbers.indexOf(slider), event.ctrlKey, event.shiftKey, event.altKey)
                 }
                 this.multiLetterPitchDelta = slider.topLeftY
                 this.multiLetterStartPitchVals = this.grabbers.map(slider => slider.topLeftY)
@@ -282,7 +282,7 @@ class Editor {
         })
     }
 
-    setLetterFocus (l, ctrlKey, altKey, shiftKey) {
+    setLetterFocus (l, ctrlKey, shiftKey, altKey) {
         // On alt key modifier, make a selection on the whole whole word
         if (altKey) {
             this.letterFocus.push(l)
@@ -291,6 +291,7 @@ class Editor {
             while (l2>=0) {
                 let prevLetter = this.letters[l2]
                 if (prevLetter!="_") {
+                    this.letterFocus.push(l2)
                 } else {
                     break
                 }
