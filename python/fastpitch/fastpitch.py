@@ -333,8 +333,6 @@ class FastPitch(nn.Module):
 
             dur_pred = torch.tensor(plugin_data["duration"]).to(self.device)
             pitch_pred = torch.tensor(plugin_data["pitch"]).to(self.device)
-        else:
-            logger.info("========= NO PLUGINS")
 
         pitch_emb = self.pitch_emb(pitch_pred.unsqueeze(1)).transpose(1, 2)
 
