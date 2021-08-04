@@ -40,13 +40,13 @@ window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["start"]["
 let themeColour
 let secondaryThemeColour
 const oldCError = console.error
-console.error = (data) => {
-    window.appLogger.log(data)
-    oldCError(arguments)
+console.error = (...rest) => {
+    window.appLogger.log(`console.error: ${rest}`)
+    oldCError(rest)
 }
 
 window.addEventListener("error", function (e) {window.appLogger.log(`error: ${e.error.stack}`)})
-window.addEventListener('unhandledrejection', function (e) {window.appLogger.log(`unhandledrejection: ${e.reason.stack}`)})
+window.addEventListener('unhandledrejection', function (e) {window.appLogger.log(`unhandledrejection: ${e.stack}`)})
 
 
 setTimeout(() => {
@@ -84,8 +84,12 @@ let fileRenameCounter = 0
 let fileChangeCounter = 0
 let isGenerating = false
 
-window.loadAllModels = () => {
+window.loadAllModels = (forceUpdate=false) => {
     return new Promise(resolve => {
+
+        if (!forceUpdate && window.nexusState.installQueue.length) {
+            return
+        }
 
         let gameFolder
         let modelPathsKeys = Object.keys(window.userSettings).filter(key => key.includes("modelspath_"))
@@ -1387,7 +1391,7 @@ window.updateGameList = () => {
             try {
                 fs.watch(modelsDir, {recursive: false, persistent: true}, (eventType, filename) => {
                     if (window.userSettings.autoReloadVoices) {
-                        window.appLogger.log(`${eventType}: ${filename}`)
+                        // window.appLogger.log(`${eventType}: ${filename}`)
                         loadAllModels().then(() => changeGame(fileName))
                     }
                 })

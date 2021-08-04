@@ -19,17 +19,19 @@ window.nexusState = {
 // TEMP, maybe move to utils
 // ==========================
 const http = require("http")
+const https = require("https")
 
 const download = (url, dest) => {
     return new Promise((resolve, reject) => {
         const file = fs.createWriteStream(dest)
 
-        const request = http.get(url, (response) => {
+        const request = https.get(url.replace("http:", "https:"), (response) => {
             // check if response is success
             if (response.statusCode !== 200) {
-                console.log("Response status was " + response.statusCode)
+                console.log("url", url)
+                console.log("Response status was " + response.statusCode, response)
+                resolve()
                 return
-                // return cb("Response status was " + response.statusCode)
             }
 
             response.pipe(file)
@@ -136,15 +138,14 @@ nexusLogInButton.addEventListener("click", () => {
 
 
 
-window.downloadFile = ([outputFileName, fileId]) => {
-    console.log("downloadFile", outputFileName, fileId)
+window.downloadFile = ([nexusGameId, nexusRepoId, outputFileName, fileId]) => {
     nexusDownloadLog.appendChild(createElem("div", `Downloading: ${outputFileName}`))
     return new Promise(async (resolve, reject) => {
         if (!fs.existsSync(`${window.path}/downloads`)) {
             fs.mkdirSync(`${window.path}/downloads`)
         }
 
-        const downloadLink = await getData(`skyrimspecialedition/mods/44184/files/${fileId}/download_link.json`)
+        const downloadLink = await getData(`${nexusGameId}/mods/${nexusRepoId}/files/${fileId}/download_link.json`)
         if (!downloadLink.length && downloadLink.code==403) {
 
             window.errorModal(`Nexus requires premium membership for using their API for file downloads<br><br>Original error message:<br>${downloadLink.message}`).then(() => {
@@ -158,7 +159,6 @@ window.downloadFile = ([outputFileName, fileId]) => {
             })
 
         } else {
-            console.log("downloadLink", downloadLink)
             await download(downloadLink[0].URI.replace("https", "http"), `${window.path}/downloads/${outputFileName}.zip`)
 
             const queueIndex = window.nexusState.downloadQueue.findIndex(it => it[1]==fileId)
@@ -171,7 +171,6 @@ window.downloadFile = ([outputFileName, fileId]) => {
 
 }
 window.installDownloadedModel = ([game, zipName]) => {
-    console.log("installDownloadedModel", game, zipName)
     nexusDownloadLog.appendChild(createElem("div", `Installing: ${zipName}`))
     return new Promise(resolve => {
         try {
@@ -180,12 +179,8 @@ window.installDownloadedModel = ([game, zipName]) => {
             const unzipper = require('unzipper')
             const zipPath = `${window.path}/downloads/${zipName}.zip`
 
-            window.deleteFolderRecursive(`${window.path}/downloads/temp_install`)
             if (!fs.existsSync(`${window.path}/downloads`)) {
                 fs.mkdirSync(`${window.path}/downloads`)
-            }
-            if (!fs.existsSync(`${window.path}/downloads/temp_install`)) {
-                fs.mkdirSync(`${window.path}/downloads/temp_install`)
             }
 
 
@@ -226,19 +221,46 @@ window.installDownloadedModel = ([game, zipName]) => {
     })
 }
 
+nexusDownloadAllBtn.addEventListener("click", async () => {
+
+    for (let mi=0; mi<window.nexusState.filteredDownloadableModels.length; mi++) {
+        const modelMeta = window.nexusState.filteredDownloadableModels[mi]
+        window.nexusState.downloadQueue.push([modelMeta.voiceId, modelMeta.nexus_file_id])
+        nexusDownloadingCount.innerHTML = window.nexusState.downloadQueue.length
+    }
+
+    for (let mi=0; mi<window.nexusState.filteredDownloadableModels.length; mi++) {
+
+        const modelMeta = window.nexusState.filteredDownloadableModels[mi]
+        await window.downloadFile([modelMeta.nexusGameId, modelMeta.nexusRepoId, modelMeta.voiceId, modelMeta.nexus_file_id])
+
+        // Install the downloaded voice
+        window.nexusState.installQueue.push([modelMeta.game, modelMeta.voiceId])
+        nexusInstallingCount.innerHTML = window.nexusState.installQueue.length
+        await window.installDownloadedModel([modelMeta.game, modelMeta.voiceId])
+
+        fs.unlinkSync(`${window.path}/downloads/${modelMeta.voiceId}.zip`)
+
+        window.nexusState.finished += 1
+        nexusFinishedCount.innerHTML = window.nexusState.finished
+        window.displayAllModels(true)
+        window.loadAllModels(true)
+    }
+})
+
+
 const getJSONData = (url) => {
     return new Promise(resolve => {
         fetch(url).then(r=>r.json())
     })
 }
 
-
 window.showUserName = async () => {
     const data = await getuserData("validate.json")
-    console.log("data", data)
     const img = createElem("img")
     img.src = data.profile_url
     img.style.height = "40px"
+    nexusAvatar.innerHTML = ""
     img.addEventListener("load", () => {
         nexusAvatar.appendChild(img)
         nexusUserName.innerHTML = data.name
@@ -326,16 +348,21 @@ window.openNexusWindow = () => {
         gameButton.style.marginTop = "8px"
         const buttonLabel = createElem("span", window.gameAssets[gameId].split("-").reverse()[0].split(".")[0])
 
-        gameButton.addEventListener("click", e => {
-            console.log("button", e.target)
+        gameButton.addEventListener("contextmenu", e => {
+            if (e.target==gameButton || e.target==buttonLabel) {
+                Array.from(nexusGamesList.querySelectorAll("input")).forEach(ckbx => ckbx.checked = false)
+                gameCheckbox.click()
+                window.displayAllModels()
+            }
+        })
 
+        gameButton.addEventListener("click", e => {
             if (e.target==gameButton || e.target==buttonLabel) {
                 gameCheckbox.click()
                 window.displayAllModels()
             }
         })
         gameCheckbox.addEventListener("change", () => {
-            console.log("checkbox")
             window.displayAllModels()
         })
 
@@ -368,21 +395,18 @@ window.getLatestModelsList = async () => {
         })
 
 
-        console.log("window.nexusState.repoLinks", window.nexusState.repoLinks)
         for (let li=0; li<window.nexusState.repoLinks.length; li++) {
             if (!window.nexusState.repoLinks[li][1]) {
                 continue
             }
             const link = window.nexusState.repoLinks[li][0].replace("\r","")
             const repoInfo = await getData(`${link.split(".com/")[1]}.json`)
-            console.log("repoInfo", repoInfo)
             const author = repoInfo.author
             const nexusRepoId = repoInfo.mod_id
             const nexusRepoVersion = repoInfo.version
             const nexusGameId = repoInfo.domain_name
 
             const files = await getData(`${link.split(".com/")[1]}/files.json`)
-            console.log(files)
             files["files"].forEach(file => {
 
                 if (file.category_name=="OPTIONAL" || file.category_name=="OPTIONAL") {
@@ -436,14 +460,16 @@ window.getLatestModelsList = async () => {
     }
 }
 
-window.displayAllModels = () => {
+window.displayAllModels = (forceUpdate=false) => {
 
+    if (!forceUpdate && window.nexusState.installQueue.length) {
+        return
+    }
 
     const enabledGames = Array.from(nexusGamesList.querySelectorAll("input"))
         .map(elem => [elem.checked, elem.id.replace("ngl_", "")])
         .filter(checkedId => checkedId[0])
         .map(checkedId => checkedId[1])
-
 
     const gameColours = {}
     Object.keys(window.gameAssets).forEach(gameId => {
@@ -457,28 +483,28 @@ window.displayAllModels = () => {
     })
 
     nexusRecordsContainer.innerHTML = ""
-    console.log("window.nexusModelsList", window.nexusModelsList)
-    window.nexusModelsList.forEach(modelMeta => {
 
+    window.nexusState.filteredDownloadableModels = []
+
+    window.nexusModelsList.forEach(modelMeta => {
         if (!enabledGames.includes(modelMeta.game)) {
             return
         }
         if (nexusSearchBar.value.toLowerCase().trim().length && !modelMeta.name.toLowerCase().includes(nexusSearchBar.value.toLowerCase().trim())) {
             return
         }
-
         const existingModel = Object.keys(window.games).includes(modelMeta.game) ? window.games[modelMeta.game].models.find(model => model.voiceId==modelMeta.voiceId) : undefined
         if (existingModel && nexusOnlyNewUpdatedCkbx.checked && (window.checkVersionRequirements(modelMeta.version, String(existingModel.modelVersion)) || (modelMeta.version.replace(".0","")==String(existingModel.modelVersion))) ){
             return
         }
 
-        const recordRow = createElem("div")
 
+
+        const recordRow = createElem("div")
         const actionsElem = createElem("div")
 
         // Open link to the repo in the browser
         const openButton = createElem("button.smallButton.fixedColour", window.i18n.OPEN)
-        // openButton.style.background = `#${gameColours[modelMeta.game]} !important`
         openButton.style.setProperty("background-color", `#${gameColours[modelMeta.game]}`, "important")
         openButton.addEventListener("click", () => {
             shell.openExternal(modelMeta.repoLink)
@@ -489,14 +515,13 @@ window.displayAllModels = () => {
 
         // Download
         const downloadButton = createElem("button.smallButton.fixedColour", window.i18n.DOWNLOAD)
-        // downloadButton.style.background = `#${gameColours[modelMeta.game]} !important`
         downloadButton.style.setProperty("background-color", `#${gameColours[modelMeta.game]}`, "important")
         downloadButton.addEventListener("click", async () => {
             // Download the voice
             window.nexusState.downloadQueue.push([modelMeta.voiceId, modelMeta.nexus_file_id])
             nexusDownloadingCount.innerHTML = window.nexusState.downloadQueue.length
             try {
-                await window.downloadFile([modelMeta.voiceId, modelMeta.nexus_file_id])
+                await window.downloadFile([modelMeta.nexusGameId, modelMeta.nexusRepoId, modelMeta.voiceId, modelMeta.nexus_file_id])
 
                 // Install the downloaded voice
                 window.nexusState.installQueue.push([modelMeta.game, modelMeta.voiceId])
@@ -512,10 +537,9 @@ window.displayAllModels = () => {
         })
         if (existingModel && (modelMeta.version.replace(".0","")==String(existingModel.modelVersion) || window.checkVersionRequirements(modelMeta.version, String(existingModel.modelVersion)) ) ) {
         } else {
+            window.nexusState.filteredDownloadableModels.push(modelMeta)
             actionsElem.appendChild(downloadButton)
         }
-
-
 
 
         // Endorse
@@ -675,26 +699,3 @@ nexusReposAddButton.addEventListener("click", () => {
 
 nexusOnlyNewUpdatedCkbx.addEventListener("change", () => window.displayAllModels())
 window.initNexus()
-
-// Temp
-// const repoLinks = [
-//     "https://www.nexusmods.com/skyrimspecialedition/mods/44184",
-//     "https://www.nexusmods.com/fallout4/mods/49340",
-//     "https://www.nexusmods.com/newvegas/mods/70815",
-//     "https://www.nexusmods.com/oblivion/mods/50697",
-//     "https://www.nexusmods.com/fallout3/mods/24502",
-//     "https://www.nexusmods.com/morrowind/mods/49210",
-//     "https://www.nexusmods.com/fallout76/mods/928",
-//     "https://www.nexusmods.com/masseffect3/mods/930",
-//     "https://www.nexusmods.com/cyberpunk2077/mods/2162",
-//     "https://www.nexusmods.com/civilisationvi/mods/109",
-//     "https://www.nexusmods.com/witcher3/mods/5676",
-// ]
-
-
-// TODO, the download/install loop for the Download all button
-// TODO, message Nexus, and ask for API login permissions
-    // TODO, implement authorisation via the login system
-
-// ?? TODO, find a way to pre-populate the list on app start-up
-// nexusCheckNow.click()
