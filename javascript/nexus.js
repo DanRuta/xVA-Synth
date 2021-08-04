@@ -431,19 +431,24 @@ window.getLatestModelsList = async () => {
                     const hasT2 = description.includes("Tacotron2")
                     const hasHiFi = description.includes("HiFi-GAN")
                     const version = file.version
-                    let type = description.includes("Model:") ? parts.filter(line => line.startsWith("Model: "))[0].split(" - ")[1] : "FastPitch"
-                    if (type=="FastPitch") {
-                        if (hasT2) {
-                            type += "+T2"
+
+                    let type
+                    if (description.includes("Model:")) {
+                        type = parts.filter(line => line.startsWith("Model: "))[0].split("Model: ")[1]
+                    } else {
+                        type = "FastPitch"
+                        if (type=="FastPitch") {
+                            if (hasT2) {
+                                type = "T2+"+type
+                            }
+                        }
+                        if (hasHiFi) {
+                            type += "+HiFi"
                         }
                     }
-                    if (hasHiFi) {
-                        type += "+HiFi"
-                    }
-                    const notes = description.includes("Notes:") ? parts.filter(line => line.startsWith("Notes: "))[0].split("Notes: ")[1] : ""
 
+                    const notes = description.includes("Notes:") ? parts.filter(line => line.startsWith("Notes: "))[0].split("Notes: ")[1] : ""
                     const meta = {author, description, version, voiceId, game, name, type, notes, date, nexusRepoId, nexusRepoVersion, nexusGameId, nexus_file_id, repoLink: link}
-                    // console.log(meta)
                     window.nexusModelsList.push(meta)
                 }
             })

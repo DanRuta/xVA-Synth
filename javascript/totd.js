@@ -27,7 +27,8 @@ const tips = {
     "23": "If you log into nexusmods.com from within the app, you can check for new and updated voice models on your chosen Nexus pages. You can also endorse these, as well as any plugins configured with a nexus link. If you have a premium membership for the Nexus, you can also download (or batch download) all available voices, and have them installed automatically.",
     "24": "You can manage the list of Nexus pages to check for voice models by clicking the 'Manage Repos' button in the Nexus menu, or by editing the repositories.txt file",
     "25": "You can enable/disable error sounds in the settings. You can also pick a different sound, if you'd prefer something else",
-    "26": "You can resize the window by dragging one of the bottom corners"
+    "26": "You can resize the window by dragging one of the bottom corners",
+    "27": "You can right-click game buttons in the nexus window 'Games' list, to de-select all other games apart from that."
 }
 
 window.totd_state = {
