@@ -150,57 +150,59 @@ class PluginsManager {
             record.appendChild(endorseButtonContainer)
             if (pluginData["nexus-link"] && window.nexusState.key) {
 
-                window.nexus_getData(`${pluginData["nexus-link"].split(".com/")[1]}.json`).then(repoInfo => {
-                    const endorseButton = createElem("button.smallButton", "Endorse")
-                    const gameId = repoInfo.game_id
-                    const nexusRepoId = repoInfo.mod_id
+                if (window.nexusState.key) {
+                    window.nexus_getData(`${pluginData["nexus-link"].split(".com/")[1]}.json`).then(repoInfo => {
+                        const endorseButton = createElem("button.smallButton", "Endorse")
+                        const gameId = repoInfo.game_id
+                        const nexusRepoId = repoInfo.mod_id
 
-                    if (repoInfo.endorsement.endorse_status=="Endorsed") {
-                        window.endorsedRepos.add(`plugin:${pluginId}`)
-                        endorseButton.innerHTML = "Unendorse"
-                        endorseButton.style.background = "none"
-                        endorseButton.style.border = `2px solid #${currentGame[1]}`
-                    } else {
-                        endorseButton.style.setProperty("background-color", `#${currentGame[1]}`, "important")
-                    }
-
-                    endorseButtonContainer.appendChild(endorseButton)
-                    endorseButton.addEventListener("click", async () => {
-                        let response
-                        if (window.endorsedRepos.has(`plugin:${pluginId}`)) {
-                            response = await window.nexus_getData(`${gameId}/mods/${nexusRepoId}/abstain.json`, {
-                                game_domain_name: gameId,
-                                id: nexusRepoId,
-                                version: repoInfo.version
-                            }, "POST")
+                        if (repoInfo.endorsement.endorse_status=="Endorsed") {
+                            window.endorsedRepos.add(`plugin:${pluginId}`)
+                            endorseButton.innerHTML = "Unendorse"
+                            endorseButton.style.background = "none"
+                            endorseButton.style.border = `2px solid #${currentGame[1]}`
                         } else {
-                            response = await window.nexus_getData(`${gameId}/mods/${nexusRepoId}/endorse.json`, {
-                                game_domain_name: gameId,
-                                id: nexusRepoId,
-                                version: repoInfo.version
-                            }, "POST")
+                            endorseButton.style.setProperty("background-color", `#${currentGame[1]}`, "important")
                         }
-                        if (response && response.message && response.status=="Error") {
-                            if (response.message=="NOT_DOWNLOADED_MOD") {
-                                response.message = "You need to first download something from this repo to be able to endorse it."
-                            } else if (response.message=="TOO_SOON_AFTER_DOWNLOAD") {
-                                response.message = "Nexus requires you to wait at least 15 mins (at the time of writing) before you can endorse."
-                            } else if (response.message=="IS_OWN_MOD") {
-                                response.message = "Nexus does not allow you to rate your own content."
-                            }
 
-                            window.errorModal(response.message)
-                        } else {
-
+                        endorseButtonContainer.appendChild(endorseButton)
+                        endorseButton.addEventListener("click", async () => {
+                            let response
                             if (window.endorsedRepos.has(`plugin:${pluginId}`)) {
-                                window.endorsedRepos.delete(`plugin:${pluginId}`)
+                                response = await window.nexus_getData(`${gameId}/mods/${nexusRepoId}/abstain.json`, {
+                                    game_domain_name: gameId,
+                                    id: nexusRepoId,
+                                    version: repoInfo.version
+                                }, "POST")
                             } else {
-                                window.endorsedRepos.add(`plugin:${pluginId}`)
+                                response = await window.nexus_getData(`${gameId}/mods/${nexusRepoId}/endorse.json`, {
+                                    game_domain_name: gameId,
+                                    id: nexusRepoId,
+                                    version: repoInfo.version
+                                }, "POST")
                             }
-                            this.updateUI()
-                        }
+                            if (response && response.message && response.status=="Error") {
+                                if (response.message=="NOT_DOWNLOADED_MOD") {
+                                    response.message = "You need to first download something from this repo to be able to endorse it."
+                                } else if (response.message=="TOO_SOON_AFTER_DOWNLOAD") {
+                                    response.message = "Nexus requires you to wait at least 15 mins (at the time of writing) before you can endorse."
+                                } else if (response.message=="IS_OWN_MOD") {
+                                    response.message = "Nexus does not allow you to rate your own content."
+                                }
+
+                                window.errorModal(response.message)
+                            } else {
+
+                                if (window.endorsedRepos.has(`plugin:${pluginId}`)) {
+                                    window.endorsedRepos.delete(`plugin:${pluginId}`)
+                                } else {
+                                    window.endorsedRepos.add(`plugin:${pluginId}`)
+                                }
+                                this.updateUI()
+                            }
+                        })
                     })
-                })
+                }
             }
 
 

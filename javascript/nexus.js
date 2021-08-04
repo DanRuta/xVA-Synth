@@ -6,7 +6,7 @@ window.nexusModelsList = []
 window.endorsedRepos = new Set()
 window.nexusState = {
     key: null,
-    applicationSlug: "vortex",
+    applicationSlug: "xvasynth",
     socket: null,
     uuid: null,
     token: null,
@@ -55,61 +55,85 @@ const download = (url, dest) => {
 
 window.initNexus = () => {
     return new Promise((resolve) => {
-        window.nexusState.socket = new WebSocket("wss://sso.nexusmods.com")
 
-        window.nexusState.socket.onopen = event => {
+        window.nexusState.key = sessionStorage.getItem("nexus_API_key")
 
-            window.nexusState.uuid = sessionStorage.getItem("uuid")
-            window.nexusState.token = sessionStorage.getItem("connection_token")
+        if (window.nexusState.key) {
+            window.showUserName()
+            closeModal(undefined, nexusContainer)
+            nexusLogInButton.innerHTML = "Log out"
+            resolve()
+        } else {
+            window.nexusState.socket = new WebSocket("wss://sso.nexusmods.com")
 
-            if (window.nexusState.uuid==null) {
-                window.nexusState.uuid = uuidv4()
-                sessionStorage.setItem('uuid', window.nexusState.uuid)
-            }
-
-
-            const data = {
-                id: window.nexusState.uuid,
-                token: window.nexusState.token,
-                protocol: 2
-            }
-            window.nexusState.socket.send(JSON.stringify(data))
-            shell.openExternal(`https://www.nexusmods.com/sso?id=${window.nexusState.uuid}&application=${window.nexusState.applicationSlug}`)
-        }
-
-        window.nexusState.socket.onclose = event => {
-            console.log("socket closed")
-            setTimeout(window.initNexus(), 5000)
-        }
-
-        window.nexusState.socket.onmessage = event => {
-            const response = JSON.parse(event.data)
-
-            if (response && response.success) {
-                if (response.data.hasOwnProperty('connection_token')) {
-                    sessionStorage.setItem('connection_token', response.data.connection_token)
-                } else if (response.data.hasOwnProperty('api_key')) {
-                    console.log("API Key Received: " + response.data.api_key)
-                    window.nexusState.key = response.data.api_key
-                    window.showUserName()
-                    resolve()
+            window.nexusState.socket.onclose = event => {
+                console.log("socket closed")
+                if (!window.nexusState.key) {
+                    setTimeout(window.initNexus(), 5000)
                 }
-            } else {
-                window.errorModal(`Error attempting to log into nexusmods: ${response.error}`)
-                reject()
+            }
+
+            window.nexusState.socket.onmessage = event => {
+                const response = JSON.parse(event.data)
+
+                if (response && response.success) {
+                    if (response.data.hasOwnProperty('connection_token')) {
+                        sessionStorage.setItem('connection_token', response.data.connection_token)
+                    } else if (response.data.hasOwnProperty('api_key')) {
+                        console.log("API Key Received: " + response.data.api_key)
+                        window.nexusState.key = response.data.api_key
+                        sessionStorage.setItem('uuid', window.nexusState.uuid)
+                        sessionStorage.setItem('nexus_API_key', window.nexusState.key)
+                        window.showUserName()
+                        window.pluginsManager.updateUI()
+                        closeModal(undefined, nexusContainer)
+                        nexusLogInButton.innerHTML = "Log out"
+                        resolve()
+                    }
+                } else {
+                    window.errorModal(`Error attempting to log into nexusmods: ${response.error}`)
+                    reject()
+                }
             }
         }
     })
 }
 nexusLogInButton.addEventListener("click", () => {
-    window.spinnerModal("Logging into nexusmods (check your browser)...")
-    window.initNexus().then(() => {
-        nexusLogInButton.style.display = "none"
-        closeModal(undefined, nexusContainer)
-    }).catch(() => {
-        closeModal(undefined, nexusContainer)
-    })
+
+    if (nexusLogInButton.innerHTML=="Log in") {
+        window.spinnerModal("Logging into nexusmods (check your browser)...")
+
+        window.nexusState.uuid = sessionStorage.getItem("uuid")
+        window.nexusState.token = sessionStorage.getItem("connection_token")
+
+        if (window.nexusState.uuid==null) {
+            window.nexusState.uuid = uuidv4()
+        }
+
+        const data = {
+            id: window.nexusState.uuid,
+            token: window.nexusState.token,
+            protocol: 2
+        }
+        console.log("data", data)
+        window.nexusState.socket.send(JSON.stringify(data))
+
+        shell.openExternal(`https://www.nexusmods.com/sso?id=${window.nexusState.uuid}&application=${window.nexusState.applicationSlug}`)
+
+    } else {
+        nexusNameDisplay.style.opacity = 0
+        sessionStorage.removeItem("nexus_API_key")
+        sessionStorage.removeItem("uuid")
+        sessionStorage.removeItem("connection_token")
+        nexusAvatar.innerHTML = ""
+        nexusUserName.innerHTML = ""
+        nexusLogInButton.innerHTML = "Log in"
+        window.nexusState.uuid = null
+        window.nexusState.key = null
+        window.pluginsManager.updateUI()
+    }
 })
+
 
 
 window.downloadFile = ([outputFileName, fileId]) => {
@@ -268,6 +292,7 @@ const getData = (url, data, type="GET") => {
         })
     })
 }
+window.nexus_getData = getData
 // ==========================
 
 
@@ -649,7 +674,7 @@ nexusReposAddButton.addEventListener("click", () => {
 })
 
 nexusOnlyNewUpdatedCkbx.addEventListener("change", () => window.displayAllModels())
-
+window.initNexus()
 
 // Temp
 // const repoLinks = [
