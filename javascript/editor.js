@@ -32,9 +32,8 @@ class Editor {
         this.LETTERS_Y_OFFSET = 40
         this.SLIDER_GRABBER_H = 15
         this.MIN_LETTER_LENGTH = 20
-        this.MAX_LETTER_LENGTH = 200
+        this.MAX_LETTER_LENGTH = 100
         this.SPACE_BETWEEN_LETTERS = 5
-
 
         this.multiLetterPitchDelta = undefined
         this.multiLetterStartPitchVals = []
@@ -198,10 +197,10 @@ class Editor {
 
                         let newWidth = elemDragged.dragStart.width + parseInt(event.layerX)-mouseDownStart.x
                         newWidth = Math.max(20, newWidth)
-                        newWidth = Math.min(newWidth, 200)
+                        newWidth = Math.min(newWidth, this.MAX_LETTER_LENGTH)
                         elemDragged.width = newWidth
 
-                        elemDragged.percentAcross = (elemDragged.width-20) / (200-20)
+                        elemDragged.percentAcross = (elemDragged.width-20) / (this.MAX_LETTER_LENGTH-20)
                         this.dursNew[elemDragged.index] = Math.max(0.1, elemDragged.percentAcross*20)
 
                         elemDragged.grabber.width = elemDragged.width-2
