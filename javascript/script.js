@@ -1527,8 +1527,10 @@ EULA_closeButon.addEventListener("click", () => {
         }
     }
 })
-if (Object.keys(window.userSettings).includes("EULA_accepted") && window.userSettings.EULA_accepted) {
-    closeModal(EULAContainer)
+if (!Object.keys(window.userSettings).includes("EULA_accepted") || !window.userSettings.EULA_accepted) {
+    const button = createElem("button")
+    window.setupModal(button, EULAContainer)
+    button.click()
 }
 // Links
 document.querySelectorAll('a[href^="http"]').forEach(a => a.addEventListener("click", e => {
