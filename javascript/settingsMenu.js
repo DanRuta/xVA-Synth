@@ -143,6 +143,9 @@ if (!Object.keys(window.userSettings).includes("showTipOfTheDay")) { // For back
 if (!Object.keys(window.userSettings).includes("showUnseenTipOfTheDay")) { // For backwards compatibility
     window.userSettings.showUnseenTipOfTheDay = false
 }
+if (!Object.keys(window.userSettings).includes("playChangedAudio")) { // For backwards compatibility
+    window.userSettings.playChangedAudio = false
+}
 
 if (!Object.keys(window.userSettings).includes("errorSoundFile")) { // For backwards compatibility
     window.userSettings.errorSoundFile = `${__dirname.replace(/\\/g,"/")}/lib/xp_error.mp3`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
@@ -196,6 +199,8 @@ const updateUIWithSettings = () => {
     totdShowTips.checked = window.userSettings.showTipOfTheDay
     setting_showUnseenTipOfTheDay.checked = window.userSettings.showUnseenTipOfTheDay
     totdShowOnlyUnseenTips.checked = window.userSettings.showUnseenTipOfTheDay
+
+    setting_playChangedAudio.checked = window.userSettings.playChangedAudio
 
     setting_external_audio_editor.value = window.userSettings.externalAudioEditor
     setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
@@ -463,6 +468,8 @@ initMenuSetting(setting_showUnseenTipOfTheDay, "showUnseenTipOfTheDay", "checkbo
 initMenuSetting(totdShowOnlyUnseenTips, "showUnseenTipOfTheDay", "checkbox", () => {
     setting_showUnseenTipOfTheDay.checked = totdShowOnlyUnseenTips.checked
 })
+
+initMenuSetting(setting_playChangedAudio, "playChangedAudio", "checkbox")
 
 
 initMenuSetting(setting_external_audio_editor, "externalAudioEditor", "text")

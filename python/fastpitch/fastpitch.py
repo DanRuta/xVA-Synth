@@ -341,7 +341,9 @@ class FastPitch(nn.Module):
         dec_out, dec_mask = self.decoder(len_regulated, dec_lens)
         mel_out = self.proj(dec_out)
         mel_out = mel_out.permute(0, 2, 1)  # For inference.py
-        return mel_out, dec_lens, dur_pred, pitch_pred
+        start_index = -1 if start_index is None else start_index
+        end_index = -1 if end_index is None else end_index
+        return mel_out, dec_lens, dur_pred, pitch_pred, start_index, end_index
 
 
     def infer_advanced (self, logger, plugin_manager, cleaned_text, inputs, speaker_i, pace=1.0, pitch_data=None, max_duration=75, old_sequence=None):

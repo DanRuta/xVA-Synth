@@ -26,6 +26,7 @@ class Editor {
         this.resetDurs = []
         this.resetPitch = []
 
+        this.adjustedLetters = new Set()
 
         this.LEFT_RIGHT_SEQ_PADDING = 20
         this.EDITOR_HEIGHT = 150
@@ -173,6 +174,7 @@ class Editor {
 
                 if (elemDragged && (parseInt(event.layerX)-mouseDownStart.x || parseInt(event.layerY)-mouseDownStart.y)) {
                     this.hasChanged = true
+                    this.letterFocus.forEach(index => this.adjustedLetters.add(index))
                 }
 
                 if (elemDragged) {
@@ -355,6 +357,41 @@ class Editor {
         }
     }
 
+
+
+    getChangedTimeStamps (startI, endI, audioSDuration) {
+
+        const adjustedLetters = Array.from(this.adjustedLetters)
+
+        // Skip this if start/end indexes are not found (new sample)
+        if ((startI==-1 || endI==-1) && !adjustedLetters.length) {
+            return undefined
+        }
+        startI = startI==-1 ? this.letters.length : parseInt(startI)
+        endI = endI==-1 ? 0 : parseInt(endI)
+
+        // Check OUTSIDE of the given changed indexes for TEXT, to see if there were other changes, to eg pitch/duration
+        if (adjustedLetters.length) {
+            startI = Math.min(startI, Math.min(adjustedLetters))
+            endI = Math.max(endI, Math.max(adjustedLetters))
+        }
+
+        const newStartI = startI
+        const newEndI = endI
+
+        // Then, look through the duration values of the audio, and get a percent into the audio where those new start/end points are
+        const totalDuration = this.dursNew.reduce((p,c)=>p+c,0)
+        const durAtStart = this.dursNew.filter((v,vi) => vi<=newStartI).reduce((p,c)=>p+c,0)
+        const durAtEnd = this.dursNew.filter((v,vi) => vi<=newEndI).reduce((p,c)=>p+c,0)
+        const startPercent = durAtStart/totalDuration
+        const endPercent = durAtEnd/totalDuration
+
+        // Then, multiply this by the seconds duration of the generated audio, and pad with ~500ms, to get the final start/end of the section of the audio to play
+        const startSeconds = Math.max(0, startPercent*audioSDuration-0.5)
+        const endSeconds = Math.min(audioSDuration, endPercent*audioSDuration+0.5)
+
+        return [startSeconds, endSeconds]
+    }
 }
 
 class Letter {

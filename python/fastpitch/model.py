@@ -69,7 +69,7 @@ class FastPitch(object):
         with torch.no_grad():
             pace = torch.tensor([record[3] for record in linesBatch]).unsqueeze(1).to(self.device)
             pitch_data = None # Maybe in the future
-            mel, mel_lens, dur_pred, pitch_pred = self.model.infer_advanced(self.logger, plugin_manager, cleaned_text_sequences, text_sequences, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=None)
+            mel, mel_lens, dur_pred, pitch_pred, start_index, end_index = self.model.infer_advanced(self.logger, plugin_manager, cleaned_text_sequences, text_sequences, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=None)
 
             if "waveglow" in vocoder:
 
@@ -122,7 +122,7 @@ class FastPitch(object):
                 old_sequence = torch.LongTensor(old_sequence)
                 old_sequence = pad_sequence([old_sequence], batch_first=True).to(self.models_manager.device)
 
-            mel, mel_lens, dur_pred, pitch_pred = self.model.infer_advanced(self.logger, plugin_manager, [cleaned_text], text, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=old_sequence)
+            mel, mel_lens, dur_pred, pitch_pred, start_index, end_index = self.model.infer_advanced(self.logger, plugin_manager, [cleaned_text], text, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=old_sequence)
 
             if "waveglow" in vocoder:
 
@@ -153,7 +153,7 @@ class FastPitch(object):
 
 
         del pitch_pred, dur_pred, text, sequence
-        return pitch_durations_text +"\n"+cleaned_text
+        return pitch_durations_text +"\n"+cleaned_text + f'{start_index}\n{end_index}'
 
     def set_device (self, device):
         self.device = device

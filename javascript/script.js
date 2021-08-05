@@ -723,6 +723,9 @@ generateVoiceButton.addEventListener("click", () => {
                 let pitchData = res[0]
                 let durationsData = res[1]
                 let cleanedSequence = res[2]
+                const start_index = res[3]
+                const end_index = res[3]
+
                 pitchData = pitchData.split(",").map(v => parseFloat(v))
                 durationsData = durationsData.split(",").map(v => isFreshRegen ? parseFloat(v) : parseFloat(v)/pace_slid.value)
                 window.sequenceEditor.inputSequence = sequence
@@ -732,7 +735,6 @@ generateVoiceButton.addEventListener("click", () => {
                     window.sequenceEditor.resetPitch = pitchData
                     window.sequenceEditor.resetDurs = durationsData
                 }
-
 
                 window.sequenceEditor.letters = cleanedSequence.replace(/\s/g, "_").split("")
                 window.sequenceEditor.pitchNew = pitchData.map(p=>p)
@@ -751,16 +753,27 @@ generateVoiceButton.addEventListener("click", () => {
                     keepSampleButton.dataset.newFileLocation = `${window.userSettings[`outpath_${game}`]}/${voiceType}/${outputFileName}.wav`
                 }
                 keepSampleButton.disabled = false
-                // samplePlay.dataset.tempFileLocation = tempFileLocation
                 window.tempFileLocation = tempFileLocation
 
 
-                // wavesurfer
+                // Wavesurfer
                 window.initWaveSurfer(`${__dirname.replace("/javascript", "")}/output/${tempFileLocation.split("/").reverse()[0]}`)
                 window.wavesurfer.on("ready",  () => {
+
                     if (window.userSettings.autoPlayGen) {
+
+                        if (window.userSettings.playChangedAudio) {
+                            const playbackStartEnd = window.sequenceEditor.getChangedTimeStamps(start_index, end_index, window.wavesurfer.getDuration())
+                            if (playbackStartEnd) {
+                                wavesurfer.play(playbackStartEnd[0], playbackStartEnd[1])
+                            } else {
+                                wavesurfer.play()
+                            }
+                        } else {
+                            wavesurfer.play()
+                        }
+                        window.sequenceEditor.adjustedLetters = new Set()
                         samplePlayPause.innerHTML = window.i18n.PAUSE
-                        wavesurfer.play()
                     }
                 })
 
