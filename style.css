@@ -210,6 +210,8 @@ a {
      align-items: center;
      height: 5vh;
      margin: 10px;
+     margin-top: 0;
+     margin-bottom: 0;
  }
  #buttonContainer > button {
      margin-left: 5px;
@@ -231,7 +233,7 @@ a {
  }
  #voiceSamples {
      width: calc(95vw - 300px);
-     height: calc(91vh - 185px - 290px - 45px);
+     height: calc(91vh - 185px - 290px - 45px - 50px);
      background: rgba(255,255,255,0.1);
      margin-left: 2.5vw;
      margin-right: 2.5vw;
@@ -308,7 +310,7 @@ a {
 
  #inputContainer {
      display: flex;
-
+     margin-bottom: -10px;
  }
  #mic_SVG {
      height: 40px;
@@ -476,7 +478,7 @@ a {
 
 
  /*Chrome*/
- #chrome {
+ #chromeBar {
      display: flex;
      height: 25px;
      width: 100vw;
