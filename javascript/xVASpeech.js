@@ -118,7 +118,7 @@ const outputRecording = (outPath, callback) => {
 }
 
 const useWavFileForxVASpeech = (fileName) => {
-    fetch(`http://localhost:8008/runSpeechToSpeech`, {
+    doFetch(`http://localhost:8008/runSpeechToSpeech`, {
         method: "Post",
         body: JSON.stringify({
             input_path: fileName,

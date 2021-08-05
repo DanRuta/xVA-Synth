@@ -593,7 +593,7 @@ const batchChangeVoice = (game, voice) => {
 
         const model = window.games[game].models.find(model => model.voiceId==voice).model
 
-        fetch(`http://localhost:8008/loadModel`, {
+        doFetch(`http://localhost:8008/loadModel`, {
             method: "Post",
             body: JSON.stringify({"outputs": null, "model": `${window.userSettings[`modelspath_${game}`]}/${voice}`, "model_speakers": model.emb_size})
         }).then(r=>r.text()).then(res => {
@@ -633,7 +633,7 @@ const batchChangeVocoder = (vocoder, game, voice) => {
         const vocoderMappings = [["waveglow", "256_waveglow"], ["waveglowBIG", "big_waveglow"], ["quickanddirty", "qnd"], ["hifi", `${game}/${voice}.hg.pt`]]
         const vocoderId = vocoderMappings.find(record => record[0]==vocoder)[1]
 
-        fetch(`http://localhost:8008/setVocoder`, {
+        doFetch(`http://localhost:8008/setVocoder`, {
             method: "Post",
             body: JSON.stringify({
                 vocoder: vocoderId,
@@ -791,7 +791,7 @@ const addActionButtons = (records, ri) => {
 
 const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
     return new Promise((resolve, reject) => {
-        fetch(`http://localhost:8008/batchOutputAudio`, {
+        doFetch(`http://localhost:8008/batchOutputAudio`, {
             method: "Post",
             body: JSON.stringify({
                 input_paths: tempPaths,
@@ -846,7 +846,7 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
 
 const batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, body) => {
     return new Promise((resolve, reject) => {
-        fetch(`http://localhost:8008/outputAudio`, {
+        doFetch(`http://localhost:8008/outputAudio`, {
             method: "Post",
             body
         }).then(r=>r.text()).then(res => {
@@ -914,7 +914,7 @@ const batchKickOffGeneration = () => {
             defaultOutFolder: window.userSettings.batchOutFolder,
             speaker_i, vocoder, linesBatch
         }
-        fetch(`http://localhost:8008/synthesize_batch`, {
+        doFetch(`http://localhost:8008/synthesize_batch`, {
             method: "Post",
             body: JSON.stringify(batchPostData)
         }).then(r=>r.text()).then(async (res) => {

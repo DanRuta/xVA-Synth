@@ -24,6 +24,10 @@ const createWindow = () => {
         minHeight: 700,
         minWidth: 1200,
         frame: false,
+        webPreferences: {
+            nodeIntegration: true,
+            // contextIsolation: false
+        },
         icon: `${__dirname}/assets/x-icon.png`
     })
 

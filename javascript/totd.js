@@ -43,7 +43,7 @@ const initTipOfTheDayMenu = (now, tipIDs) => {
 
     totdContainer.style.opacity = 1
     totdContainer.style.display = "flex"
-    chrome.style.opacity = 1
+    chromeBar.style.opacity = 1
     requestAnimationFrame(() => requestAnimationFrame(() => totdContainer.style.opacity = 1))
 
     return new Promise(resolve => {

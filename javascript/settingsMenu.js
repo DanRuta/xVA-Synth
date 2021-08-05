@@ -251,7 +251,7 @@ setting_change_installation.innerHTML = window.userSettings.installation=="cpu" 
 
 setting_change_installation.addEventListener("click", () => {
     spinnerModal("Changing installation sever...")
-    fetch(`http://localhost:8008/stopServer`, {
+    doFetch(`http://localhost:8008/stopServer`, {
         method: "Post",
         body: JSON.stringify({})
     }).then(r=>r.text()).then(console.log) // The server stopping should mean this never runs
@@ -263,7 +263,7 @@ setting_change_installation.addEventListener("click", () => {
             settings_installation.innerHTML = `GPU`
             setting_change_installation.innerHTML = `Change to CPU`
         } else {
-            fetch(`http://localhost:8008/setDevice`, {
+            doFetch(`http://localhost:8008/setDevice`, {
                 method: "Post",
                 body: JSON.stringify({device: "cpu"})
             })
@@ -352,7 +352,7 @@ navigator.mediaDevices.enumerateDevices().then(devices => {
 // =============
 useGPUCbx.addEventListener("change", () => {
     spinnerModal(window.i18n.CHANGING_DEVICE)
-    fetch(`http://localhost:8008/setDevice`, {
+    doFetch(`http://localhost:8008/setDevice`, {
         method: "Post",
         body: JSON.stringify({device: useGPUCbx.checked ? "gpu" : "cpu"})
     }).then(r=>r.text()).then(res => {

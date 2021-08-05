@@ -6,7 +6,7 @@ window.openEmbeddingsWindow = () => {
         embeddingsContainer.style.opacity = 0
         embeddingsContainer.style.display = "flex"
         requestAnimationFrame(() => requestAnimationFrame(() => embeddingsContainer.style.opacity = 1))
-        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
+        requestAnimationFrame(() => requestAnimationFrame(() => chromeBar.style.opacity = 1))
     })
 }
 
@@ -708,7 +708,7 @@ window.computeEmbsAndDimReduction = (includeAllVoices=false) => {
 
     window.spinnerModal("Re-computing embeddings and dimensionality reduction on voices. May take a minute the first time, subsequent runs should be instant.")
 
-    fetch(`http://localhost:8008/computeEmbsAndDimReduction`, {
+    doFetch(`http://localhost:8008/computeEmbsAndDimReduction`, {
         method: "Post",
         body: JSON.stringify({
             mappings: mappings.join("\n"),

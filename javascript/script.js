@@ -2,14 +2,14 @@
 
 window.appVersion = "v2.0.0"
 
-window.PRODUCTION = process.mainModule.filename.includes("resources")
+window.PRODUCTION = module.filename.includes("resources")
 const path = window.PRODUCTION ? "./resources/app" : "."
 window.path = path
 
 const fs = require("fs")
 const zipdir = require('zip-dir')
 const {shell, ipcRenderer} = require("electron")
-const fetch = require("node-fetch")
+const doFetch = require("node-fetch")
 const {xVAAppLogger} = require("./javascript/appLogger.js")
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 process.on(`uncaughtException`, data => window.appLogger.log(`uncaughtException: ${data}`))
@@ -83,6 +83,35 @@ fs.readdir(`${__dirname.replace("/javascript", "")}/output`, (err, files) => {
 let fileRenameCounter = 0
 let fileChangeCounter = 0
 let isGenerating = false
+
+
+// Audio player
+window.initWaveSurfer = (src) => {
+    if (window.wavesurfer) {
+        window.wavesurfer.stop()
+        wavesurferContainer.innerHTML = ""
+    }
+    window.wavesurfer = WaveSurfer.create({
+        container: '#wavesurferContainer',
+        waveColor: `#${window.currentGame[1]}`,
+        height: 100,
+        progressColor: 'white',
+        responsive: true,
+    })
+    window.wavesurfer.load(src)
+    window.wavesurfer.setSinkId(window.userSettings.base_speaker)
+    window.wavesurfer.on("finish", () => {
+        samplePlayPause.innerHTML = window.i18n.PLAY
+    })
+    window.wavesurfer.on("seek", event => {
+        if (event!=0) {
+            window.wavesurfer.play()
+            samplePlayPause.innerHTML = window.i18n.PAUSE
+        }
+    })
+    // wavesurferContainer.style.filter = "drop-shadow(1px 0px 0px rgba(255, 255, 255, 1)) drop-shadow(2px 0px 0px rgba(0, 0, 0, 1))"
+}
+
 
 window.loadAllModels = (forceUpdate=false) => {
     return new Promise(resolve => {
@@ -286,7 +315,7 @@ window.changeGame = (meta) => {
                             amplitude: window.userSettings.audio.amplitude
                         }
 
-                        fetch(`http://localhost:8008/outputAudio`, {
+                        doFetch(`http://localhost:8008/outputAudio`, {
                             method: "Post",
                             body: JSON.stringify({
                                 input_path: `./output/${files[0]}`,
@@ -371,13 +400,6 @@ window.changeGame = (meta) => {
             window.currentModel.audioPreviewPath = audioPreviewPath
             window.currentModelButton = button
 
-            if (voiceDescription) {
-                description.innerHTML = voiceDescription
-                description.className = "withContent"
-            } else {
-                description.innerHTML = ""
-                description.className = ""
-            }
 
             generateVoiceButton.dataset.modelQuery = null
 
@@ -404,7 +426,7 @@ window.changeGame = (meta) => {
             title.innerHTML = button.innerHTML
             title.dataset.modelId = voiceId
             keepSampleButton.style.display = "none"
-            samplePlay.style.display = "none"
+            samplePlayPause.style.display = "none"
 
             // Voice samples
             voiceSamples.innerHTML = ""
@@ -418,6 +440,23 @@ window.changeGame = (meta) => {
 
 }
 
+samplePlayPause.addEventListener("click", (event) => {
+    if (event.ctrlKey) {
+        window.wavesurfer.setSinkId(window.userSettings.alt_speaker)
+    } else {
+        window.wavesurfer.setSinkId(window.userSettings.base_speaker)
+    }
+
+    if (window.wavesurfer.isPlaying()) {
+        samplePlayPause.innerHTML = window.i18n.PLAY
+        window.wavesurfer.playPause()
+    } else {
+        samplePlayPause.innerHTML = window.i18n.PAUSE
+        window.wavesurfer.playPause()
+    }
+
+
+})
 
 const makeSample = (src, newSample) => {
     const fileName = src.split("/").reverse()[0].split("%20").join(" ")
@@ -473,22 +512,8 @@ const makeSample = (src, newSample) => {
 
             window.sequenceEditor.sliderBoxes.forEach((box, i) => {box.setValueFromValue(window.sequenceEditor.dursNew[i])})
             window.sequenceEditor.update()
-
-            if (samplePlay.style.display!="none") {
-                samplePlay.removeChild(samplePlay.children[0])
-                samplePlay.appendChild(createElem("audio", {controls: true}, createElem("source", {
-                    src: src,
-                    type: `audio/${fileFormat}`
-                })))
-                samplePlay.addEventListener("play", () => {
-                    if (window.ctrlKeyIsPressed) {
-                        samplePlay.setSinkId(window.userSettings.alt_speaker)
-                    } else {
-                        samplePlay.setSinkId(window.userSettings.base_speaker)
-                    }
-                })
-                samplePlay.setSinkId(window.userSettings.base_speaker)
-            }
+            window.initWaveSurfer(src)
+            samplePlayPause.style.display = "block"
         })
         audioControls.appendChild(editButton)
     }
@@ -595,7 +620,7 @@ generateVoiceButton.addEventListener("click", () => {
         window.batch_state.lastModel = JSON.parse(generateVoiceButton.dataset.modelQuery).model.split("/").reverse()[0]
 
         spinnerModal(`${window.i18n.LOADING_VOICE}`)
-        fetch(`http://localhost:8008/loadModel`, {
+        doFetch(`http://localhost:8008/loadModel`, {
             method: "Post",
             body: generateVoiceButton.dataset.modelQuery
         }).then(r=>r.text()).then(res => {
@@ -634,11 +659,10 @@ generateVoiceButton.addEventListener("click", () => {
         window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["generate-voice"]["pre"], event="pre generate-voice")
         sequence = dialogueInput.value.trim().replace("…", "...")
 
-        const existingSample = samplePlay.querySelector("audio")
-        if (existingSample) {
-            existingSample.pause()
+        if (window.wavesurfer) {
+            window.wavesurfer.stop()
+            wavesurferContainer.innerHTML = ""
         }
-
         toggleSpinnerButtons()
 
         const voiceType = title.dataset.modelId
@@ -673,7 +697,9 @@ generateVoiceButton.addEventListener("click", () => {
 
         window.appLogger.log(`${window.i18n.SYNTHESIZING}: ${sequence}`)
 
-        fetch(`http://localhost:8008/synthesize`, {
+
+
+        doFetch(`http://localhost:8008/synthesize`, {
             method: "Post",
             body: JSON.stringify({
                 sequence, pitch, duration, speaker_i, pace,
@@ -725,23 +751,18 @@ generateVoiceButton.addEventListener("click", () => {
                     keepSampleButton.dataset.newFileLocation = `${window.userSettings[`outpath_${game}`]}/${voiceType}/${outputFileName}.wav`
                 }
                 keepSampleButton.disabled = false
-                samplePlay.dataset.tempFileLocation = tempFileLocation
-                samplePlay.innerHTML = ""
+                // samplePlay.dataset.tempFileLocation = tempFileLocation
+                window.tempFileLocation = tempFileLocation
 
-                const audio = createElem("audio", {controls: true, style: {width:"150px"}}, createElem("source", {src: `${__dirname.replace("/javascript", "")}/output/${tempFileLocation.split("/").reverse()[0]}`, type: "audio/wav"}))
-                audio.setSinkId(window.userSettings.base_speaker)
-                audio.addEventListener("play", () => {
-                    if (window.ctrlKeyIsPressed) {
-                        audio.setSinkId(window.userSettings.alt_speaker)
-                    } else {
-                        audio.setSinkId(window.userSettings.base_speaker)
+
+                // wavesurfer
+                window.initWaveSurfer(`${__dirname.replace("/javascript", "")}/output/${tempFileLocation.split("/").reverse()[0]}`)
+                window.wavesurfer.on("ready",  () => {
+                    if (window.userSettings.autoPlayGen) {
+                        samplePlayPause.innerHTML = window.i18n.PAUSE
+                        wavesurfer.play()
                     }
                 })
-                samplePlay.appendChild(audio)
-                audio.load()
-                if (window.userSettings.autoPlayGen) {
-                    audio.play()
-                }
 
                 // Persistance across sessions
                 localStorage.setItem("tempFileLocation", tempFileLocation)
@@ -757,7 +778,7 @@ generateVoiceButton.addEventListener("click", () => {
                     amplitude: window.userSettings.audio.amplitude
                 }
 
-                fetch(`http://localhost:8008/outputAudio`, {
+                doFetch(`http://localhost:8008/outputAudio`, {
                     method: "Post",
                     body: JSON.stringify({
                         input_path: tempFileLocation,
@@ -775,9 +796,9 @@ generateVoiceButton.addEventListener("click", () => {
                     }
                 }).catch(res => {
                     window.appLogger.log(`outputAudio error: ${res}`)
-                    closeModal().then(() => {
+                    // closeModal().then(() => {
                         window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${res}`)
-                    })
+                    // })
                 })
             } else {
                 doTheRest()
@@ -892,7 +913,7 @@ const saveFile = (from, to, skipUIRecord=false) => {
             voiceName: window.currentModel.voiceName
         }
 
-        fetch(`http://localhost:8008/outputAudio`, {
+        doFetch(`http://localhost:8008/outputAudio`, {
             method: "Post",
             body: JSON.stringify({
                 input_path: from,
@@ -952,7 +973,7 @@ window.keepSampleFunction = shiftClick => {
     if (keepSampleButton.dataset.newFileLocation) {
 
         const skipUIRecord = keepSampleButton.dataset.newFileLocation.includes("BATCH_EDIT")
-        let fromLocation = samplePlay.dataset.tempFileLocation
+        let fromLocation = window.tempFileLocation
         let toLocation = keepSampleButton.dataset.newFileLocation.replace("BATCH_EDIT", "")
 
         if (!skipUIRecord) {
@@ -1080,7 +1101,7 @@ window.doWeirdServerStartupCheck = () => {
             } else {
                 // console.log("checking");
                 (new Promise((resolve, reject) => {
-                    fetch(`http://localhost:8008/checkReady`, {
+                    doFetch(`http://localhost:8008/checkReady`, {
                         method: "Post",
                         body: JSON.stringify({device: (window.userSettings.useGPU&&window.userSettings.installation=="gpu")?"gpu":"cpu"})
                     }).then(r => r.text()).then(r => {
@@ -1097,7 +1118,7 @@ window.doWeirdServerStartupCheck = () => {
                         if (window.userSettings.installation=="cpu") {
 
                             if (useGPUCbx.checked) {
-                                fetch(`http://localhost:8008/setDevice`, {
+                                doFetch(`http://localhost:8008/setDevice`, {
                                     method: "Post",
                                     body: JSON.stringify({device: "cpu"})
                                 })
@@ -1223,7 +1244,7 @@ vocoder_select.value = window.userSettings.vocoder.includes(".hg.") ? "qnd" : wi
 const changeVocoder = vocoder => {
     return new Promise(resolve => {
         spinnerModal(window.i18n.CHANGING_MODELS)
-        fetch(`http://localhost:8008/setVocoder`, {
+        doFetch(`http://localhost:8008/setVocoder`, {
             method: "Post",
             body: JSON.stringify({
                 vocoder,
@@ -1272,7 +1293,7 @@ window.setupModal(patreonIcon, patreonContainer, () => {
 patreonButton.addEventListener("click", () => {
     shell.openExternal("https://patreon.com")
 })
-fetch("http://danruta.co.uk/patreon.txt").then(r=>r.text()).then(data => fs.writeFileSync(`${path}/patreon.txt`, data, "utf8")).catch(e => {})
+doFetch("http://danruta.co.uk/patreon.txt").then(r=>r.text()).then(data => fs.writeFileSync(`${path}/patreon.txt`, data, "utf8")).catch(e => {})
 
 
 // Updates
@@ -1281,7 +1302,7 @@ app_version.innerHTML = window.appVersion
 updatesVersions.innerHTML = `${window.i18n.THIS_APP_VERSION}: ${window.appVersion}`
 
 const checkForUpdates = () => {
-    fetch("http://danruta.co.uk/xvasynth_updates.txt").then(r=>r.json()).then(data => {
+    doFetch("http://danruta.co.uk/xvasynth_updates.txt").then(r=>r.json()).then(data => {
         fs.writeFileSync(`${path}/updates.json`, JSON.stringify(data), "utf8")
         checkUpdates.innerHTML = window.i18n.CHECK_FOR_UPDATES
         showUpdates()

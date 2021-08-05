@@ -301,7 +301,7 @@ class PluginsManager {
         this.loadModules()
         plugins_applyBtn.disabled = true
 
-        fetch(`http://localhost:8008/refreshPlugins`, {
+        doFetch(`http://localhost:8008/refreshPlugins`, {
             method: "Post",
             body: "{}"
         }).then(r=>r.text()).then(status => {

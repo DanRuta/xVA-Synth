@@ -1,7 +1,5 @@
 "use strict"
 
-const fetch = require("node-fetch")
-
 window.nexusModelsList = []
 window.endorsedRepos = new Set()
 window.nexusState = {
@@ -251,7 +249,7 @@ nexusDownloadAllBtn.addEventListener("click", async () => {
 
 const getJSONData = (url) => {
     return new Promise(resolve => {
-        fetch(url).then(r=>r.json())
+        doFetch(url).then(r=>r.json())
     })
 }
 
@@ -271,7 +269,7 @@ window.showUserName = async () => {
 const getuserData = (url, data) => {
     return new Promise(resolve => {
 
-        fetch(`https://api.nexusmods.com/v1/users/${url}`, {
+        doFetch(`https://api.nexusmods.com/v1/users/${url}`, {
             method: "GET",
             headers: {
                 apikey: window.nexusState.key
@@ -303,7 +301,7 @@ const getData = (url, data, type="GET") => {
             payload.body = params
         }
 
-        fetch(`https://api.nexusmods.com/v1/games/${url}`, payload)
+        doFetch(`https://api.nexusmods.com/v1/games/${url}`, payload)
         .then(r=>r.json())
         .then(data => {
             resolve(data)
@@ -326,7 +324,7 @@ window.openNexusWindow = () => {
         nexusContainer.style.opacity = 0
         nexusContainer.style.display = "flex"
         requestAnimationFrame(() => requestAnimationFrame(() => nexusContainer.style.opacity = 1))
-        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
+        requestAnimationFrame(() => requestAnimationFrame(() => chromeBar.style.opacity = 1))
     })
 
     const gameColours = {}

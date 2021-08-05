@@ -3,7 +3,7 @@ window.toggleSpinnerButtons = () => {
     spinner.style.display = spinnerVisible ? "none" : "block"
     keepSampleButton.style.display = spinnerVisible ? "block" : "none"
     generateVoiceButton.style.display = spinnerVisible ? "block" : "none"
-    samplePlay.style.display = spinnerVisible ? "flex" : "none"
+    samplePlayPause.style.display = spinnerVisible ? "flex" : "none"
 }
 
 window.confirmModal = message => new Promise(resolve => resolve(createModal("confirm", message)))
@@ -79,7 +79,7 @@ window.createModal = (type, message) => {
         modalContainer.style.display = "flex"
 
         requestAnimationFrame(() => requestAnimationFrame(() => modalContainer.style.opacity = 1))
-        requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
+        requestAnimationFrame(() => requestAnimationFrame(() => chromeBar.style.opacity = 1))
     })
 }
 window.closeModal = (container=undefined, notThisOne=undefined) => {
@@ -94,7 +94,7 @@ window.closeModal = (container=undefined, notThisOne=undefined) => {
 
         const someOpenContainer = allContainers.find(container => container!=undefined && container.style.opacity==1 && container.style.display!="none" && container!=modalContainer)
         if (!someOpenContainer || someOpenContainer==container) {
-            chrome.style.opacity = 0.88
+            chromeBar.style.opacity = 0.88
         }
 
         containers.forEach(cont => {
@@ -109,7 +109,7 @@ window.closeModal = (container=undefined, notThisOne=undefined) => {
                     cont.style.display = "none"
                     const someOpenContainer2 = allContainers.find(container => container!=undefined && container.style.opacity==1 && container.style.display!="none" && container!=modalContainer)
                     if (!someOpenContainer2 || someOpenContainer2==container) {
-                        chrome.style.opacity = 0.88
+                        chromeBar.style.opacity = 0.88
                     }
                 }
             })
@@ -158,6 +158,10 @@ window.setTheme = (meta) => {
         Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.color = `white`)
         Array.from(document.querySelectorAll("button")).forEach(e => e.style.textShadow = `0 0 2px black`)
         Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.textShadow = `0 0 2px black`)
+    }
+
+    if (window.wavesurfer) {
+        window.wavesurfer.setWaveColor(`#${window.currentGame[1]}`)
     }
 
     // Fade the background image transition
@@ -384,7 +388,7 @@ window.setupModal = (openingButton, modalContainerElem, callback, exitCallback) 
                 modalContainerElem.style.opacity = 0
                 modalContainerElem.style.display = "flex"
                 requestAnimationFrame(() => requestAnimationFrame(() => modalContainerElem.style.opacity = 1))
-                requestAnimationFrame(() => requestAnimationFrame(() => chrome.style.opacity = 1))
+                requestAnimationFrame(() => requestAnimationFrame(() => chromeBar.style.opacity = 1))
             })
         })
     }
