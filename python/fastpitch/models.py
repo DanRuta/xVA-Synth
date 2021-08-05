@@ -37,16 +37,9 @@ from python.fastpitch.fastpitch import FastPitch as _FastPitch
 # from python.model_fp import WaveGlow
 
 
-def parse_model_args(model_name, parser, add_help=False):
-    if model_name == 'WaveGlow':
-        from python.big_waveglow.arg_parser import parse_waveglow_args
-        return parse_waveglow_args(parser, add_help)
-    elif model_name == 'FastPitch':
-        from python.fastpitch.arg_parser import parse_fastpitch_args
-        return parse_fastpitch_args(parser, add_help)
-    else:
-        raise NotImplementedError(model_name)
-
+def parse_model_args(model_name, symbols_alphabet, parser, add_help=False):
+    from python.fastpitch.arg_parser import parse_fastpitch_args
+    return parse_fastpitch_args(symbols_alphabet, parser, add_help)
 
 def batchnorm_to_float(module):
     """Converts batch norm to FP32"""

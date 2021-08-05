@@ -1,3 +1,4 @@
+import json
 import argparse
 
 import torch
@@ -19,9 +20,17 @@ class FastPitch(object):
         self.ckpt_path = None
 
         torch.backends.cudnn.benchmark = True
-        parser = argparse.ArgumentParser(description='PyTorch FastPitch Inference', allow_abbrev=False)
 
-        model_parser = models.parse_model_args("FastPitch", parser, add_help=False)
+        self.init_model("english_basic")
+        self.isReady = True
+
+
+    def init_model (self, symbols_alphabet):
+
+        parser = argparse.ArgumentParser(description='PyTorch FastPitch Inference', allow_abbrev=False)
+        self.symbols_alphabet = symbols_alphabet
+
+        model_parser = models.parse_model_args("FastPitch", symbols_alphabet, parser, add_help=False)
         model_args, model_unk_args = model_parser.parse_known_args()
         model_config = models.get_model_config("FastPitch", model_args)
 
@@ -29,12 +38,15 @@ class FastPitch(object):
         self.model.eval()
         self.model.device = self.device
 
-        self.isReady = True
-
-
     def load_state_dict (self, ckpt_path, ckpt, n_speakers):
 
         self.ckpt_path = ckpt_path
+
+        with open(ckpt_path.replace(".pt", ".json"), "r") as f:
+            data = json.load(f)
+            if "symbols_alphabet" in data.keys() and data["symbols_alphabet"]!=self.symbols_alphabet:
+                self.logger.info(f'Changing symbols_alphabet from {self.symbols_alphabet} to {data["symbols_alphabet"]}')
+                self.init_model(data["symbols_alphabet"])
 
         if 'state_dict' in ckpt:
             ckpt = ckpt['state_dict']
@@ -59,8 +71,8 @@ class FastPitch(object):
         cleaned_text_sequences = []
         for record in linesBatch:
             text = record[0]
-            sequence = text_to_sequence(text, ['english_cleaners'])
-            cleaned_text_sequences.append(sequence_to_text(sequence))
+            sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
+            cleaned_text_sequences.append(sequence_to_text("english_basic", sequence))
             text = torch.LongTensor(sequence)
             text_sequences.append(text)
 
@@ -110,15 +122,15 @@ class FastPitch(object):
         sampling_rate = 22050
         denoising_strength = 0.01
 
-        sequence = text_to_sequence(text, ['english_cleaners'])
-        cleaned_text = sequence_to_text(sequence)
+        sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
+        cleaned_text = sequence_to_text("english_basic", sequence)
         text = torch.LongTensor(sequence)
         text = pad_sequence([text], batch_first=True).to(self.models_manager.device)
 
         with torch.no_grad():
 
             if old_sequence is not None:
-                old_sequence = text_to_sequence(old_sequence, ['english_cleaners'])
+                old_sequence = text_to_sequence(old_sequence, "english_basic", ['english_cleaners'])
                 old_sequence = torch.LongTensor(old_sequence)
                 old_sequence = pad_sequence([old_sequence], batch_first=True).to(self.models_manager.device)
 

@@ -11,11 +11,12 @@ _punctuation = '!\'(),.:;? '
 _special = '-'
 _letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 
+_french_hepburn ="ÀÂÄĀÈÉÊËĒÎÏĪÔŌŒÙÛÜŪŸÇàâäāèéêëēîïīôōœùûüūÿç"
+
 # Prepend "@" to ARPAbet symbols to ensure uniqueness (some are the same as uppercase letters):
 _arpabet = ['@' + s for s in cmudict.valid_symbols]
 
 # Export all symbols:
-symbols = [_pad] + list(_special) + list(_punctuation) + list(_letters) + _arpabet
 pad_idx = 0
 
 
@@ -26,6 +27,12 @@ def get_symbols(symbol_set='english_basic'):
         _special = '-'
         _letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
         symbols = list(_pad + _special + _punctuation + _letters) + _arpabet
+    elif symbol_set == 'english_french_hepburn':
+        _pad = '_'
+        _punctuation = '!\'(),.:;? '
+        _special = '-'
+        _letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+        symbols = list(_pad + _special + _punctuation + _letters + _french_hepburn) + _arpabet
     elif symbol_set == 'english_basic_lowercase':
         _pad = '_'
         _punctuation = '!\'"(),.:;? '

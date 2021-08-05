@@ -27,10 +27,10 @@
 
 import argparse
 
-from python.common.text import symbols
+from python.common.text import get_symbols
 
 
-def parse_fastpitch_args(parent, add_help=False):
+def parse_fastpitch_args(symbols_alphabet, parent, add_help=False):
     """
     Parse commandline arguments.
     """
@@ -40,8 +40,8 @@ def parse_fastpitch_args(parent, add_help=False):
     io.add_argument('--n-mel-channels', default=80, type=int, help='Number of bins in mel-spectrograms')
     io.add_argument('--max-seq-len', default=2048, type=int, help='')
     global symbols
-    from python.common.text import symbols
-    len_symbols = len(symbols)
+    from python.common.text import get_symbols
+    len_symbols = len(get_symbols(symbols_alphabet))
     symbols = parser.add_argument_group('symbols parameters')
     symbols.add_argument('--n-symbols', default=len_symbols, type=int, help='Number of symbols in dictionary')
     symbols.add_argument('--padding-idx', default=0, type=int, help='Index of padding symbol in dictionary')

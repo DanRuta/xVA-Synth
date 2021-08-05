@@ -17,8 +17,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from python.common.utils import mask_from_lens
-from python.common.text.symbols import pad_idx, symbols
-
 
 class PositionalEmbedding(nn.Module):
     def __init__(self, demb):
