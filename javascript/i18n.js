@@ -321,7 +321,7 @@ window.i18n.setEnglish = () => {
     window.i18n.TOTD_24 = "You can manage the list of Nexus pages to check for voice models by clicking the 'Manage Repos' button in the Nexus menu, or by editing the repositories.txt file"
     window.i18n.TOTD_25 = "You can enable/disable error sounds in the settings. You can also pick a different sound, if you'd prefer something else"
     window.i18n.TOTD_26 = "You can resize the window by dragging one of the bottom corners"
-    window.i18n.TOTD_27 = "You can right-click game buttons in the nexus window 'Games' list, to de-select all other games apart from that"
+    window.i18n.TOTD_27 = "You can right-click game buttons in the nexus window 'Games' list and voice embeddings 'Games' list, to de-select all other games apart from the one you right-clicked"
 
     window.i18n.TOTD_NO_UNSEEN = "There are no unseen tips left to show. Untick the 'Only show unseen tips' setting to show all tips."
 

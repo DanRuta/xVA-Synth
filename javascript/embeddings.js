@@ -73,10 +73,20 @@ window.populateGamesList = () => {
                 window.populateVoicesList()
             }
         })
+        gameButton.addEventListener("contextmenu", e => {
+            if (e.target==gameButton || e.target==buttonLabel) {
+                Array.from(embeddingsGamesListContainer.querySelectorAll("input")).forEach(ckbx => ckbx.checked = false)
+                gameCheckbox.click()
+                window.computeEmbsAndDimReduction()
+                window.populateVoicesList()
+            }
+        })
         gameCheckbox.addEventListener("change", () => {
             window.computeEmbsAndDimReduction()
             window.populateVoicesList()
         })
+
+
 
         gameButton.appendChild(gameCheckbox)
         gameButton.appendChild(buttonLabel)
@@ -505,6 +515,7 @@ window.initEmbeddingsScene = () => {
                     hoveredObject.object.material.emissive.setRGB(0, 1, 0)
 
                     const voiceId = window.embeddingsState.clickedObject.object.data.voiceId
+
                     if (Object.keys(window.embeddingsState.voiceIdToModel).includes(voiceId)) {
                         embeddingsVoiceGameDisplay.innerHTML = window.embeddingsState.gameTitles[window.embeddingsState.clickedObject.object.data.game]
                         embeddingsVoiceNameDisplay.innerHTML = window.embeddingsState.voiceIdToModel[voiceId].voiceName
