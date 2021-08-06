@@ -711,7 +711,7 @@ generateVoiceButton.addEventListener("click", () => {
         }).then(r=>r.text()).then(res => {
 
             if (res=="ENOENT") {
-                window.errorModal(`Model not found.${vocoder_select.value.includes("waveglow")?" Download WaveGlow files separately if you haven't, or check the path in the settings.":""}`)
+                window.errorModal(`${window.i18n.BATCH_MODEL_NOT_FOUND}.${vocoder_select.value.includes("waveglow")?" "+window.i18n.BATCH_DOWNLOAD_WAVEGLOW:""}`)
                 toggleSpinnerButtons()
                 return
             }
@@ -1192,8 +1192,8 @@ if (dialogueInputCache) {
 
 if (Object.keys(window.userSettings).includes("voiceRecordsOrderBy")) {
     const labels = {
-        "name": "Name",
-        "time": "Time"
+        "name": window.i18n.NAME,
+        "time": window.i18n.TIME
     }
     voiceRecordsOrderByButton.innerHTML = labels[window.userSettings.voiceRecordsOrderBy]
 } else {
@@ -1202,8 +1202,8 @@ if (Object.keys(window.userSettings).includes("voiceRecordsOrderBy")) {
 }
 if (Object.keys(window.userSettings).includes("voiceRecordsOrderByOrder")) {
     const labels = {
-        "ascending": "Ascending",
-        "descending": "Descending"
+        "ascending": window.i18n.ASCENDING,
+        "descending": window.i18n.DESCENDING
     }
     voiceRecordsOrderByOrderButton.innerHTML = labels[window.userSettings.voiceRecordsOrderByOrder]
 } else {
@@ -1217,8 +1217,8 @@ voiceRecordsOrderByButton.addEventListener("click", () => {
     window.userSettings.voiceRecordsOrderBy = window.userSettings.voiceRecordsOrderBy=="name" ? "time" : "name"
     saveUserSettings()
     const labels = {
-        "name": "Name",
-        "time": "Time"
+        "name": window.i18n.NAME,
+        "time": window.i18n.TIME
     }
     voiceRecordsOrderByButton.innerHTML = labels[window.userSettings.voiceRecordsOrderBy]
     if (window.currentModel) {
@@ -1230,8 +1230,8 @@ voiceRecordsOrderByOrderButton.addEventListener("click", () => {
     window.userSettings.voiceRecordsOrderByOrder = window.userSettings.voiceRecordsOrderByOrder=="ascending" ? "descending" : "ascending"
     saveUserSettings()
     const labels = {
-        "ascending": "Ascending",
-        "descending": "Descending"
+        "ascending": window.i18n.ASCENDING,
+        "descending": window.i18n.DESCENDING
     }
     voiceRecordsOrderByOrderButton.innerHTML = labels[window.userSettings.voiceRecordsOrderByOrder]
     if (window.currentModel) {
@@ -1268,7 +1268,7 @@ const changeVocoder = vocoder => {
                 setTimeout(() => {
                     if (res=="ENOENT") {
                         vocoder_select.value = window.userSettings.vocoder
-                        window.errorModal(`Model not found.${vocoder.includes("waveglow")?" Download WaveGlow files separately if you haven't, or check the path in the settings.":""}`)
+                        window.errorModal(`${window.i18n.BATCH_MODEL_NOT_FOUND}.${vocoderId.includes("waveglow")?" "+window.i18n.BATCH_DOWNLOAD_WAVEGLOW:""}`)
                         resolve()
                     } else {
                         window.batch_state.lastVocoder = vocoder

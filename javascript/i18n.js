@@ -3,7 +3,7 @@ window.i18n = {}
 
 window.i18n.setEnglish = () => {
     window.i18n.SELECT_GAME = "Select Game"
-    window.i18n.SEARCH_VOICES = "Select voices..."
+    window.i18n.SEARCH_VOICES = "Search voices..."
     window.i18n.SELECT_VOICE = "Select voice"
     window.i18n.SELECT_VOICE_TYPE = "Select Voice Type"
     window.i18n.KEEP_SAMPLE = "Keep Sample"
@@ -27,6 +27,7 @@ window.i18n.setEnglish = () => {
     window.i18n.PACING = "Pacing"
     window.i18n.OPEN = "Open"
     window.i18n.DOWNLOAD = "Download"
+    window.i18n.VRAM_USAGE = "VRAM usage:"
 
     window.i18n.SETTINGS = "Settings"
     window.i18n.SETTINGS_GPU = "Use GPU (requires CUDA)"
@@ -211,6 +212,8 @@ window.i18n.setEnglish = () => {
     window.i18n.FILE_EXISTS_ADJUST = `File already exists. Adjust the file name here, or submit without changing to overwrite the old file.`
     window.i18n.ENTER_FILE_NAME = `Enter file name`
     window.i18n.WAVEGLOW_NOT_FOUND = "WaveGlow model not found. Download it also (separate download), and place the .pt file in the models folder."
+    window.i18n.BATCH_MODEL_NOT_FOUND = "Model not found."
+    window.i18n.BATCH_DOWNLOAD_WAVEGLOW = "Download WaveGlow files separately if you haven't, or check the path in the settings."
     window.i18n.ERR_LOADING_MODELS_FOR_GAME = "ERROR loading models for game"
     window.i18n.ERR_LOADING_MODELS_FOR_GAME_WITH_FILENAME = "ERROR loading models for game _1 with filename:"
     window.i18n.ERR_XVASPEECH_MODEL_VERSION = `This xVASpeech model needs minimum app version _1. Your app version:`
@@ -245,11 +248,15 @@ window.i18n.setEnglish = () => {
     window.i18n.VOICE = "voice"
     window.i18n.VOICE_PLURAL = "voices"
     window.i18n.NEW = "new"
+    window.i18n.PAGE = "Page:"
+    window.i18n.NEXT = "Next"
+    window.i18n.PREVIOUS = "Previous"
     window.i18n.LOADING = "Loading"
     window.i18n.MAY_TAKE_A_MINUTE = "May take a minute (but not much more)"
     window.i18n.BUILDING_FASTPITCH = "Building FastPitch model"
     window.i18n.LOADING_WAVEGLOW = "Loading WaveGlow model"
     window.i18n.STARTING_PYTHON = "Starting up the python backend"
+    window.i18n.NOT_USING_GPU = "Not using GPU"
 
     window.i18n.BATCH_CHANGING_MODEL_TO = "Changing voice model to"
     window.i18n.BATCH_CHANGING_VOCODER_TO = "Changing vocoder to"
@@ -286,6 +293,142 @@ window.i18n.setEnglish = () => {
     window.i18n.SATURDAY = "Saturday"
     window.i18n.SUNDAY = "Sunday"
 
+
+
+    window.i18n.TOTD_1 = "You can right-click a voice on the left to hear a preview of the voice"
+    window.i18n.TOTD_2 = "You can right-click the microphone icon after a recording, to hear back the audio you recorded/inserted"
+    window.i18n.TOTD_3 = "There are a number of keyboard shortcuts you can use. Check the info tab for a reference"
+    window.i18n.TOTD_4 = "Check the community guide for tips for how to get the best quality out of the tool. This is linked in the info (i) menu"
+    window.i18n.TOTD_5 = "You can create a multi-letter selection in the editor by Ctrl+clicking several letters"
+    window.i18n.TOTD_6 = "You can shift-click the 'Keep Sample' button (or Ctrl+Shift+S) to first give your file a custom name before saving"
+    window.i18n.TOTD_7 = "You can alt+click editor letters to make a multi-letter selection for the entire word you click on"
+    window.i18n.TOTD_8 = "You can drag+drop multiple .csv or .txt files into batch mode"
+    window.i18n.TOTD_9 = "You can use .txt files in batch mode instead of .csv files, if you first click a voice in the main app to assign the lines to"
+    window.i18n.TOTD_10 = "If you have a compatible NVIDIA GPU, and CUDA installed, you can switch to the CPU+GPU installation. Using the GPU is much faster, especially for batch mode."
+    window.i18n.TOTD_11 = "The HiFi-GAN vocoder is normally the best quality, but you can also download and use WaveGlow vocoders, if you'd like."
+    window.i18n.TOTD_12 = "If the 'Keep editor state on voice changes' option is ticked on, you can generate a line using one voice, then switch to a different voice, and click the 'Generate Voice' button again to generate a line using the new voice, but using a similar speaking style to the first voice."
+    window.i18n.TOTD_13 = "If you set the 'Alternative Output device' to something other than the default device, you can Ctrl-click when playing audio, to have it play on a different speaker. You can couple this with something like Voicemeeter Banana split, to have the app speak for you over the microphone, for voice chat, or other audio recording."
+    window.i18n.TOTD_14 = "If you add the path to an audio editing program to the 'External Program for Editing audio' setting, you can open generated audio straight in that program in one click, from the output records on the main page"
+    window.i18n.TOTD_15 = "If you install ffmpeg (at least version 4.3), you can automatically directly apply a few different audio post processing tasks on the generated audio. This can include Hz resampling, silence padding to the start and/or end of the audio, bit depth, loudness, and different audio formats. You can also tick on the option to pre-apply these to the temporary preview audio sample."
+    window.i18n.TOTD_16 = "You can tick on the 'Fast mode' for batch mode to parallelize the audio generation and the audio output (via ffmpeg for example)"
+    window.i18n.TOTD_17 = "You can enable multiprocessing for ffmpeg file output in batch mode, to speed up the output process. This is especially useful if you use a large batch size, and your CPU has plenty of threads. This can be used together with Fast Mode."
+    window.i18n.TOTD_18 = "If you're having trouble formatting a .csv file for batch mode, you can change the delimiter in the settings to something else (for example a pipe symbol '|')"
+    window.i18n.TOTD_19 = "You can change the folder location of your output files, as well as the models. I'd recommend keeping your model files on an SSD, to reduce the loading time."
+    window.i18n.TOTD_20 = "Use the voice embeddings search menu to get a 3D visualisation of all the voices in the app (including some 'officially' trained voices not downloaded yet). You can use this as a reference for voice similarly search, to see what other voices there are, which sound similar to a particular voice."
+    window.i18n.TOTD_21 = "You can right click on the points in the 3D voice embeddings visualisation, to hear a preview of that voice. This will only work for the voices you have installed, locally."
+    window.i18n.TOTD_22 = "The app is customisable via third-party plugins. Plugins can be managed from the plugins menu, and they can change, or add to the front end app functionality/looks (the UI), as well as the python back-end (the machine learning code). If you're interested in developing such a plugin, there is a full developer reference on the GitHub wiki, here: https://github.com/DanRuta/xvasynth-community-guide"
+    window.i18n.TOTD_23 = "If you log into nexusmods.com from within the app, you can check for new and updated voice models on your chosen Nexus pages. You can also endorse these, as well as any plugins configured with a nexus link. If you have a premium membership for the Nexus, you can also download (or batch download) all available voices, and have them installed automatically."
+    window.i18n.TOTD_24 = "You can manage the list of Nexus pages to check for voice models by clicking the 'Manage Repos' button in the Nexus menu, or by editing the repositories.txt file"
+    window.i18n.TOTD_25 = "You can enable/disable error sounds in the settings. You can also pick a different sound, if you'd prefer something else"
+    window.i18n.TOTD_26 = "You can resize the window by dragging one of the bottom corners"
+    window.i18n.TOTD_27 = "You can right-click game buttons in the nexus window 'Games' list, to de-select all other games apart from that"
+
+    window.i18n.TOTD_NO_UNSEEN = "There are no unseen tips left to show. Untick the 'Only show unseen tips' setting to show all tips."
+
+
+    window.i18n.LINES_PER_SECOND = "lines per second"
+    window.i18n.ETA_FINISHED = "Estimated time until finished:"
+    window.i18n.LOGGED_IN_AS = "Logged in as: "
+    window.i18n.GAMES = "Games"
+    window.i18n.MODELS = "Models"
+    window.i18n.SHOW_NEW_UPDATED = "Show only new/updated"
+    window.i18n.CHECK_NOW = "Check now"
+    window.i18n.MANAGE_REPOS = "Manage repos"
+    window.i18n.LOG_IN = "Log in"
+    window.i18n.LOG_OUT = "Log out"
+    window.i18n.NAME = "Name"
+    window.i18n.AUTHOR = "Author"
+    window.i18n.VERSION = "Version"
+    window.i18n.DATE = "Date"
+    window.i18n.TYPE = "Type"
+    window.i18n.NOTES = "Notes"
+    window.i18n.DOWNLOADING = "Downloading:"
+    window.i18n.INSTALLING = "Installing:"
+    window.i18n.FINISHED = "Finished:"
+    window.i18n.DOWNLOAD_ALL = "Download All"
+    window.i18n.REPOSITORIES = "Repositories"
+    window.i18n.ADD = "Add"
+    window.i18n.V_EMB_VIS = "Voice embeddings visualiser"
+    window.i18n.VOICES = "Voices"
+    window.i18n.SHOW = "Show"
+    window.i18n.GAME = "Game"
+    window.i18n.GENDER = "Gender"
+    window.i18n.GENDER_IS = "Gender:"
+    window.i18n.GAME_IS = "Game:"
+    window.i18n.PREVIEW = "Preview"
+    window.i18n.LOAD = "Load"
+
+    window.i18n.VOICE_NAME_IS = "Voice Name:"
+
+    window.i18n.VEMB_INSTR_1 = "Left click drag to rotate"
+    window.i18n.VEMB_INSTR_2 = "Right click drag to pan"
+    window.i18n.VEMB_INSTR_3 = "Mouse wheel scroll to zoom"
+    window.i18n.VEMB_INSTR_4 = "Left click on voice to select"
+    window.i18n.VEMB_INSTR_5 = "Right click on voice to play sample"
+
+    window.i18n.MALES = "Males"
+    window.i18n.FEMALES = "Females"
+    window.i18n.OTHER = "Other"
+
+    window.i18n.SHOW_ONLY_INSTALED = "Show only installed voices"
+    window.i18n.KEY_IS = "Key:"
+    window.i18n.ALGORITHM = "Algorithm"
+
+    window.i18n.TOTD = "Tip of the day"
+    window.i18n.TOTD_SHOW = "Show tip of the day"
+    window.i18n.TOTD_SHOW_UNSEEN = "Only show unseen tips"
+    window.i18n.TOTD_PREV_TIP = "Previous tip"
+    window.i18n.TOTD_NEXT_TIP = "Next tip"
+
+    window.i18n.ENDORSE = "Endorse"
+    window.i18n.GET_MORE_VOICES = "Get more voices"
+
+    window.i18n.CURR_INSTALL = "Current installation:"
+    window.i18n.CHANGE_TO_GPU = "Change to CPU+GPU"
+    window.i18n.CHANGE_TO_CPU = "Change to CPU"
+    window.i18n.USE_SOUND_ERR = "Use sound for errors"
+    window.i18n.ERR_SOUNDFILE = "Error sound file"
+    window.i18n.SHOW_NOW = "Show now"
+    window.i18n.SETTINGS_PLAYCHANGEDAUDIO = "Play only changed audio, when regenerating"
+    window.i18n.SETTINGS_PREAPPLY_FFMPEG = "(recommended) Pre-apply ffmpeg effects to the preview sample"
+    window.i18n.SETTINGS_DOUBLE_AMP_DISPLAY = "Also display amplitude setting in the editor"
+    window.i18n.SETTINGS_CSV_DELIMITER = "CSV delimiter"
+    window.i18n.SETTINGS_PAGINATION_SIZE = "Pagination size"
+    window.i18n.SETTINGS_GROUP_VOICEID = "Group voices by voiceId and vocoder in preprocessing to minimize model switching"
+    window.i18n.SETTINGS_GROUP_VOCODER = "Also do a secondary group by the vocoder - can take long to do with big files (100k+ lines)"
+
+    window.i18n.SEARCH_OUTPUT = "Search output file names..."
+    window.i18n.SORT_BY = "Sort by"
+    window.i18n.ASCENDING = "Ascending"
+    window.i18n.DESCENDING = "Descending"
+    window.i18n.TIME = "Time"
+
+    window.i18n.ERR_LOGGING_INTO_NEXUS = "Error attempting to log into nexusmods"
+    window.i18n.LOGGING_INTO_NEXUS = "Logging into nexusmods (check your browser)..."
+    window.i18n.NEXUS_PREMIUM = "Nexus requires premium membership for using their API for file downloads"
+    window.i18n.NEXUS_ORIG_ERR = "Original error message"
+    window.i18n.FAILED_DOWNLOAD = "Failed to download"
+    window.i18n.DONE_INSTALLING = "Done installing"
+    window.i18n.CHECKING_NEXUS = "Checking nexusmods.com..."
+    window.i18n.NEXUS_NOT_DOWNLOADED_MOD = "You need to first download something from this repo to be able to endorse it."
+    window.i18n.NEXUS_TOO_SOON_AFTER_DOWNLOAD = "Nexus requires you to wait at least 15 mins (at the time of writing) before you can endorse."
+    window.i18n.NEXUS_IS_OWN_MOD = "Nexus does not allow you to rate your own content."
+    window.i18n.YOURS = "Yours"
+    window.i18n.NEXUS_ENTER_LINK = "Enter the nexusmods.com link to use as a repository"
+    window.i18n.NEXUS_LINK_EXISTS = "This link already exists."
+
+    window.i18n.VEMB_VOICE_NOT_ENABLED = "This voice is not enabled"
+    window.i18n.VEMB_NO_PREVIEW = "No preview audio file available"
+    window.i18n.VEMB_SELECT_VOICE_FIRST = "Select a voice from the scene below first."
+    window.i18n.VEMB_NO_MODEL = "No model file available. Download it if you haven't already."
+    window.i18n.VEMB_RECOMPUTING = "Re-computing embeddings and dimensionality reduction on voices. May take a minute the first time, subsequent runs should be instant."
+
+    // Useful during developing, to see if there are any strings left un-i18n-ed
+    // Object.keys(window.i18n).forEach(key => {
+    //     if (!["setEnglish", "updateUI"].includes(key)) {
+    //         window.i18n[key] = ""
+    //     }
+    // })
 }
 
 
@@ -297,10 +440,103 @@ window.i18n.updateUI = () => {
     generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
     keepSampleButton.innerHTML = window.i18n.KEEP_SAMPLE
 
+    i18n_vramUsage.innerHTML = window.i18n.VRAM_USAGE
     i18n_length.innerHTML = window.i18n.LENGTH
     resetLetter_btn.innerHTML = window.i18n.RESET_LETTER
     i18n_autoregen.innerHTML = window.i18n.AUTO_REGEN
     i18n_vocoder.innerHTML = window.i18n.VOCODER
+
+    batch_paginationPrev.innerHTML = window.i18n.PREVIOUS
+    batch_paginationNext.innerHTML = window.i18n.NEXT
+    i18n_page.innerHTML = window.i18n.PAGE
+    i18n_batchLPS.innerHTML = window.i18n.LINES_PER_SECOND
+    i18n_etaFinished.innerHTML = window.i18n.ETA_FINISHED
+    nexusNameDisplay.innerHTML = window.i18n.LOGGED_IN_AS
+    i18n_games.innerHTML = window.i18n.GAMES
+    i18n_models.innerHTML = window.i18n.MODELS
+    i18n_showNewUpdated.innerHTML = window.i18n.SHOW_NEW_UPDATED
+    nexusCheckNow.innerHTML = window.i18n.CHECK_NOW
+    nexusManageReposButton.innerHTML = window.i18n.MANAGE_REPOS
+    nexusLogInButton.innerHTML = window.i18n.LOG_IN
+    i18n_nexush_name.innerHTML = window.i18n.NAME
+    i18n_nexush_author.innerHTML = window.i18n.AUTHOR
+    i18n_nexush_version.innerHTML = window.i18n.VERSION
+    i18n_nexush_date.innerHTML = window.i18n.DATE
+    i18n_nexush_type.innerHTML = window.i18n.TYPE
+    i18n_nexush_notes.innerHTML = window.i18n.NOTES
+    i18n_nexusDownloading.innerHTML = window.i18n.DOWNLOADING
+    i18n_nexusInstalling.innerHTML = window.i18n.INSTALLING
+    i18n_nexusFinished.innerHTML = window.i18n.FINISHED
+    nexusDownloadAllBtn.innerHTML = window.i18n.DOWNLOAD_ALL
+    i18n_repositories.innerHTML = window.i18n.REPOSITORIES
+    nexusReposAddButton.innerHTML = window.i18n.ADD
+
+
+
+    i18n_settings_curr_install.innerHTML = window.i18n.CURR_INSTALL
+    setting_change_installation.innerHTML = window.i18n.CHANGE_TO_GPU
+    i18n_settings_useSound.innerHTML = window.i18n.USE_SOUND_ERR
+    i18n_settings_err_soundfile.innerHTML = window.i18n.ERR_SOUNDFILE
+    i18n_settings_showTOTD.innerHTML = window.i18n.TOTD_SHOW
+    setting_btnShowTOTD.innerHTML = window.i18n.SHOW_NOW
+    i18n_settings_unseenTOTD.innerHTML = window.i18n.TOTD_SHOW_UNSEEN
+    i18n_settings_playChangedAudio.innerHTML = window.i18n.SETTINGS_PLAYCHANGEDAUDIO
+    i18n_setting_ffmpeg_preapply.innerHTML = window.i18n.SETTINGS_PREAPPLY_FFMPEG
+    i18n_settings_doubleAmpDisplay.innerHTML = window.i18n.SETTINGS_DOUBLE_AMP_DISPLAY
+    i18n_settings_csv_delimiter.innerHTML = window.i18n.SETTINGS_CSV_DELIMITER
+    i18n_settings_paginationSize.innerHTML = window.i18n.SETTINGS_PAGINATION_SIZE
+    i18n_settings_groupVoiceID.innerHTML = window.i18n.SETTINGS_GROUP_VOICEID
+    i18n_settings_groupVocoder.innerHTML = window.i18n.SETTINGS_GROUP_VOCODER
+
+
+    voiceSamplesSearch.placeholder = window.i18n.SEARCH_OUTPUT
+    i18n_sortByOutput.innerHTML = window.i18n.SORT_BY
+    voiceRecordsOrderByButton.innerHTML = window.i18n.NAME
+    voiceRecordsOrderByOrderButton.innerHTML = window.i18n.ASCENDING
+
+    i18n_pluginsh_endorse.innerHTML = window.i18n.ENDORSE
+
+    i18n_vembVis.innerHTML = window.i18n.V_EMB_VIS
+    i18n_games_vemb.innerHTML = window.i18n.GAMES
+    i18n_voices.innerHTML = window.i18n.VOICES
+    i18n_vembShow.innerHTML = window.i18n.SHOW
+    i18n_vembName.innerHTML = window.i18n.NAME
+    i18n_vembGame.innerHTML = window.i18n.GAME
+    i18n_vembGender.innerHTML = window.i18n.GENDER
+    embeddingsSearchBar.placeholder = window.i18n.SEARCH_VOICES
+    nexusSearchBar.placeholder = window.i18n.SEARCH_VOICES
+    i18n_voiceName.innerHTML = window.i18n.VOICE_NAME_IS
+    i18n_genderIs.innerHTML = window.i18n.GENDER_IS
+    i18n_vemb_game.innerHTML = window.i18n.GAME_IS
+    embeddingsPreviewButton.innerHTML = window.i18n.PREVIEW
+    embeddingsLoadButton.innerHTML = window.i18n.LOAD
+
+    i18n_vemb_instr1.innerHTML = window.i18n.VEMB_INSTR_1
+    i18n_vemb_instr2.innerHTML = window.i18n.VEMB_INSTR_2
+    i18n_vemb_instr3.innerHTML = window.i18n.VEMB_INSTR_3
+    i18n_vemb_instr4.innerHTML = window.i18n.VEMB_INSTR_4
+    i18n_vemb_instr5.innerHTML = window.i18n.VEMB_INSTR_5
+
+    i18n_vemb_males.innerHTML = window.i18n.MALES
+    i18n_vemb_females.innerHTML = window.i18n.FEMALES
+    i18n_vemb_other.innerHTML = window.i18n.OTHER
+
+    i18n_showOnlyInstalled.innerHTML = window.i18n.SHOW_ONLY_INSTALED
+    i18n_vemb_keyIs.innerHTML = window.i18n.KEY_IS
+    i18n_vemb_game_option.innerHTML = window.i18n.GAME
+    i18n_vemb_gender_option.innerHTML = window.i18n.GENDER
+    i18n_algorithm.innerHTML = window.i18n.ALGORITHM
+
+    i18n_totd.innerHTML = window.i18n.TOTD
+    i18n_totd_show.innerHTML = window.i18n.TOTD_SHOW
+    i18n_totd_show_unseen.innerHTML = window.i18n.TOTD_SHOW_UNSEEN
+    totdPrevTipBtn.innerHTML = window.i18n.TOTD_PREV_TIP
+    totdNextTipBtn.innerHTML = window.i18n.TOTD_NEXT_TIP
+    totd_close.innerHTML = window.i18n.CLOSE
+    embeddingsCloseHelpUI.innerHTML = window.i18n.CLOSE
+    nexusMenuButton.innerHTML = window.i18n.GET_MORE_VOICES
+
+
 
     reset_btn.innerHTML = window.i18n.RESET
     amplify_btn.innerHTML = window.i18n.AMPLIFY
@@ -427,7 +663,9 @@ window.i18n.updateUI = () => {
     i18n_batchh_num.innerHTML = window.i18n.BATCHH_NUM
     i18n_batchh_status.innerHTML = window.i18n.BATCHH_STATUS
     i18n_batchh_actions.innerHTML = window.i18n.BATCHH_ACTIONS
+    i18n_nexush_actions.innerHTML = window.i18n.BATCHH_ACTIONS
     i18n_batchh_game.innerHTML = window.i18n.BATCHH_GAME
+    i18n_nexush_game.innerHTML = window.i18n.BATCHH_GAME
     i18n_batchh_voice.innerHTML = window.i18n.BATCHH_VOICE
     i18n_batchh_text.innerHTML = window.i18n.BATCHH_TEXT
     i18n_batchh_vocoder.innerHTML = window.i18n.BATCHH_VOCODER

@@ -2,33 +2,33 @@
 // tip of the day
 
 const tips = {
-    "1": "You can right-click a voice on the left to hear a preview of the voice",
-    "2": "You can right-click the microphone icon after a recording, to hear back the audio you recorded/inserted",
-    "3": "There are a number of keyboard shortcuts you can use. Check the info tab for a reference",
-    "4": "Check the community guide for tips for how to get the best quality out of the tool. This is linked in the info (i) menu",
-    "5": "You can create a multi-letter selection in the editor by Ctrl+clicking several letters",
-    "6": "You can shift-click the 'Keep Sample' button (or Ctrl+Shift+S) to first give your file a custom name before saving",
-    "7": "You can alt+click editor letters to make a multi-letter selection for the entire word you click on",
-    "8": "You can drag+drop multiple .csv or .txt files into batch mode",
-    "9": "You can use .txt files in batch mode instead of .csv files, if you first click a voice in the main app to assign the lines to",
-    "10": "If you have a compatible NVIDIA GPU, and CUDA installed, you can switch to the CPU+GPU installation. Using the GPU is much faster, especially for batch mode.",
-    "11": "The HiFi-GAN vocoder is normally the best quality, but you can also download and use WaveGlow vocoders, if you'd like.",
-    "12": "If the 'Keep editor state on voice changes' option is ticked on, you can generate a line using one voice, then switch to a different voice, and click the 'Generate Voice' button again to generate a line using the new voice, but using a similar speaking style to the first voice.",
-    "13": "If you set the 'Alternative Output device' to something other than the default device, you can Ctrl-click when playing audio, to have it play on a different speaker. You can couple this with something like Voicemeeter Banana split, to have the app speak for you over the microphone, for voice chat, or other audio recording.",
-    "14": "If you add the path to an audio editing program to the 'External Program for Editing audio' setting, you can open generated audio straight in that program in one click, from the output records on the main page",
-    "15": "If you install ffmpeg (at least version 4.3), you can automatically directly apply a few different audio post processing tasks on the generated audio. This can include Hz resampling, silence padding to the start and/or end of the audio, bit depth, loudness, and different audio formats. You can also tick on the option to pre-apply these to the temporary preview audio sample.",
-    "16": "You can tick on the 'Fast mode' for batch mode to parallelize the audio generation and the audio output (via ffmpeg for example)",
-    "17": "You can enable multiprocessing for ffmpeg file output in batch mode, to speed up the output process. This is especially useful if you use a large batch size, and your CPU has plenty of threads. This can be used together with Fast Mode.",
-    "18": "If you're having trouble formatting a .csv file for batch mode, you can change the delimiter in the settings to something else (for example a pipe symbol '|')",
-    "19": "You can change the folder location of your output files, as well as the models. I'd recommend keeping your model files on an SSD, to reduce the loading time.",
-    "20": "Use the voice embeddings search menu to get a 3D visualisation of all the voices in the app (including some 'officially' trained voices not downloaded yet). You can use this as a reference for voice similarly search, to see what other voices there are, which sound similar to a particular voice.",
-    "21": "You can right click on the points in the 3D voice embeddings visualisation, to hear a preview of that voice. This will only work for the voices you have installed, locally.",
-    "22": "The app is customisable via third-party plugins. Plugins can be managed from the plugins menu, and they can change, or add to the front end app functionality/looks (the UI), as well as the python back-end (the machine learning code). If you're interested in developing such a plugin, there is a full developer reference on the GitHub wiki, here: https://github.com/DanRuta/xvasynth-community-guide",
-    "23": "If you log into nexusmods.com from within the app, you can check for new and updated voice models on your chosen Nexus pages. You can also endorse these, as well as any plugins configured with a nexus link. If you have a premium membership for the Nexus, you can also download (or batch download) all available voices, and have them installed automatically.",
-    "24": "You can manage the list of Nexus pages to check for voice models by clicking the 'Manage Repos' button in the Nexus menu, or by editing the repositories.txt file",
-    "25": "You can enable/disable error sounds in the settings. You can also pick a different sound, if you'd prefer something else",
-    "26": "You can resize the window by dragging one of the bottom corners",
-    "27": "You can right-click game buttons in the nexus window 'Games' list, to de-select all other games apart from that."
+    "1": window.i18n.TOTD_1,
+    "2": window.i18n.TOTD_2,
+    "3": window.i18n.TOTD_3,
+    "4": window.i18n.TOTD_4,
+    "5": window.i18n.TOTD_5,
+    "6": window.i18n.TOTD_6,
+    "7": window.i18n.TOTD_7,
+    "8": window.i18n.TOTD_8,
+    "9": window.i18n.TOTD_9,
+    "10": window.i18n.TOTD_10,
+    "11": window.i18n.TOTD_11,
+    "12": window.i18n.TOTD_12,
+    "13": window.i18n.TOTD_13,
+    "14": window.i18n.TOTD_14,
+    "15": window.i18n.TOTD_15,
+    "16": window.i18n.TOTD_16,
+    "17": window.i18n.TOTD_17,
+    "18": window.i18n.TOTD_18,
+    "19": window.i18n.TOTD_19,
+    "20": window.i18n.TOTD_20,
+    "21": window.i18n.TOTD_21,
+    "22": window.i18n.TOTD_22,
+    "23": window.i18n.TOTD_23,
+    "24": window.i18n.TOTD_24,
+    "25": window.i18n.TOTD_25,
+    "26": window.i18n.TOTD_26,
+    "27": window.i18n.TOTD_27
 }
 
 window.totd_state = {
@@ -127,7 +127,7 @@ window.showTipIfEnabledAndNewDay = (justShowIt) => {
                     await initTipOfTheDayMenu(now, shuffledTipIDs)
                     resolve()
                 } else if (justShowIt) {
-                    window.errorModal("There are no unseen tips left to show. Untick the 'Only show unseen tips' setting to show all tips.")
+                    window.errorModal(window.i18n.TOTD_NO_UNSEEN)
                 }
             } else {
                 resolve()

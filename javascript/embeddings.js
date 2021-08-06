@@ -115,7 +115,7 @@ window.populateVoicesList = () => {
             showVoiceBtn.style.background = `#${window.embeddingsState.gameColours[model.gameId]}`
             showVoiceBtn.addEventListener("click", () => {
                 if (!voiceCkbx.checked) {
-                    return window.errorModal("This voice is not enabled")
+                    return window.errorModal(window.i18n.VEMB_VOICE_NOT_ENABLED)
                 }
                 const point = window.embeddingsState.sceneData.points.find(point => point.data.voiceId==model.voiceId)
                 window.embeddingsState.sceneData.controls.target.set(point.position.x, point.position.y, point.position.z)
@@ -393,11 +393,9 @@ window.initEmbeddingsScene = () => {
                 text: voiceName,
                 fontFamily: 'Helvetica, sans-serif',
                 fontSize: 2,
-                // color: '#000000',
                 strokeColor: '#ffffff',
                 strokeWidth: 0,
                 color: '#24ff00',
-                // color: gameColours[game],
                 material: {color: "white"}
             })
             sprite.position.x = coords.x
@@ -416,7 +414,6 @@ window.initEmbeddingsScene = () => {
 
     const render = () => {
         if (!window.embeddingsState.isReady) {
-            console.log("stopping rendering")
             return
         }
         requestAnimationFrame(render)
@@ -490,7 +487,7 @@ window.initEmbeddingsScene = () => {
                     }))
                     audioPreview.setSinkId(window.userSettings.base_speaker)
                 } else {
-                    window.errorModal("No preview audio file available")
+                    window.errorModal(window.i18n.VEMB_NO_PREVIEW)
                 }
             }
 
@@ -590,10 +587,10 @@ embeddingsPreviewButton.addEventListener("click", () => {
             }))
             audioPreview.setSinkId(window.userSettings.base_speaker)
         } else {
-            window.errorModal("No preview audio file available")
+            window.errorModal(window.i18n.VEMB_NO_PREVIEW)
         }
     } else {
-        window.errorModal("Select a voice from the scene below first.")
+        window.errorModal(window.i18n.VEMB_SELECT_VOICE_FIRST)
     }
 })
 embeddingsLoadButton.addEventListener("click", () => {
@@ -617,10 +614,10 @@ embeddingsLoadButton.addEventListener("click", () => {
             })
 
         } else {
-            window.errorModal("No model file available. Download it if you haven't already.")
+            window.errorModal(window.i18n.VEMB_NO_MODEL)
         }
     } else {
-        window.errorModal("Select a voice from the scene below first.")
+        window.errorModal(window.i18n.VEMB_SELECT_VOICE_FIRST)
     }
 })
 
@@ -706,7 +703,7 @@ window.computeEmbsAndDimReduction = (includeAllVoices=false) => {
     }
 
 
-    window.spinnerModal("Re-computing embeddings and dimensionality reduction on voices. May take a minute the first time, subsequent runs should be instant.")
+    window.spinnerModal(window.i18n.VEMB_RECOMPUTING)
 
     doFetch(`http://localhost:8008/computeEmbsAndDimReduction`, {
         method: "Post",

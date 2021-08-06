@@ -128,7 +128,7 @@
                         <input id="voiceSamplesSearch" placeholder="Search output file names..." style="height: 30px;font-size: 14pt;">
                     </div>
                     <div style="width: 250px;display: flex;align-items: center;justify-content: flex-end;">
-                        <div style="text-shadow: 0px 0px 1px rgba(255,255,255,0.4);font-weight: bold;margin-right: 5px;">Sort by:</div>
+                        <div id="i18n_sortByOutput" style="text-shadow: 0px 0px 1px rgba(255,255,255,0.4);font-weight: bold;margin-right: 5px;">Sort by:</div>
                         <button id="voiceRecordsOrderByButton" style="margin-left: 5px;margin-right: 5px;">Name</button>
                         <button id="voiceRecordsOrderByOrderButton">Ascending</button>
                     </div>
@@ -148,7 +148,7 @@
                     </div>
                     <div>
                         <div style="flex-direction: row;justify-content: flex-end;">
-                            <span>Current installation:</span>
+                            <span id="i18n_settings_curr_install">Current installation:</span>
                             <span id="settings_installation" style="margin-left: 5px;">CPU</span>
                         </div>
                         <div>
@@ -242,33 +242,33 @@
                         </div>
                     </div>
                     <div>
-                        <div id="">Use sound for errors</div>
+                        <div id="i18n_settings_useSound">Use sound for errors</div>
                         <div>
                             <input id="setting_use_error_sound" type="checkbox" name="">
                         </div>
                     </div>
                     <div>
-                        <div id="">Error sound file</div>
+                        <div id="i18n_settings_err_soundfile">Error sound file</div>
                         <div style="flex-direction: row;">
                             <input id="setting_error_sound_file" style="width: 80%;">
                             <button id="setting_errorSoundFileBtn" class="svgButton"></button>
                         </div>
                     </div>
                     <div>
-                        <div id="">Show tip of the day</div>
+                        <div id="i18n_settings_showTOTD">Show tip of the day</div>
                         <div style="flex-direction: row;">
                             <input id="setting_showTipOfTheDay" type="checkbox" style="width: 50%;">
                             <button id="setting_btnShowTOTD">Show now</button>
                         </div>
                     </div>
                     <div>
-                        <div id="">Only show unseen tips</div>
+                        <div id="i18n_settings_unseenTOTD">Only show unseen tips</div>
                         <div>
                             <input id="setting_showUnseenTipOfTheDay" type="checkbox">
                         </div>
                     </div>
                     <div>
-                        <div id="">Play only changed audio, when regenerating</div>
+                        <div id="i18n_settings_playChangedAudio">Play only changed audio, when regenerating</div>
                         <div>
                             <input id="setting_playChangedAudio" type="checkbox">
                         </div>
@@ -291,7 +291,7 @@
                         </div>
                     </div>
                     <div>
-                        <div id="i18n_setting_ffmpeg">(recommended) Pre-apply ffmpeg effects to the preview sample</div>
+                        <div id="i18n_setting_ffmpeg_preapply">(recommended) Pre-apply ffmpeg effects to the preview sample</div>
                         <div>
                             <input id="setting_audio_ffmpeg_preview" name="" type="checkbox">
                         </div>
@@ -336,7 +336,7 @@
                         </div>
                     </div>
                     <div>
-                        <div id="">Also display amplitude setting in the editor</div>
+                        <div id="i18n_settings_doubleAmpDisplay">Also display amplitude setting in the editor</div>
                         <div>
                             <input id="setting_show_editor_ffmpegamplitude" name="" type="checkbox">
                         </div>
@@ -364,25 +364,25 @@
                         </div>
                     </div>
                     <div>
-                        <div>CSV delimiter</div>
+                        <div id="i18n_settings_csv_delimiter">CSV delimiter</div>
                         <div>
                             <input id="setting_batch_delimiter">
                         </div>
                     </div>
                     <div>
-                        <div>Pagination size</div>
+                        <div id="i18n_settings_paginationSize">Pagination size</div>
                         <div>
                             <input id="setting_batch_paginationSize" type="number">
                         </div>
                     </div>
                     <div>
-                        <div>Group voices by voiceId and vocoder in preprocessing to minimize model switching</div>
+                        <div id="i18n_settings_groupVoiceID">Group voices by voiceId and vocoder in preprocessing to minimize model switching</div>
                         <div>
                             <input id="setting_batch_doGrouping" type="checkbox">
                         </div>
                     </div>
                     <div>
-                        <div>Also do a secondary group by the vocoder - can take long to do with big files (100k+ lines)</div>
+                        <div id="i18n_settings_groupVocoder">Also do a secondary group by the vocoder - can take long to do with big files (100k+ lines)</div>
                         <div>
                             <input id="setting_batch_doVocoderGrouping" type="checkbox">
                         </div>
@@ -507,7 +507,7 @@
                             <div id="i18n_pluginsh_order">Order</div>
                             <div id="i18n_pluginsh_name">Plugin Name</div>
                             <div id="i18n_pluginsh_author">Author</div>
-                            <div id="">Endorse</div>
+                            <div id="i18n_pluginsh_endorse">Endorse</div>
                             <div id="i18n_pluginsh_version">Plugin Version</div>
                             <div id="i18n_pluginsh_type">Type</div>
                             <div id="i18n_pluginsh_minv">Min App Version</div>
@@ -705,7 +705,7 @@
                                 <input type="number" id="batch_batchSizeInput" value="1" placeholder="1" min="1" step="1">
                             </div>
                             <div>
-                                <span>VRAM usage:</span>
+                                <span id="i18n_vramUsage">VRAM usage:</span>
                                 <span id="vramUsage">22.5/24.0 GB (87%)</span>
                             </div>
                         </div>
@@ -741,7 +741,7 @@
                             <div style="height: 40px;display: flex;justify-content: center;align-items: center;">
                                 <div><button id="batch_paginationPrev">Previous</button></div>
                                 <div style="display: flex;align-items: center;">
-                                    <div>Page:</div>
+                                    <div id="i18n_page">Page:</div>
                                     <input id="batch_pageNum" type="number" min="1" step="1" style="height: 25px;width: 50px;margin: 10px;">
                                     <div id="batch_total_pages" style="margin-right: 10px;"></div>
                                 </div>
@@ -754,9 +754,9 @@
                         </div>
                         <div id="batch_ETA_container">
                             <div id="batch_eta_lps"></div>
-                            <div>lines per second</div>
+                            <div id="i18n_batchLPS">lines per second</div>
                             <div>|</div>
-                            <div>Estimated time until finished:</div>
+                            <div id="i18n_etaFinished">Estimated time until finished:</div>
                             <div id="batch_eta_time"></div>
                             <div>|</div>
                             <div id="batch_eta_eta"></div>
@@ -841,20 +841,20 @@
         <div id="nexusContainer" style="display:none">
             <div class="modal">
                 <div style="height: 30px;;display: flex;align-items: center;width: 100%;justify-content: flex-end;padding-right: 40px;">
-                    <div id="nexusNameDisplay" style="opacity: 0;margin-right: 10px;">Logged in as: <span id="nexusUserName"></span></div>
+                    <div style="opacity: 0;margin-right: 10px;"><span id="nexusNameDisplay">Logged in as: </span><span id="nexusUserName"></span></div>
                     <div id="nexusAvatar"></div>
                 </div>
                 <div style="display: flex;height: 60vh;">
                     <div style="width: 15vw;margin-left: 2vw;">
-                        <div style="display: flex;justify-content:center;align-items: center;height: 5vh;font-size: 16pt;">Games</div>
+                        <div id="i18n_games" style="display: flex;justify-content:center;align-items: center;height: 5vh;font-size: 16pt;">Games</div>
                         <div style="background: rgb(75,75,75);overflow-y: auto;width: calc(100% - 10px);;height: calc(55vh - 10px);padding-bottom: 10px;padding-right: 5px;padding-left: 5px;" id="nexusGamesList"></div>
                     </div>
                     <div style="width: 70vw;display: flex;flex-direction: column;align-items: center;">
                         <div style="display: flex;justify-content: space-between;align-items: center;height: 5vh;font-size: 16pt;width: 95%;">
-                            <div>Models</div>
+                            <div id="i18n_models">Models</div>
                             <div style="width: 55vw;display: flex;align-items: center;justify-content: flex-end;">
                                 <input id="nexusSearchBar" placeholder="Search voices..." style="height: 25px;width: calc(100% - 600px);">
-                                <span style="font-size: 12pt;margin-left: 5px;margin-right: 5px;">Show only new/updated</span>
+                                <span id="i18n_showNewUpdated" style="font-size: 12pt;margin-left: 5px;margin-right: 5px;">Show only new/updated</span>
                                 <input id="nexusOnlyNewUpdatedCkbx" type="checkbox">
                                 <button id="nexusCheckNow">Check now</button>
                                 <button id="nexusManageReposButton">Manage repos</button>
@@ -863,14 +863,14 @@
                         </div>
                         <div style="display: block;background: rgb(75,75,75);overflow-y: auto;width: 95%;height: 55vh;" id="nexus_main">
                             <div id="nexusRecordsHeader">
-                                <div id="i18n_batchh_actions">Actions</div>
-                                <div id="i18n_batchh_game">Game</div>
-                                <div id="">Name</div>
-                                <div id="">Author</div>
-                                <div id="">Version</div>
-                                <div id="">Date</div>
-                                <div id="">Type</div>
-                                <div id="">Notes</div>
+                                <div id="i18n_nexush_actions">Actions</div>
+                                <div id="i18n_nexush_game">Game</div>
+                                <div id="i18n_nexush_name">Name</div>
+                                <div id="i18n_nexush_author">Author</div>
+                                <div id="i18n_nexush_version">Version</div>
+                                <div id="i18n_nexush_date">Date</div>
+                                <div id="i18n_nexush_type">Type</div>
+                                <div id="i18n_nexush_notes">Notes</div>
                             </div>
                             <div id="nexusRecordsContainer">
 
@@ -881,15 +881,15 @@
                 <div style="width: 83vw;display: flex;justify-content: center;">
                     <div style="width: 40%;display: flex;font-size: 16pt;">
                         <div style="width: 50%;display: flex;align-items: center;">
-                            <div style="margin-right: 10px;">Downloading:</div>
+                            <div id="i18n_nexusDownloading" style="margin-right: 10px;">Downloading:</div>
                             <div id="nexusDownloadingCount">0</div>
                         </div>
                         <div style="width: 50%;display: flex;align-items: center;">
-                            <div style="margin-right: 10px;">Installing:</div>
+                            <div id="i18n_nexusInstalling" style="margin-right: 10px;">Installing:</div>
                             <div id="nexusInstallingCount">0</div>
                         </div>
                         <div style="width: 50%;display: flex;align-items: center;">
-                            <div style="margin-right: 10px;">Finished:</div>
+                            <div id="i18n_nexusFinished" style="margin-right: 10px;">Finished:</div>
                             <div id="nexusFinishedCount">0</div>
                         </div>
                     </div>
@@ -902,7 +902,7 @@
         </div>
         <div id="nexusReposContainer" style="display:none">
             <div class="modal" style="width: 35vw;">
-                <h1>Repositories</h1>
+                <h1 id="i18n_repositories">Repositories</h1>
                 <div id="nexusReposList">
 
                 </div>
@@ -918,22 +918,22 @@
         <div id="embeddingsContainer" style="display:none">
             <div class="modal" style="flex-direction: column;height: calc(85vh + 30px);">
 
-                <h2 style="margin-top: 10px;margin-bottom: 0px;">Voice embeddings visualiser</h2>
+                <h2 id="i18n_vembVis" style="margin-top: 10px;margin-bottom: 0px;">Voice embeddings visualiser</h2>
                 <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;margin-top: 0;">
 
                     <!-- left -->
                     <div style="height: calc(70vh + 100px);width: 20vw;margin: 10px;">
-                        <div class="sectionTitle" style="height: 50px;display: flex;align-items: flex-end;margin-bottom: 10px;margin-top: -10px;">Games</div>
+                        <div id="i18n_games_vemb" class="sectionTitle" style="height: 50px;display: flex;align-items: flex-end;margin-bottom: 10px;margin-top: -10px;">Games</div>
                         <div id="embeddingsGamesListContainer" class="listContainer"></div>
-                        <div class="sectionTitle" style="margin-top: 30px;margin-bottom: 10px;">Voices</div>
+                        <div id="i18n_voices" class="sectionTitle" style="margin-top: 30px;margin-bottom: 10px;">Voices</div>
                         <div id="embeddings_main" class="listContainer" style="display: block;width: 100%;height: 32vh;">
 
                             <div id="embeddingsRecordsHeader">
                                 <div id=""></div>
-                                <div id="">Show</div>
-                                <div id="">Name</div>
-                                <div id="">Game</div>
-                                <div id="">Gender</div>
+                                <div id="i18n_vembShow">Show</div>
+                                <div id="i18n_vembName">Name</div>
+                                <div id="i18n_vembGame">Game</div>
+                                <div id="i18n_vembGender">Gender</div>
                             </div>
                             <div id="embeddingsRecordsContainer">
                             </div>
@@ -948,15 +948,15 @@
                         <div id="embeddingsTopRightBar">
                             <div>
                                 <div>
-                                    <div>Voice Name:</div>
+                                    <div id="i18n_voiceName">Voice Name:</div>
                                     <div id="embeddingsVoiceNameDisplay"></div>
                                 </div>
                                 <div>
-                                    <div>Gender:</div>
+                                    <div id="i18n_genderIs">Gender:</div>
                                     <div id="embeddingsVoiceGenderDisplay"></div>
                                 </div>
                                 <div>
-                                    <div>Game:</div>
+                                    <div id="i18n_vemb_game">Game:</div>
                                     <div id="embeddingsVoiceGameDisplay"></div>
                                 </div>
                             </div>
@@ -967,11 +967,11 @@
                         </div>
                         <div id="embeddingsSceneContainer">
                             <div id="embeddingsHelpUI" style="height: 70vh;width: 60vw;background: rgba(0,0,0,0.5);display: flex;justify-content: center;align-items: center;position: fixed;flex-direction: column;">
-                                <span>Left click drag to rotate</span>
-                                <span>Right click drag to pan</span>
-                                <span>Mouse wheel scroll to zoom</span>
-                                <span>Left click on voice to select</span>
-                                <span>Right click on voice to play sample</span>
+                                <span id="i18n_vemb_instr1">Left click drag to rotate</span>
+                                <span id="i18n_vemb_instr2">Right click drag to pan</span>
+                                <span id="i18n_vemb_instr3">Mouse wheel scroll to zoom</span>
+                                <span id="i18n_vemb_instr4">Left click on voice to select</span>
+                                <span id="i18n_vemb_instr5">Right click on voice to play sample</span>
                                 <button id="embeddingsCloseHelpUI">Close</button>
                             </div>
                         </div>
@@ -981,34 +981,34 @@
                                     <div>
                                         <input id="embeddingsMalesCkbx" type="checkbox" checked>
                                     </div>
-                                    <div>Males</div>
+                                    <div id="i18n_vemb_males">Males</div>
                                 </div>
                                 <div>
                                     <div>
                                         <input id="embeddingsFemalesCkbx" type="checkbox" checked>
                                     </div>
-                                    <div>Females</div>
+                                    <div id="i18n_vemb_females">Females</div>
                                 </div>
                                 <div>
                                     <div>
                                         <input id="embeddingsOtherGendersCkbx" type="checkbox" checked>
                                     </div>
-                                    <div>Other</div>
+                                    <div id="i18n_vemb_other">Other</div>
                                 </div>
                                 <div style="width: 15vw;">
                                     <div>
                                         <input id="embeddingsOnlyInstalledCkbx" type="checkbox">
                                     </div>
-                                    <div>Show only installed voices</div>
+                                    <div id="i18n_showOnlyInstalled">Show only installed voices</div>
                                 </div>
                             </div>
                             <div id="embeddingsSceneOptions">
-                                <div>Key:</div>
+                                <div id="i18n_vemb_keyIs">Key:</div>
                                 <select id="embeddingsKey">
-                                    <option value="embsKey_game">Game</option>
-                                    <option value="embsKey_gender">Gender</option>
+                                    <option id="i18n_vemb_game_option" value="embsKey_game">Game</option>
+                                    <option id="i18n_vemb_gender_option" value="embsKey_gender">Gender</option>
                                 </select>
-                                <div>Algorithm</div>
+                                <div id="i18n_algorithm">Algorithm</div>
                                 <select id="embeddingsAlgorithm">
                                     <option value="embsAlgo_pca">PCA</option>
                                     <option value="embsAlgo_tsne">tSNE</option>
@@ -1021,19 +1021,19 @@
         </div>
 
         <div id="totdContainer" style="display: none;">
-            <div class="modal" style="height: 30vh;">
-                <h2>Tip of the day <span id="totd_counter"></span></h2>
+            <div class="modal" style="height: 30vh;min-width: 700px;width: 45vw;">
+                <h2><span id="i18n_totd">Tip of the day</span> <span id="totd_counter"></span></h2>
 
                 <div id="tipMessage" style="display: flex;justify-content: center;align-items: center;height: 100%;margin: 5vw;"></div>
 
                 <div id="totdButtons">
                     <span>
                         <input id="totdShowTips" type="checkbox">
-                        <span>Show tip of the day</span>
+                        <span id="i18n_totd_show">Show tip of the day</span>
                     </span>
                     <span>
                         <input id="totdShowOnlyUnseenTips" type="checkbox">
-                        <span>Only show unseen tips</span>
+                        <span id="i18n_totd_show_unseen">Only show unseen tips</span>
                     </span>
                 </div>
                 <div>

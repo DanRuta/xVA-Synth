@@ -107,7 +107,7 @@ let smiInterval = setInterval(() => {
                 vramUsage.innerHTML = `${(used/1000).toFixed(1)}/${(total/1000).toFixed(1)} GB (${percent.toFixed(2)}%)`
             })
         } else {
-            vramUsage.innerHTML = "Not using GPU"
+            vramUsage.innerHTML = window.i18n.NOT_USING_GPU
         }
     } catch (e) {
         console.log(e)
@@ -644,7 +644,7 @@ const batchChangeVocoder = (vocoder, game, voice) => {
                 closeModal(undefined, batchGenerationContainer).then(() => {
                     setTimeout(() => {
                         vocoder_select.value = window.userSettings.vocoder
-                        window.errorModal(`Model not found.${vocoderId.includes("waveglow")?" Download WaveGlow files separately if you haven't, or check the path in the settings.":""}`)
+                        window.errorModal(`${window.i18n.BATCH_MODEL_NOT_FOUND}.${vocoderId.includes("waveglow")?" "+window.i18n.BATCH_DOWNLOAD_WAVEGLOW:""}`)
                         batch_pauseBtn.click()
                         resolve()
                     }, 300)

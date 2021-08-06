@@ -56,20 +56,24 @@ const download = (url, dest) => {
 window.initNexus = () => {
     return new Promise((resolve) => {
 
-        window.nexusState.key = sessionStorage.getItem("nexus_API_key")
+        window.nexusState.key = localStorage.getItem("nexus_API_key")
 
         if (window.nexusState.key) {
             window.showUserName()
             closeModal(undefined, nexusContainer)
-            nexusLogInButton.innerHTML = "Log out"
+            nexusLogInButton.innerHTML = window.i18n.LOG_OUT
             resolve()
         } else {
-            window.nexusState.socket = new WebSocket("wss://sso.nexusmods.com")
+            try {
+                window.nexusState.socket = new WebSocket("wss://sso.nexusmods.com")
+            } catch (e) {
+                console.log(e)
+            }
 
             window.nexusState.socket.onclose = event => {
                 console.log("socket closed")
                 if (!window.nexusState.key) {
-                    setTimeout(window.initNexus(), 5000)
+                    setTimeout(() => {window.initNexus()}, 5000)
                 }
             }
 
@@ -78,20 +82,20 @@ window.initNexus = () => {
 
                 if (response && response.success) {
                     if (response.data.hasOwnProperty('connection_token')) {
-                        sessionStorage.setItem('connection_token', response.data.connection_token)
+                        localStorage.setItem('connection_token', response.data.connection_token)
                     } else if (response.data.hasOwnProperty('api_key')) {
                         console.log("API Key Received: " + response.data.api_key)
                         window.nexusState.key = response.data.api_key
-                        sessionStorage.setItem('uuid', window.nexusState.uuid)
-                        sessionStorage.setItem('nexus_API_key', window.nexusState.key)
+                        localStorage.setItem('uuid', window.nexusState.uuid)
+                        localStorage.setItem('nexus_API_key', window.nexusState.key)
                         window.showUserName()
                         window.pluginsManager.updateUI()
                         closeModal(undefined, nexusContainer)
-                        nexusLogInButton.innerHTML = "Log out"
+                        nexusLogInButton.innerHTML = window.i18n.LOG_OUT
                         resolve()
                     }
                 } else {
-                    window.errorModal(`Error attempting to log into nexusmods: ${response.error}`)
+                    window.errorModal(`${window.i18n.ERR_LOGGING_INTO_NEXUS}: ${response.error}`)
                     reject()
                 }
             }
@@ -100,11 +104,11 @@ window.initNexus = () => {
 }
 nexusLogInButton.addEventListener("click", () => {
 
-    if (nexusLogInButton.innerHTML=="Log in") {
-        window.spinnerModal("Logging into nexusmods (check your browser)...")
+    if (nexusLogInButton.innerHTML==window.i18n.LOG_IN) {
+        window.spinnerModal(window.i18n.LOGGING_INTO_NEXUS)
 
-        window.nexusState.uuid = sessionStorage.getItem("uuid")
-        window.nexusState.token = sessionStorage.getItem("connection_token")
+        window.nexusState.uuid = localStorage.getItem("uuid")
+        window.nexusState.token = localStorage.getItem("connection_token")
 
         if (window.nexusState.uuid==null) {
             window.nexusState.uuid = uuidv4()
@@ -122,12 +126,12 @@ nexusLogInButton.addEventListener("click", () => {
 
     } else {
         nexusNameDisplay.style.opacity = 0
-        sessionStorage.removeItem("nexus_API_key")
-        sessionStorage.removeItem("uuid")
-        sessionStorage.removeItem("connection_token")
+        localStorage.removeItem("nexus_API_key")
+        localStorage.removeItem("uuid")
+        localStorage.removeItem("connection_token")
         nexusAvatar.innerHTML = ""
         nexusUserName.innerHTML = ""
-        nexusLogInButton.innerHTML = "Log in"
+        nexusLogInButton.innerHTML = window.i18n.LOG_IN
         window.nexusState.uuid = null
         window.nexusState.key = null
         window.pluginsManager.updateUI()
@@ -146,12 +150,12 @@ window.downloadFile = ([nexusGameId, nexusRepoId, outputFileName, fileId]) => {
         const downloadLink = await getData(`${nexusGameId}/mods/${nexusRepoId}/files/${fileId}/download_link.json`)
         if (!downloadLink.length && downloadLink.code==403) {
 
-            window.errorModal(`Nexus requires premium membership for using their API for file downloads<br><br>Original error message:<br>${downloadLink.message}`).then(() => {
+            window.errorModal(`${window.i18n.NEXUS_PREMIUM}<br><br>${window.i18n.NEXUS_ORIG_ERR}:<br>${downloadLink.message}`).then(() => {
                 const queueIndex = window.nexusState.downloadQueue.findIndex(it => it[1]==fileId)
                 window.nexusState.downloadQueue.splice(queueIndex, 1)
                 nexusDownloadingCount.innerHTML = window.nexusState.downloadQueue.length
 
-                nexusDownloadLog.appendChild(createElem("div", `Failed to download: ${outputFileName}`))
+                nexusDownloadLog.appendChild(createElem("div", `${window.i18n.FAILED_DOWNLOAD}: ${outputFileName}`))
 
                 reject()
             })
@@ -169,7 +173,7 @@ window.downloadFile = ([nexusGameId, nexusRepoId, outputFileName, fileId]) => {
 
 }
 window.installDownloadedModel = ([game, zipName]) => {
-    nexusDownloadLog.appendChild(createElem("div", `Installing: ${zipName}`))
+    nexusDownloadLog.appendChild(createElem("div", `${window.i18n.INSTALLING} ${zipName}`))
     return new Promise(resolve => {
         try {
             const modelsFolder = window.userSettings[`modelspath_${game}`]
@@ -197,13 +201,13 @@ window.installDownloadedModel = ([game, zipName]) => {
             })
             .promise()
             .then(() => {
-                window.appLogger.log(`Done installing ${zipName}`)
+                window.appLogger.log(`${window.i18n.DONE_INSTALLING} ${zipName}`)
 
                 const queueIndex = window.nexusState.installQueue.findIndex(it => it[1]==zipName)
                 window.nexusState.installQueue.splice(queueIndex, 1)
                 nexusInstallingCount.innerHTML = window.nexusState.installQueue.length
 
-                nexusDownloadLog.appendChild(createElem("div", `Finished: ${zipName}`))
+                nexusDownloadLog.appendChild(createElem("div", `${window.i18n.FINISHED} ${zipName}`))
                 resolve()
             }, e => {
                 console.log(e)
@@ -383,7 +387,7 @@ nexusSearchBar.addEventListener("keyup", () => {
 
 window.getLatestModelsList = async () => {
     try {
-        window.spinnerModal("Checking nexusmods.com...")
+        window.spinnerModal(window.i18n.CHECKING_NEXUS)
         window.nexusModelsList = []
 
         const idToGame = {}
@@ -572,11 +576,11 @@ window.displayAllModels = (forceUpdate=false) => {
             }
             if (response && response.message && response.status=="Error") {
                 if (response.message=="NOT_DOWNLOADED_MOD") {
-                    response.message = "You need to first download something from this repo to be able to endorse it."
+                    response.message = window.i18n.NEXUS_NOT_DOWNLOADED_MOD
                 } else if (response.message=="TOO_SOON_AFTER_DOWNLOAD") {
-                    response.message = "Nexus requires you to wait at least 15 mins (at the time of writing) before you can endorse."
+                    response.message = window.i18n.NEXUS_TOO_SOON_AFTER_DOWNLOAD
                 } else if (response.message=="IS_OWN_MOD") {
-                    response.message = "Nexus does not allow you to rate your own content."
+                    response.message = window.i18n.NEXUS_IS_OWN_MOD
                 }
 
                 window.errorModal(response.message)
@@ -602,7 +606,7 @@ window.displayAllModels = (forceUpdate=false) => {
         let versionElemText
         if (existingModel) {
             const yoursVersion = String(existingModel.modelVersion).includes(".") ? existingModel.modelVersion : existingModel.modelVersion+".0"
-            versionElemText = `${modelMeta.version} (Yours: ${yoursVersion})`
+            versionElemText = `${modelMeta.version} (${window.i18n.YOURS}: ${yoursVersion})`
         } else {
             versionElemText = modelMeta.version
         }
@@ -672,7 +676,7 @@ if (fs.existsSync(`${window.path}/repositories.txt`)) {
     })
 }
 nexusReposAddButton.addEventListener("click", () => {
-    window.createModal("prompt", {prompt: "Enter the nexusmods.com link to use as a repository", value: ""}).then(link => {
+    window.createModal("prompt", {prompt: window.i18n.NEXUS_ENTER_LINK, value: ""}).then(link => {
 
         let alreadyExists = false
         window.nexusState.repoLinks.forEach(linkAndEnabled => {
@@ -682,7 +686,7 @@ nexusReposAddButton.addEventListener("click", () => {
         })
         if (alreadyExists) {
             setTimeout(() => {
-            window.errorModal("This link already exists.")
+            window.errorModal(window.i18n.NEXUS_LINK_EXISTS)
 
             }, 500)
             return
