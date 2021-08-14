@@ -35,7 +35,9 @@ if (window.PRODUCTION) {
 
 const {PluginsManager} = require("./javascript/plugins_manager.js")
 window.pluginsManager = new PluginsManager(window.path, window.appLogger, window.appVersion)
+window.pluginsContext = {}
 window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["start"]["pre"], event="pre start")
+
 
 let themeColour
 let secondaryThemeColour
@@ -619,10 +621,13 @@ generateVoiceButton.addEventListener("click", () => {
         window.appLogger.log(`${window.i18n.LOADING_VOICE}: ${JSON.parse(generateVoiceButton.dataset.modelQuery).model}`)
         window.batch_state.lastModel = JSON.parse(generateVoiceButton.dataset.modelQuery).model.split("/").reverse()[0]
 
+        const body = JSON.parse(generateVoiceButton.dataset.modelQuery)
+        body["pluginsContext"] = JSON.stringify(window.pluginsContext)
+
         spinnerModal(`${window.i18n.LOADING_VOICE}`)
         doFetch(`http://localhost:8008/loadModel`, {
             method: "Post",
-            body: generateVoiceButton.dataset.modelQuery
+            body: JSON.stringify(body)
         }).then(r=>r.text()).then(res => {
             generateVoiceButton.dataset.modelQuery = null
             generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
@@ -705,6 +710,7 @@ generateVoiceButton.addEventListener("click", () => {
                 sequence, pitch, duration, speaker_i, pace,
                 old_sequence, // For partial re-generation
                 outfile: tempFileLocation,
+                pluginsContext: JSON.stringify(window.pluginsContext),
                 vocoder: window.userSettings.vocoder,
                 waveglowPath: vocoder_select.value=="256_waveglow" ? window.userSettings.waveglow_path : window.userSettings.bigwaveglow_path
             })
@@ -807,6 +813,7 @@ generateVoiceButton.addEventListener("click", () => {
                     body: JSON.stringify({
                         input_path: tempFileLocation,
                         output_path: tempFileLocation.replace(".wav", `_ffmpeg.${window.userSettings.audio.format}`),
+                        pluginsContext: JSON.stringify(window.pluginsContext),
                         extraInfo: JSON.stringify(extraInfo),
                         isBatchMode: false,
                         options: JSON.stringify(options)
@@ -937,6 +944,7 @@ const saveFile = (from, to, skipUIRecord=false) => {
             body: JSON.stringify({
                 input_path: from,
                 output_path: to,
+                pluginsContext: JSON.stringify(window.pluginsContext),
                 isBatchMode: false,
                 extraInfo: JSON.stringify(pluginData),
                 options: JSON.stringify(options)

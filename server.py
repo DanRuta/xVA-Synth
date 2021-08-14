@@ -190,6 +190,7 @@ if __name__ == '__main__':
                     logger.info("POST {}".format(self.path))
                     logger.info(post_data)
                     ckpt = post_data["model"]
+                    ckpt["pluginsContext"] = json.loads(post_data["pluginsContext"])
                     n_speakers = post_data["model_speakers"] if "model_speakers" in post_data else None
 
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["pre"], event="pre load-model", data=ckpt)
@@ -207,6 +208,7 @@ if __name__ == '__main__':
                     vocoder = post_data["vocoder"]
                     pitch_data = [pitch, duration]
                     old_sequence = post_data["old_sequence"] if "old_sequence" in post_data else None
+                    post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])
 
                     # Handle the case where the vocoder remains selected on app start-up, with auto-HiFi turned off, but no setVocoder call is made before synth
                     continue_synth = True
@@ -229,6 +231,8 @@ if __name__ == '__main__':
                     linesBatch = post_data["linesBatch"]
                     speaker_i = post_data["speaker_i"]
                     vocoder = post_data["vocoder"]
+                    post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])
+
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["batch-synth-line"]["pre"], event="pre batch-synth-line", data=post_data)
                     try:
                         req_response = models_manager.models("fastpitch").infer_batch(plugin_manager, linesBatch, vocoder=vocoder, speaker_i=speaker_i)
@@ -286,6 +290,7 @@ if __name__ == '__main__':
                     extraInfo = {}
                     if "extraInfo" in post_data:
                         extraInfo = json.loads(post_data["extraInfo"])
+                        extraInfo["pluginsContext"] = json.loads(post_data["pluginsContext"])
                         extraInfo["audio_options"] = options
                         extraInfo["input_paths"] = input_paths
                         extraInfo["output_paths"] = output_paths
@@ -309,6 +314,7 @@ if __name__ == '__main__':
                     extraInfo = {}
                     if "extraInfo" in post_data:
                         extraInfo = json.loads(post_data["extraInfo"])
+                        extraInfo["pluginsContext"] = json.loads(post_data["pluginsContext"])
                         extraInfo["audio_options"] = options
                         extraInfo["input_path"] = input_path
                         extraInfo["output_path"] = output_path

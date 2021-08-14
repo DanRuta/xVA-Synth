@@ -797,6 +797,7 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options, extra
                 input_paths: tempPaths,
                 output_paths: outPaths,
                 isBatchMode: true,
+                pluginsContext: JSON.stringify(window.pluginsContext),
                 processes: window.userSettings.batch_MPCount,
                 extraInfo: extraInfo,
                 options: JSON.stringify(options)
@@ -913,6 +914,7 @@ const batchKickOffGeneration = () => {
         const batchPostData = {
             batchSize: window.userSettings.batch_batchSize,
             defaultOutFolder: window.userSettings.batchOutFolder,
+            pluginsContext: JSON.stringify(window.pluginsContext),
             speaker_i, vocoder, linesBatch
         }
         doFetch(`http://localhost:8008/synthesize_batch`, {
@@ -994,6 +996,7 @@ const batchKickOffGeneration = () => {
                                         input_path: tempFileLocation,
                                         output_path: outPath,
                                         isBatchMode: true,
+                                        pluginsContext: JSON.stringify(window.pluginsContext),
                                         extraInfo: JSON.stringify(extraInfo),
                                         options: JSON.stringify(options)
                                     }))
@@ -1002,6 +1005,7 @@ const batchKickOffGeneration = () => {
                                         input_path: tempFileLocation,
                                         output_path: outPath,
                                         isBatchMode: true,
+                                        pluginsContext: JSON.stringify(window.pluginsContext),
                                         extraInfo: JSON.stringify(extraInfo),
                                         options: JSON.stringify(options)
                                     }))
