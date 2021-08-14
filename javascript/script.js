@@ -716,18 +716,19 @@ generateVoiceButton.addEventListener("click", () => {
                 return
             }
 
-            const doTheRest = () => {
-                dialogueInput.focus()
-                isGenerating = false
-                res = res.split("\n")
-                let pitchData = res[0]
-                let durationsData = res[1]
-                let cleanedSequence = res[2]
-                const start_index = res[3]
-                const end_index = res[3]
+            dialogueInput.focus()
+            isGenerating = false
+            res = res.split("\n")
+            let pitchData = res[0]
+            let durationsData = res[1]
+            let cleanedSequence = res[2]
+            const start_index = res[3]
+            const end_index = res[3]
+            pitchData = pitchData.split(",").map(v => parseFloat(v))
+            durationsData = durationsData.split(",").map(v => isFreshRegen ? parseFloat(v) : parseFloat(v)/pace_slid.value)
 
-                pitchData = pitchData.split(",").map(v => parseFloat(v))
-                durationsData = durationsData.split(",").map(v => isFreshRegen ? parseFloat(v) : parseFloat(v)/pace_slid.value)
+            const doTheRest = () => {
+
                 window.sequenceEditor.inputSequence = sequence
                 window.sequenceEditor.sequence = cleanedSequence
 
@@ -791,11 +792,22 @@ generateVoiceButton.addEventListener("click", () => {
                     amplitude: window.userSettings.audio.amplitude
                 }
 
+                const extraInfo = {
+                    game: window.currentGame[0],
+                    voiceId: window.currentModel.voiceId,
+                    voiceName: window.currentModel.voiceName,
+                    inputSequence: sequence,
+                    letters: cleanedSequence.replace(/\s/g, "_").split(""),
+                    pitch: pitchData.map(p=>p),
+                    durations: durationsData.map(v=>v)
+                }
+
                 doFetch(`http://localhost:8008/outputAudio`, {
                     method: "Post",
                     body: JSON.stringify({
                         input_path: tempFileLocation,
                         output_path: tempFileLocation.replace(".wav", `_ffmpeg.${window.userSettings.audio.format}`),
+                        extraInfo: JSON.stringify(extraInfo),
                         isBatchMode: false,
                         options: JSON.stringify(options)
                     })
@@ -840,7 +852,7 @@ const refreshRecordsList = (directory) => {
 
     const files = fs.readdirSync(directory)
     files.forEach(file => {
-        if (file.endsWith(".json")) {
+        if (file.endsWith(".json") || file.endsWith(".lip") || file.endsWith(".fuz")) {
             return
         }
         const record = {}
@@ -919,12 +931,6 @@ const saveFile = (from, to, skipUIRecord=false) => {
         spinnerModal(window.i18n.SAVING_AUDIO_FILE)
 
         window.appLogger.log(`${window.i18n.ABOUT_TO_SAVE_FROM_N1_TO_N2_WITH_OPTIONS}: ${JSON.stringify(options)}`.replace("_1", from).replace("_2", to))
-
-        const extraInfo = {
-            game: window.currentGame[0],
-            voiceId: window.currentModel.voiceId,
-            voiceName: window.currentModel.voiceName
-        }
 
         doFetch(`http://localhost:8008/outputAudio`, {
             method: "Post",
@@ -1104,12 +1110,12 @@ keepSampleButton.addEventListener("click", event => keepSampleFunction(event.shi
 
 
 // Weird recursive intermittent promises to repeatedly check if the server is up yet - but it works!
-let serverIsUp = false
+window.serverIsUp = false
 const serverStartingMessage = `${window.i18n.LOADING}...<br>${window.i18n.MAY_TAKE_A_MINUTE}<br><br>${window.i18n.STARTING_PYTHON}...`
 window.doWeirdServerStartupCheck = () => {
     const check = () => {
         return new Promise(topResolve => {
-            if (serverIsUp) {
+            if (window.serverIsUp) {
                 topResolve()
             } else {
                 // console.log("checking");
@@ -1119,7 +1125,7 @@ window.doWeirdServerStartupCheck = () => {
                         body: JSON.stringify({device: (window.userSettings.useGPU&&window.userSettings.installation=="gpu")?"gpu":"cpu"})
                     }).then(r => r.text()).then(r => {
                         // console.log("r", r)
-                        closeModal(undefined, totdContainer).then(() => {
+                        closeModal(activeModal, totdContainer).then(() => {
                             window.pluginsManager.updateUI()
                             if (!window.pluginsManager.hasRunPostStartPlugins) {
                                 window.pluginsManager.hasRunPostStartPlugins = true
@@ -1127,7 +1133,7 @@ window.doWeirdServerStartupCheck = () => {
                                 window.electronBrowserWindow.setProgressBar(-1)
                             }
                         })
-                        serverIsUp = true
+                        window.serverIsUp = true
                         if (window.userSettings.installation=="cpu") {
 
                             if (useGPUCbx.checked) {
@@ -1162,7 +1168,7 @@ window.doWeirdServerStartupCheck = () => {
 window.doWeirdServerStartupCheck()
 if (window.userSettings.EULA_accepted) {
     window.showTipIfEnabledAndNewDay().then(() => {
-        if (!serverIsUp) {
+        if (!window.serverIsUp) {
             spinnerModal(serverStartingMessage)
         }
     })

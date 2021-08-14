@@ -293,11 +293,12 @@ setting_change_installation.addEventListener("click", () => {
         window.currentModel = undefined
         title.innerHTML = window.i18n.SELECT_VOICE_TYPE
         keepSampleButton.style.display = "none"
-        samplePlay.style.display = "none"
+        wavesurferContainer.innerHTML = ""
         generateVoiceButton.dataset.modelQuery = "null"
         generateVoiceButton.dataset.modelIDLoaded = undefined
         generateVoiceButton.innerHTML = window.i18n.LOAD_MODEL
         generateVoiceButton.disabled = true
+        window.serverIsUp = false
         window.doWeirdServerStartupCheck(`${window.i18n.LOADING}...<br>${window.i18n.MAY_TAKE_A_MINUTE}<br><br>${window.i18n.STARTING_PYTHON}...`)
     })
 })

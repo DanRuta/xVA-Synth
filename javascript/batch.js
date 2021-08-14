@@ -574,7 +574,7 @@ const batchChangeVoice = (game, voice) => {
         if (window.currentModel) {
             generateVoiceButton.innerHTML = window.i18n.LOAD_MODEL
             keepSampleButton.style.display = "none"
-            samplePlay.style.display = "none"
+            wavesurferContainer.innerHTML = ""
 
             const modelGameFolder = window.currentModel.audioPreviewPath.split("/")[0]
             const modelFileName = window.currentModel.audioPreviewPath.split("/")[1].split(".wav")[0]
@@ -789,7 +789,7 @@ const addActionButtons = (records, ri) => {
 }
 
 
-const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
+const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options, extraInfo) => {
     return new Promise((resolve, reject) => {
         doFetch(`http://localhost:8008/batchOutputAudio`, {
             method: "Post",
@@ -798,6 +798,7 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
                 output_paths: outPaths,
                 isBatchMode: true,
                 processes: window.userSettings.batch_MPCount,
+                extraInfo: extraInfo,
                 options: JSON.stringify(options)
             })
         }).then(r=>r.text()).then(res => {
@@ -806,7 +807,7 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
                 if (resItem.length && resItem!="-") {
                     console.log("resItem", resItem, resItem.length, resItem.length!="-")
                     window.appLogger.log("resItem", resItem)
-                    window.errorModal(resItem)
+                    window.errorModal(res.join("\n"))
                     if (window.batch_state.state) {
                         batch_pauseBtn.click()
                     }
@@ -828,7 +829,7 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options) => {
 
         }).catch(async e => {
             if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
-                await batchKickOffMPffmpegOutput(records, tempPaths, outPaths, options)
+                await batchKickOffMPffmpegOutput(records, tempPaths, outPaths, options, extraInfo)
                 resolve()
             } else {
                 console.log(e)
@@ -967,7 +968,13 @@ const batchKickOffGeneration = () => {
                 })
 
                 if (window.userSettings.batch_useMP) {
-                    await batchKickOffMPffmpegOutput(records, tempPaths, outPaths, options)
+                    const extraInfo = {
+                        game: records.map(rec => rec[0].game_id),
+                        voiceId: records.map(rec => rec[0].voice_id),
+                        voiceName: records.map(rec => window.games[rec[0].game_id].models.find(m=>m.voiceId==rec[0].voice_id).voiceName),
+                        inputSequence: records.map(rec => rec[0].text)
+                    }
+                    await batchKickOffMPffmpegOutput(records, tempPaths, outPaths, options, JSON.stringify(extraInfo))
                 } else {
                     for (let ri=0; ri<linesBatch.length; ri++) {
                         let tempFileLocation = tempPaths[ri]
@@ -975,11 +982,19 @@ const batchKickOffGeneration = () => {
                         try {
                             if (window.batch_state.state) {
                                 records[ri][1].children[1].innerHTML = window.i18n.OUTPUTTING
+                                const extraInfo = {
+                                    game: records[ri][0].game_id,
+                                    voiceId: records[ri][0].voiceId,
+                                    voiceName: window.games[records[ri][0].game_id].models.find(m=>m.voiceId==records[ri][0].voice_id).voiceName,
+                                    inputSequence: records[ri][0].text
+                                }
+
                                 if (window.userSettings.batch_fastMode) {
                                     batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
                                         input_path: tempFileLocation,
                                         output_path: outPath,
                                         isBatchMode: true,
+                                        extraInfo: JSON.stringify(extraInfo),
                                         options: JSON.stringify(options)
                                     }))
                                 } else {
@@ -987,6 +1002,7 @@ const batchKickOffGeneration = () => {
                                         input_path: tempFileLocation,
                                         output_path: outPath,
                                         isBatchMode: true,
+                                        extraInfo: JSON.stringify(extraInfo),
                                         options: JSON.stringify(options)
                                     }))
                                 }
@@ -1039,7 +1055,8 @@ const batchKickOffGeneration = () => {
                 if (document.getElementById("activeModal")) {
                     activeModal.remove()
                 }
-                window.errorModal("error", e.message).then(() => resolve())
+                console.log(e.message)
+                window.errorModal(e.message).then(() => resolve())
             }
         })
     })
