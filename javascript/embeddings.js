@@ -335,6 +335,7 @@ window.initEmbeddingsScene = () => {
             } else {
                 gender = window.embeddingsState.allData[voiceId].voiceGender
             }
+            gender = gender.toLowerCase()
 
             // if (!enabledGames.includes(game)) {
             //     return
@@ -364,6 +365,7 @@ window.initEmbeddingsScene = () => {
                 y: parseFloat(data[voiceId][1]),
                 z: parseFloat(data[voiceId][2])
             }
+
             const genderColour = gender=="female" ? genderColours["f"] : (gender=="male" ? genderColours["m"] : genderColours["o"])
 
 
@@ -679,7 +681,7 @@ window.computeEmbsAndDimReduction = (includeAllVoices=false) => {
         Object.keys(window.embeddingsState.allData).forEach(voiceId => {
             try {
                 const voiceMeta = window.embeddingsState.allData[voiceId]
-                const gender = voiceMeta.voiceGender
+                const gender = voiceMeta.voiceGender.toLowerCase()
 
                 // Filter game-level voices
                 if (!enabledGames.includes(voiceMeta.gameId)) {
@@ -707,7 +709,7 @@ window.computeEmbsAndDimReduction = (includeAllVoices=false) => {
                     audioPreviewPath = ""
                 }
 
-                mappings.push(`${voiceId}=${audioPreviewPath}=${voiceMeta.voiceName}=${voiceMeta.voiceGender}=${voiceMeta.gameId}`)
+                mappings.push(`${voiceId}=${audioPreviewPath}=${voiceMeta.voiceName}=${voiceMeta.voiceGender.toLowerCase()}=${voiceMeta.gameId}`)
 
             } catch (e) {console.log(e)}
         })
@@ -726,12 +728,12 @@ window.computeEmbsAndDimReduction = (includeAllVoices=false) => {
         })
     }).then(r=>r.text()).then(res => {
         window.embeddingsState.data = {}
-        res.split("\n").forEach(voiceIdAndCoords => {
-            const voiceId = voiceIdAndCoords.split("=")[0]
-            const voiceName = voiceIdAndCoords.split("=")[1]
-            const voiceGender = voiceIdAndCoords.split("=")[2]
-            const gameId = voiceIdAndCoords.split("=")[3]
-            const coords = voiceIdAndCoords.split("=")[4].split(",").map(v => parseFloat(v))
+        res.split("\n").forEach(voiceMetaAndCoords => {
+            const voiceId = voiceMetaAndCoords.split("=")[0]
+            const voiceName = voiceMetaAndCoords.split("=")[1]
+            const voiceGender = voiceMetaAndCoords.split("=")[2]
+            const gameId = voiceMetaAndCoords.split("=")[3]
+            const coords = voiceMetaAndCoords.split("=")[4].split(",").map(v => parseFloat(v))
             window.embeddingsState.data[voiceId] = coords
             if (includeAllVoices) {
                 window.embeddingsState.allData[voiceId] = {

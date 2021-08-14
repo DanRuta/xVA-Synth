@@ -158,6 +158,10 @@ class xVARep(object):
 
         # Prepare audio data
         audio_feats_batch = {}
+        todo_keys = []
+        todo_names = []
+        todo_genders = []
+        todo_gameIDs = []
 
         DO_MP = False # TODO, figure out why this doesn't work in prod - also, I need to update the code, having changed the caching strategy
         if DO_MP and includeAllVoices:
@@ -173,6 +177,7 @@ class xVARep(object):
 
 
             voiceIds_to_extract = list(files_to_extract.keys())
+
             paths_to_extract = [files_to_extract[voiceIds] for voiceIds in voiceIds_to_extract]
 
 
@@ -181,6 +186,7 @@ class xVARep(object):
                 extracted_feats = mp_preprocess_extract_features(self.logger, self.norm_stats, paths_to_extract)
 
                 for fi, audio_feats in enumerate(extracted_feats):
+
                     voiceId = voiceIds_to_extract[fi]
                     if voiceId not in self.cached_audio_feats.keys():
                         self.cached_audio_feats[voiceId] = audio_feats
@@ -193,11 +199,18 @@ class xVARep(object):
                     audio_feats = [(val-self.norm_stats["mean"][vi]) / self.norm_stats["std"][vi] for vi,val in enumerate(audio_feats)]
                     audio_feats_batch[voiceIds[api]] = audio_feats
 
+                    todo_keys.append(voiceIds[api])
+                    todo_names.append(voiceNames[api])
+                    todo_genders.append(voiceGenders[api])
+                    todo_gameIDs.append(gameIds[api])
 
-        todo_keys = [key for key in audio_feats_batch.keys()]
-        audio_feats_batch = [audio_feats_batch[key] for key in audio_feats_batch.keys()]
+
+        todo_feats = [audio_feats_batch[key] for key in audio_feats_batch.keys()]
+        self.logger.log(f'todo_keys, {todo_keys}')
 
 
+
+        # Include all the embeddings for the installed voices with a preview audio path
         for api, audio_path in enumerate(sampleWAVs):
             if voiceIds[api] in self.embeddings.keys():
                 embeddings[voiceIds[api]] = {}
@@ -205,62 +218,53 @@ class xVARep(object):
                 embeddings[voiceIds[api]]["name"] = self.embeddings[voiceIds[api]]["name"]
                 embeddings[voiceIds[api]]["gender"] = self.embeddings[voiceIds[api]]["gender"]
                 embeddings[voiceIds[api]]["gameId"] = self.embeddings[voiceIds[api]]["gameId"]
-                voiceIds.append(voiceIds[api])
-                voiceNames.append(self.embeddings[voiceIds[api]]["name"])
-                voiceGenders.append(self.embeddings[voiceIds[api]]["gender"])
-                gameIds.append(self.embeddings[voiceIds[api]]["gameId"])
 
-
-
-        # Compute embedding using the model
-        if len(audio_feats_batch):
-            embs = self.forward(audio_feats_batch)
+        # Compute embedding using the model, for the installed voices without an embedding
+        if len(todo_feats):
+            embs = self.forward(todo_feats)
             embs = list(embs.cpu().detach().numpy())
             for ei, emb in enumerate(embs):
                 voiceId = todo_keys[ei]
-                embeddings[voiceId] = {"emb": emb, "name": voiceNames[ei], "gender": voiceGenders[ei], "gameId": gameIds[ei]}
-                self.embeddings[voiceId] = {"emb": emb, "name": voiceNames[ei], "gender": voiceGenders[ei], "gameId": gameIds[ei]}
+                if voiceId in embeddings.keys():
+                    self.logger.log(f'===== CONFLICT 1: {voiceId}')
 
+                embeddings[voiceId] = {"emb": emb, "name": todo_names[ei], "gender": todo_genders[ei], "gameId": todo_gameIDs[ei]}
+                self.embeddings[voiceId] = {"emb": emb, "name": todo_names[ei], "gender": todo_genders[ei], "gameId": todo_gameIDs[ei]}
 
-
+        # Include the embeddings for the non-installed voices
         if includeAllVoices:
             for voiceId in list(self.embeddings.keys()):
                 if voiceId not in embeddings.keys():
+                    if voiceId in embeddings.keys():
+                        self.logger.log(f'===== CONFLICT 2: {voiceId}')
                     embeddings[voiceId] = {}
                     embeddings[voiceId]["emb"] = self.embeddings[voiceId]["emb"]
                     embeddings[voiceId]["name"] = self.embeddings[voiceId]["name"]
                     embeddings[voiceId]["gender"] = self.embeddings[voiceId]["gender"]
                     embeddings[voiceId]["gameId"] = self.embeddings[voiceId]["gameId"]
-                    voiceIds.append(voiceId)
-                    voiceNames.append(self.embeddings[voiceId]["name"])
-                    voiceGenders.append(self.embeddings[voiceId]["gender"])
-                    gameIds.append(self.embeddings[voiceId]["gameId"])
 
         if not onlyInstalled:
             for voice in non_installed_voices:
+                if voiceId in embeddings.keys():
+                    self.logger.log(f'===== CONFLICT 3: {voice["voiceId"]}')
                 embeddings[voice["voiceId"]] = {}
                 embeddings[voice["voiceId"]]["emb"] = self.embeddings[voice["voiceId"]]["emb"]
                 embeddings[voice["voiceId"]]["name"] = voice["voiceName"]
                 embeddings[voice["voiceId"]]["gender"] = voice["gender"]
                 embeddings[voice["voiceId"]]["gameId"] = voice["gameId"]
-                voiceIds.append(voice["voiceId"])
-                voiceNames.append(voice["voiceName"])
-                voiceGenders.append(voice["gender"])
-                gameIds.append(voice["gameId"])
-
 
         with open(f'{self.path}/python/xVARep/embs.pkl', "wb") as pklFile:
             pickle.dump(self.embeddings, pklFile)
 
-        return voiceIds, voiceNames, voiceGenders, gameIds, embeddings
+        return embeddings
 
 
 
     def reduce_data_dimension (self, mappings, includeAllVoices, onlyInstalled, algorithm):
 
-        voiceIds, voiceNames, voiceGenders, gameIds, embeddings = self.compile_emb_bank(mappings, includeAllVoices, onlyInstalled)
+        embeddings = self.compile_emb_bank(mappings, includeAllVoices, onlyInstalled)
 
-        tsne_input_data = [embeddings[voiceId]["emb"] for voiceId in voiceIds] # if voiceId in embeddings.keys()
+        tsne_input_data = [embeddings[voiceId]["emb"] for voiceId in embeddings.keys()]
 
         if algorithm=="tsne":
             reduced_data = TSNE(n_components=3, random_state=0, perplexity=30).fit_transform(np.array(tsne_input_data))
@@ -270,8 +274,8 @@ class xVARep(object):
 
 
         string_formatted_dict = []
-        for vi, voiceId in enumerate(voiceIds):
-            formatted_string = f'{voiceId}={voiceNames[vi]}={voiceGenders[vi]}={gameIds[vi]}='
+        for vi, voiceId in enumerate(embeddings.keys()):
+            formatted_string = f'{voiceId}={embeddings[voiceId]["name"]}={embeddings[voiceId]["gender"]}={embeddings[voiceId]["gameId"]}='
             formatted_string += ",".join([str(val*(200 if algorithm=="pca" else 1)) for val in reduced_data[vi]])
             string_formatted_dict.append(formatted_string)
 
