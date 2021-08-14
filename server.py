@@ -282,8 +282,19 @@ if __name__ == '__main__':
                     output_paths = post_data["output_paths"]
                     processes = post_data["processes"]
                     options = json.loads(post_data["options"])
+                    # For plugins
+                    extraInfo = {}
+                    if "extraInfo" in post_data:
+                        extraInfo = json.loads(post_data["extraInfo"])
+                        extraInfo["audio_options"] = options
+                        extraInfo["input_paths"] = input_paths
+                        extraInfo["output_paths"] = output_paths
+                        extraInfo["processes"] = processes
+                        extraInfo["ffmpeg"] = ffmpeg
 
+                    plugin_manager.run_plugins(plist=plugin_manager.plugins["mp-output-audio"]["pre"], event="pre mp-output-audio", data=extraInfo)
                     req_response = mp_ffmpeg_output(logger, processes, input_paths, output_paths, options)
+                    plugin_manager.run_plugins(plist=plugin_manager.plugins["mp-output-audio"]["post"], event="post mp-output-audio", data=extraInfo)
 
 
                 if self.path == "/outputAudio":

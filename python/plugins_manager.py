@@ -41,6 +41,10 @@ class PluginManager(object):
                 "mid": [],
                 "post": []
             },
+            "mp-output-audio": {
+                "pre": [],
+                "post": []
+            },
             "output-audio": {
                 "pre": [],
                 "mid": [],
