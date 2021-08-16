@@ -847,7 +847,7 @@ generateVoiceButton.addEventListener("click", () => {
 })
 
 
-const refreshRecordsList = (directory) => {
+window.refreshRecordsList = (directory) => {
 
     if (!fs.existsSync(directory)) {
         return
@@ -1126,14 +1126,12 @@ window.doWeirdServerStartupCheck = () => {
             if (window.serverIsUp) {
                 topResolve()
             } else {
-                // console.log("checking");
                 (new Promise((resolve, reject) => {
                     doFetch(`http://localhost:8008/checkReady`, {
                         method: "Post",
                         body: JSON.stringify({device: (window.userSettings.useGPU&&window.userSettings.installation=="gpu")?"gpu":"cpu"})
                     }).then(r => r.text()).then(r => {
-                        // console.log("r", r)
-                        closeModal(activeModal, totdContainer).then(() => {
+                        closeModal([document.querySelector("#activeModal"), modalContainer], [totdContainer, EULAContainer]).then(() => {
                             window.pluginsManager.updateUI()
                             if (!window.pluginsManager.hasRunPostStartPlugins) {
                                 window.pluginsManager.hasRunPostStartPlugins = true
@@ -1157,7 +1155,10 @@ window.doWeirdServerStartupCheck = () => {
                         }
 
                         resolve()
-                    }).catch(() => reject())
+                    }).catch((err) => {
+                        console.log(err)
+                        reject()
+                    })
                 })).catch(() => {
                     setTimeout(async () => {
                         await check()
@@ -1168,19 +1169,9 @@ window.doWeirdServerStartupCheck = () => {
         })
     }
 
-    if (window.userSettings.EULA_accepted) {
-        spinnerModal(serverStartingMessage)
-    }
     check()
 }
 window.doWeirdServerStartupCheck()
-if (window.userSettings.EULA_accepted) {
-    window.showTipIfEnabledAndNewDay().then(() => {
-        if (!window.serverIsUp) {
-            spinnerModal(serverStartingMessage)
-        }
-    })
-}
 
 modalContainer.addEventListener("click", event => {
     try {
@@ -1555,10 +1546,20 @@ EULA_closeButon.addEventListener("click", () => {
     }
 })
 if (!Object.keys(window.userSettings).includes("EULA_accepted") || !window.userSettings.EULA_accepted) {
-    const button = createElem("button")
-    window.setupModal(button, EULAContainer)
-    button.click()
+    EULAContainer.style.opacity = 0
+    EULAContainer.style.display = "flex"
+    requestAnimationFrame(() => requestAnimationFrame(() => EULAContainer.style.opacity = 1))
+    requestAnimationFrame(() => requestAnimationFrame(() => chromeBar.style.opacity = 1))
+} else {
+    window.showTipIfEnabledAndNewDay().then(() => {
+        // If not, or the user closed the window quickly, show the server is starting message if still booting up
+        if (!window.serverIsUp) {
+            spinnerModal(serverStartingMessage)
+        }
+    })
 }
+
+
 // Links
 document.querySelectorAll('a[href^="http"]').forEach(a => a.addEventListener("click", e => {
     event.preventDefault()

@@ -84,30 +84,29 @@ window.createModal = (type, message) => {
 }
 window.closeModal = (container=undefined, notThisOne=undefined) => {
     return new Promise(resolve => {
-        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, container, pluginsContainer, modalContainer, s2sSelectContainer, nexusContainer, embeddingsContainer, totdContainer, nexusReposContainer]
-        const containers = container==undefined ? allContainers : [container]
+        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, pluginsContainer, modalContainer, s2sSelectContainer, nexusContainer, embeddingsContainer, totdContainer, nexusReposContainer, EULAContainer]
+        const containers = container==undefined ? allContainers : (Array.isArray(container) ? container.filter(c=>c!=undefined) : [container])
+
+        notThisOne = Array.isArray(notThisOne) ? notThisOne : (notThisOne==undefined ? [] : [notThisOne])
+
         containers.forEach(cont => {
-            if ((notThisOne!=undefined&&notThisOne!=cont) && (notThisOne==undefined || notThisOne!=cont) && cont!=undefined) {
+            // Fade out the containers except the exceptions
+            if (cont!=undefined && !notThisOne.includes(cont)) {
                 cont.style.opacity = 0
             }
         })
 
-        const someOpenContainer = allContainers.find(container => container!=undefined && container.style.opacity==1 && container.style.display!="none" && container!=modalContainer)
+        const someOpenContainer = allContainers.filter(c=>c!=undefined).find(cont => cont.style.opacity==1 && cont.style.display!="none" && cont!=modalContainer)
         if (!someOpenContainer || someOpenContainer==container) {
             chromeBar.style.opacity = 0.88
         }
 
-        containers.forEach(cont => {
-            if ((notThisOne==undefined || notThisOne!=cont) && cont!=undefined) {
-                cont.style.opacity = 0
-            }
-        })
-
         setTimeout(() => {
             containers.forEach(cont => {
-                if ((notThisOne==undefined || notThisOne!=cont) && cont!=undefined) {
+                // Hide the containers except the exceptions
+                if (cont!=undefined && !notThisOne.includes(cont)) {
                     cont.style.display = "none"
-                    const someOpenContainer2 = allContainers.find(container => container!=undefined && container.style.opacity==1 && container.style.display!="none" && container!=modalContainer)
+                    const someOpenContainer2 = allContainers.filter(c=>c!=undefined).find(cont => cont.style.opacity==1 && cont.style.display!="none" && cont!=modalContainer)
                     if (!someOpenContainer2 || someOpenContainer2==container) {
                         chromeBar.style.opacity = 0.88
                     }

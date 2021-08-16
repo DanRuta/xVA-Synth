@@ -60,7 +60,6 @@ window.initNexus = () => {
 
         if (window.nexusState.key) {
             window.showUserName()
-            closeModal(undefined, nexusContainer)
             nexusLogInButton.innerHTML = window.i18n.LOG_OUT
             resolve()
         } else {
@@ -457,7 +456,6 @@ window.getLatestModelsList = async () => {
         }
 
         window.displayAllModels()
-        closeModal(undefined, nexusContainer)
 
     } catch (e) {
         console.log(e)
