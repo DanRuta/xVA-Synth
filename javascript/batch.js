@@ -595,7 +595,12 @@ const batchChangeVoice = (game, voice) => {
 
         doFetch(`http://localhost:8008/loadModel`, {
             method: "Post",
-            body: JSON.stringify({"outputs": null, "model": `${window.userSettings[`modelspath_${game}`]}/${voice}`, "model_speakers": model.emb_size})
+            body: JSON.stringify({
+                "outputs": null,
+                "model": `${window.userSettings[`modelspath_${game}`]}/${voice}`,
+                "model_speakers": model.emb_size,
+                "pluginsContext": JSON.stringify(window.pluginsContext)
+            })
         }).then(r=>r.text()).then(res => {
             resolve()
         }).catch(async e => {
