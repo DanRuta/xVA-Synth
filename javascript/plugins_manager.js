@@ -296,9 +296,13 @@ class PluginsManager {
             }
         })
 
+        const pluginLoadStatus = this.loadModules()
+        if (pluginLoadStatus) {
+            window.errorModal(`${window.i18n.FAILED_INIT_FOLLOWING} ${window.i18n.PLUGIN.toLowerCase()}: ${pluginLoadStatus}`)
+            return
+        }
         this.savePlugins()
         this.resetModules()
-        this.loadModules()
         plugins_applyBtn.disabled = true
 
         doFetch(`http://localhost:8008/refreshPlugins`, {
@@ -330,19 +334,32 @@ class PluginsManager {
                 message += `<br><br> ${window.i18n.APP_RESTART_NEEDED}`
             }
 
-            window.errorModal(message)
+            // Don't use window.errorModal, otherwise you get the error sound
+            createModal("error", message)
         })
     }
 
 
     loadModules () {
-        this.plugins.forEach(([pluginId, pluginData, enabled]) => {
-            if (!enabled) return
-            this.loadModuleFns(pluginId, pluginData, "start", "pre")
-            this.loadModuleFns(pluginId, pluginData, "start", "post")
+        for (let pi=0; pi<this.plugins.length; pi++) {
+            const [pluginId, pluginData, enabled] = this.plugins[pi]
+            if (!enabled) continue
+            let failed
+
+            failed = this.loadModuleFns(pluginId, pluginData, "start", "pre")
+            if (failed) return `${pluginId}->start->pre<br><br>${failed}`
+
+            failed = this.loadModuleFns(pluginId, pluginData, "start", "post")
+            if (failed) return `${pluginId}->start->post<br><br>${failed}`
+
             this.loadModuleFns(pluginId, pluginData, "generate-voice", "pre")
+            if (failed) return `${pluginId}->generate-voice->pre<br><br>${failed}`
+
             this.loadModuleFns(pluginId, pluginData, "keep-sample", "pre")
+            if (failed) return `${pluginId}->keep-sample->pre<br><br>${failed}`
+
             this.loadModuleFns(pluginId, pluginData, "keep-sample", "post")
+            if (failed) return `${pluginId}->keep-sample->post<br><br>${failed}`
 
             if (Object.keys(pluginData).includes("front-end-style-files") && pluginData["front-end-style-files"].length) {
                 pluginData["front-end-style-files"].forEach(styleFile => {
@@ -355,9 +372,8 @@ class PluginsManager {
                         window.appLogger.log(`${window.i18n.ERR_LOADING_CSS} ${pluginId}: ${e}`)
                     }
                 })
-
             }
-        })
+        }
     }
 
     loadModuleFns (pluginId, pluginData, task, hookTime) {
@@ -395,6 +411,7 @@ class PluginsManager {
         } catch (e) {
             console.log(`${window.i18n.ERR_LOADING_PLUGIN} ${pluginId}->${task}->${hookTime}: ` + e)
             window.appLogger.log(`${window.i18n.ERR_LOADING_PLUGIN} ${pluginId}->${task}->${hookTime}: ` + e)
+            return e.stack
         }
 
     }
