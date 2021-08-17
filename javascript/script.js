@@ -34,8 +34,8 @@ if (window.PRODUCTION) {
 }
 
 const {PluginsManager} = require("./javascript/plugins_manager.js")
-window.pluginsManager = new PluginsManager(window.path, window.appLogger, window.appVersion)
 window.pluginsContext = {}
+window.pluginsManager = new PluginsManager(window.path, window.appLogger, window.appVersion)
 window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["start"]["pre"], event="pre start")
 
 

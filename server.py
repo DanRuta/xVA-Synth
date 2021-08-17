@@ -190,12 +190,12 @@ if __name__ == '__main__':
                     logger.info("POST {}".format(self.path))
                     logger.info(post_data)
                     ckpt = post_data["model"]
-                    ckpt["pluginsContext"] = json.loads(post_data["pluginsContext"])
+                    post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])
                     n_speakers = post_data["model_speakers"] if "model_speakers" in post_data else None
 
-                    plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["pre"], event="pre load-model", data=ckpt)
+                    plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["pre"], event="pre load-model", data=post_data)
                     models_manager.load_model("fastpitch", ckpt+".pt", n_speakers=n_speakers)
-                    plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["post"], event="post load-model", data=ckpt)
+                    plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["post"], event="post load-model", data=post_data)
 
                 if self.path == "/synthesize":
                     logger.info("POST {}".format(self.path))
