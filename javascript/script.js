@@ -972,26 +972,31 @@ const saveFile = (from, to, skipUIRecord=false) => {
             })
         })
     } else {
-        fs.copyFile(from, to, err => {
-            if (err) {
-                console.log(err)
-                window.appLogger.log(`Error in saveFile->outputAudio[no ffmpeg]: ${err}`)
-                if (!fs.existsSync(from)) {
-                    window.appLogger.log(`${window.i18n.TEMP_FILE_NOT_EXIST}: ${from}`)
+
+        const allFiles = fs.readdirSync(`${path}/output`).filter(fname => fname.includes(from.split("/").reverse()[0].split(".")[0]))
+        const toFolder = to.split("/").reverse().slice(1, 1000).reverse().join("/")
+
+        allFiles.forEach(fname => {
+            fs.copyFile(`${path}/output/${fname}`, `${toFolder}/${fname}`, err => {
+                if (err) {
+                    console.log(err)
+                    window.appLogger.log(`Error in saveFile->outputAudio[no ffmpeg]: ${err}`)
+                    if (!fs.existsSync(from)) {
+                        window.appLogger.log(`${window.i18n.TEMP_FILE_NOT_EXIST}: ${from}`)
+                    }
+                    if (!fs.existsSync(toFolder)) {
+                        window.appLogger.log(`${window.i18n.OUT_DIR_NOT_EXIST}: ${toFolder}`)
+                    }
+                } else {
+                    if (window.userSettings.outputJSON) {
+                        fs.writeFileSync(`${to}.json`, JSON.stringify(jsonDataOut, null, 4))
+                    }
+                    if (!skipUIRecord) {
+                        refreshRecordsList(containerFolderPath)
+                    }
+                    window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["post"], event="post keep-sample", pluginData)
                 }
-                const outputFolder = to.split("/").reverse().slice(1,1000).reverse().join("/")
-                if (!fs.existsSync(outputFolder)) {
-                    window.appLogger.log(`${window.i18n.OUT_DIR_NOT_EXIST}: ${outputFolder}`)
-                }
-            } else {
-                if (window.userSettings.outputJSON) {
-                    fs.writeFileSync(`${to}.json`, JSON.stringify(jsonDataOut, null, 4))
-                }
-                if (!skipUIRecord) {
-                    refreshRecordsList(containerFolderPath)
-                }
-                window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["post"], event="post keep-sample", pluginData)
-            }
+            })
         })
     }
 }
