@@ -25,6 +25,7 @@ if __name__ == '__main__':
         from logging.handlers import RotatingFileHandler
         import json
         from http.server import BaseHTTPRequestHandler, HTTPServer
+        from socketserver     import ThreadingMixIn
         from python.audio_post import run_audio_post, prepare_input_audio, mp_ffmpeg_output
         import ffmpeg
     except:
@@ -133,6 +134,8 @@ if __name__ == '__main__':
 
 
     # Server
+    class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+        pass
     class Handler(BaseHTTPRequestHandler):
         def _set_response(self):
             self.send_response(200)
@@ -355,7 +358,10 @@ if __name__ == '__main__':
                 logger.info(traceback.format_exc())
 
     try:
-        server = HTTPServer(("",8008), Handler)
+        # server = HTTPServer(("",8008), Handler)
+        server = ThreadedHTTPServer(("",8008), Handler)
+        # Prevent issues with socket reuse
+        server.allow_reuse_address = True
     except:
         with open("./DEBUG_server_error.txt", "w+") as f:
             f.write(traceback.format_exc())
