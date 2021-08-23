@@ -71,7 +71,7 @@ def run_audio_post(logger, input, output, options=None):
     except:
         if logger!=None:
             logger.info(traceback.format_exc())
-        return traceback.format_exc()
+        return traceback.format_exc().replace("\n", " ")
 
     return "-"
 
