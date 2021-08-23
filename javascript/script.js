@@ -100,8 +100,8 @@ window.initWaveSurfer = (src) => {
         progressColor: 'white',
         responsive: true,
     })
-    window.wavesurfer.load(src)
     window.wavesurfer.setSinkId(window.userSettings.base_speaker)
+    window.wavesurfer.load(src)
     window.wavesurfer.on("finish", () => {
         samplePlayPause.innerHTML = window.i18n.PLAY
     })
@@ -443,10 +443,12 @@ window.changeGame = (meta) => {
 }
 
 samplePlayPause.addEventListener("click", (event) => {
-    if (event.ctrlKey) {
-        window.wavesurfer.setSinkId(window.userSettings.alt_speaker)
-    } else {
-        window.wavesurfer.setSinkId(window.userSettings.base_speaker)
+    if (window.wavesurfer) {
+        if (event.ctrlKey) {
+            window.wavesurfer.setSinkId(window.userSettings.alt_speaker)
+        } else {
+            window.wavesurfer.setSinkId(window.userSettings.base_speaker)
+        }
     }
 
     if (window.wavesurfer.isPlaying()) {
@@ -756,6 +758,7 @@ generateVoiceButton.addEventListener("click", () => {
 
                 toggleSpinnerButtons()
                 if (keepSampleButton.dataset.newFileLocation && keepSampleButton.dataset.newFileLocation.startsWith("BATCH_EDIT")) {
+                    console.log("_debug_")
                 } else {
                     keepSampleButton.dataset.newFileLocation = `${window.userSettings[`outpath_${game}`]}/${voiceType}/${outputFileName}.wav`
                 }
@@ -975,9 +978,11 @@ const saveFile = (from, to, skipUIRecord=false) => {
 
         const allFiles = fs.readdirSync(`${path}/output`).filter(fname => fname.includes(from.split("/").reverse()[0].split(".")[0]))
         const toFolder = to.split("/").reverse().slice(1, 1000).reverse().join("/")
+        const outputFileName = to.split("/").reverse()[0].split(".").reverse().slice(1, 1000).join(".")
 
         allFiles.forEach(fname => {
-            fs.copyFile(`${path}/output/${fname}`, `${toFolder}/${fname}`, err => {
+            const ext = fname.split(".").reverse()[0]
+            fs.copyFile(`${path}/output/${fname}`, `${toFolder}/${outputFileName}.${ext}`, err => {
                 if (err) {
                     console.log(err)
                     window.appLogger.log(`Error in saveFile->outputAudio[no ffmpeg]: ${err}`)
@@ -1161,7 +1166,6 @@ window.doWeirdServerStartupCheck = () => {
 
                         resolve()
                     }).catch((err) => {
-                        console.log(err)
                         reject()
                     })
                 })).catch(() => {
