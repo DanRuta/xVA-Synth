@@ -108,7 +108,9 @@ class PluginManager(object):
 
 
                         for key in self.plugins.keys():
-                            if key!="custom-event":
+                            if key=="custom-event":
+                                self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "custom-event"], [])
+                            else:
                                 for trigger_type in ["pre", "mid", "post"]:
                                     self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", key, trigger_type], [])
 
