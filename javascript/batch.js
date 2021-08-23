@@ -5,6 +5,8 @@ const smi = require('node-nvidia-smi')
 
 window.batch_state = {
     lines: [],
+    fastModeActuallyFinishedTasks: 0,
+    fastModeOutputPromises: [],
     lastModel: undefined,
     lastVocoder: undefined,
     lineIndex: 0,
@@ -14,8 +16,7 @@ window.batch_state = {
     paginationIndex: 0,
     taskBarPercent: 0,
     startTime: undefined,
-    linesDoneSinceStart: 0,
-    batchesDoneSinceStart: 0
+    linesDoneSinceStart: 0
 }
 
 
@@ -556,12 +557,13 @@ const startBatch = () => {
         record[1].children[1].style.background = "none"
     })
 
+    window.batch_state.fastModeOutputPromises = []
+    window.batch_state.fastModeActuallyFinishedTasks = 0
     window.batch_state.lineIndex = 0
     window.batch_state.state = true
     window.batch_state.outPathsChecked = []
     window.batch_state.startTime = new Date()
     window.batch_state.linesDoneSinceStart = 0
-    window.batch_state.batchesDoneSinceStart = 0
     performSynthesis()
 }
 
@@ -811,7 +813,6 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options, extra
             res = res.split("\n")
             res.forEach((resItem, ri) => {
                 if (resItem.length && resItem!="-") {
-                    console.log("resItem", resItem, resItem.length, resItem.length!="-")
                     window.appLogger.log("resItem", resItem)
                     window.errorModal(res.join("\n"))
                     if (window.batch_state.state) {
@@ -829,8 +830,18 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options, extra
                     addActionButtons(records, ri)
                 }
 
-                window.batch_state.lineIndex += 1
+                if (!window.userSettings.batch_fastMode) {
+                    window.batch_state.lineIndex += 1
+                }
+                window.batch_state.fastModeActuallyFinishedTasks += 1
+
             })
+            const percentDone = (window.batch_state.fastModeActuallyFinishedTasks) / window.batch_state.lines.length * 100
+            batch_progressBar.style.background = `linear-gradient(90deg, green ${parseInt(percentDone)}%, rgba(255,255,255,0) ${parseInt(percentDone)}%)`
+            batch_progressBar.innerHTML = `${parseInt(percentDone* 100)/100}%`
+            window.batch_state.taskBarPercent = percentDone/100
+            window.electronBrowserWindow.setProgressBar(window.batch_state.taskBarPercent)
+            adjustETA()
             resolve()
 
         }).catch(async e => {
@@ -874,6 +885,14 @@ const batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, bod
                 records[ri][1].children[1].style.background = "green"
                 fs.unlinkSync(tempFileLocation)
                 addActionButtons(records, ri)
+                window.batch_state.fastModeActuallyFinishedTasks += 1
+
+                const percentDone = (window.batch_state.fastModeActuallyFinishedTasks) / window.batch_state.lines.length * 100
+                batch_progressBar.style.background = `linear-gradient(90deg, green ${parseInt(percentDone)}%, rgba(255,255,255,0) ${parseInt(percentDone)}%)`
+                batch_progressBar.innerHTML = `${parseInt(percentDone* 100)/100}%`
+                window.batch_state.taskBarPercent = percentDone/100
+                window.electronBrowserWindow.setProgressBar(window.batch_state.taskBarPercent)
+                adjustETA()
                 resolve()
             }
         }).catch(async e => {
@@ -981,7 +1000,12 @@ const batchKickOffGeneration = () => {
                         voiceName: records.map(rec => window.games[rec[0].game_id].models.find(m=>m.voiceId==rec[0].voice_id).voiceName),
                         inputSequence: records.map(rec => rec[0].text)
                     }
-                    await batchKickOffMPffmpegOutput(records, tempPaths, outPaths, options, JSON.stringify(extraInfo))
+                    if (window.userSettings.batch_fastMode) {
+                        window.batch_state.fastModeOutputPromises.push(batchKickOffMPffmpegOutput(records, tempPaths, outPaths, options, JSON.stringify(extraInfo)))
+                        window.batch_state.lineIndex += records.length
+                    } else {
+                        await batchKickOffMPffmpegOutput(records, tempPaths, outPaths, options, JSON.stringify(extraInfo))
+                    }
                 } else {
                     for (let ri=0; ri<linesBatch.length; ri++) {
                         let tempFileLocation = tempPaths[ri]
@@ -993,18 +1017,18 @@ const batchKickOffGeneration = () => {
                                     game: records[ri][0].game_id,
                                     voiceId: records[ri][0].voiceId,
                                     voiceName: window.games[records[ri][0].game_id].models.find(m=>m.voiceId==records[ri][0].voice_id).voiceName,
-                                    inputSequence: records[ri][0].text
+                                    letters: records[ri][0].text
                                 }
 
                                 if (window.userSettings.batch_fastMode) {
-                                    batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
+                                    window.batch_state.fastModeOutputPromises.push(batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
                                         input_path: tempFileLocation,
                                         output_path: outPath,
                                         isBatchMode: true,
                                         pluginsContext: JSON.stringify(window.pluginsContext),
                                         extraInfo: JSON.stringify(extraInfo),
                                         options: JSON.stringify(options)
-                                    }))
+                                    })))
                                 } else {
                                     await batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
                                         input_path: tempFileLocation,
@@ -1025,8 +1049,6 @@ const batchKickOffGeneration = () => {
                     }
                 }
                 window.batch_state.linesDoneSinceStart += linesBatch.length
-                window.batch_state.batchesDoneSinceStart += 1
-                adjustETA()
                 resolve()
             } else {
                 linesBatch.forEach((lineRecord, li) => {
@@ -1048,8 +1070,6 @@ const batchKickOffGeneration = () => {
                         batch_pauseBtn.click()
                     }
                     window.batch_state.linesDoneSinceStart += linesBatch.length
-                    window.batch_state.batchesDoneSinceStart += 1
-                    adjustETA()
                     resolve()
                 })
             }
@@ -1073,15 +1093,23 @@ const batchKickOffGeneration = () => {
 
 const performSynthesis = async () => {
 
+    if (batch_state.lineIndex-batch_state.fastModeActuallyFinishedTasks > 1000) {
+        console.log(`Ahead by ${batch_state.lineIndex-batch_state.fastModeActuallyFinishedTasks} tasks. Waiting...`)
+        setTimeout(() => {performSynthesis()}, 1000)
+        return
+    }
+
     if (!window.batch_state.state) {
         return
     }
 
-    const percentDone = (window.batch_state.lineIndex) / window.batch_state.lines.length * 100
-    batch_progressBar.style.background = `linear-gradient(90deg, green ${parseInt(percentDone)}%, rgba(255,255,255,0) ${parseInt(percentDone)}%)`
-    batch_progressBar.innerHTML = `${parseInt(percentDone* 100)/100}%`
-    window.batch_state.taskBarPercent = percentDone/100
-    window.electronBrowserWindow.setProgressBar(window.batch_state.taskBarPercent)
+    if (window.batch_state.lineIndex==0) {
+        const percentDone = (window.batch_state.lineIndex) / window.batch_state.lines.length * 100
+        batch_progressBar.style.background = `linear-gradient(90deg, green ${parseInt(percentDone)}%, rgba(255,255,255,0) ${parseInt(percentDone)}%)`
+        batch_progressBar.innerHTML = `${parseInt(percentDone* 100)/100}%`
+        window.batch_state.taskBarPercent = percentDone/100
+        window.electronBrowserWindow.setProgressBar(window.batch_state.taskBarPercent)
+    }
 
 
     const record = window.batch_state.lines[window.batch_state.lineIndex]
@@ -1101,8 +1129,16 @@ const performSynthesis = async () => {
 
     if (window.batch_state.lineIndex==window.batch_state.lines.length) {
         // The end
-        batch_stopBtn.click()
-        batch_openDirBtn.style.display = "inline-block"
+        if (window.userSettings.batch_fastMode) {
+            Promise.all(window.batch_state.fastModeOutputPromises).then(() => {
+                batch_stopBtn.click()
+                batch_openDirBtn.style.display = "inline-block"
+            })
+        } else {
+            batch_stopBtn.click()
+            batch_openDirBtn.style.display = "inline-block"
+        }
+
     } else {
         performSynthesis()
     }
@@ -1154,17 +1190,17 @@ const stopBatch = () => {
 }
 
 const adjustETA = () => {
-    if (window.batch_state.state && window.batch_state.batchesDoneSinceStart>=2) {
+    if (window.batch_state.state && window.batch_state.fastModeActuallyFinishedTasks>=2) {
         batch_ETA_container.style.opacity = 1
 
         // Lines per second
         const timeNow = new Date()
         const timeSinceStart = timeNow - window.batch_state.startTime
-        const avgMSTimePerLine = timeSinceStart / window.batch_state.linesDoneSinceStart
+        const avgMSTimePerLine = timeSinceStart / window.batch_state.fastModeActuallyFinishedTasks
         batch_eta_lps.innerHTML = parseInt((1000/avgMSTimePerLine)*100)/100
 
 
-        const remainingLines = window.batch_state.lines.length - window.batch_state.linesDoneSinceStart
+        const remainingLines = window.batch_state.lines.length - window.batch_state.fastModeActuallyFinishedTasks
         let estTimeRemaining = avgMSTimePerLine*remainingLines
 
         // Estimated finish time
