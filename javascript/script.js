@@ -418,6 +418,7 @@ window.changeGame = (meta) => {
                 generateVoiceButton.dataset.modelQuery = JSON.stringify({
                     outputs: parseInt(model.outputs),
                     model: `${modelsPath}/${voiceId}`,
+                    modelType: model.modelType,
                     model_speakers: model.emb_size,
                     cmudict: model.cmudict
                 })
@@ -682,6 +683,7 @@ generateVoiceButton.addEventListener("click", () => {
         let tempFileLocation = `${path}/output/temp-${tempFileNum}.wav`
         let pitch = []
         let duration = []
+        let energy = []
         let isFreshRegen = true
         let old_sequence = undefined
 
@@ -694,6 +696,7 @@ generateVoiceButton.addEventListener("click", () => {
         if (editorContainer.innerHTML && editorContainer.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice)) {
             pitch = window.sequenceEditor.pitchNew.map(v=> v==undefined?0:v)
             duration = window.sequenceEditor.dursNew.map(v => v*pace_slid.value).map(v=> v==undefined?0:v)
+            energy = window.sequenceEditor.energyNew.map(v => v==undefined?0:v)
             isFreshRegen = false
         }
         window.sequenceEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
@@ -701,15 +704,13 @@ generateVoiceButton.addEventListener("click", () => {
         const speaker_i = window.currentModel.games[0].emb_i
         const pace = (window.userSettings.keepPaceOnNew && isFreshRegen)?pace_slid.value:1
 
-
         window.appLogger.log(`${window.i18n.SYNTHESIZING}: ${sequence}`)
-
-
 
         doFetch(`http://localhost:8008/synthesize`, {
             method: "Post",
             body: JSON.stringify({
-                sequence, pitch, duration, speaker_i, pace,
+                sequence, pitch, duration, energy, speaker_i, pace,
+                modelType: window.currentModel.modelType,
                 old_sequence, // For partial re-generation
                 outfile: tempFileLocation,
                 pluginsContext: JSON.stringify(window.pluginsContext),
@@ -729,10 +730,16 @@ generateVoiceButton.addEventListener("click", () => {
             res = res.split("\n")
             let pitchData = res[0]
             let durationsData = res[1]
-            let cleanedSequence = res[2]
-            const start_index = res[3]
-            const end_index = res[3]
+            let energyData = res[2]
+            let cleanedSequence = res[3]
+            const start_index = res[4]
+            const end_index = res[5]
             pitchData = pitchData.split(",").map(v => parseFloat(v))
+            if (energyData.length) {
+                energyData = energyData.split(",").map(v => parseFloat(v))
+            } else {
+                energyData = []
+            }
             durationsData = durationsData.split(",").map(v => isFreshRegen ? parseFloat(v) : parseFloat(v)/pace_slid.value)
 
             const doTheRest = () => {
@@ -743,11 +750,13 @@ generateVoiceButton.addEventListener("click", () => {
                 if (pitch.length==0 || isFreshRegen) {
                     window.sequenceEditor.resetPitch = pitchData
                     window.sequenceEditor.resetDurs = durationsData
+                    window.sequenceEditor.resetEnergy = energyData
                 }
 
                 window.sequenceEditor.letters = cleanedSequence.replace(/\s/g, "_").split("")
                 window.sequenceEditor.pitchNew = pitchData.map(p=>p)
                 window.sequenceEditor.dursNew = durationsData.map(v=>v)
+                window.sequenceEditor.energyNew = energyData.map(v=>v)
                 window.sequenceEditor.init()
                 window.sequenceEditor.update()
 
@@ -808,6 +817,7 @@ generateVoiceButton.addEventListener("click", () => {
                     inputSequence: sequence,
                     letters: cleanedSequence.replace(/\s/g, "_").split(""),
                     pitch: pitchData.map(p=>p),
+                    energy: energyData.map(p=>p),
                     durations: durationsData.map(v=>v)
                 }
 

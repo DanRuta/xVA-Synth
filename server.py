@@ -193,23 +193,26 @@ if __name__ == '__main__':
                     logger.info("POST {}".format(self.path))
                     logger.info(post_data)
                     ckpt = post_data["model"]
+                    modelType = post_data["modelType"]
                     post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])
                     n_speakers = post_data["model_speakers"] if "model_speakers" in post_data else None
 
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["pre"], event="pre load-model", data=post_data)
-                    models_manager.load_model("fastpitch", ckpt+".pt", n_speakers=n_speakers)
+                    models_manager.load_model(modelType.lower().replace(".", "_").replace(" ", ""), ckpt+".pt", n_speakers=n_speakers)
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["post"], event="post load-model", data=post_data)
 
                 if self.path == "/synthesize":
                     logger.info("POST {}".format(self.path))
+                    modelType = post_data["modelType"]
                     text = post_data["sequence"]
                     pace = float(post_data["pace"])
                     out_path = post_data["outfile"]
                     pitch = post_data["pitch"] if "pitch" in post_data else None
+                    energy = post_data["energy"] if "energy" in post_data else None
                     duration = post_data["duration"] if "duration" in post_data else None
                     speaker_i = post_data["speaker_i"] if "speaker_i" in post_data else None
                     vocoder = post_data["vocoder"]
-                    pitch_data = [pitch, duration]
+                    pitch_data = [pitch, duration, energy]
                     old_sequence = post_data["old_sequence"] if "old_sequence" in post_data else None
                     post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])
 
@@ -225,12 +228,13 @@ if __name__ == '__main__':
 
                     if continue_synth:
                         plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["pre"], event="pre synth-line", data=post_data)
-                        req_response = models_manager.models("fastpitch").infer(plugin_manager, text, out_path, vocoder=vocoder, \
+                        req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", "")).infer(plugin_manager, text, out_path, vocoder=vocoder, \
                             speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence)
                         plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["post"], event="post synth-line", data=post_data)
 
 
                 if self.path == "/synthesize_batch":
+                    modelType = post_data["modelType"]
                     linesBatch = post_data["linesBatch"]
                     speaker_i = post_data["speaker_i"]
                     vocoder = post_data["vocoder"]
@@ -238,7 +242,7 @@ if __name__ == '__main__':
 
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["batch-synth-line"]["pre"], event="pre batch-synth-line", data=post_data)
                     try:
-                        req_response = models_manager.models("fastpitch").infer_batch(plugin_manager, linesBatch, vocoder=vocoder, speaker_i=speaker_i)
+                        req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", "")).infer_batch(plugin_manager, linesBatch, vocoder=vocoder, speaker_i=speaker_i)
                     except RuntimeError as e:
                         if "CUDA out of memory" in str(e):
                             req_response = "CUDA OOM"

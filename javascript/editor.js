@@ -13,6 +13,7 @@ class Editor {
         this.letters = []
         this.pitchNew = []
         this.dursNew = []
+        this.energyNew = []
         this.pacing = 1
         this.ampFlatCounter = 0
 
@@ -25,6 +26,7 @@ class Editor {
         this.letterClasses = []
         this.resetDurs = []
         this.resetPitch = []
+        this.resetEnergy = []
 
         this.adjustedLetters = new Set()
 

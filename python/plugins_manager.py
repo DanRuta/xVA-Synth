@@ -34,6 +34,7 @@ class PluginManager(object):
             "synth-line": {
                 "pre": [],
                 "mid": [],
+                "pre_energy": [],
                 "post": []
             },
             "batch-synth-line": {

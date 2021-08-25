@@ -42,6 +42,10 @@ class ModelsManager(object):
                 from python.fastpitch.model import FastPitch
                 self.models_bank[model_key] = FastPitch(self.logger, self.PROD, self.device, self)
 
+            elif model_key=="fastpitch1_1":
+                from python.fastpitch1_1.model import FastPitch1_1
+                self.models_bank[model_key] = FastPitch1_1(self.logger, self.PROD, self.device, self)
+
             self.models_bank[model_key].model = self.models_bank[model_key].model.to(self.device)
         except:
             self.logger.info(traceback.format_exc())

@@ -3,15 +3,15 @@ import argparse
 
 import torch
 import torch.nn as nn
-from python.fastpitch import models
+from python.fastpitch1_1 import models
 
 from scipy.io.wavfile import write
 from torch.nn.utils.rnn import pad_sequence
 from python.common.text import text_to_sequence, sequence_to_text
 
-class FastPitch(object):
+class FastPitch1_1(object):
     def __init__(self, logger, PROD, device, models_manager):
-        super(FastPitch, self).__init__()
+        super(FastPitch1_1, self).__init__()
 
         self.logger = logger
         self.PROD = PROD
@@ -38,7 +38,7 @@ class FastPitch(object):
         self.model.eval()
         self.model.device = self.device
 
-    def load_state_dict (self, ckpt_path, ckpt, n_speakers):
+    def load_state_dict (self, ckpt_path, ckpt, n_speakers=1):
 
         self.ckpt_path = ckpt_path
 
@@ -52,6 +52,7 @@ class FastPitch(object):
             ckpt = ckpt['state_dict']
 
         symbols_embedding_dim = 384
+        self.logger.info(f'n_speakers: {n_speakers}')
         self.model.speaker_emb = nn.Embedding(1 if n_speakers is None else n_speakers, symbols_embedding_dim).to(self.device)
 
         self.model.load_state_dict(ckpt, strict=False)
@@ -134,7 +135,7 @@ class FastPitch(object):
                 old_sequence = torch.LongTensor(old_sequence)
                 old_sequence = pad_sequence([old_sequence], batch_first=True).to(self.models_manager.device)
 
-            mel, mel_lens, dur_pred, pitch_pred, start_index, end_index = self.model.infer_advanced(self.logger, plugin_manager, [cleaned_text], text, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=old_sequence)
+            mel, mel_lens, dur_pred, pitch_pred, energy_pred, start_index, end_index = self.model.infer_advanced(self.logger, plugin_manager, [cleaned_text], text, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=old_sequence)
 
             if "waveglow" in vocoder:
 
@@ -160,12 +161,11 @@ class FastPitch(object):
 
             del mel, mel_lens
 
-        [pitch, durations] = [pitch_pred.cpu().detach().numpy()[0], dur_pred.cpu().detach().numpy()[0]]
-        pitch_durations_text = ",".join([str(v) for v in pitch])+"\n"+",".join([str(v) for v in durations]) + "\n"
+        [pitch, durations, energy] = [pitch_pred.squeeze().cpu().detach().numpy(), dur_pred.cpu().detach().numpy()[0], energy_pred.cpu().detach().numpy()[0]]
+        pitch_durations_energy_text = ",".join([str(v) for v in pitch]) + "\n" + ",".join([str(v) for v in durations]) + "\n" + ",".join([str(v) for v in energy])
 
-
-        del pitch_pred, dur_pred, text, sequence
-        return pitch_durations_text +"\n"+cleaned_text + f'{start_index}\n{end_index}'
+        del pitch_pred, dur_pred, energy_pred, text, sequence
+        return pitch_durations_energy_text +"\n"+cleaned_text + f'{start_index}\n{end_index}'
 
     def set_device (self, device):
         self.device = device

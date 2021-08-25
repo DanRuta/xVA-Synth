@@ -390,6 +390,8 @@ const preProcessCSVData = data => {
                 return []
             }
 
+            data[di].modelType = window.games[data[di].game_id].models.find(rec => rec.voiceId==data[di].voice_id).model.modelType
+
             // Fill with defaults
             // ==================
             if (!record.out_path) {
@@ -936,6 +938,7 @@ const batchKickOffGeneration = () => {
             }
         }
         const batchPostData = {
+            modelType: records[0].modelType,
             batchSize: window.userSettings.batch_batchSize,
             defaultOutFolder: window.userSettings.batchOutFolder,
             pluginsContext: JSON.stringify(window.pluginsContext),
