@@ -220,6 +220,18 @@ setting_models_path_input.addEventListener("change", () => {
         })
     }
     window.updateGameList()
+
+    // Gather the model paths to send to the server
+    const modelsPaths = {}
+    Object.keys(window.userSettings).filter(key => key.includes("modelspath_")).forEach(key => {
+        modelsPaths[key.split("_")[1]] = window.userSettings[key]
+    })
+    doFetch(`http://localhost:8008/setAvailableVoices`, {
+        method: "Post",
+        body: JSON.stringify({
+            modelsPaths: JSON.stringify(modelsPaths)
+        })
+    })
 })
 
 // Change game
@@ -1147,9 +1159,18 @@ window.doWeirdServerStartupCheck = () => {
                 topResolve()
             } else {
                 (new Promise((resolve, reject) => {
+                    // Gather the model paths to send to the server
+                    const modelsPaths = {}
+                    Object.keys(window.userSettings).filter(key => key.includes("modelspath_")).forEach(key => {
+                        modelsPaths[key.split("_")[1]] = window.userSettings[key]
+                    })
+
                     doFetch(`http://localhost:8008/checkReady`, {
                         method: "Post",
-                        body: JSON.stringify({device: (window.userSettings.useGPU&&window.userSettings.installation=="gpu")?"gpu":"cpu"})
+                        body: JSON.stringify({
+                            device: (window.userSettings.useGPU&&window.userSettings.installation=="gpu")?"gpu":"cpu",
+                            modelsPaths: JSON.stringify(modelsPaths)
+                        })
                     }).then(r => r.text()).then(r => {
                         closeModal([document.querySelector("#activeModal"), modalContainer], [totdContainer, EULAContainer]).then(() => {
                             window.pluginsManager.updateUI()

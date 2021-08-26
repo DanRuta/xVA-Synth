@@ -102,6 +102,7 @@ if __name__ == '__main__':
 
 
     # ======================== Models manager
+    modelsPaths = {}
     try:
         from python.models_manager import ModelsManager
         models_manager = ModelsManager(logger, PROD, device="cpu")
@@ -149,14 +150,41 @@ if __name__ == '__main__':
             self.wfile.write(returnString)
 
         def do_POST(self):
+            global modelsPaths
             post_data = ""
             try:
                 content_length = int(self.headers['Content-Length'])
-                post_data = json.loads(self.rfile.read(content_length).decode('utf-8'))
+                post_data = json.loads(self.rfile.read(content_length).decode('utf-8')) if content_length else {}
                 req_response = "POST request for {}".format(self.path)
 
                 print("POST")
                 print(self.path)
+
+                # For headless mode
+                if self.path == "/setAvailableVoices":
+                    modelsPaths = json.loads(post_data["modelsPaths"])
+                if self.path == "/getAvailableVoices":
+                    models = {}
+                    for gameId in modelsPaths.keys():
+                        models[gameId] = []
+
+                        modelJSONs = sorted(os.listdir(modelsPaths[gameId]))
+                        for fname in modelJSONs:
+                            if fname.endswith(".json"):
+                                with open(f'{modelsPaths[gameId]}/{fname}', "r") as f:
+                                    jsons = f.read()
+                                    metadata = json.loads(jsons)
+
+                                    models[gameId].append({
+                                        "modelType": metadata["modelType"],
+                                        "author": metadata["author"] if "author" in metadata else "",
+                                        "emb_size": metadata["emb_size"] if "emb_size" in metadata else 1,
+                                        "voiceId": metadata["games"][0]["voiceId"],
+                                        "voiceName": metadata["games"][0]["voiceName"],
+                                        "gender": metadata["games"][0]["gender"] if "gender" in metadata["games"][0] else "other",
+                                        "emb_i": metadata["games"][0]["emb_i"] if "emb_i" in metadata["games"][0] else 0
+                                    })
+                    req_response = json.dumps(models)
 
 
                 if self.path == "/setVocoder":
@@ -347,6 +375,7 @@ if __name__ == '__main__':
 
                 if self.path == "/checkReady":
                     use_gpu = post_data["device"]=="gpu"
+                    modelsPaths = json.loads(post_data["modelsPaths"])
                     models_manager.set_device('cuda' if use_gpu else 'cpu')
                     req_response = "ready"
 

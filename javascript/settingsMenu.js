@@ -1,6 +1,7 @@
 "use strict"
 
 const saveUserSettings = () => localStorage.setItem("userSettings", JSON.stringify(window.userSettings))
+// const saveUserSettings = () => {}
 
 const deleteFolderRecursive = function (directoryPath) {
     if (fs.existsSync(directoryPath)) {
@@ -666,6 +667,18 @@ reset_paths_btn.addEventListener("click", () => {
                 }
             })
             saveUserSettings()
+
+            // Gather the model paths to send to the server
+            const modelsPaths = {}
+            Object.keys(window.userSettings).filter(key => key.includes("modelspath_")).forEach(key => {
+                modelsPaths[key.split("_")[1]] = window.userSettings[key]
+            })
+            doFetch(`http://localhost:8008/setAvailableVoices`, {
+                method: "Post",
+                body: JSON.stringify({
+                    modelsPaths: JSON.stringify(modelsPaths)
+                })
+            })
         }
     })
 })
