@@ -76,6 +76,9 @@ class PluginsManager {
                 "mid": [],
                 "post": []
             },
+            "batch-stop": {
+                "post": []
+            },
             "generate-voice": {
                 "pre": []
             }
@@ -352,14 +355,21 @@ class PluginsManager {
             failed = this.loadModuleFns(pluginId, pluginData, "start", "post")
             if (failed) return `${pluginId}->start->post<br><br>${failed}`
 
-            this.loadModuleFns(pluginId, pluginData, "generate-voice", "pre")
-            if (failed) return `${pluginId}->generate-voice->pre<br><br>${failed}`
-
             this.loadModuleFns(pluginId, pluginData, "keep-sample", "pre")
             if (failed) return `${pluginId}->keep-sample->pre<br><br>${failed}`
 
+            this.loadModuleFns(pluginId, pluginData, "keep-sample", "mid")
+            if (failed) return `${pluginId}->keep-sample->mid<br><br>${failed}`
+
             this.loadModuleFns(pluginId, pluginData, "keep-sample", "post")
             if (failed) return `${pluginId}->keep-sample->post<br><br>${failed}`
+
+            this.loadModuleFns(pluginId, pluginData, "generate-voice", "pre")
+            if (failed) return `${pluginId}->generate-voice->pre<br><br>${failed}`
+
+            this.loadModuleFns(pluginId, pluginData, "batch-stop", "post")
+            if (failed) return `${pluginId}->batch-stop->post<br><br>${failed}`
+
 
             if (Object.keys(pluginData).includes("front-end-style-files") && pluginData["front-end-style-files"].length) {
                 pluginData["front-end-style-files"].forEach(styleFile => {
@@ -409,7 +419,7 @@ class PluginsManager {
                 }
             }
         } catch (e) {
-            console.log(`${window.i18n.ERR_LOADING_PLUGIN} ${pluginId}->${task}->${hookTime}: ` + e)
+            console.log(`${window.i18n.ERR_LOADING_PLUGIN} ${pluginId}->${task}->${hookTime}: ` + e.stack)
             window.appLogger.log(`${window.i18n.ERR_LOADING_PLUGIN} ${pluginId}->${task}->${hookTime}: ` + e)
             return e.stack
         }

@@ -1134,11 +1134,11 @@ const performSynthesis = async () => {
         // The end
         if (window.userSettings.batch_fastMode) {
             Promise.all(window.batch_state.fastModeOutputPromises).then(() => {
-                batch_stopBtn.click()
+                stopBatch()
                 batch_openDirBtn.style.display = "inline-block"
             })
         } else {
-            batch_stopBtn.click()
+            stopBatch()
             batch_openDirBtn.style.display = "inline-block"
         }
 
@@ -1168,7 +1168,7 @@ const pauseResumeBatch = () => {
     }
 }
 
-const stopBatch = () => {
+const stopBatch = (stoppedByUser) => {
     window.electronBrowserWindow.setProgressBar(0)
     window.batch_state.state = false
     window.batch_state.lineIndex = 0
@@ -1190,6 +1190,11 @@ const stopBatch = () => {
             record[1].children[1].style.background = "none"
         }
     })
+
+    const pluginData = {
+        stoppedByUser: stoppedByUser
+    }
+    window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["batch-stop"]["post"], event="post batch-stop", pluginData)
 }
 
 const adjustETA = () => {
@@ -1279,7 +1284,7 @@ batch_main.addEventListener("drop", event => uploadBatchCSVs("drop", event), fal
 
 batch_synthesizeBtn.addEventListener("click", startBatch)
 batch_pauseBtn.addEventListener("click", pauseResumeBatch)
-batch_stopBtn.addEventListener("click", stopBatch)
+batch_stopBtn.addEventListener("click", () => stopBatch(true))
 batch_openDirBtn.addEventListener("click", openOutput)
 
 exports.uploadBatchCSVs = uploadBatchCSVs
