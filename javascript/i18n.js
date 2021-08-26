@@ -11,6 +11,12 @@ window.i18n.setEnglish = () => {
     window.i18n.RENAME_THE_FILE = "Rename the file"
     window.i18n.DELETE_FILE = "Delete file"
 
+    window.i18n.PITCH_AND_ENERGY = "Pitch+Energy"
+    window.i18n.PITCH = "Pitch"
+    window.i18n.ENERGY = "Energy"
+
+    window.i18n.VIEW_IS = "View:"
+    window.i18n.ENERGY_IS = "Energy:"
     window.i18n.LENGTH = "Length:"
     window.i18n.RESET_LETTER = "Reset Letter"
     window.i18n.AUTO_REGEN = "Auto regenerate"
@@ -231,6 +237,7 @@ window.i18n.setEnglish = () => {
     window.i18n.PAUSE = "Pause"
     window.i18n.PLAY = "Play"
     window.i18n.EDIT = "Edit"
+    window.i18n.EDIT_IS = "Edit:"
     window.i18n.RESUME = "Resume"
     window.i18n.STOPPED = "Stopped"
     window.i18n.SYNTHESIZING = "Synthesizing"
@@ -439,6 +446,15 @@ window.i18n.updateUI = () => {
     title.innerHTML = window.i18n.SELECT_VOICE_TYPE
     generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
     keepSampleButton.innerHTML = window.i18n.KEEP_SAMPLE
+
+    i18n_seq_edit_edit.innerHTML = window.i18n.EDIT_IS
+    i18n_seq_edit_view.innerHTML = window.i18n.VIEW_IS
+    i18n_energy.innerHTML = window.i18n.ENERGY_IS
+    seq_edit_view_pitch_energy.innerHTML = window.i18n.PITCH_AND_ENERGY
+    seq_edit_view_pitch.innerHTML = window.i18n.PITCH
+    seq_edit_view_energy.innerHTML = window.i18n.ENERGY
+    seq_edit_edit_pitch.innerHTML = window.i18n.PITCH
+    seq_edit_edit_energy.innerHTML = window.i18n.ENERGY
 
     i18n_vramUsage.innerHTML = window.i18n.VRAM_USAGE
     i18n_length.innerHTML = window.i18n.LENGTH

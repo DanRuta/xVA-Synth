@@ -84,6 +84,18 @@
                     <div id="adv_opts">
                         <div>
                             <div>
+                                <span id="i18n_seq_edit_view">View:</span>
+                                <select id="seq_edit_view_select">
+                                    <option id="seq_edit_view_pitch_energy" value="pitch_energy">Pitch+Energy</option>
+                                    <option id="seq_edit_view_pitch" value="pitch">Pitch</option>
+                                    <option id="seq_edit_view_energy" value="energy">Energy</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span id="i18n_energy">Energy:</span>
+                                <input id="energyNumb" disabled="true" type="number" name="energyNum" min="3.6" step="0.01" max="4.3">
+                            </div>
+                            <div>
                                 <span id="i18n_length">Length:</span>
                                 <input id="letterLengthNumb" disabled="true" type="number" name="lengthNum" min="0.1" step="0.1" max="15">
                             </div>
@@ -104,6 +116,13 @@
                         </div>
 
                         <div>
+                            <div>
+                                <span id="i18n_seq_edit_edit">Edit:</span>
+                                <select id="seq_edit_edit_select">
+                                    <option id="seq_edit_edit_pitch" value="pitch">Pitch</option>
+                                    <option id="seq_edit_edit_energy" value="energy">Energy</option>
+                                </select>
+                            </div>
                             <div id="editor_amplitude_options">
                                 <span>Amplitude</span>
                                 <input id="setting_editor_audio_amplitude" name="" placeholder="1" type="number" step=0.01 min=0>

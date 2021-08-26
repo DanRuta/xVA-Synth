@@ -6,6 +6,7 @@ from pydub import AudioSegment
 
 
 import multiprocessing as mp
+
 def mp_ffmpeg_output (logger, processes, input_paths, output_paths, options):
 
     workItems = []

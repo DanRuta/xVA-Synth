@@ -269,6 +269,7 @@ class FastPitch(nn.Module):
 
         # Pitch over chars
         pitch_pred = self.pitch_predictor(enc_out, enc_mask).permute(0, 2, 1)
+        pitch_pred = torch.clamp(pitch_pred, min=-3, max=3)
 
         if pitch_transform is not None:
             if self.pitch_std[0] == 0.0:
@@ -363,6 +364,7 @@ class FastPitch(nn.Module):
 
             # Pitch over chars
             pitch_pred = self.pitch_predictor(enc_out, enc_mask).permute(0, 2, 1)
+            pitch_pred = torch.clamp(pitch_pred, min=-3, max=3)
 
         else:
             dur_pred = dur_pred_existing

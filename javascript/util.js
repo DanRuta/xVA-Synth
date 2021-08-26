@@ -140,6 +140,7 @@ window.setTheme = (meta) => {
     } catch (e) {}
     try {
         window.sequenceEditor.grabbers.forEach(grabber => grabber.fillStyle = `#${primaryColour}`)
+        window.sequenceEditor.energyGrabbers.forEach(grabber => grabber.fillStyle = `#${primaryColour}`)
     } catch (e) {}
 
     const background = `linear-gradient(0deg, rgba(128,128,128,${window.userSettings.bg_gradient_opacity}) 0px, rgba(0,0,0,0)), url("assets/${meta.join("-")}")`

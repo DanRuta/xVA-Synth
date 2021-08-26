@@ -8,6 +8,7 @@ class Editor {
         this.isCreated = false
         this.sliderBoxes = []
         this.grabbers = []
+        this.energyGrabbers = []
 
         // Data
         this.letters = []
@@ -38,8 +39,14 @@ class Editor {
         this.MAX_LETTER_LENGTH = 100
         this.SPACE_BETWEEN_LETTERS = 5
 
+        this.MIN_ENERGY = 3.6
+        this.MAX_ENERGY = 4.3
+        this.ENERGY_GRABBER_RADIUS = 8
+
         this.multiLetterPitchDelta = undefined
         this.multiLetterStartPitchVals = []
+        this.multiLetterEnergyDelta = undefined
+        this.multiLetterStartEnergyVals = []
 
         this.multiLetterLengthDelta = undefined
         this.multiLetterStartLengthVals = []
@@ -87,6 +94,15 @@ class Editor {
             const mouseY = parseInt(event.layerY)
             this.canvas.style.cursor = "default"
 
+            // Check energy grabber hover
+            const isOnEGrabber = this.energyGrabbers.find(eGrabber => {
+                const grabberX = eGrabber.getXLeft()+eGrabber.sliderBox.width/2-this.ENERGY_GRABBER_RADIUS
+                return (mouseX>grabberX && mouseX<grabberX+this.ENERGY_GRABBER_RADIUS*2+4) && (mouseY>eGrabber.topLeftY-this.ENERGY_GRABBER_RADIUS-2 && mouseY<eGrabber.topLeftY+this.ENERGY_GRABBER_RADIUS+2)
+            })
+            if (isOnEGrabber!=undefined) {
+                this.canvas.style.cursor = "row-resize"
+                return
+            }
             // Check grabber hover
             const isOnGrabber = this.grabbers.find(grabber => {
                 const grabberX = grabber.getXLeft()
@@ -123,6 +139,24 @@ class Editor {
             mouseDownStart.x = mouseX
             mouseDownStart.y = mouseY
 
+            // Check up-down energy dragging
+            const isOnEGrabber = this.energyGrabbers.find(eGrabber => {
+                const grabberX = eGrabber.getXLeft()+eGrabber.sliderBox.width/2-this.ENERGY_GRABBER_RADIUS
+                return (mouseX>grabberX && mouseX<grabberX+this.ENERGY_GRABBER_RADIUS*2+4) && (mouseY>eGrabber.topLeftY-this.ENERGY_GRABBER_RADIUS-2 && mouseY<eGrabber.topLeftY+this.ENERGY_GRABBER_RADIUS+2)
+            })
+            if (isOnEGrabber) {
+
+                const eGrabber = isOnEGrabber
+
+                if (this.letterFocus.length <= 1 || (!event.ctrlKey && !this.letterFocus.includes(eGrabber.index))) {
+                    this.setLetterFocus(this.energyGrabbers.indexOf(eGrabber), event.ctrlKey, event.shiftKey, event.altKey)
+                }
+                this.multiLetterEnergyDelta = eGrabber.topLeftY
+                this.multiLetterStartEnergyVals = this.energyGrabbers.map(eGrabber => eGrabber.topLeftY)
+
+                elemDragged = isOnEGrabber
+                return
+            }
             // Check up-down pitch dragging
             const isOnGrabber = this.grabbers.find(grabber => {
                 const grabberX = grabber.getXLeft()
@@ -196,7 +230,6 @@ class Editor {
                         }
 
 
-
                     } else if (elemDragged.type=="box") {
 
                         let newWidth = elemDragged.dragStart.width + parseInt(event.layerX)-mouseDownStart.x
@@ -211,7 +244,24 @@ class Editor {
                         elemDragged.letter.centerX = elemDragged.leftX + elemDragged.width/2
 
                         letterLengthNumb.value = parseInt(this.dursNew[elemDragged.index]*100)/100
+
+                    } else if (elemDragged.type="energy_slider") {
+
+                        elemDragged.setValueFromCoords(parseInt(event.layerY)-elemDragged.height/2)
+
+                        // If there's a multi-selection, update all of their values, otherwise update the numerical input
+                        if (this.letterFocus.length>1) {
+                            this.letterFocus.forEach(li => {
+                                if (li!=elemDragged.index) {
+                                    this.energyGrabbers[li].setValueFromCoords(this.multiLetterStartEnergyVals[li]+(elemDragged.topLeftY-this.multiLetterEnergyDelta))
+                                }
+                            })
+                        } else {
+                            energyNumb.value = parseInt(this.energyNew[elemDragged.index]*100)/100
+                        }
+
                     }
+
                 }
             }
         })
@@ -230,7 +280,12 @@ class Editor {
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
             this.letterClasses.forEach(letter => {letter.context=this.context;letter.render()})
             this.sliderBoxes.forEach(sliderBox => {sliderBox.context=this.context;sliderBox.render()})
-            this.grabbers.forEach(grabber => {grabber.context=this.context;grabber.render()})
+            if (seq_edit_view_select.value=="pitch_energy" || seq_edit_view_select.value=="pitch") {
+                this.grabbers.forEach(grabber => {grabber.context=this.context;grabber.render()})
+            }
+            if (seq_edit_view_select.value=="pitch_energy" || seq_edit_view_select.value=="energy") {
+                this.energyGrabbers.forEach(eGrabber => {eGrabber.context=this.context;eGrabber.render()})
+            }
         }
         requestAnimationFrame(() => {this.render()})
     }
@@ -243,6 +298,7 @@ class Editor {
         this.letterClasses = []
         this.sliderBoxes = []
         this.grabbers = []
+        this.energyGrabbers = []
 
         let xCounter = 0
         let lastBox = undefined
@@ -274,6 +330,16 @@ class Editor {
             const grabber = new SliderGrabber(this.context, li, sliderBox, (this.LETTERS_Y_OFFSET+1)+(this.SLIDER_GRABBER_H/2)+((this.EDITOR_HEIGHT-2)-this.SLIDER_GRABBER_H)*pitchPercent-this.SLIDER_GRABBER_H/2, width-2, this.SLIDER_GRABBER_H)
             grabber.render()
             this.grabbers.push(grabber)
+
+            // Energy round grabber
+            let energyPercent = 1 - ( (this.energyNew[li]-this.MIN_ENERGY) / (this.MAX_ENERGY-this.MIN_ENERGY)  )
+            energyPercent = Math.max(0, energyPercent)
+            energyPercent = Math.min(energyPercent, 1)
+
+            const topLeftY = (1 - energyPercent) * (this.EDITOR_HEIGHT-2-this.ENERGY_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
+            const energyGrabber = new EnergyGrabber(this.context, li, sliderBox, topLeftY, width-2, this.ENERGY_GRABBER_RADIUS)
+            energyGrabber.render()
+            this.energyGrabbers.push(energyGrabber)
 
             sliderBox.letter = letterClass
             sliderBox.grabber = grabber
@@ -346,12 +412,17 @@ class Editor {
 
 
         if (this.letterFocus.length==1) {
+            if (this.energyNew.length) {
+                energyNumb.value = parseInt(this.energyNew[this.letterFocus[0]])
+            }
             letterPitchNumb.value = parseInt(this.pitchNew[this.letterFocus[0]]*100)/100
             letterLengthNumb.value = parseInt(parseFloat(this.dursNew[this.letterFocus[0]])*100)/100
 
+            energyNumb.disabled = false
             letterPitchNumb.disabled = false
             letterLengthNumb.disabled = false
         } else {
+            energyNumb.disabled = true
             letterPitchNumb.disabled = true
             letterPitchNumb.value = ""
             letterLengthNumb.disabled = true
@@ -470,6 +541,47 @@ class SliderGrabber {
 
 }
 
+
+class EnergyGrabber extends SliderGrabber {
+
+    constructor (context, index, sliderBox, topLeftY, width, height) {
+        super(context, index, sliderBox, topLeftY, width, height)
+        this.type = "energy_slider"
+    }
+
+    render () {
+        this.context.fillStyle = this.fillStyle
+        this.context.beginPath()
+        this.context.lineWidth = 1
+        let radius = window.sequenceEditor.ENERGY_GRABBER_RADIUS
+        let x = this.sliderBox.getXLeft()+1 + this.sliderBox.width/2 // Centered
+        let y = this.topLeftY
+        this.context.arc(x, y, radius, 0, 2 * Math.PI)
+        this.context.fill()
+        this.context.stroke()
+        this.context.lineWidth = 1
+    }
+
+    setValueFromCoords (topLeftY) {
+
+        this.topLeftY = topLeftY
+        this.topLeftY = Math.max(window.sequenceEditor.LETTERS_Y_OFFSET+window.sequenceEditor.ENERGY_GRABBER_RADIUS, this.topLeftY)
+        this.topLeftY = Math.min(this.topLeftY, window.sequenceEditor.LETTERS_Y_OFFSET+(window.sequenceEditor.EDITOR_HEIGHT-2-window.sequenceEditor.ENERGY_GRABBER_RADIUS/2))
+
+        this.percentUp = 1-(this.topLeftY-window.sequenceEditor.LETTERS_Y_OFFSET)/(window.sequenceEditor.EDITOR_HEIGHT-window.sequenceEditor.ENERGY_GRABBER_RADIUS)
+        window.sequenceEditor.energyNew[this.index] = window.sequenceEditor.MAX_ENERGY - (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)*this.percentUp
+    }
+
+    setValueFromValue (value) {
+        value = Math.max(window.sequenceEditor.MIN_ENERGY, value)
+        value = Math.min(value, window.sequenceEditor.MAX_ENERGY)
+        this.percentUp = 1 - ( (value-window.sequenceEditor.MIN_ENERGY) / (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)  )
+        this.topLeftY = (1 - this.percentUp) * (window.sequenceEditor.EDITOR_HEIGHT-2-window.sequenceEditor.ENERGY_GRABBER_RADIUS*2) + (window.sequenceEditor.LETTERS_Y_OFFSET+1)
+    }
+
+}
+
+
 class SliderBox {
     constructor (context, index, leftBox, topY, height, minLetterLength, maxLetterLength) {
         this.type = "box"
@@ -561,12 +673,32 @@ right.addEventListener("click", event => {
     })
     window.sequenceEditor.letterFocus = []
 
+    energyNumb.disabled = true
+    energyNumb.value = ""
     letterPitchNumb.disabled = true
     letterPitchNumb.value = ""
     letterLengthNumb.disabled = true
     letterLengthNumb.value = ""
 })
 
+energyNumb.addEventListener("input", () => {
+    const lpnValue = parseFloat(energyNumb.value) || 0
+    if (window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
+        window.sequenceEditor.hasChanged = true
+    }
+    window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]] = lpnValue
+    window.sequenceEditor.energyGrabbers[window.sequenceEditor.letterFocus[0]].setValueFromValue(lpnValue)
+    kickOffAutoInferTimer()
+})
+energyNumb.addEventListener("change", () => {
+    const lpnValue = parseFloat(energyNumb.value) || 0
+    if (window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
+        window.sequenceEditor.hasChanged = true
+    }
+    window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]] = lpnValue
+    window.sequenceEditor.energyGrabbers[window.sequenceEditor.letterFocus[0]].setValueFromValue(lpnValue)
+    kickOffAutoInferTimer()
+})
 letterPitchNumb.addEventListener("input", () => {
     const lpnValue = parseFloat(letterPitchNumb.value) || 0
     if (window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
@@ -605,6 +737,7 @@ resetLetter_btn.addEventListener("click", () => {
     if (window.sequenceEditor.letterFocus.length==1) {
         letterLengthNumb.value = parseFloat(window.sequenceEditor.dursNew[window.sequenceEditor.letterFocus[0]])
         letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
+        energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]])
     }
 })
 const updateLetterLengthFromInput = () => {
@@ -642,67 +775,133 @@ reset_btn.addEventListener("click", () => {
     if (window.sequenceEditor.letterFocus.length==1) {
         letterLengthNumb.value = parseFloat(window.sequenceEditor.dursNew[window.sequenceEditor.letterFocus[0]])
         letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
+        energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]])
     }
     pace_slid.value = 1
 })
 amplify_btn.addEventListener("click", () => {
-    window.sequenceEditor.pitchNew = window.sequenceEditor.pitchNew.map((p, pi) => {
-        if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(pi)==-1) {
-            return p
+    if (seq_edit_edit_select.value=="pitch") {
+        window.sequenceEditor.pitchNew = window.sequenceEditor.pitchNew.map((p, pi) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(pi)==-1) {
+                return p
+            }
+            const newVal = p*1.025
+            return newVal>0 ? Math.min(3, newVal) : Math.max(-3, newVal)
+        })
+        window.sequenceEditor.grabbers.forEach((slider, l) => {
+            slider.setValueFromValue(window.sequenceEditor.pitchNew[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
         }
-        const newVal = p*1.025
-        return newVal>0 ? Math.min(3, newVal) : Math.max(-3, newVal)
-    })
-    window.sequenceEditor.grabbers.forEach((slider, l) => {
-        slider.setValueFromValue(window.sequenceEditor.pitchNew[l])
-    })
-    if (window.sequenceEditor.letterFocus.length==1) {
-        letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
+    } else if (seq_edit_edit_select.value=="energy") {
+        window.sequenceEditor.energyNew = window.sequenceEditor.energyNew.map((e, ei) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
+                return e
+            }
+            const distFromMiddle = (e-window.sequenceEditor.MIN_ENERGY) - (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)/2
+            const newVal = e + distFromMiddle*0.025
+            return newVal>0 ? Math.min(window.sequenceEditor.MAX_ENERGY, newVal) : Math.max(window.sequenceEditor.MIN_ENERGY, newVal)
+        })
+        window.sequenceEditor.energyGrabbers.forEach((slider, l) => {
+            slider.setValueFromValue(window.sequenceEditor.energyNew[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
     }
     kickOffAutoInferTimer()
 })
 flatten_btn.addEventListener("click", () => {
-    window.sequenceEditor.pitchNew = window.sequenceEditor.pitchNew.map((p,pi) => {
-        if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(pi)==-1) {
-            return p
+    if (seq_edit_edit_select.value=="pitch") {
+        window.sequenceEditor.pitchNew = window.sequenceEditor.pitchNew.map((p,pi) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(pi)==-1) {
+                return p
+            }
+            return p*(1-0.025)
+        })
+        window.sequenceEditor.grabbers.forEach((slider, l) => {
+            slider.setValueFromValue(window.sequenceEditor.pitchNew[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
         }
-        return p*(1-0.025)
-    })
-    window.sequenceEditor.grabbers.forEach((slider, l) => {
-        slider.setValueFromValue(window.sequenceEditor.pitchNew[l])
-    })
-    if (window.sequenceEditor.letterFocus.length==1) {
-        letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
+
+    } else if (seq_edit_edit_select.value=="energy") {
+        window.sequenceEditor.energyNew = window.sequenceEditor.energyNew.map((e,ei) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
+                return e
+            }
+            const distFromMiddle = (e-window.sequenceEditor.MIN_ENERGY) - (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)/2
+            const newVal = e + distFromMiddle*-0.025
+            return newVal>0 ? Math.min(window.sequenceEditor.MAX_ENERGY, newVal) : Math.max(window.sequenceEditor.MIN_ENERGY, newVal)
+        })
+        window.sequenceEditor.energyGrabbers.forEach((slider, l) => {
+            slider.setValueFromValue(window.sequenceEditor.energyNew[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
     }
     kickOffAutoInferTimer()
 })
 increase_btn.addEventListener("click", () => {
-    window.sequenceEditor.pitchNew = window.sequenceEditor.pitchNew.map((p,pi) => {
-        if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(pi)==-1) {
-            return p
+    if (seq_edit_edit_select.value=="pitch") {
+        window.sequenceEditor.pitchNew = window.sequenceEditor.pitchNew.map((p,pi) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(pi)==-1) {
+                return p
+            }
+            return p+0.025
+        })
+        window.sequenceEditor.grabbers.forEach((slider, l) => {
+            slider.setValueFromValue(window.sequenceEditor.pitchNew[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
         }
-        return p+0.025
-    })
-    window.sequenceEditor.grabbers.forEach((slider, l) => {
-        slider.setValueFromValue(window.sequenceEditor.pitchNew[l])
-    })
-    if (window.sequenceEditor.letterFocus.length==1) {
-        letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
+    } else if (seq_edit_edit_select.value=="energy") {
+        window.sequenceEditor.energyNew = window.sequenceEditor.energyNew.map((e,ei) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
+                return e
+            }
+            return e-0.01
+        })
+        window.sequenceEditor.energyGrabbers.forEach((slider, l) => {
+            slider.setValueFromValue(window.sequenceEditor.energyNew[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
     }
     kickOffAutoInferTimer()
 })
 decrease_btn.addEventListener("click", () => {
-    window.sequenceEditor.pitchNew = window.sequenceEditor.pitchNew.map((p,pi) => {
-        if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(pi)==-1) {
-            return p
+    if (seq_edit_edit_select.value=="pitch") {
+        window.sequenceEditor.pitchNew = window.sequenceEditor.pitchNew.map((p,pi) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(pi)==-1) {
+                return p
+            }
+            return p-0.025
+        })
+        window.sequenceEditor.grabbers.forEach((slider, l) => {
+            slider.setValueFromValue(window.sequenceEditor.pitchNew[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
         }
-        return p-0.025
-    })
-    window.sequenceEditor.grabbers.forEach((slider, l) => {
-        slider.setValueFromValue(window.sequenceEditor.pitchNew[l])
-    })
-    if (window.sequenceEditor.letterFocus.length==1) {
-        letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
+    } else if (seq_edit_edit_select.value=="energy") {
+        window.sequenceEditor.energyNew = window.sequenceEditor.energyNew.map((e,ei) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
+                return e
+            }
+            return e+0.01
+        })
+        window.sequenceEditor.energyGrabbers.forEach((slider, l) => {
+            slider.setValueFromValue(window.sequenceEditor.energyNew[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
     }
     kickOffAutoInferTimer()
 })
