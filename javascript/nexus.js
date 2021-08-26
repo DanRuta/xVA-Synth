@@ -124,7 +124,7 @@ nexusLogInButton.addEventListener("click", () => {
         shell.openExternal(`https://www.nexusmods.com/sso?id=${window.nexusState.uuid}&application=${window.nexusState.applicationSlug}`)
 
     } else {
-        nexusNameDisplay.style.opacity = 0
+        nexusNameDisplayContainer.style.opacity = 0
         localStorage.removeItem("nexus_API_key")
         localStorage.removeItem("uuid")
         localStorage.removeItem("connection_token")
@@ -265,7 +265,7 @@ window.showUserName = async () => {
     img.addEventListener("load", () => {
         nexusAvatar.appendChild(img)
         nexusUserName.innerHTML = data.name
-        nexusNameDisplay.style.opacity = 1
+        nexusNameDisplayContainer.style.opacity = 1
     })
 }
 
