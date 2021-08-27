@@ -397,15 +397,15 @@ class FastPitch(nn.Module):
             energy_pred = self.energy_predictor(enc_out + pitch_emb, enc_mask).squeeze(-1)
 
 
-
         if len(plugin_manager.plugins["synth-line"]["mid"]):
+            pitch_pred = pitch_pred.cpu().detach().numpy()
             plugin_data = {
-                "duration": dur_pred.cpu().detach().numpy(), "pitch": pitch_pred.cpu().detach().numpy(), "text": sequence, "is_fresh_synth": pitch_pred_existing is None and dur_pred_existing is None
+                "duration": dur_pred.cpu().detach().numpy(), "pitch": pitch_pred.reshape((pitch_pred.shape[0],pitch_pred.shape[2])), "text": sequence, "is_fresh_synth": pitch_pred_existing is None and dur_pred_existing is None
             }
             plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["mid"], event="mid synth-line", data=plugin_data)
 
             dur_pred = torch.tensor(plugin_data["duration"]).to(self.device)
-            pitch_pred = torch.tensor(plugin_data["pitch"]).to(self.device)
+            pitch_pred = torch.tensor(plugin_data["pitch"]).unsqueeze(1).to(self.device)
 
         # pitch_emb = self.pitch_emb(pitch_pred.unsqueeze(1)).transpose(1, 2)
         pitch_emb = self.pitch_emb(pitch_pred).transpose(1, 2)
@@ -431,9 +431,10 @@ class FastPitch(nn.Module):
 
 
         if len(plugin_manager.plugins["synth-line"]["pre_energy"]):
+            pitch_pred = pitch_pred.cpu().detach().numpy()
             plugin_data = {
                 "duration": dur_pred.cpu().detach().numpy(),
-                "pitch": pitch_pred.cpu().detach().numpy(),
+                "pitch": pitch_pred.reshape((pitch_pred.shape[0],pitch_pred.shape[2])),
                 "energy": energy_pred.cpu().detach().numpy(),
                 "text": sequence, "is_fresh_synth": pitch_pred_existing is None and dur_pred_existing is None
             }

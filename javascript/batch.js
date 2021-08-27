@@ -569,7 +569,7 @@ const startBatch = () => {
     performSynthesis()
 }
 
-const batchChangeVoice = (game, voice) => {
+const batchChangeVoice = (game, voice, modelType) => {
     return new Promise((resolve) => {
         if (!window.batch_state.state) {
             return resolve()
@@ -596,10 +596,10 @@ const batchChangeVoice = (game, voice) => {
         }
 
         const model = window.games[game].models.find(model => model.voiceId==voice).model
-
         doFetch(`http://localhost:8008/loadModel`, {
             method: "Post",
             body: JSON.stringify({
+                "modelType": modelType,
                 "outputs": null,
                 "model": `${window.userSettings[`modelspath_${game}`]}/${voice}`,
                 "model_speakers": model.emb_size,
@@ -609,7 +609,7 @@ const batchChangeVoice = (game, voice) => {
             resolve()
         }).catch(async e => {
             if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
-                await batchChangeVoice(game, voice)
+                await batchChangeVoice(game, voice, modelType)
                 resolve()
             } else {
                 console.log(e)
@@ -692,7 +692,7 @@ const prepareLinesBatchForSynth = () => {
     const records = []
     let firstItemVoiceId = undefined
     let firstItemVocoder = undefined
-    let speaker_i = undefined
+    let speaker_i = 0
 
     for (let i=0; i<Math.min(window.userSettings.batch_batchSize, window.batch_state.lines.length-window.batch_state.lineIndex); i++) {
 
@@ -713,7 +713,7 @@ const prepareLinesBatchForSynth = () => {
         const sequence = record[0].text
         const pitch = undefined // maybe later
         const duration = undefined // maybe later
-        speaker_i = model.games[0].emb_i
+        speaker_i = model.games[0].emb_i || 0
         const pace = record[0].pacing
 
         const tempFileNum = `${Math.random().toString().split(".")[1]}`
@@ -938,7 +938,7 @@ const batchKickOffGeneration = () => {
             }
         }
         const batchPostData = {
-            modelType: records[0].modelType,
+            modelType: records[0][0].modelType,
             batchSize: window.userSettings.batch_batchSize,
             defaultOutFolder: window.userSettings.batchOutFolder,
             pluginsContext: JSON.stringify(window.pluginsContext),
@@ -1119,7 +1119,7 @@ const performSynthesis = async () => {
 
     // Change the voice model if the next line uses a different one
     if (window.batch_state.lastModel!=record[0].voice_id) {
-        await batchChangeVoice(record[0].game_id, record[0].voice_id)
+        await batchChangeVoice(record[0].game_id, record[0].voice_id, record[0].modelType)
         window.batch_state.lastModel = record[0].voice_id
     }
 
