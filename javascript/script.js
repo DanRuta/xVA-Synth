@@ -509,12 +509,14 @@ const makeSample = (src, newSample) => {
             window.sequenceEditor.pacing = editData.pacing
             window.sequenceEditor.letters = editData.pitchEditor ? editData.pitchEditor.letters : editData.letters
             window.sequenceEditor.currentVoice = editData.pitchEditor ? editData.pitchEditor.currentVoice : editData.currentVoice
+            window.sequenceEditor.resetEnergy = (editData.pitchEditor && editData.pitchEditor.resetEnergy) ? editData.pitchEditor.resetEnergy : editData.resetEnergy
             window.sequenceEditor.resetPitch = editData.pitchEditor ? editData.pitchEditor.resetPitch : editData.resetPitch
             window.sequenceEditor.resetDurs = editData.pitchEditor ? editData.pitchEditor.resetDurs : editData.resetDurs
             window.sequenceEditor.letterFocus = []
             window.sequenceEditor.ampFlatCounter = 0
             window.sequenceEditor.hasChanged = false
             window.sequenceEditor.sequence = editData.pitchEditor ? editData.pitchEditor.sequence : editData.sequence
+            window.sequenceEditor.energyNew = (editData.pitchEditor && editData.pitchEditor.energyNew) ? editData.pitchEditor.energyNew : editData.energyNew
             window.sequenceEditor.pitchNew = editData.pitchEditor ? editData.pitchEditor.pitchNew : editData.pitchNew
             window.sequenceEditor.dursNew = editData.pitchEditor ? editData.pitchEditor.dursNew : editData.dursNew
 
@@ -950,12 +952,14 @@ const saveFile = (from, to, skipUIRecord=false) => {
         pacing: parseFloat(pace_slid.value),
         letters: window.sequenceEditor.letters,
         currentVoice: window.sequenceEditor.currentVoice,
+        resetEnergy: window.sequenceEditor.resetEnergy,
         resetPitch: window.sequenceEditor.resetPitch,
         resetDurs: window.sequenceEditor.resetDurs,
         ampFlatCounter: window.sequenceEditor.ampFlatCounter,
         inputSequence: window.sequenceEditor.inputSequence,
         sequence: window.sequenceEditor.sequence,
         pitchNew: window.sequenceEditor.pitchNew,
+        energyNew: window.sequenceEditor.energyNew,
         dursNew: window.sequenceEditor.dursNew,
     }
 

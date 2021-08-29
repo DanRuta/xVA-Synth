@@ -331,15 +331,17 @@ class Editor {
             grabber.render()
             this.grabbers.push(grabber)
 
-            // Energy round grabber
-            let energyPercent = 1 - ( (this.energyNew[li]-this.MIN_ENERGY) / (this.MAX_ENERGY-this.MIN_ENERGY)  )
-            energyPercent = Math.max(0, energyPercent)
-            energyPercent = Math.min(energyPercent, 1)
+            if (this.energyNew && this.energyNew.length) {
+                // Energy round grabber
+                let energyPercent = 1 - ( (this.energyNew[li]-this.MIN_ENERGY) / (this.MAX_ENERGY-this.MIN_ENERGY)  )
+                energyPercent = Math.max(0, energyPercent)
+                energyPercent = Math.min(energyPercent, 1)
 
-            const topLeftY = (1 - energyPercent) * (this.EDITOR_HEIGHT-2-this.ENERGY_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
-            const energyGrabber = new EnergyGrabber(this.context, li, sliderBox, topLeftY, width-2, this.ENERGY_GRABBER_RADIUS)
-            energyGrabber.render()
-            this.energyGrabbers.push(energyGrabber)
+                const topLeftY = (1 - energyPercent) * (this.EDITOR_HEIGHT-2-this.ENERGY_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
+                const energyGrabber = new EnergyGrabber(this.context, li, sliderBox, topLeftY, width-2, this.ENERGY_GRABBER_RADIUS)
+                energyGrabber.render()
+                this.energyGrabbers.push(energyGrabber)
+            }
 
             sliderBox.letter = letterClass
             sliderBox.grabber = grabber
