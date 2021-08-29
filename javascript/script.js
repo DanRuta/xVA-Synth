@@ -959,6 +959,17 @@ const saveFile = (from, to, skipUIRecord=false) => {
         dursNew: window.sequenceEditor.dursNew,
     }
 
+    let outputFileName = to.split("/").reverse()[0].split(".").reverse().slice(1, 1000)
+    const toExt = to.split(".").reverse()[0]
+
+    if (window.userSettings.filenameNumericalSeq) {
+        outputFileName = outputFileName[0]+"."+outputFileName.slice(1,1000).reverse().join(".")
+    } else {
+        outputFileName = outputFileName.reverse().join(".")
+    }
+    to = `${to.split("/").reverse().slice(1,10000).reverse().join("/")}/${outputFileName}`
+
+
     if (!setting_audio_ffmpeg_preview.checked && window.userSettings.audio.ffmpeg) {
         spinnerModal(window.i18n.SAVING_AUDIO_FILE)
 
@@ -981,7 +992,7 @@ const saveFile = (from, to, skipUIRecord=false) => {
                     window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${window.i18n.INPUT}: ${from}<br>${window.i18n.OUTPUT}: ${to}<br><br>${res}`)
                 } else {
                     if (window.userSettings.outputJSON) {
-                        fs.writeFileSync(`${to}.json`, JSON.stringify(jsonDataOut, null, 4))
+                        fs.writeFileSync(`${to}.${toExt}.json`, JSON.stringify(jsonDataOut, null, 4))
                     }
                     if (!skipUIRecord) {
                         refreshRecordsList(containerFolderPath)
@@ -1000,7 +1011,7 @@ const saveFile = (from, to, skipUIRecord=false) => {
 
         const allFiles = fs.readdirSync(`${path}/output`).filter(fname => fname.includes(from.split("/").reverse()[0].split(".")[0]))
         const toFolder = to.split("/").reverse().slice(1, 1000).reverse().join("/")
-        const outputFileName = to.split("/").reverse()[0].split(".").reverse().slice(1, 1000).join(".")
+
 
         allFiles.forEach(fname => {
             const ext = fname.split(".").reverse()[0]
@@ -1016,7 +1027,7 @@ const saveFile = (from, to, skipUIRecord=false) => {
                     }
                 } else {
                     if (window.userSettings.outputJSON) {
-                        fs.writeFileSync(`${to}.json`, JSON.stringify(jsonDataOut, null, 4))
+                        fs.writeFileSync(`${to}.${toExt}.json`, JSON.stringify(jsonDataOut, null, 4))
                     }
                     if (!skipUIRecord) {
                         refreshRecordsList(containerFolderPath)
@@ -1048,13 +1059,15 @@ window.keepSampleFunction = shiftClick => {
             try {
                 existingFiles = fs.readdirSync(toLocation.slice(0, toLocation.length-1).join("/")).filter(fname => !fname.endsWith(".json"))
             } catch (e) {
+                console.log(e)
             }
             existingFiles = existingFiles.filter(fname => fname.includes(toLocation[toLocation.length-1]))
             existingFiles = existingFiles.map(fname => {
                 const parts = fname.split(".")
-                if (parts.length>2 && parts[parts.length-2].length) {
-                    if (parseInt(parts[parts.length-2]) != NaN) {
-                        return parseInt(parts[parts.length-2])
+                parts.reverse()
+                if (parts.length>2 && parts.reverse()[0].length) {
+                    if (parseInt(parts[0]) != NaN) {
+                        return parseInt(parts[0])
                     }
                 }
                 return null
