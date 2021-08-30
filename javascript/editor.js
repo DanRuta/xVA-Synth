@@ -415,7 +415,7 @@ class Editor {
 
         if (this.letterFocus.length==1) {
             if (this.energyNew.length) {
-                energyNumb.value = parseInt(this.energyNew[this.letterFocus[0]])
+                energyNumb.value = parseFloat(this.energyNew[this.letterFocus[0]])
             }
             letterPitchNumb.value = parseInt(this.pitchNew[this.letterFocus[0]]*100)/100
             letterLengthNumb.value = parseInt(parseFloat(this.dursNew[this.letterFocus[0]])*100)/100
