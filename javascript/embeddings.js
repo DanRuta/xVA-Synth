@@ -335,7 +335,7 @@ window.initEmbeddingsScene = () => {
             } else {
                 gender = window.embeddingsState.allData[voiceId].voiceGender
             }
-            gender = gender.toLowerCase()
+            gender = gender ? gender.toLowerCase() : "other"
 
             // if (!enabledGames.includes(game)) {
             //     return
