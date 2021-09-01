@@ -1,3 +1,4 @@
+import re
 import json
 import argparse
 
@@ -71,6 +72,7 @@ class FastPitch(object):
         cleaned_text_sequences = []
         for record in linesBatch:
             text = record[0]
+            text = re.sub(r'[^a-zA-Z\s\(\)\[\]0-9\?\.\,\!\']+', '', text)
             sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
             cleaned_text_sequences.append(sequence_to_text("english_basic", sequence))
             text = torch.LongTensor(sequence)
@@ -122,6 +124,7 @@ class FastPitch(object):
         sampling_rate = 22050
         denoising_strength = 0.01
 
+        text = re.sub(r'[^a-zA-Z\s\(\)\[\]0-9\?\.\,\!\']+', '', text)
         sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
         cleaned_text = sequence_to_text("english_basic", sequence)
         text = torch.LongTensor(sequence)
@@ -130,6 +133,7 @@ class FastPitch(object):
         with torch.no_grad():
 
             if old_sequence is not None:
+                old_sequence = re.sub(r'[^a-zA-Z\s\(\)\[\]0-9\?\.\,\!\']+', '', old_sequence)
                 old_sequence = text_to_sequence(old_sequence, "english_basic", ['english_cleaners'])
                 old_sequence = torch.LongTensor(old_sequence)
                 old_sequence = pad_sequence([old_sequence], batch_first=True).to(self.models_manager.device)
