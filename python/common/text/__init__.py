@@ -40,15 +40,18 @@ def sequence_to_text(symbol_alphabet, sequence):
   _id_to_symbol = {i: s for i, s in enumerate(get_symbols(symbol_alphabet))}
 
   '''Converts a sequence of IDs back to a string'''
-  result = ''
+  # result = ''
+  result = []
   for symbol_id in sequence:
     if symbol_id in _id_to_symbol:
       s = _id_to_symbol[symbol_id]
       # Enclose ARPAbet back in curly braces:
       if len(s) > 1 and s[0] == '@':
         s = '{%s}' % s[1:]
-      result += s
-  return result.replace('}{', ' ')
+      # result += s
+      result.append(s)
+  return "|".join(result)
+  # return result.replace('}{', ' ')
 
 
 def _clean_text(text, cleaner_names):

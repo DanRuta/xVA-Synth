@@ -62,15 +62,18 @@ class TextProcessing(object):
         return sequence
 
     def sequence_to_text(self, sequence):
-        result = ''
+        # result = ''
+        result = []
         for symbol_id in sequence:
             if symbol_id in self.id_to_symbol:
                 s = self.id_to_symbol[symbol_id]
                 # Enclose ARPAbet back in curly braces:
                 if len(s) > 1 and s[0] == '@':
                     s = '{%s}' % s[1:]
-                result += s
-        return result.replace('}{', ' ')
+                # result += s
+                result.append(s)
+        return "|".join(result)
+        # return result.replace('}{', ' ')
 
     def clean_text(self, text):
         for name in self.cleaner_names:

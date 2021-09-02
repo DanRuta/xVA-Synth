@@ -710,7 +710,7 @@ generateVoiceButton.addEventListener("click", () => {
         if (editorContainer.innerHTML && editorContainer.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice)) {
             pitch = window.sequenceEditor.pitchNew.map(v=> v==undefined?0:v)
             duration = window.sequenceEditor.dursNew.map(v => v*pace_slid.value).map(v=> v==undefined?0:v)
-            energy = window.sequenceEditor.energyNew.map(v => v==undefined?0:v)
+            energy = window.sequenceEditor.energyNew.map(v => v==undefined?0:v).filter(v => !isNaN(v))
             isFreshRegen = false
         }
         window.sequenceEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
@@ -745,12 +745,12 @@ generateVoiceButton.addEventListener("click", () => {
             let pitchData = res[0]
             let durationsData = res[1]
             let energyData = res[2]
-            let cleanedSequence = res[3]
+            let cleanedSequence = res[3].split("|").map(c=>c.replaceAll("{", "").replaceAll("}", "").replace(/\s/g, "_"))
             const start_index = res[4]
             const end_index = res[5]
             pitchData = pitchData.split(",").map(v => parseFloat(v))
             if (energyData.length) {
-                energyData = energyData.split(",").map(v => parseFloat(v))
+                energyData = energyData.split(",").map(v => parseFloat(v)).filter(v => !isNaN(v))
             } else {
                 energyData = []
             }
@@ -767,7 +767,7 @@ generateVoiceButton.addEventListener("click", () => {
                     window.sequenceEditor.resetEnergy = energyData
                 }
 
-                window.sequenceEditor.letters = cleanedSequence.replace(/\s/g, "_").split("")
+                window.sequenceEditor.letters = cleanedSequence
                 window.sequenceEditor.pitchNew = pitchData.map(p=>p)
                 window.sequenceEditor.dursNew = durationsData.map(v=>v)
                 window.sequenceEditor.energyNew = energyData.map(v=>v)
@@ -829,7 +829,7 @@ generateVoiceButton.addEventListener("click", () => {
                     voiceId: window.currentModel.voiceId,
                     voiceName: window.currentModel.voiceName,
                     inputSequence: sequence,
-                    letters: cleanedSequence.replace(/\s/g, "_").split(""),
+                    letters: cleanedSequence,
                     pitch: pitchData.map(p=>p),
                     energy: energyData.map(p=>p),
                     durations: durationsData.map(v=>v)

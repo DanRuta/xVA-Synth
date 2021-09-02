@@ -250,64 +250,6 @@ class FastPitch(nn.Module):
         mel_out = self.proj(dec_out)
         return (mel_out, dec_mask, dur_pred, log_dur_pred, pitch_pred, pitch_tgt, energy_pred, energy_tgt, attn_soft, attn_hard, attn_hard_dur, attn_logprob)
 
-    def infer(self, inputs, pace=1.0, dur_tgt=None, pitch_tgt=None, energy_tgt=None, pitch_transform=None, max_duration=75, speaker=0):
-
-        if self.speaker_emb is None:
-            spk_emb = 0
-        else:
-            speaker = (torch.ones(inputs.size(0)).long().to(inputs.device)
-                       * speaker)
-            spk_emb = self.speaker_emb(speaker).unsqueeze(1)
-            spk_emb.mul_(self.speaker_emb_weight)
-
-        # Input FFT
-        enc_out, enc_mask = self.encoder(inputs, conditioning=spk_emb)
-
-        # Predict durations
-        log_dur_pred = self.duration_predictor(enc_out, enc_mask).squeeze(-1)
-        dur_pred = torch.clamp(torch.exp(log_dur_pred) - 1, 0, max_duration)
-
-        # Pitch over chars
-        pitch_pred = self.pitch_predictor(enc_out, enc_mask).permute(0, 2, 1)
-        pitch_pred = torch.clamp(pitch_pred, min=-3, max=3)
-
-        if pitch_transform is not None:
-            if self.pitch_std[0] == 0.0:
-                # XXX LJSpeech-1.1 defaults
-                mean, std = 218.14, 67.24
-            else:
-                mean, std = self.pitch_mean[0], self.pitch_std[0]
-            pitch_pred = pitch_transform(pitch_pred, enc_mask.sum(dim=(1,2)), mean, std)
-        if pitch_tgt is None:
-            pitch_emb = self.pitch_emb(pitch_pred).transpose(1, 2)
-        else:
-            pitch_emb = self.pitch_emb(pitch_tgt).transpose(1, 2)
-
-        enc_out = enc_out + pitch_emb
-
-        # Predict energy
-        if self.energy_conditioning:
-
-            if energy_tgt is None:
-                energy_pred = self.energy_predictor(enc_out, enc_mask).squeeze(-1)
-                energy_emb = self.energy_emb(energy_pred.unsqueeze(1)).transpose(1, 2)
-            else:
-                energy_emb = self.energy_emb(energy_tgt).transpose(1, 2)
-
-            enc_out = enc_out + energy_emb
-        else:
-            energy_pred = None
-
-        len_regulated, dec_lens = regulate_len(
-            dur_pred if dur_tgt is None else dur_tgt, enc_out, pace, mel_max_len=None)
-
-        dec_out, dec_mask = self.decoder(len_regulated, dec_lens)
-        mel_out = self.proj(dec_out)
-        # mel_lens = dec_mask.squeeze(2).sum(axis=1).long()
-        mel_out = mel_out.permute(0, 2, 1)  # For inference.py
-        return mel_out, dec_lens, dur_pred, pitch_pred, energy_pred
-
-
     def infer_using_vals (self, logger, plugin_manager, sequence, pace, enc_out, max_duration, enc_mask, dur_pred_existing, pitch_pred_existing, energy_pred_existing, old_sequence, new_sequence):
         start_index = None
         end_index = None
