@@ -777,20 +777,30 @@ const addActionButtons = (records, ri) => {
         }
 
         // Change app theme to the voice's game
-        window.changeGame(window.gameAssets[records[ri][0].game_id])
+        if (window.currentGame[0]!=records[ri][0].game_id) {
+            window.changeGame(window.gameAssets[records[ri][0].game_id])
+        }
 
-        // Simulate voice loading through the UI
-        const voiceName = window.games[records[ri][0].game_id].models.find(model => model.voiceId==records[ri][0].voice_id).voiceName
-        const voiceButton = Array.from(voiceTypeContainer.children).find(button => button.innerHTML==voiceName)
-        voiceButton.click()
-        generateVoiceButton.click()
         dialogueInput.value = records[ri][0].text
 
-        let audioPreviewPath = records[ri][0].fileOutputPath
-        if (audioPreviewPath.startsWith("./")) {
-            audioPreviewPath = window.userSettings.batchOutFolder + audioPreviewPath.replace("./", "/")
+        // Simulate voice loading through the UI
+        if (!window.currentModel || window.currentModel.voiceId != records[ri][0].voice_id) {
+            const voiceName = window.games[records[ri][0].game_id].models.find(model => model.voiceId==records[ri][0].voice_id).voiceName
+            const voiceButton = Array.from(voiceTypeContainer.children).find(button => button.innerHTML==voiceName)
+            voiceButton.click()
+            vocoder_select.value = records[ri][0].vocoder=="hifi" ? `${records[ri][0].game_id}/${records[ri][0].voice_id}.hg.pt` : records[ri][0].vocoder
+            generateVoiceButton.click()
         }
-        keepSampleButton.dataset.newFileLocation = "BATCH_EDIT"+audioPreviewPath
+        window.closeModal(batchGenerationContainer)
+
+        setTimeout(() => {
+            let audioPreviewPath = records[ri][0].fileOutputPath
+            if (audioPreviewPath.startsWith("./")) {
+                audioPreviewPath = window.userSettings.batchOutFolder + audioPreviewPath.replace("./", "/")
+            }
+            keepSampleButton.dataset.newFileLocation = "BATCH_EDIT"+audioPreviewPath
+            generateVoiceButton.click()
+        }, 500)
     })
     records[ri][1].children[2].appendChild(playButton)
     records[ri][1].children[2].appendChild(editButton)
