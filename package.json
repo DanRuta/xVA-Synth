@@ -15,6 +15,7 @@
     "electron": "2.0.0"
   },
   "dependencies": {
+    "discord-rich-presence": "0.0.8",
     "fs-extra": "^9.1.0",
     "node-fetch": "^2.1.2",
     "node-nvidia-smi": "^1.0.0",

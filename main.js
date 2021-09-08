@@ -15,9 +15,10 @@ if (PRODUCTION) {
 }
 
 let mainWindow
+let discordClient
+let discordClientStart = Date.now()
 
 const createWindow = () => {
-
     mainWindow = new BrowserWindow({
         width: 1200,
         height: 1000,
@@ -39,6 +40,34 @@ const createWindow = () => {
 
 ipcMain.on("resize", (event, arg) => {
     mainWindow.setSize(arg.width, arg.height)
+})
+ipcMain.on("updateDiscord", (event, arg) => {
+
+    // Disconnect if turned off
+    if (!Object.keys(arg).includes("details")) {
+        if (discordClient) {
+            try {
+                discordClient.disconnect()
+            } catch (e) {}
+        }
+        discordClient = undefined
+        return
+    }
+
+    if (!discordClient) {
+        discordClient = require('discord-rich-presence')('885096702648938546')
+    }
+
+    discordClient.updatePresence({
+        state: 'Synthesizing lines',
+        details: arg.details,
+        startTimestamp: discordClientStart,
+        largeImageKey: 'xvasynth_512_512',
+        largeImageText: "xVASynth",
+        smallImageKey: 'xvasynth_512_512',
+        smallImageText: "xVASynth",
+        instance: true,
+    })
 })
 
 // This method will be called when Electron has finished

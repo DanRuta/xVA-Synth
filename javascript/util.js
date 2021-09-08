@@ -143,8 +143,14 @@ window.closeModal = (container=undefined, notThisOne=undefined) => {
 
 
 window.setTheme = (meta) => {
+
     const primaryColour = meta[1]
     const secondaryColour = meta.length==5?meta[2]:undefined
+    const gameName = (meta.length==5 ? meta[4] : meta[3]).split(".")[0]
+
+    if (window.userSettings.showDiscordStatus) {
+        ipcRenderer.send('updateDiscord', {details: gameName})
+    }
 
     // Change batch panel colours, if it is initialized
     try {

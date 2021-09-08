@@ -48,6 +48,9 @@ if (!Object.keys(window.userSettings).includes("sliderTooltip")) { // For backwa
 if (!Object.keys(window.userSettings).includes("darkPrompt")) { // For backwards compatibility
     window.userSettings.darkPrompt = false
 }
+if (!Object.keys(window.userSettings).includes("showDiscordStatus")) { // For backwards compatibility
+    window.userSettings.showDiscordStatus = true
+}
 if (!Object.keys(window.userSettings).includes("prompt_fontSize")) { // For backwards compatibility
     window.userSettings.prompt_fontSize = 13
 }
@@ -187,6 +190,7 @@ const updateUIWithSettings = () => {
     setting_keepPaceOnNew.checked = window.userSettings.keepPaceOnNew
     setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
     setting_darkprompt.checked = window.userSettings.darkPrompt
+    setting_show_discord_status.checked = window.userSettings.showDiscordStatus
     setting_prompt_fontSize.value = window.userSettings.prompt_fontSize
     setting_bg_gradient_opacity.value = window.userSettings.bg_gradient_opacity
     setting_areload_voices.checked = window.userSettings.autoReloadVoices
@@ -429,6 +433,13 @@ const setPromptTheme = () => {
         dialogueInput.style.color = "black"
     }
 }
+const updateDiscord = () => {
+    let gameName = undefined
+    if (window.userSettings.showDiscordStatus && window.currentGame) {
+        gameName = (window.currentGame.length==5 ? window.currentGame[4] : window.currentGame[3]).split(".")[0]
+    }
+    ipcRenderer.send('updateDiscord', {details: gameName})
+}
 const setPromptFontSize = () => {
     dialogueInput.style.fontSize = `${window.userSettings.prompt_fontSize}pt`
 }
@@ -452,6 +463,7 @@ initMenuSetting(setting_output_json, "outputJSON", "checkbox")
 initMenuSetting(setting_keepEditorOnVoiceChange, "keepEditorOnVoiceChange", "checkbox")
 initMenuSetting(setting_output_num_seq, "filenameNumericalSeq", "checkbox")
 initMenuSetting(setting_darkprompt, "darkPrompt", "checkbox", setPromptTheme)
+initMenuSetting(setting_show_discord_status, "showDiscordStatus", "checkbox", updateDiscord)
 initMenuSetting(setting_prompt_fontSize, "prompt_fontSize", "number", setPromptFontSize)
 initMenuSetting(setting_bg_gradient_opacity, "bg_gradient_opacity", "number", updateBackground)
 initMenuSetting(setting_use_error_sound, "useErrorSound", "checkbox")

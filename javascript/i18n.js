@@ -42,6 +42,7 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_KEEP_PACING = "Keep the same pacing value on new text generations"
     window.i18n.SETTINGS_TOOLTIP = "Show the sliders tooltip"
 
+    window.i18n.SETTINGS_SHOW_DISCORD = "Show Discord status"
     window.i18n.SETTINGS_DARKMODE = "Dark mode text prompt"
     window.i18n.SETTINGS_PROMPTSIZE = "Text prompt font size"
     window.i18n.SETTINGS_BG_FADE = "Background image fade opacity"
@@ -568,6 +569,7 @@ window.i18n.updateUI = () => {
     i18n_setting_keeppacing.innerHTML = window.i18n.SETTINGS_KEEP_PACING
     // i18n_setting_tooltip.innerHTML = window.i18n.SETTINGS_TOOLTIP
 
+    i18n_showDiscordStatus.innerHTML = window.i18n.SETTINGS_SHOW_DISCORD
     i18n_setting_darkmode.innerHTML = window.i18n.SETTINGS_DARKMODE
     i18n_setting_promptfontsize.innerHTML = window.i18n.SETTINGS_PROMPTSIZE
     i18n_setting_bg_fade.innerHTML = window.i18n.SETTINGS_BG_FADE
