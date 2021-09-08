@@ -182,7 +182,7 @@ window.i18n.setEnglish = () => {
     window.i18n.S2S_EXPERIMENTALNOTE = "The speech to speech feature is in active research/development. All is subject to change, and will be improved over time. This notice will be removed when the research is complete."
     window.i18n.S2S_RECORD_NOTE = "You can record a few seconds of silence to capture background noise to remove from your future recordings."
     window.i18n.S2S_RECORD_NOISE = "Record noise"
-    window.i18n.S2S_INSTRUCTIONS = "Pick from the available xVASpeech models which voice sounds most like yours. If you have an xVASpeech model trained for your own voice, make sure you use that one. You can record a short sample here, for comparison. Ensure the volume is also similar. For this to work well, your voice/microphone should sound as similar as possible to the audio of the voice you select."
+    window.i18n.S2S_INSTRUCTIONS = "Pick from the available FastPitch 1.1 models which voice sounds most like yours. If you have a model trained for your own voice, make sure you use that one. You can record a short sample here, for comparison. For this to work well, your voice/microphone/volume should sound as similar as possible to the audio of the voice you select."
     window.i18n.S2S_RECORD_SAMPLE = "Record sample"
     window.i18n.FEMALE = "Female"
     window.i18n.MALE = "Male"
@@ -598,7 +598,7 @@ window.i18n.updateUI = () => {
     i18n_setting_microphone.innerHTML = window.i18n.SETTINGS_MICROPHONE
     i18n_setting_s2s_voice.innerHTML = window.i18n.SETTINGS_S2S_VOICE
     i18n_setting_autogeneratevoice.innerHTML = window.i18n.SETTINGS_AUTOGENERATEVOICE
-    i18n_setting_s2s_preadjust_pitch.innerHTML = window.i18n.SETTINGS_S2S_PREADJUST_PITCH
+    // i18n_setting_s2s_preadjust_pitch.innerHTML = window.i18n.SETTINGS_S2S_PREADJUST_PITCH
     i18n_setting_s2s_bgnoise.innerHTML = window.i18n.SETTINGS_S2S_BGNOISE
     s2s_settingsRecNoiseBtn.innerHTML = window.i18n.SETTINGS_S2S_RECNOISE
     i18n_setting_s2s_bgnoise_strength.innerHTML = window.i18n.SETTINGS_S2S_BGNOISE_STRENGTH

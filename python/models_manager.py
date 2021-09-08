@@ -46,6 +46,14 @@ class ModelsManager(object):
                 from python.fastpitch1_1.model import FastPitch1_1
                 self.models_bank[model_key] = FastPitch1_1(self.logger, self.PROD, self.device, self)
 
+            elif model_key=="s2s_fastpitch1_1":
+                from python.fastpitch1_1.model import FastPitch1_1 as S2S_FastPitch1_1
+                self.models_bank[model_key] = S2S_FastPitch1_1(self.logger, self.PROD, self.device, self)
+
+            elif model_key=="wav2vec2":
+                from python.wav2vec2.model import Wav2Vec2
+                self.models_bank[model_key] = Wav2Vec2(self.logger, self.PROD, self.device, self)
+
             self.models_bank[model_key].model = self.models_bank[model_key].model.to(self.device)
         except:
             self.logger.info(traceback.format_exc())

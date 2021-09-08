@@ -54,7 +54,7 @@ class FastPitch1_1(object):
 
         symbols_embedding_dim = 384
         self.logger.info(f'n_speakers: {n_speakers}')
-        if n_speakers is None:
+        if n_speakers is None or n_speakers==0:
             self.model.speaker_emb = None
         else:
             self.model.speaker_emb = nn.Embedding(1 if n_speakers is None else n_speakers, symbols_embedding_dim).to(self.device)
@@ -178,5 +178,9 @@ class FastPitch1_1(object):
         self.device = device
         self.model = self.model.to(device)
         self.model.device = device
+
+
+    def run_speech_to_speech (self, audiopath, text):
+        return self.model.run_speech_to_speech(self.device, self.logger, audiopath, text)
 
 

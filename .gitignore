@@ -31,3 +31,4 @@ release-builds
 package-lock.json
 app.log
 batch
+python/wav2vec2/pytorch_model.bin

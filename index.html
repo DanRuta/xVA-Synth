@@ -63,7 +63,9 @@
                         <svg id="mic_progress_SVG" height="75" width="75">
                           <circle id="mic_progress_SVG_circle" stroke-width="5" fill="transparent" stroke="white" r="35" cx="37" cy="37" />
                         </svg>
-
+                        <div id="s2s_voiceId_selected_label_container" style="width: 125px;display: flex;justify-content: center;">
+                            <div id="s2s_voiceId_selected_label" style="display:none;color: white;margin-left: 10px;position: absolute;background: rgba(0,0,0,0.5);z-index: 100;padding: 2px;font-size: 9pt;margin-top: -10px;"></div>
+                        </div>
                     </div>
                     <textarea id="dialogueInput" placeholder="Type your text here..."></textarea>
                 </div>
@@ -446,12 +448,12 @@
                         </div>
                     </div>
 
-                    <div>
+                    <!-- <div>
                         <div id="i18n_setting_s2s_preadjust_pitch">Pre-adjust the input audio average pitch to match the xVASpeech model voice's</div>
                         <div>
                             <input id="setting_s2s_prePitchShift" type="checkbox" name="">
                         </div>
-                    </div>
+                    </div> -->
 
                     <div style="min-height: 65px;">
                         <div id="i18n_setting_s2s_bgnoise">Remove background noise from microphone. You need to record a background noise clip first. (requires sox >= v14.4.2) </div>

@@ -38,6 +38,56 @@ from python.fastpitch1_1.transformer import FFTransformer
 from python.fastpitch1_1.attention import ConvAttention
 from python.fastpitch1_1.alignment import b_mas, mas_width1
 
+from python.common.utils import load_wav_to_torch
+from librosa.filters import mel as librosa_mel_fn
+from python.common.stft import STFT
+from python.common.utils import mask_from_lens
+from python.common.audio_processing import dynamic_range_compression, dynamic_range_decompression
+from python.common.text.text_processing import TextProcessing
+
+class TacotronSTFT(torch.nn.Module):
+    def __init__(self, filter_length=1024, hop_length=256, win_length=1024,
+                 n_mel_channels=80, sampling_rate=22050, mel_fmin=0.0,
+                 mel_fmax=8000.0):
+        super(TacotronSTFT, self).__init__()
+        self.n_mel_channels = n_mel_channels
+        self.sampling_rate = sampling_rate
+        self.stft_fn = STFT(filter_length, hop_length, win_length)
+        mel_basis = librosa_mel_fn(sampling_rate, filter_length, n_mel_channels, mel_fmin, mel_fmax)
+        mel_basis = torch.from_numpy(mel_basis).float()
+        self.register_buffer('mel_basis', mel_basis)
+
+    def spectral_normalize(self, magnitudes):
+        output = dynamic_range_compression(magnitudes)
+        return output
+
+    def spectral_de_normalize(self, magnitudes):
+        output = dynamic_range_decompression(magnitudes)
+        return output
+
+    def mel_spectrogram(self, y):
+        """Computes mel-spectrograms from a batch of waves
+        PARAMS
+        ------
+        y: Variable(torch.FloatTensor) with shape (B, T) in range [-1, 1]
+
+        RETURNS
+        -------
+        mel_output: torch.FloatTensor of shape (B, n_mel_channels, T)
+        """
+        assert(torch.min(y.data) >= -1)
+        assert(torch.max(y.data) <= 1)
+
+        magnitudes, phases = self.stft_fn.transform(y)
+        magnitudes = magnitudes.data
+        mel_output = torch.matmul(self.mel_basis, magnitudes)
+        mel_output = self.spectral_normalize(mel_output)
+        return mel_output
+
+# For Speech-to-Speech
+tp = TextProcessing("english_basic", ["english_cleaners"])
+stft = TacotronSTFT(1024, 256, 1024, 80, 22050, 0, 8000)
+
 
 def regulate_len(durations, enc_out, pace: float = 1.0, mel_max_len: Optional[int] = None):
     """If target=None, then predicted durations are applied"""
@@ -106,6 +156,8 @@ class FastPitch(nn.Module):
     def __init__(self, n_mel_channels, n_symbols, padding_idx, symbols_embedding_dim, in_fft_n_layers, in_fft_n_heads, in_fft_d_head, in_fft_conv1d_kernel_size, in_fft_conv1d_filter_size, in_fft_output_size, p_in_fft_dropout, p_in_fft_dropatt, p_in_fft_dropemb, out_fft_n_layers, out_fft_n_heads, out_fft_d_head, out_fft_conv1d_kernel_size, out_fft_conv1d_filter_size, out_fft_output_size, p_out_fft_dropout, p_out_fft_dropatt, p_out_fft_dropemb, dur_predictor_kernel_size, dur_predictor_filter_size, p_dur_predictor_dropout, dur_predictor_n_layers, pitch_predictor_kernel_size, pitch_predictor_filter_size, p_pitch_predictor_dropout, pitch_predictor_n_layers, pitch_embedding_kernel_size, energy_conditioning, energy_predictor_kernel_size, energy_predictor_filter_size, p_energy_predictor_dropout, energy_predictor_n_layers, energy_embedding_kernel_size, n_speakers, speaker_emb_weight, pitch_conditioning_formants=1, device=None):
         super(FastPitch, self).__init__()
 
+        self.device = None
+
         self.encoder = FFTransformer(
             n_layer=in_fft_n_layers, n_head=in_fft_n_heads, d_model=symbols_embedding_dim, d_head=in_fft_d_head, d_inner=in_fft_conv1d_filter_size, kernel_size=in_fft_conv1d_kernel_size, dropout=p_in_fft_dropout, dropatt=p_in_fft_dropatt, dropemb=p_in_fft_dropemb, embed_input=True, d_embed=symbols_embedding_dim, n_embed=n_symbols, padding_idx=padding_idx)
 
@@ -147,6 +199,11 @@ class FastPitch(nn.Module):
 
         self.attention = ConvAttention(n_mel_channels, 0, symbols_embedding_dim, use_query_proj=True, align_query_enc_type='3xconv')
 
+
+
+
+
+
     def binarize_attention(self, attn, in_lens, out_lens):
         """For training purposes only. Binarizes attention with MAS.
            These will no longer recieve a gradient.
@@ -174,7 +231,7 @@ class FastPitch(nn.Module):
         with torch.no_grad():
             attn_cpu = attn.data.cpu().numpy()
             attn_out = b_mas(attn_cpu, in_lens.cpu().numpy(), out_lens.cpu().numpy(), width=1)
-        return torch.from_numpy(attn_out).to(attn.get_device())
+        return torch.from_numpy(attn_out).to(self.device)
 
     def forward(self, inputs, use_gt_pitch=True, pace=1.0, max_duration=75):
 
@@ -235,6 +292,7 @@ class FastPitch(nn.Module):
             energy_tgt = average_pitch(energy_dense.unsqueeze(1), dur_tgt)
             energy_tgt = torch.log(1.0 + energy_tgt)
 
+            energy_tgt = torch.clamp(energy_tgt, min=3.7, max=4.3)
             energy_emb = self.energy_emb(energy_tgt)
             energy_tgt = energy_tgt.squeeze(1)
             enc_out = enc_out + energy_emb.transpose(1, 2)
@@ -370,6 +428,7 @@ class FastPitch(nn.Module):
                     for i in range(len(old_sequence_np)-end_index):
                         energy_pred_np[-i-1] = energy_pred_existing_np[-i-1]
                 energy_pred = torch.tensor(energy_pred_np).to(self.device).unsqueeze(0)
+                energy_pred = torch.clamp(energy_pred, min=3.7, max=4.3)
 
 
         if len(plugin_manager.plugins["synth-line"]["pre_energy"]):
@@ -409,7 +468,7 @@ class FastPitch(nn.Module):
         # Input FFT
         enc_out, enc_mask = self.encoder(inputs, conditioning=spk_emb)
 
-        if (pitch_data is not None) and (pitch_data[0] is not None and len(pitch_data[0])) and (pitch_data[1] is not None and len(pitch_data[1])) and (pitch_data[2] is not None and len(pitch_data[2])):
+        if (pitch_data is not None) and (pitch_data[0] is not None and len(pitch_data[0])) and (pitch_data[1] is not None and len(pitch_data[1])):
             pitch_pred, dur_pred, energy_pred = pitch_data
             dur_pred = torch.tensor(dur_pred)
             dur_pred = dur_pred.view((1, dur_pred.shape[0])).float().to(self.device)
@@ -430,3 +489,193 @@ class FastPitch(nn.Module):
         else:
             del spk_emb
             return self.infer_using_vals(logger, plugin_manager, cleaned_text, pace, enc_out, max_duration, enc_mask, None, None, None, None, None)
+
+
+    def run_speech_to_speech (self, device, logger, audiopath, in_text):
+
+        self.device = device
+        max_wav_value = 32768
+
+        # Inference
+        audio, sampling_rate = load_wav_to_torch(audiopath)
+        audio_norm = audio / max_wav_value
+        audio_norm = audio_norm.unsqueeze(0)
+        audio_norm = torch.autograd.Variable(audio_norm, requires_grad=False)
+        melspec = stft.mel_spectrogram(audio_norm)
+        melspec = torch.squeeze(melspec, 0)
+        melspec = melspec.to(device)
+        mel = melspec
+
+        text = tp.encode_text(in_text)
+        text = torch.LongTensor(text)
+        text = text.to(device)
+
+        attn_prior = beta_binomial_prior_distribution(text.shape[0], mel.shape[1]).unsqueeze(0)
+        attn_prior = attn_prior.to(device)
+
+        inputs = text.unsqueeze(0)
+        mel_tgt = mel.unsqueeze(0)
+        text_emb = self.encoder.word_emb(inputs).to(device)
+        input_lens = torch.tensor([len(text)]).to(device)
+        mel_lens = torch.tensor([mel.size(1)]).to(device)
+        attn_mask = mask_from_lens(input_lens)[..., None] == 0
+        attn_soft, attn_logprob = self.attention(mel_tgt, text_emb.permute(0, 2, 1), mel_lens, attn_mask, key_lens=input_lens, attn_prior=attn_prior)
+
+        attn_hard = self.binarize_attention_parallel(attn_soft, input_lens, mel_lens)
+
+        attn_hard_dur = attn_hard.sum(2)[:, 0, :]
+        durs = attn_hard_dur
+        durs = torch.clamp(durs, 0.25)
+        durs = durs.cpu().detach().numpy()
+
+
+        pitch = estimate_pitch(audiopath, mel.size(-1), "praat", None, None)
+        # Average pitch over characters
+        pitch_tgt = average_pitch(pitch.unsqueeze(0), attn_hard_dur)
+
+
+        # Energy stuff
+        # ============
+        # Average energy over characters
+        energy_dense = torch.norm(mel.float(), dim=0, p=2)
+        energy = average_pitch(energy_dense.unsqueeze(0).unsqueeze(0), attn_hard_dur)
+        energy = torch.log(1.0 + energy)
+        energy = torch.clamp(energy, min=3.7, max=4.3)
+        energy_final = list(energy.squeeze().cpu().detach().numpy())
+        # ============
+
+        pitch_final = list(pitch_tgt.squeeze().cpu().detach().numpy())
+        pitch_final = normalize_pitch_vectors(logger, pitch_final)
+        pitch_final = [max(-3, min(v, 3)) for v in pitch_final]
+        durs_final = list(durs[0])
+
+        return [in_text, pitch_final, durs_final, energy_final]
+
+
+
+import librosa
+def normalize_pitch_vectors(logger, pitch_vecs):
+    nonzeros = [v for v in pitch_vecs if v!=0.0]
+    mean, std = np.mean(nonzeros), np.std(nonzeros)
+
+    # logger.info(f'mean {mean}')
+    # logger.info(f'std {std}')
+
+    for vi, v in enumerate(pitch_vecs):
+        v -= mean
+        v /= std
+        pitch_vecs[vi] = v
+
+    return pitch_vecs
+def normalize_pitch(pitch, mean, std):
+    zeros = (pitch == 0.0)
+    pitch -= mean[:, None]
+    pitch /= std[:, None]
+    pitch[zeros] = 0.0
+    return pitch
+def estimate_pitch(wav, mel_len, method='pyin', normalize_mean=None, normalize_std=None, n_formants=1):
+
+    if type(normalize_mean) is float or type(normalize_mean) is list:
+        normalize_mean = torch.tensor(normalize_mean)
+
+    if type(normalize_std) is float or type(normalize_std) is list:
+        normalize_std = torch.tensor(normalize_std)
+
+    if method == 'praat':
+
+        snd = parselmouth.Sound(wav)
+        pitch_mel = snd.to_pitch(time_step=snd.duration / (mel_len + 3)
+                                 ).selected_array['frequency']
+        assert np.abs(mel_len - pitch_mel.shape[0]) <= 1.0
+
+        pitch_mel = torch.from_numpy(pitch_mel).unsqueeze(0)
+
+        if n_formants > 1:
+            formant = snd.to_formant_burg(
+                time_step=snd.duration / (mel_len + 3))
+            formant_n_frames = formant.get_number_of_frames()
+            assert np.abs(mel_len - formant_n_frames) <= 1.0
+
+            formants_mel = np.zeros((formant_n_frames + 1, n_formants - 1))
+            for i in range(1, formant_n_frames + 1):
+                formants_mel[i] = np.asarray([
+                    formant.get_value_at_time(
+                        formant_number=f,
+                        time=formant.get_time_from_frame_number(i))
+                    for f in range(1, n_formants)
+                ])
+
+            pitch_mel = torch.cat(
+                [pitch_mel, torch.from_numpy(formants_mel).permute(1, 0)],
+                dim=0)
+
+    elif method == 'pyin':
+
+        snd, sr = librosa.load(wav)
+        pitch_mel, voiced_flag, voiced_probs = librosa.pyin(
+            snd, fmin=librosa.note_to_hz('C2'),
+            fmax=librosa.note_to_hz('C7'), frame_length=1024)
+        assert np.abs(mel_len - pitch_mel.shape[0]) <= 1.0
+
+        pitch_mel = np.where(np.isnan(pitch_mel), 0.0, pitch_mel)
+        pitch_mel = torch.from_numpy(pitch_mel).unsqueeze(0)
+        pitch_mel = F.pad(pitch_mel, (0, mel_len - pitch_mel.size(1)))
+
+        if n_formants > 1:
+            raise NotImplementedError
+
+    else:
+        raise ValueError
+
+    pitch_mel = pitch_mel.float()
+
+    if normalize_mean is not None:
+        assert normalize_std is not None
+        pitch_mel = normalize_pitch(pitch_mel, normalize_mean, normalize_std)
+
+    return pitch_mel
+
+
+
+from scipy.stats import betabinom
+def beta_binomial_prior_distribution(phoneme_count, mel_count, scaling=1.0):
+    P = phoneme_count
+    M = mel_count
+    x = np.arange(0, P)
+    mel_text_probs = []
+    for i in range(1, M+1):
+        a, b = scaling * i, scaling * (M + 1 - i)
+        rv = betabinom(P, a, b)
+        mel_i_prob = rv.pmf(x)
+        mel_text_probs.append(mel_i_prob)
+    return torch.tensor(np.array(mel_text_probs))
+
+
+
+import parselmouth
+import numpy as np
+def maybe_pad(vec, l):
+    assert np.abs(vec.shape[0] - l) <= 3
+    vec = vec[:l]
+    if vec.shape[0] < l:
+        vec = np.pad(vec, pad_width=(0, l - vec.shape[0]))
+    return vec
+def calculate_pitch (fname, durs):
+    mel_len = durs.sum()
+    print(int(mel_len))
+    durs_cum = np.cumsum(np.pad(durs, (1, 0), mode="constant"))
+    snd = parselmouth.Sound(fname)
+
+    pitch = snd.to_pitch(time_step=snd.duration / (mel_len + 3)).selected_array['frequency']
+
+    assert np.abs(mel_len - pitch.shape[0]) <= 1.0
+
+    # Average pitch over characters
+    pitch_char = np.zeros((durs.shape[0],), dtype=np.float)
+    for idx, a, b in zip(range(mel_len), durs_cum[:-1], durs_cum[1:]):
+        values = pitch[a:b][np.where(pitch[a:b] != 0.0)[0]]
+        pitch_char[idx] = np.mean(values) if len(values) > 0 else 0.0
+
+    pitch_char = maybe_pad(pitch_char, len(durs))
+
+    return pitch_char

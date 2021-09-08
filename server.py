@@ -112,23 +112,6 @@ if __name__ == '__main__':
     # ========================
 
 
-    # xVASpeech setup
-    # ===============
-    xVASpeechModel = 0
-    try:
-        from python import xVASpeech
-    except:
-        print(traceback.format_exc())
-        logger.info(traceback.format_exc())
-    try:
-        print(xVASpeech)
-        xVASpeechModel = xVASpeech.init(PROD, False, logger)
-    except:
-        print(traceback.format_exc())
-        logger.info(traceback.format_exc())
-    # ===============
-
-
 
     print("Models ready")
     logger.info("Models ready")
@@ -285,34 +268,32 @@ if __name__ == '__main__':
                     logger.info("post_data")
                     logger.info(post_data)
                     input_path = post_data["input_path"]
-                    voiceId = post_data["voiceId"]
                     modelPath = post_data["modelPath"]
-                    doPitchShift = post_data["doPitchShift"]
+                    n_speakers = int(post_data["n_speakers"]) if "n_speakers" in post_data else 0
+                    text = post_data["text"]
+
                     removeNoise = post_data["removeNoise"]
                     removeNoiseStrength = post_data["removeNoiseStrength"]
 
                     final_path = prepare_input_audio(PROD, logger, input_path, removeNoise, removeNoiseStrength)
-                    print("final_path", final_path)
-                    logger.info("final_path")
-                    logger.info(final_path)
 
-                    if xVASpeechModel.voiceId != voiceId:
-                        error = xVASpeech.loadModel(logger, APP_VERSION, xVASpeechModel, voiceId, modelPath)
-                        if error:
-                            req_response = error
-                            self._set_response()
-                            self.wfile.write(req_response.encode("utf-8"))
-                            return
+                    # Infer ASR text from audio, if text is not provided
+                    if text=="":
+                        models_manager.init_model("wav2vec2")
+                        text = models_manager.models("wav2vec2").infer(final_path)
 
 
-                    text, pitch, durs = xVASpeech.infer(logger, xVASpeechModel, final_path, use_gpu="cuda" in models_manager.device_label, doPitchShift=doPitchShift)
+                    models_manager.init_model("s2s_fastpitch1_1")
+                    models_manager.load_model("s2s_fastpitch1_1", modelPath, n_speakers=n_speakers)
+                    text, pitch, durs, energy = models_manager.models("s2s_fastpitch1_1").run_speech_to_speech(final_path, text=text)
 
-                    pitch_durations_text = ""
-                    pitch_durations_text += ",".join([str(v) for v in pitch])+"\n"
-                    pitch_durations_text += ",".join([str(v) for v in durs])+"\n"
-                    pitch_durations_text += f'{text.lower()}'
+                    data_out = ""
+                    data_out += ",".join([str(v) for v in pitch])+"\n"
+                    data_out += ",".join([str(v) for v in durs])+"\n"
+                    data_out += ",".join([str(v) for v in energy])+"\n"
+                    data_out += f'{text.lower()}'
 
-                    req_response = pitch_durations_text
+                    req_response = data_out
 
 
                 if self.path == "/batchOutputAudio":

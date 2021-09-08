@@ -1,0 +1,1 @@
+{"unk_token": "<unk>", "bos_token": "<s>", "eos_token": "</s>", "pad_token": "<pad>", "do_lower_case": false, "word_delimiter_token": "|", "tokenizer_class": "Wav2Vec2CTCTokenizer"}

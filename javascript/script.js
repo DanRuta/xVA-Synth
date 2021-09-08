@@ -167,14 +167,17 @@ window.loadAllModels = (forceUpdate=false) => {
                                 }
                             })
 
-                            const modelData = {model, modelsPath, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, gender, modelVersion: model.modelVersion, hifi: undefined, xvaspeech: undefined}
+                            const modelData = {
+                                model, modelsPath, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, gender,
+                                modelVersion: model.modelVersion,
+                                hifi: undefined,
+                                num_speakers: model.emb_size,
+                                modelType: model.modelType
+                            }
+
                             const potentialHiFiPath = `${modelsPath}/${voiceId}.hg.pt`
                             if (fs.existsSync(potentialHiFiPath)) {
                                 modelData.hifi = potentialHiFiPath
-                            }
-                            const potentialxVASpeechPath = `${modelsPath}/${voiceId}.xvaspeech.pt`
-                            if (fs.existsSync(potentialxVASpeechPath)) {
-                                modelData.xvaspeech = potentialxVASpeechPath
                             }
 
                             if (existingDuplicates.length) {
@@ -707,7 +710,8 @@ generateVoiceButton.addEventListener("click", () => {
             }
         }
 
-        if (editorContainer.innerHTML && editorContainer.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice)) {
+        if (xVASpeechState.s2s_autogenerate || (editorContainer.innerHTML && editorContainer.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice))) {
+            xVASpeechState.s2s_autogenerate = false
             pitch = window.sequenceEditor.pitchNew.map(v=> v==undefined?0:v)
             duration = window.sequenceEditor.dursNew.map(v => v*pace_slid.value).map(v=> v==undefined?0:v)
             energy = window.sequenceEditor.energyNew.map(v => v==undefined?0:v).filter(v => !isNaN(v))
