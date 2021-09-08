@@ -23,6 +23,7 @@ window.i18n.setEnglish = () => {
     window.i18n.VOCODER = "Vocoder:"
 
     window.i18n.SEARCH_GAMES = "Search games..."
+    window.i18n.SEARCH_SETTINGS = "Search settings..."
     window.i18n.SEARCH_N_VOICES = "Search _ voices..."
     window.i18n.SEARCH_N_GAMES_WITH_N2_VOICES = "Search _1 games with _2 voices..."
     window.i18n.RESET = "Reset"
@@ -666,6 +667,7 @@ window.i18n.updateUI = () => {
     i18n_support_thanks.innerHTML = window.i18n.SUPPORT_THANKS
 
     searchGameInput.placeholder = window.i18n.SEARCH_GAMES
+    searchSettingsInput.placeholder = window.i18n.SEARCH_SETTINGS
 
     i18n_eula_accept.innerHTML = window.i18n.EULA_ACCEPT
     EULA_closeButon.innerHTML = window.i18n.EULA_CLOSE

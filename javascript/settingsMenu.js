@@ -695,6 +695,43 @@ reset_paths_btn.addEventListener("click", () => {
     })
 })
 
+// Search settings
+const settingItems = Array.from(settingsOptionsContainer.children)
+searchSettingsInput.addEventListener("keyup", () => {
+
+    const query = searchSettingsInput.value.trim().toLowerCase()
+
+    const filteredItems = settingItems.map(el => {
+        if (el.tagName=="HR") {return [el, true]}
+        if (el.tagName=="DIV") {
+            if (!query.length || el.children[0].innerHTML.toLowerCase().includes(query)) {
+                return [el, true]
+            }
+        }
+        return [el, false]
+    })
+
+    let lastIsHR = false
+    filteredItems.forEach(elem => {
+        const [el, showIt] = elem
+        if (el.tagName=="HR") {
+            if (lastIsHR) {
+                el.style.display = "none"
+                return
+            }
+            lastIsHR = true
+            el.style.display = "flex"
+        } else {
+            if (showIt) {
+                el.style.display = "flex"
+                lastIsHR = false
+            } else {
+                el.style.display = "none"
+            }
+        }
+    })
+
+})
 
 window.saveUserSettings = saveUserSettings
 exports.saveUserSettings = saveUserSettings

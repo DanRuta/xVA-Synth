@@ -130,7 +130,7 @@ a {
     justify-content: center;
     height: 20px;
 }
- #voiceSearchInput, #searchGameInput, #nexusSearchBar, #embeddingsSearchBar, #voiceSamplesSearch {
+ #voiceSearchInput, #searchGameInput, #nexusSearchBar, #embeddingsSearchBar, #voiceSamplesSearch, #searchSettingsInput {
     width: calc(100% - 25px);
     text-align: center;
     background: none;
@@ -142,10 +142,13 @@ a {
     width: 50vw;
     font-size: 16pt;
  }
+ #searchSettingsInput {
+    font-size: 16pt;
+ }
  #voiceSamplesSearch::placeholder {
     color: rgba(200,200,200,0.7);
  }
- #voiceSearchInput:focus, #voiceSearchInput:active, #searchGameInput:focus, #searchGameInput:active, #nexusSearchBar:focus, #nexusSearchBar:active, #embeddingsSearchBar:focus, #embeddingsSearchBar:active, #voiceSamplesSearch:focus, #voiceSamplesSearch:active {
+ #voiceSearchInput:focus, #voiceSearchInput:active, #searchGameInput:focus, #searchGameInput:active, #nexusSearchBar:focus, #nexusSearchBar:active, #embeddingsSearchBar:focus, #embeddingsSearchBar:active, #voiceSamplesSearch:focus, #voiceSamplesSearch:active, #searchSettingsInput:focus, #searchSettingsInput:active {
     outline: none;
  }
  .content {
