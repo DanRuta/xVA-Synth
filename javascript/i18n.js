@@ -407,6 +407,9 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_GROUP_VOCODER = "Also do a secondary group by the vocoder - can take long to do with big files (100k+ lines)"
 
     window.i18n.SEARCH_OUTPUT = "Search output file names..."
+    window.i18n.DELETE_ALL = "Delete all"
+    window.i18n.DELETE_ALL_FILES_CONFIRM = "Are you sure you'd like to delete all files for this voice? This will delete all _1 files in the following output directory:<br>_2"
+    window.i18n.DELETE_ALL_FILES_ERR_NO_FILES = "There are no files in the following output directory:<br>_1"
     window.i18n.SORT_BY = "Sort by"
     window.i18n.ASCENDING = "Ascending"
     window.i18n.DESCENDING = "Descending"
@@ -511,6 +514,7 @@ window.i18n.updateUI = () => {
     i18n_sortByOutput.innerHTML = window.i18n.SORT_BY
     voiceRecordsOrderByButton.innerHTML = window.i18n.NAME
     voiceRecordsOrderByOrderButton.innerHTML = window.i18n.ASCENDING
+    voiceRecordsDeleteAllButton.innerHTML = window.i18n.DELETE_ALL
 
     i18n_pluginsh_endorse.innerHTML = window.i18n.ENDORSE
 

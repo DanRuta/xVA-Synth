@@ -1275,6 +1275,25 @@ if (Object.keys(window.userSettings).includes("voiceRecordsOrderByOrder")) {
 // =========
 
 
+// Delete all output files for a voice
+voiceRecordsDeleteAllButton.addEventListener("click", () => {
+    if (window.currentModel) {
+        const outDir = window.userSettings[`outpath_${window.currentGame[0]}`]+`/${currentModel.voiceId}`
+
+        const files = fs.readdirSync(outDir)
+        if (files.length) {
+            window.confirmModal(window.i18n.DELETE_ALL_FILES_CONFIRM.replace("_1", files.length).replace("_2", outDir)).then(resp => {
+                if (resp) {
+                    window.deleteFolderRecursive(outDir, true)
+                    refreshRecordsList(outDir)
+                }
+            })
+        } else {
+            window.errorModal(window.i18n.DELETE_ALL_FILES_ERR_NO_FILES.replace("_1", outDir))
+        }
+    }
+})
+
 voiceRecordsOrderByButton.addEventListener("click", () => {
     window.userSettings.voiceRecordsOrderBy = window.userSettings.voiceRecordsOrderBy=="name" ? "time" : "name"
     saveUserSettings()
