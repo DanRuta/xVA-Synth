@@ -59,7 +59,7 @@ ipcMain.on("updateDiscord", (event, arg) => {
     }
 
     discordClient.updatePresence({
-        state: 'Synthesizing lines',
+        state: 'Generating AI voice acting',
         details: arg.details,
         startTimestamp: discordClientStart,
         largeImageKey: 'xvasynth_512_512',
