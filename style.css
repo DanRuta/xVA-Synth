@@ -1044,6 +1044,7 @@ a {
 
 #batch_ETA_container {
     display: flex;
+    justify-content: center;
     margin-top: 5px;
     opacity: 0;
 }
