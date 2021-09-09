@@ -70,7 +70,7 @@ if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.u
     window.userSettings.audio.padEnd = 0
 }
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("ffmpeg")) { // For backwards compatibility
-    window.userSettings.audio.ffmpeg = false
+    window.userSettings.audio.ffmpeg = true
 }
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("ffmpeg_preview")) { // For backwards compatibility
     window.userSettings.audio.ffmpeg_preview = true

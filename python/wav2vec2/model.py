@@ -28,11 +28,14 @@ class Wav2Vec2(object):
         self.ckpt_path = ckpt_path
 
 
-    def infer (self, audiopath):
+    def infer (self, PROD, audiopath):
+
+        ffmpeg_path = f'{"./resources/app" if PROD else "."}/python/ffmpeg.exe'
+
         stream = ffmpeg.input(audiopath)
         ffmpeg_options = {"ar": "16000"}
         stream = ffmpeg.output(stream, audiopath.replace(".wav", "_16khz.wav"), **ffmpeg_options)
-        out, err = (ffmpeg.run(stream, capture_stdout=True, capture_stderr=True, overwrite_output=True))
+        out, err = (ffmpeg.run(stream, cmd=ffmpeg_path, capture_stdout=True, capture_stderr=True, overwrite_output=True))
         audio_input, sample_rate = sf.read(audiopath.replace(".wav", "_16khz.wav"))
 
         # Tokenize

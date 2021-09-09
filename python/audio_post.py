@@ -7,11 +7,11 @@ from pydub import AudioSegment
 
 import multiprocessing as mp
 
-def mp_ffmpeg_output (logger, processes, input_paths, output_paths, options):
+def mp_ffmpeg_output (PROD, logger, processes, input_paths, output_paths, options):
 
     workItems = []
     for ip, path in enumerate(input_paths):
-        workItems.append([None, path, output_paths[ip], options])
+        workItems.append([PROD, None, path, output_paths[ip], options])
 
     workers = processes if processes>0 else max(1, mp.cpu_count()-1)
     workers = min(len(workItems), workers)
@@ -26,11 +26,13 @@ def mp_ffmpeg_output (logger, processes, input_paths, output_paths, options):
     return "\n".join(results)
 
 def processingTask(data):
-    return run_audio_post(data[0], data[1], data[2], data[3])
+    return run_audio_post(data[0], data[1], data[2], data[3], data[4])
 
 
 
-def run_audio_post(logger, input, output, options=None):
+def run_audio_post(PROD, logger, input, output, options=None):
+
+    ffmpeg_path = f'{"./resources/app" if PROD else "."}/python/ffmpeg.exe'
 
     try:
         stream = ffmpeg.input(input)
@@ -63,7 +65,7 @@ def run_audio_post(logger, input, output, options=None):
             logger.info("audio options: "+str(options))
             logger.info("ffmpeg command: "+ " ".join(stream.compile()))
 
-        out, err = (ffmpeg.run(stream, capture_stdout=True, capture_stderr=True, overwrite_output=True))
+        out, err = (ffmpeg.run(stream, cmd=ffmpeg_path, capture_stdout=True, capture_stderr=True, overwrite_output=True))
 
     except ffmpeg.Error as e:
         if logger!=None:
@@ -78,12 +80,15 @@ def run_audio_post(logger, input, output, options=None):
 
 
 def prepare (PROD, logger, inputPath, outputPath, removeNoise, removeNoiseStrength):
+
+    ffmpeg_path = f'{"./resources/app" if PROD else "."}/python/ffmpeg.exe'
+
     try:
         stream = ffmpeg.input(inputPath)
         ffmpeg_options = {"ar": 22050, "ac": 1}
 
         stream = ffmpeg.output(stream, outputPath, **ffmpeg_options)
-        out, err = (ffmpeg.run(stream, capture_stdout=True, capture_stderr=True, overwrite_output=True))
+        out, err = (ffmpeg.run(stream, cmd=ffmpeg_path, capture_stdout=True, capture_stderr=True, overwrite_output=True))
 
         # Remove silence if a silence clip has been provided
         if removeNoise and os.path.exists(f'{"./resources/app" if PROD else "."}/output/silence.wav'):

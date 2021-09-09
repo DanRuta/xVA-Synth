@@ -280,7 +280,7 @@ if __name__ == '__main__':
                     # Infer ASR text from audio, if text is not provided
                     if text=="":
                         models_manager.init_model("wav2vec2")
-                        text = models_manager.models("wav2vec2").infer(final_path)
+                        text = models_manager.models("wav2vec2").infer(PROD, final_path)
 
 
                     models_manager.init_model("s2s_fastpitch1_1")
@@ -314,7 +314,7 @@ if __name__ == '__main__':
                         extraInfo["ffmpeg"] = ffmpeg
 
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["mp-output-audio"]["pre"], event="pre mp-output-audio", data=extraInfo)
-                    req_response = mp_ffmpeg_output(logger, processes, input_paths, output_paths, options)
+                    req_response = mp_ffmpeg_output(PROD, logger, processes, input_paths, output_paths, options)
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["mp-output-audio"]["post"], event="post mp-output-audio", data=extraInfo)
 
 
@@ -337,7 +337,7 @@ if __name__ == '__main__':
                         extraInfo["ffmpeg"] = ffmpeg
 
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["output-audio"]["pre"], event="pre output-audio", data=extraInfo)
-                    req_response = run_audio_post(None if isBatchMode else logger, input_path, output_path, options)
+                    req_response = run_audio_post(PROD, None if isBatchMode else logger, input_path, output_path, options)
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["output-audio"]["post"], event="post output-audio", data=extraInfo)
 
                 if self.path == "/refreshPlugins":
