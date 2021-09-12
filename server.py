@@ -350,8 +350,8 @@ if __name__ == '__main__':
 
                 if self.path == "/computeEmbsAndDimReduction":
                     logger.info("POST {}".format(self.path))
-                    models_manager.init_model("xvarep")
-                    embs = models_manager.models("xvarep").reduce_data_dimension(post_data["mappings"], post_data["includeAllVoices"], post_data["onlyInstalled"], post_data["algorithm"])
+                    models_manager.init_model("resemblyzer")
+                    embs = models_manager.models("resemblyzer").reduce_data_dimension(post_data["mappings"], post_data["includeAllVoices"], post_data["onlyInstalled"], post_data["algorithm"])
                     req_response = embs
 
                 if self.path == "/checkReady":

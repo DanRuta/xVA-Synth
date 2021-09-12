@@ -21,10 +21,9 @@ class ModelsManager(object):
                 return
             self.logger.info(f'ModelsManager: Initializing model: {model_key}')
 
-            if model_key=="xvarep":
-                from python.xVARep.model import xVARep
-                self.models_bank[model_key] = xVARep(self.logger, self.PROD, self.device, self)
-                self.load_model(model_key, ("./resources/app" if self.PROD else ".")+"/python/xVARep/xVARep.pt")
+            if model_key=="resemblyzer":
+                from python.resemblyzer.model import ResemblyzerModel
+                self.models_bank[model_key] = ResemblyzerModel(self.logger, self.PROD, self.device, self)
 
             elif model_key=="hifigan":
                 from python.hifigan.model import HiFi_GAN

@@ -22,9 +22,9 @@ def extract_features(encoder, file_name):
     return embed
 
 
-class xVARep(object):
+class ResemblyzerModel(object):
     def __init__(self, logger, PROD, device, models_manager):
-        super(xVARep, self).__init__()
+        super(ResemblyzerModel, self).__init__()
 
         self.logger = logger
         self.PROD = PROD
@@ -34,34 +34,12 @@ class xVARep(object):
         self.ckpt_path = None
         self.embeddings = []
 
-        # self.logger.info("xVARep device")
-        # self.logger.info(device)
-        # self.logger.info(device=="cpu")
-        # self.logger.info(str(device)=="cpu")
         self.model = VoiceEncoder(device)
-
-        # layers = []
-
-        # layers.append(("fc1", nn.Linear(193, 256)))
-        # layers.append(("relu1", nn.LeakyReLU()))
-        # layers.append(("d1", nn.Dropout(p=0.1)))
-
-        # layers.append(("fc2", nn.Linear(256, 256)))
-
-        # self.model = nn.Sequential(OrderedDict(layers))
-        # self.model = self.model.to(self.device)
-
-        # with open(f'{self.path}/python/xVARep/norm_stats.txt') as f:
-        #     mean, std = f.read().split("\n")
-        #     self.norm_stats = {}
-        #     self.norm_stats["mean"] = [float(num) for num in mean.split(",")]
-        #     self.norm_stats["std"] = [float(num) for num in std.split(",")]
-
         self.isReady = True
 
 
-        if os.path.exists(f'{self.path}/python/xVARep/embs.pkl'):
-            with open(f'{self.path}/python/xVARep/embs.pkl', "rb") as pklFile:
+        if os.path.exists(f'{self.path}/python/resemblyzer/embs.pkl'):
+            with open(f'{self.path}/python/resemblyzer/embs.pkl', "rb") as pklFile:
                 self.embeddings = pickle.load(pklFile)
         else:
             self.embeddings = {}
@@ -161,7 +139,7 @@ class xVARep(object):
                 embeddings[voice["voiceId"]]["gender"] = voice["gender"]
                 embeddings[voice["voiceId"]]["gameId"] = voice["gameId"]
 
-        with open(f'{self.path}/python/xVARep/embs.pkl', "wb") as pklFile:
+        with open(f'{self.path}/python/resemblyzer/embs.pkl', "wb") as pklFile:
             pickle.dump(self.embeddings, pklFile)
 
         return embeddings
