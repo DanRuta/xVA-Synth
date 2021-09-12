@@ -1,6 +1,6 @@
 "use strict"
 
-window.xVASpeechState = {
+window.speech2speechState = {
     isReadingMic: false,
     elapsedRecording: 0,
     recorder: null,
@@ -40,8 +40,8 @@ window.initMic = () => {
         navigator.mediaDevices.getUserMedia({audio: {deviceId: deviceId}}).then(stream => {
             const audio_context = new AudioContext
             const input = audio_context.createMediaStreamSource(stream)
-            window.xVASpeechState.stream = stream
-            window.xVASpeechState.recorder = new Recorder(input)
+            window.speech2speechState.stream = stream
+            window.speech2speechState.recorder = new Recorder(input)
             resolve()
 
         }).catch(err => {
@@ -54,7 +54,7 @@ window.initMic()
 
 
 const animateRecordingProgress = () => {
-    const percentDone = (Date.now() - window.xVASpeechState.elapsedRecording) / 10000
+    const percentDone = (Date.now() - window.speech2speechState.elapsedRecording) / 10000
 
     if (percentDone >= 1 && percentDone!=Infinity) {
         window.stopRecord()
@@ -88,17 +88,17 @@ window.clearProgress = clearProgress
 
 window.startRecord = async () => {
     await window.initMic()
-    window.xVASpeechState.recorder.record()
+    window.speech2speechState.recorder.record()
 
-    window.xVASpeechState.isReadingMic = true
-    window.xVASpeechState.elapsedRecording = Date.now()
+    window.speech2speechState.isReadingMic = true
+    window.speech2speechState.elapsedRecording = Date.now()
     clearProgress()
     mic_progress_SVG_circle.style.stroke = "red"
     requestAnimationFrame(animateRecordingProgress)
 }
 
 const outputRecording = (outPath, callback) => {
-    window.xVASpeechState.recorder.exportWAV(AudioBLOB => {
+    window.speech2speechState.recorder.exportWAV(AudioBLOB => {
         const fileReader = new FileReader()
         fileReader.onload = function() {
 
@@ -113,11 +113,11 @@ const outputRecording = (outPath, callback) => {
             }
         }
         fileReader.readAsArrayBuffer(AudioBLOB)
-        window.xVASpeechState.recorder.clear()
+        window.speech2speechState.recorder.clear()
     })
 }
 
-const useWavFileForxVASpeech = (fileName) => {
+const useWavFileForspeech2speech = (fileName) => {
     let sequence = dialogueInput.value.trim().replace("…", "...")
     doFetch(`http://localhost:8008/runSpeechToSpeech`, {
         method: "Post",
@@ -137,8 +137,8 @@ const useWavFileForxVASpeech = (fileName) => {
         clearProgress()
 
         if (res.includes("ERROR:APP_VERSION")) {
-            const xVASpeechModelVersion = "v"+res.split(",")[1]
-            window.errorModal(`${window.i18n.ERR_XVASPEECH_MODEL_VERSION.replace("_1", xVASpeechModelVersion)} ${window.appVersion}`)
+            const speech2speechModelVersion = "v"+res.split(",")[1]
+            window.errorModal(`${window.i18n.ERR_XVASPEECH_MODEL_VERSION.replace("_1", speech2speechModelVersion)} ${window.appVersion}`)
         } else {
             res = res.split("\n")
             let pitchData = res[0]
@@ -178,7 +178,7 @@ const useWavFileForxVASpeech = (fileName) => {
             generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
 
             if (window.userSettings.s2s_autogenerate) {
-                xVASpeechState.s2s_autogenerate = true
+                speech2speechState.s2s_autogenerate = true
                 generateVoiceButton.click()
             }
         }
@@ -191,8 +191,8 @@ const useWavFileForxVASpeech = (fileName) => {
 
 window.stopRecord = (cancelled) => {
 
-    window.xVASpeechState.recorder.stop()
-    window.xVASpeechState.stream.getAudioTracks()[0].stop()
+    window.speech2speechState.recorder.stop()
+    window.speech2speechState.stream.getAudioTracks()[0].stop()
 
     if (!cancelled) {
         clearProgress(0.35)
@@ -200,12 +200,12 @@ window.stopRecord = (cancelled) => {
         mic_progress_SVG_circle.style.stroke = "white"
         const fileName = `${__dirname.replace("\\javascript", "").replace(/\\/g,"/")}/output/recorded_file.wav`
         outputRecording(fileName, () => {
-            useWavFileForxVASpeech(fileName)
+            useWavFileForspeech2speech(fileName)
         })
     }
 
-    window.xVASpeechState.isReadingMic = false
-    window.xVASpeechState.elapsedRecording = 0
+    window.speech2speechState.isReadingMic = false
+    window.speech2speechState.elapsedRecording = 0
     clearProgress()
 }
 
@@ -214,15 +214,15 @@ const micClickHandler = (ctrlKey) => {
     if (ctrlKey) {
         s2s_selectVoiceBtn.click()
     } else {
-        if (window.xVASpeechState.isReadingMic) {
+        if (window.speech2speechState.isReadingMic) {
             window.stopRecord()
         } else {
 
             if (!Object.keys(window.userSettings).includes("s2s_voiceId") || !window.userSettings.s2s_voiceId) {
                 s2s_selectVoiceBtn.click()
             } else {
-                const xvaspeechPath = window.userSettings.s2s_voiceId.split(",")[2]
-                if (!fs.existsSync(xvaspeechPath)) {
+                const speech2speechPath = window.userSettings.s2s_voiceId.split(",")[2]
+                if (!fs.existsSync(speech2speechPath)) {
                     window.userSettings.s2s_voiceId = undefined
                     micClickHandler()
                     return
@@ -244,7 +244,7 @@ mic_SVG.addEventListener("mouseleave", () => {
 })
 mic_SVG.addEventListener("click", event => micClickHandler(event.ctrlKey))
 mic_SVG.addEventListener("contextmenu", () => {
-    if (window.xVASpeechState.isReadingMic) {
+    if (window.speech2speechState.isReadingMic) {
         window.stopRecord(true)
     } else {
         const audioPreview = createElem("audio", {autoplay: false}, createElem("source", {
@@ -345,11 +345,11 @@ if (Object.keys(window.userSettings).includes("s2sVL_other")) {
 
 const silenceFileName = `${__dirname.replace("\\javascript", "").replace(/\\/g,"/")}/output/silence.wav`
 s2sNoiseRecordSampleBtn.addEventListener("click", () => {
-    if (window.xVASpeechState.isReadingMic) {
+    if (window.speech2speechState.isReadingMic) {
         return
     }
-    window.xVASpeechState.recorder.record()
-    window.xVASpeechState.isReadingMic = true
+    window.speech2speechState.recorder.record()
+    window.speech2speechState.isReadingMic = true
 
     const origButtonColour = s2sNoiseRecordSampleBtn.style.background
     s2sNoiseRecordSampleBtn.style.background = "red"
@@ -359,11 +359,11 @@ s2sNoiseRecordSampleBtn.addEventListener("click", () => {
 
         if (secondsElapsed>=5) {
             s2sNoiseSampleRecordTimer.innerHTML = ""
-            window.xVASpeechState.isReadingMic = false
+            window.speech2speechState.isReadingMic = false
             clearInterval(interval)
             s2sNoiseRecordSampleBtn.style.background = origButtonColour
-            window.xVASpeechState.recorder.stop()
-            window.xVASpeechState.stream.getAudioTracks()[0].stop()
+            window.speech2speechState.recorder.stop()
+            window.speech2speechState.stream.getAudioTracks()[0].stop()
             outputRecording(silenceFileName, () => {
                 s2sNoiseAudioContainer.innerHTML = ""
                 const audioElem = createElem("audio", {controls: true}, createElem("source", {
@@ -394,12 +394,12 @@ if (fs.existsSync(silenceFileName)) {
 
 s2sVLRecordSampleBtn.addEventListener("click", () => {
 
-    if (window.xVASpeechState.isReadingMic) {
+    if (window.speech2speechState.isReadingMic) {
         return
     }
 
-    window.xVASpeechState.recorder.record()
-    window.xVASpeechState.isReadingMic = true
+    window.speech2speechState.recorder.record()
+    window.speech2speechState.isReadingMic = true
 
     const origButtonColour = s2sVLRecordSampleBtn.style.background
     s2sVLRecordSampleBtn.style.background = "red"
@@ -409,11 +409,11 @@ s2sVLRecordSampleBtn.addEventListener("click", () => {
 
         if (secondsElapsed>=5) {
             s2sVLSampleRecordTimer.innerHTML = ""
-            window.xVASpeechState.isReadingMic = false
+            window.speech2speechState.isReadingMic = false
             clearInterval(interval)
             s2sVLRecordSampleBtn.style.background = origButtonColour
-            window.xVASpeechState.recorder.stop()
-            window.xVASpeechState.stream.getAudioTracks()[0].stop()
+            window.speech2speechState.recorder.stop()
+            window.speech2speechState.stream.getAudioTracks()[0].stop()
             const fileName = `${__dirname.replace("\\javascript", "").replace(/\\/g,"/")}/output/temp-recsample.wav`
             outputRecording(fileName, () => {
                 s2sVLVoiceSampleAudioContainer.innerHTML = ""
@@ -474,7 +474,7 @@ const uploadS2SFile = (eType, event) => {
 
                 const fileName = `${__dirname.replace("\\javascript", "").replace(/\\/g,"/")}/output/recorded_file.wav`
                 fs.copyFileSync(file.path, fileName)
-                useWavFileForxVASpeech(fileName)
+                useWavFileForspeech2speech(fileName)
             } else {
                 window.errorModal(window.i18n.LOAD_TARGET_MODEL)
             }

@@ -21,7 +21,7 @@ require("./javascript/embeddings.js")
 require("./javascript/totd.js")
 const {Editor} = require("./javascript/editor.js")
 const {saveUserSettings, deleteFolderRecursive} = require("./javascript/settingsMenu.js")
-const xVASpeech = require("./javascript/xVASpeech.js")
+const xVASpeech = require("./javascript/speech2speech.js")
 const {startBatch} = require("./javascript/batch.js")
 window.electronBrowserWindow = require("electron").remote.getCurrentWindow()
 const child = require("child_process").execFile
@@ -710,8 +710,8 @@ generateVoiceButton.addEventListener("click", () => {
             }
         }
 
-        if (xVASpeechState.s2s_autogenerate || (editorContainer.innerHTML && editorContainer.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice))) {
-            xVASpeechState.s2s_autogenerate = false
+        if (speech2speechState.s2s_autogenerate || (editorContainer.innerHTML && editorContainer.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice))) {
+            speech2speechState.s2s_autogenerate = false
             pitch = window.sequenceEditor.pitchNew.map(v=> v==undefined?0:v)
             duration = window.sequenceEditor.dursNew.map(v => v*pace_slid.value).map(v=> v==undefined?0:v)
             energy = window.sequenceEditor.energyNew.map(v => v==undefined?0:v).filter(v => !isNaN(v))
