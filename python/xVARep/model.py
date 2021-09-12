@@ -12,67 +12,14 @@ import pickle
 from sklearn.manifold import TSNE
 from sklearn.decomposition import PCA
 
-
-# https://towardsdatascience.com/how-to-build-a-neural-network-for-voice-classification-5e2810fe1efa
-def extract_features(file_name):
-
-    # Sets the name to be the path to where the file is in my computer
-    # file_name = os.path.join(os.path.abspath('30_speakers_train')+'/'+str(files.file))
-    # Loads the audio file as a floating point time series and assigns the default sample rate
-    # Sample rate is set to 22050 by default
-    X, sample_rate = librosa.load(file_name, res_type='kaiser_fast')
-    # Generate Mel-frequency cepstral coefficients (MFCCs) from a time series
-    mfccs = np.mean(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=40).T,axis=0)
-    # Generates a Short-time Fourier transform (STFT) to use in the chroma_stft
-    stft = np.abs(librosa.stft(X))
-    # Computes a chromagram from a waveform or power spectrogram.
-    chroma = np.mean(librosa.feature.chroma_stft(S=stft, sr=sample_rate).T,axis=0)
-    # Computes a mel-scaled spectrogram.
-    mel = np.mean(librosa.feature.melspectrogram(X, sr=sample_rate).T,axis=0)
-    # Computes spectral contrast
-    contrast = np.mean(librosa.feature.spectral_contrast(S=stft, sr=sample_rate).T,axis=0)
-    # Computes the tonal centroid features (tonnetz)
-    tonnetz = np.mean(librosa.feature.tonnetz(y=librosa.effects.harmonic(X), sr=sample_rate).T,axis=0)
-
-    features = []
-    for v in mfccs:
-        features.append(v)
-    for v in chroma:
-        features.append(v)
-    for v in mel:
-        features.append(v)
-    for v in contrast:
-        features.append(v)
-    for v in tonnetz:
-        features.append(v)
-
-    return features
+from resemblyzer import VoiceEncoder, preprocess_wav
 
 
-import multiprocessing as mp
-def mp_preprocess_extract_features(logger, norm_stats, sampleWAVs):
-    workers = max(1, mp.cpu_count()-1)
-    workers = min(len(sampleWAVs), workers)
 
-    workItems = [[norm_stats, sampleWAV] for si, sampleWAV in enumerate(sampleWAVs)]
-
-    logger.info("[mp embeddings feature extraction] workers: "+str(workers))
-
-    pool = mp.Pool(workers)
-    results = pool.map(processingTask, workItems)
-    pool.close()
-    pool.join()
-
-
-    return results
-
-def processingTask(data):
-    norm_stats = data[0]
-    wavPath = data[1]
-
-    audio_feats = extract_features(wavPath)
-    audio_feats = [(val-norm_stats["mean"][vi]) / norm_stats["std"][vi] for vi,val in enumerate(audio_feats)]
-    return audio_feats
+def extract_features(encoder, file_name):
+    wav = preprocess_wav(file_name)
+    embed = encoder.embed_utterance(wav)
+    return embed
 
 
 class xVARep(object):
@@ -87,22 +34,28 @@ class xVARep(object):
         self.ckpt_path = None
         self.embeddings = []
 
-        layers = []
+        # self.logger.info("xVARep device")
+        # self.logger.info(device)
+        # self.logger.info(device=="cpu")
+        # self.logger.info(str(device)=="cpu")
+        self.model = VoiceEncoder(device)
 
-        layers.append(("fc1", nn.Linear(193, 256)))
-        layers.append(("relu1", nn.LeakyReLU()))
-        layers.append(("d1", nn.Dropout(p=0.1)))
+        # layers = []
 
-        layers.append(("fc2", nn.Linear(256, 256)))
+        # layers.append(("fc1", nn.Linear(193, 256)))
+        # layers.append(("relu1", nn.LeakyReLU()))
+        # layers.append(("d1", nn.Dropout(p=0.1)))
 
-        self.model = nn.Sequential(OrderedDict(layers))
-        self.model = self.model.to(self.device)
+        # layers.append(("fc2", nn.Linear(256, 256)))
 
-        with open(f'{self.path}/python/xVARep/norm_stats.txt') as f:
-            mean, std = f.read().split("\n")
-            self.norm_stats = {}
-            self.norm_stats["mean"] = [float(num) for num in mean.split(",")]
-            self.norm_stats["std"] = [float(num) for num in std.split(",")]
+        # self.model = nn.Sequential(OrderedDict(layers))
+        # self.model = self.model.to(self.device)
+
+        # with open(f'{self.path}/python/xVARep/norm_stats.txt') as f:
+        #     mean, std = f.read().split("\n")
+        #     self.norm_stats = {}
+        #     self.norm_stats["mean"] = [float(num) for num in mean.split(",")]
+        #     self.norm_stats["std"] = [float(num) for num in std.split(",")]
 
         self.isReady = True
 
@@ -116,17 +69,6 @@ class xVARep(object):
 
     def load_state_dict (self, ckpt_path, sd):
         self.ckpt_path = ckpt_path
-        self.model.load_state_dict(sd["state_dict"])
-
-
-    def forward (self, data):
-        data = torch.tensor(data).to(self.device).float()
-        emb = self.model(data)
-        emb = emb / emb.norm(dim=1)[:, None]
-        del data
-        return emb
-
-
 
 
     # Get all the preview audios, and generate embeddings for them
@@ -163,46 +105,15 @@ class xVARep(object):
         todo_genders = []
         todo_gameIDs = []
 
-        DO_MP = False # TODO, figure out why this doesn't work in prod - also, I need to update the code, having changed the caching strategy
-        if DO_MP and includeAllVoices:
-            files_to_extract = {}
+        for api, audio_path in enumerate(sampleWAVs):
+            if voiceIds[api] not in self.embeddings.keys():
+                audio_feats = extract_features(self.model, audio_path)
+                audio_feats_batch[voiceIds[api]] = audio_feats
 
-            for api, audio_path in enumerate(sampleWAVs):
-
-                if voiceIds[api] in self.cached_audio_feats.keys():
-                    audio_feats = self.cached_audio_feats[voiceIds[api]]
-                    audio_feats_batch[voiceIds[api]] = audio_feats
-                else:
-                    files_to_extract[voiceIds[api]] = audio_path
-
-
-            voiceIds_to_extract = list(files_to_extract.keys())
-
-            paths_to_extract = [files_to_extract[voiceIds] for voiceIds in voiceIds_to_extract]
-
-
-
-            if len(paths_to_extract):
-                extracted_feats = mp_preprocess_extract_features(self.logger, self.norm_stats, paths_to_extract)
-
-                for fi, audio_feats in enumerate(extracted_feats):
-
-                    voiceId = voiceIds_to_extract[fi]
-                    if voiceId not in self.cached_audio_feats.keys():
-                        self.cached_audio_feats[voiceId] = audio_feats
-                    audio_feats_batch[voiceId] = audio_feats
-
-        else:
-            for api, audio_path in enumerate(sampleWAVs):
-                if voiceIds[api] not in self.embeddings.keys():
-                    audio_feats = extract_features(audio_path)
-                    audio_feats = [(val-self.norm_stats["mean"][vi]) / self.norm_stats["std"][vi] for vi,val in enumerate(audio_feats)]
-                    audio_feats_batch[voiceIds[api]] = audio_feats
-
-                    todo_keys.append(voiceIds[api])
-                    todo_names.append(voiceNames[api])
-                    todo_genders.append(voiceGenders[api])
-                    todo_gameIDs.append(gameIds[api])
+                todo_keys.append(voiceIds[api])
+                todo_names.append(voiceNames[api])
+                todo_genders.append(voiceGenders[api])
+                todo_gameIDs.append(gameIds[api])
 
 
         todo_feats = [audio_feats_batch[key] for key in audio_feats_batch.keys()]
@@ -221,12 +132,9 @@ class xVARep(object):
 
         # Compute embedding using the model, for the installed voices without an embedding
         if len(todo_feats):
-            embs = self.forward(todo_feats)
-            embs = list(embs.cpu().detach().numpy())
+            embs = todo_feats
             for ei, emb in enumerate(embs):
                 voiceId = todo_keys[ei]
-                if voiceId in embeddings.keys():
-                    self.logger.log(f'===== CONFLICT 1: {voiceId}')
 
                 embeddings[voiceId] = {"emb": emb, "name": todo_names[ei], "gender": todo_genders[ei], "gameId": todo_gameIDs[ei]}
                 self.embeddings[voiceId] = {"emb": emb, "name": todo_names[ei], "gender": todo_genders[ei], "gameId": todo_gameIDs[ei]}
@@ -276,13 +184,11 @@ class xVARep(object):
         string_formatted_dict = []
         for vi, voiceId in enumerate(embeddings.keys()):
             formatted_string = f'{voiceId}={embeddings[voiceId]["name"]}={embeddings[voiceId]["gender"]}={embeddings[voiceId]["gameId"]}='
-            formatted_string += ",".join([str(val*(200 if algorithm=="pca" else 1)) for val in reduced_data[vi]])
+            formatted_string += ",".join([str(val*(500 if algorithm=="pca" else 1)) for val in reduced_data[vi]])
             string_formatted_dict.append(formatted_string)
 
         return "\n".join(string_formatted_dict)
 
     def set_device (self, device):
         self.device = device
-        self.model = self.model.to(device)
-        self.model.device = device
-
+        self.model = VoiceEncoder(device)
