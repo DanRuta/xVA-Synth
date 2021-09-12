@@ -424,11 +424,11 @@ window.initEmbeddingsScene = () => {
     let hoveredObject = undefined
     let clickedObject = undefined
 
-    const render = () => {
+    window.embeddings_render = () => {
         if (!window.embeddingsState.isReady) {
             return
         }
-        requestAnimationFrame(render)
+        requestAnimationFrame(window.embeddings_render)
 
         const target = window.embeddingsState.sceneData.controls.target
         window.embeddingsState.sceneData.controls.update()
@@ -552,7 +552,7 @@ window.initEmbeddingsScene = () => {
         window.embeddingsState.renderer.render(scene, window.embeddingsState.sceneData.camera)
     }
     window.embeddingsState.isReady = true
-    render()
+    window.embeddings_render()
 
 
     window.toggleSprites = () => {

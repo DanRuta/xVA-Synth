@@ -97,7 +97,7 @@ window.startRecord = async () => {
     requestAnimationFrame(animateRecordingProgress)
 }
 
-const outputRecording = (outPath, callback) => {
+window.outputS2SRecording = (outPath, callback) => {
     window.speech2speechState.recorder.exportWAV(AudioBLOB => {
         const fileReader = new FileReader()
         fileReader.onload = function() {
@@ -117,7 +117,7 @@ const outputRecording = (outPath, callback) => {
     })
 }
 
-const useWavFileForspeech2speech = (fileName) => {
+window.useWavFileForspeech2speech = (fileName) => {
     let sequence = dialogueInput.value.trim().replace("…", "...")
     doFetch(`http://localhost:8008/runSpeechToSpeech`, {
         method: "Post",
@@ -199,8 +199,8 @@ window.stopRecord = (cancelled) => {
         mic_progress_SVG.style.animation = "spin 1.5s linear infinite"
         mic_progress_SVG_circle.style.stroke = "white"
         const fileName = `${__dirname.replace("\\javascript", "").replace(/\\/g,"/")}/output/recorded_file.wav`
-        outputRecording(fileName, () => {
-            useWavFileForspeech2speech(fileName)
+        window.outputS2SRecording(fileName, () => {
+            window.useWavFileForspeech2speech(fileName)
         })
     }
 
@@ -209,7 +209,7 @@ window.stopRecord = (cancelled) => {
     clearProgress()
 }
 
-const micClickHandler = (ctrlKey) => {
+window.micClickHandler = (ctrlKey) => {
 
     if (ctrlKey) {
         s2s_selectVoiceBtn.click()
@@ -224,7 +224,7 @@ const micClickHandler = (ctrlKey) => {
                 const speech2speechPath = window.userSettings.s2s_voiceId.split(",")[2]
                 if (!fs.existsSync(speech2speechPath)) {
                     window.userSettings.s2s_voiceId = undefined
-                    micClickHandler()
+                    window.micClickHandler()
                     return
                 }
                 if (window.currentModel && generateVoiceButton.innerHTML == window.i18n.GENERATE_VOICE) {
@@ -242,7 +242,7 @@ mic_SVG.addEventListener("mouseenter", () => {
 mic_SVG.addEventListener("mouseleave", () => {
     s2s_voiceId_selected_label.style.display = "none"
 })
-mic_SVG.addEventListener("click", event => micClickHandler(event.ctrlKey))
+mic_SVG.addEventListener("click", event => window.micClickHandler(event.ctrlKey))
 mic_SVG.addEventListener("contextmenu", () => {
     if (window.speech2speechState.isReadingMic) {
         window.stopRecord(true)
@@ -256,7 +256,7 @@ mic_SVG.addEventListener("contextmenu", () => {
 clearProgress()
 
 
-const populateS2SVoiceList = () => {
+window.populateS2SVoiceList = () => {
     const models = []
     Object.values(window.games).forEach(game => {
         game.models.forEach(model => {
@@ -307,8 +307,6 @@ const populateS2SVoiceList = () => {
         s2sVoiceList.appendChild(createElem("div", window.i18n.NO_XVASPEECH_MODELS))
     }
 }
-window.populateS2SVoiceList = populateS2SVoiceList
-
 
 
 
@@ -319,7 +317,7 @@ if (Object.keys(window.userSettings).includes("s2s_voiceId")) {
 
 s2sVLFemale.addEventListener("change", () => {
     window.userSettings.s2sVL_female = s2sVLFemale.checked
-    populateS2SVoiceList()
+    window.populateS2SVoiceList()
     window.saveUserSettings()
 })
 if (Object.keys(window.userSettings).includes("s2sVL_female")) {
@@ -327,7 +325,7 @@ if (Object.keys(window.userSettings).includes("s2sVL_female")) {
 }
 s2sVLMale.addEventListener("change", () => {
     window.userSettings.s2sVL_male = s2sVLMale.checked
-    populateS2SVoiceList()
+    window.populateS2SVoiceList()
     window.saveUserSettings()
 })
 if (Object.keys(window.userSettings).includes("s2sVL_male")) {
@@ -335,7 +333,7 @@ if (Object.keys(window.userSettings).includes("s2sVL_male")) {
 }
 s2sVLOther.addEventListener("change", () => {
     window.userSettings.s2sVL_other = s2sVLOther.checked
-    populateS2SVoiceList()
+    window.populateS2SVoiceList()
     window.saveUserSettings()
 })
 if (Object.keys(window.userSettings).includes("s2sVL_other")) {
@@ -364,7 +362,7 @@ s2sNoiseRecordSampleBtn.addEventListener("click", () => {
             s2sNoiseRecordSampleBtn.style.background = origButtonColour
             window.speech2speechState.recorder.stop()
             window.speech2speechState.stream.getAudioTracks()[0].stop()
-            outputRecording(silenceFileName, () => {
+            window.outputS2SRecording(silenceFileName, () => {
                 s2sNoiseAudioContainer.innerHTML = ""
                 const audioElem = createElem("audio", {controls: true}, createElem("source", {
                     src: silenceFileName,
@@ -415,7 +413,7 @@ s2sVLRecordSampleBtn.addEventListener("click", () => {
             window.speech2speechState.recorder.stop()
             window.speech2speechState.stream.getAudioTracks()[0].stop()
             const fileName = `${__dirname.replace("\\javascript", "").replace(/\\/g,"/")}/output/temp-recsample.wav`
-            outputRecording(fileName, () => {
+            window.outputS2SRecording(fileName, () => {
                 s2sVLVoiceSampleAudioContainer.innerHTML = ""
                 const audioElem = createElem("audio", {controls: true}, createElem("source", {
                     src: fileName,
@@ -440,7 +438,7 @@ s2sVLRecordSampleBtn.addEventListener("click", () => {
 
 
 // File dragging
-const uploadS2SFile = (eType, event) => {
+window.uploadS2SFile = (eType, event) => {
 
     if (["dragenter", "dragover"].includes(eType)) {
         clearProgress(1)
@@ -474,7 +472,7 @@ const uploadS2SFile = (eType, event) => {
 
                 const fileName = `${__dirname.replace("\\javascript", "").replace(/\\/g,"/")}/output/recorded_file.wav`
                 fs.copyFileSync(file.path, fileName)
-                useWavFileForspeech2speech(fileName)
+                window.useWavFileForspeech2speech(fileName)
             } else {
                 window.errorModal(window.i18n.LOAD_TARGET_MODEL)
             }
@@ -482,10 +480,10 @@ const uploadS2SFile = (eType, event) => {
     }
 }
 
-micContainer.addEventListener("dragenter", event => uploadS2SFile("dragenter", event), false)
-micContainer.addEventListener("dragleave", event => uploadS2SFile("dragleave", event), false)
-micContainer.addEventListener("dragover", event => uploadS2SFile("dragover", event), false)
-micContainer.addEventListener("drop", event => uploadS2SFile("drop", event), false)
+micContainer.addEventListener("dragenter", event => window.uploadS2SFile("dragenter", event), false)
+micContainer.addEventListener("dragleave", event => window.uploadS2SFile("dragleave", event), false)
+micContainer.addEventListener("dragover", event => window.uploadS2SFile("dragover", event), false)
+micContainer.addEventListener("drop", event => window.uploadS2SFile("drop", event), false)
 
 // Disable page navigation on badly dropped file
 window.document.addEventListener("dragover", event => event.preventDefault(), false)

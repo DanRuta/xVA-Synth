@@ -95,7 +95,7 @@ function CSVToArray( strData, strDelimiter ){
     // Return the parsed data.
     return( arrData );
 }
-
+window.CSVToArray = CSVToArray
 
 let smiInterval = setInterval(() => {
     try {
@@ -165,7 +165,7 @@ batch_generateSample.addEventListener("click", () => {
     shell.showItemInFolder(`${out_directory}/sample.csv`)
 })
 
-const readFileTxt = (file) => {
+window.readFileTxt = (file) => {
     return new Promise((resolve, reject) => {
         const dataLines = []
         const reader = new FileReader()
@@ -189,7 +189,7 @@ const readFileTxt = (file) => {
     })
 }
 
-const readFile = (file) => {
+window.readFile = (file) => {
     return new Promise((resolve, reject) => {
         const dataLines = []
         const reader = new FileReader()
@@ -212,7 +212,7 @@ const readFile = (file) => {
     })
 }
 
-const uploadBatchCSVs = async (eType, event) => {
+window.uploadBatchCSVs = async (eType, event) => {
 
     if (["dragenter", "dragover"].includes(eType)) {
         batch_main.style.background = "#5b5b5b"
@@ -241,7 +241,7 @@ const uploadBatchCSVs = async (eType, event) => {
                 if (file.name.toLowerCase().endsWith(".txt")) {
                     if (window.currentModel) {
                         window.appLogger.log(`Reading file: ${file.name}`)
-                        const records = await readFileTxt(file)
+                        const records = await window.readFileTxt(file)
                         if (window.userSettings.batch_skipExisting) {
                             window.appLogger.log("Checking existing files before adding to queue")
                         } else {
@@ -282,7 +282,7 @@ const uploadBatchCSVs = async (eType, event) => {
             }
 
             window.appLogger.log(`Reading file: ${file.name}`)
-            const records = await readFile(file)
+            const records = await window.readFile(file)
             if (window.userSettings.batch_skipExisting) {
                 window.appLogger.log("Checking existing files before adding to queue")
             } else {
@@ -327,12 +327,12 @@ const uploadBatchCSVs = async (eType, event) => {
 
 
         window.appLogger.log("Preprocessing data...")
-        const cleanedData = preProcessCSVData(dataLines)
+        const cleanedData = window.preProcessCSVData(dataLines)
         if (cleanedData.length) {
-            populateRecordsList(cleanedData)
+            window.populateRecordsList(cleanedData)
             window.appLogger.log("Grouping up lines...")
-            const finalOrder = groupLines()
-            refreshRecordsList(finalOrder)
+            const finalOrder = window.groupLines()
+            window.refreshRecordsList(finalOrder)
             window.batch_state.lines = finalOrder
         } else {
             batch_clearBtn.click()
@@ -345,7 +345,7 @@ const uploadBatchCSVs = async (eType, event) => {
     }
 }
 
-const preProcessCSVData = data => {
+window.preProcessCSVData = data => {
 
     batch_main.style.display = "block"
     batchDropZoneNote.style.display = "none"
@@ -416,7 +416,7 @@ const preProcessCSVData = data => {
     return data
 }
 
-const populateRecordsList = records => {
+window.populateRecordsList = records => {
     batch_synthesizeBtn.style.display = "inline-block"
     batchDropZoneNote.style.display = "none"
 
@@ -450,7 +450,7 @@ const populateRecordsList = records => {
     })
 }
 
-const refreshRecordsList = (finalOrder) => {
+window.refreshRecordsList = (finalOrder) => {
     batchRecordsContainer.innerHTML = ""
     finalOrder = finalOrder ? finalOrder : window.batch_state.lines
 
@@ -465,7 +465,7 @@ const refreshRecordsList = (finalOrder) => {
 }
 
 // Sort the lines by voice_id, and then by vocoder used
-const groupLines = () => {
+window.groupLines = () => {
     if (window.userSettings.batch_doGrouping) {
         const voices_order = []
 
@@ -526,7 +526,7 @@ batch_clearBtn.addEventListener("click", () => {
 })
 
 
-const startBatch = () => {
+window.startBatch = () => {
 
     // Output directory
     if (!fs.existsSync(window.userSettings.batchOutFolder)) {
@@ -566,10 +566,10 @@ const startBatch = () => {
     window.batch_state.outPathsChecked = []
     window.batch_state.startTime = new Date()
     window.batch_state.linesDoneSinceStart = 0
-    performSynthesis()
+    window.performSynthesis()
 }
 
-const batchChangeVoice = (game, voice, modelType) => {
+window.batchChangeVoice = (game, voice, modelType) => {
     return new Promise((resolve) => {
         if (!window.batch_state.state) {
             return resolve()
@@ -609,7 +609,7 @@ const batchChangeVoice = (game, voice, modelType) => {
             resolve()
         }).catch(async e => {
             if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
-                await batchChangeVoice(game, voice, modelType)
+                await window.batchChangeVoice(game, voice, modelType)
                 resolve()
             } else {
                 console.log(e)
@@ -629,7 +629,7 @@ const batchChangeVoice = (game, voice, modelType) => {
         })
     })
 }
-const batchChangeVocoder = (vocoder, game, voice) => {
+window.batchChangeVocoder = (vocoder, game, voice) => {
     return new Promise((resolve) => {
         if (!window.batch_state.state) {
             return resolve()
@@ -664,7 +664,7 @@ const batchChangeVocoder = (vocoder, game, voice) => {
             }
         }).catch(async e => {
             if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
-                await batchChangeVocoder(vocoder, game, voice)
+                await window.batchChangeVocoder(vocoder, game, voice)
                 resolve()
             } else {
                 console.log(e)
@@ -686,7 +686,7 @@ const batchChangeVocoder = (vocoder, game, voice) => {
 }
 
 
-const prepareLinesBatchForSynth = () => {
+window.prepareLinesBatchForSynth = () => {
 
     const linesBatch = []
     const records = []
@@ -739,7 +739,7 @@ const prepareLinesBatchForSynth = () => {
 }
 
 
-const addActionButtons = (records, ri) => {
+window.addActionButtons = (records, ri) => {
 
     let audioPreview
     const playButton = createElem("button.smallButton", window.i18n.PLAY)
@@ -808,7 +808,7 @@ const addActionButtons = (records, ri) => {
 }
 
 
-const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options, extraInfo) => {
+window.batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options, extraInfo) => {
     return new Promise((resolve, reject) => {
         doFetch(`http://localhost:8008/batchOutputAudio`, {
             method: "Post",
@@ -839,7 +839,7 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options, extra
                     records[ri][1].children[1].innerHTML = window.i18n.DONE
                     records[ri][1].children[1].style.background = "green"
                     fs.unlinkSync(tempPaths[ri])
-                    addActionButtons(records, ri)
+                    window.addActionButtons(records, ri)
                 }
 
                 if (!window.userSettings.batch_fastMode) {
@@ -853,12 +853,12 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options, extra
             batch_progressBar.innerHTML = `${parseInt(percentDone* 100)/100}%`
             window.batch_state.taskBarPercent = percentDone/100
             window.electronBrowserWindow.setProgressBar(window.batch_state.taskBarPercent)
-            adjustETA()
+            window.adjustETA()
             resolve()
 
         }).catch(async e => {
             if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
-                await batchKickOffMPffmpegOutput(records, tempPaths, outPaths, options, extraInfo)
+                await window.batchKickOffMPffmpegOutput(records, tempPaths, outPaths, options, extraInfo)
                 resolve()
             } else {
                 console.log(e)
@@ -874,7 +874,7 @@ const batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options, extra
 }
 
 
-const batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, body) => {
+window.batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, body) => {
     return new Promise((resolve, reject) => {
         doFetch(`http://localhost:8008/outputAudio`, {
             method: "Post",
@@ -896,7 +896,7 @@ const batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, bod
                 records[ri][1].children[1].innerHTML = window.i18n.DONE
                 records[ri][1].children[1].style.background = "green"
                 fs.unlinkSync(tempFileLocation)
-                addActionButtons(records, ri)
+                window.addActionButtons(records, ri)
                 window.batch_state.fastModeActuallyFinishedTasks += 1
 
                 const percentDone = (window.batch_state.fastModeActuallyFinishedTasks) / window.batch_state.lines.length * 100
@@ -904,12 +904,12 @@ const batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, bod
                 batch_progressBar.innerHTML = `${parseInt(percentDone* 100)/100}%`
                 window.batch_state.taskBarPercent = percentDone/100
                 window.electronBrowserWindow.setProgressBar(window.batch_state.taskBarPercent)
-                adjustETA()
+                window.adjustETA()
                 resolve()
             }
         }).catch(async e => {
             if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
-                await batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, body)
+                await window.batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, body)
                 resolve()
             } else {
                 console.log(e)
@@ -925,12 +925,12 @@ const batchKickOffFfmpegOutput = (ri, linesBatch, records, tempFileLocation, bod
     })
 }
 
-const batchKickOffGeneration = () => {
+window.batchKickOffGeneration = () => {
     return new Promise((resolve) => {
         if (!window.batch_state.state) {
             return resolve()
         }
-        const [speaker_i, voice_id, vocoder, linesBatch, records] = prepareLinesBatchForSynth()
+        const [speaker_i, voice_id, vocoder, linesBatch, records] = window.prepareLinesBatchForSynth()
 
         records.forEach((record, ri) => {
             record[1].children[1].innerHTML = window.i18n.RUNNING
@@ -1014,10 +1014,10 @@ const batchKickOffGeneration = () => {
                         inputSequence: records.map(rec => rec[0].text)
                     }
                     if (window.userSettings.batch_fastMode) {
-                        window.batch_state.fastModeOutputPromises.push(batchKickOffMPffmpegOutput(records, tempPaths, outPaths, options, JSON.stringify(extraInfo)))
+                        window.batch_state.fastModeOutputPromises.push(window.batchKickOffMPffmpegOutput(records, tempPaths, outPaths, options, JSON.stringify(extraInfo)))
                         window.batch_state.lineIndex += records.length
                     } else {
-                        await batchKickOffMPffmpegOutput(records, tempPaths, outPaths, options, JSON.stringify(extraInfo))
+                        await window.batchKickOffMPffmpegOutput(records, tempPaths, outPaths, options, JSON.stringify(extraInfo))
                     }
                 } else {
                     for (let ri=0; ri<linesBatch.length; ri++) {
@@ -1034,7 +1034,7 @@ const batchKickOffGeneration = () => {
                                 }
 
                                 if (window.userSettings.batch_fastMode) {
-                                    window.batch_state.fastModeOutputPromises.push(batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
+                                    window.batch_state.fastModeOutputPromises.push(window.batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
                                         input_path: tempFileLocation,
                                         output_path: outPath,
                                         isBatchMode: true,
@@ -1043,7 +1043,7 @@ const batchKickOffGeneration = () => {
                                         options: JSON.stringify(options)
                                     })))
                                 } else {
-                                    await batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
+                                    await window.batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
                                         input_path: tempFileLocation,
                                         output_path: outPath,
                                         isBatchMode: true,
@@ -1074,7 +1074,7 @@ const batchKickOffGeneration = () => {
 
                         window.batch_state.lineIndex += 1
 
-                        addActionButtons(records, li)
+                        window.addActionButtons(records, li)
 
                     } catch (err) {
                         console.log(err)
@@ -1088,7 +1088,7 @@ const batchKickOffGeneration = () => {
             }
         }).catch(async e => {
             if (e.code=="ECONNREFUSED" || e.code=="ECONNRESET") {
-                await batchKickOffGeneration()
+                await window.batchKickOffGeneration()
                 resolve()
             } else {
                 console.log(e)
@@ -1104,11 +1104,11 @@ const batchKickOffGeneration = () => {
     })
 }
 
-const performSynthesis = async () => {
+window.performSynthesis = async () => {
 
     if (batch_state.lineIndex-batch_state.fastModeActuallyFinishedTasks > 1000) {
         console.log(`Ahead by ${batch_state.lineIndex-batch_state.fastModeActuallyFinishedTasks} tasks. Waiting...`)
-        setTimeout(() => {performSynthesis()}, 1000)
+        setTimeout(() => {window.performSynthesis()}, 1000)
         return
     }
 
@@ -1129,35 +1129,35 @@ const performSynthesis = async () => {
 
     // Change the voice model if the next line uses a different one
     if (window.batch_state.lastModel!=record[0].voice_id) {
-        await batchChangeVoice(record[0].game_id, record[0].voice_id, record[0].modelType)
+        await window.batchChangeVoice(record[0].game_id, record[0].voice_id, record[0].modelType)
         window.batch_state.lastModel = record[0].voice_id
     }
 
     // Change the vocoder if the next line uses a different one
     if (window.batch_state.lastVocoder!=record[0].vocoder) {
-        await batchChangeVocoder(record[0].vocoder, record[0].game_id, record[0].voice_id)
+        await window.batchChangeVocoder(record[0].vocoder, record[0].game_id, record[0].voice_id)
     }
 
-    await batchKickOffGeneration()
+    await window.batchKickOffGeneration()
 
     if (window.batch_state.lineIndex==window.batch_state.lines.length) {
         // The end
         if (window.userSettings.batch_fastMode) {
             Promise.all(window.batch_state.fastModeOutputPromises).then(() => {
-                stopBatch()
+                window.stopBatch()
                 batch_openDirBtn.style.display = "inline-block"
             })
         } else {
-            stopBatch()
+            window.stopBatch()
             batch_openDirBtn.style.display = "inline-block"
         }
 
     } else {
-        performSynthesis()
+        window.performSynthesis()
     }
 }
 
-const pauseResumeBatch = () => {
+window.pauseResumeBatch = () => {
 
     batch_progressNotes.innerHTML = window.i18n.PAUSED
 
@@ -1174,11 +1174,11 @@ const pauseResumeBatch = () => {
 
 
     if (!isRunning) {
-        performSynthesis()
+        window.performSynthesis()
     }
 }
 
-const stopBatch = (stoppedByUser) => {
+window.stopBatch = (stoppedByUser) => {
     window.electronBrowserWindow.setProgressBar(0)
     window.batch_state.state = false
     window.batch_state.lineIndex = 0
@@ -1207,7 +1207,7 @@ const stopBatch = (stoppedByUser) => {
     window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["batch-stop"]["post"], event="post batch-stop", pluginData)
 }
 
-const adjustETA = () => {
+window.adjustETA = () => {
     if (window.batch_state.state && window.batch_state.fastModeActuallyFinishedTasks>=2) {
         batch_ETA_container.style.opacity = 1
 
@@ -1262,19 +1262,19 @@ const openOutput = () => {
 batch_paginationPrev.addEventListener("click", () => {
     batch_pageNum.value = Math.max(1, parseInt(batch_pageNum.value)-1)
     window.batch_state.paginationIndex = batch_pageNum.value-1
-    refreshRecordsList()
+    window.refreshRecordsList()
 })
 batch_paginationNext.addEventListener("click", () => {
     const numPages = Math.ceil(window.batch_state.lines.length/window.userSettings.batch_paginationSize)
     batch_pageNum.value = Math.min(parseInt(batch_pageNum.value)+1, numPages)
     window.batch_state.paginationIndex = batch_pageNum.value-1
-    refreshRecordsList()
+    window.refreshRecordsList()
 })
 batch_pageNum.addEventListener("change", () => {
     const numPages = Math.ceil(window.batch_state.lines.length/window.userSettings.batch_paginationSize)
     batch_pageNum.value = Math.max(1, Math.min(parseInt(batch_pageNum.value), numPages))
     window.batch_state.paginationIndex = batch_pageNum.value-1
-    refreshRecordsList()
+    window.refreshRecordsList()
 })
 setting_batch_paginationSize.addEventListener("change", () => {
     const numPages = Math.ceil(window.batch_state.lines.length/window.userSettings.batch_paginationSize)
@@ -1282,20 +1282,20 @@ setting_batch_paginationSize.addEventListener("change", () => {
     window.batch_state.paginationIndex = batch_pageNum.value-1
     batch_total_pages.innerHTML = `of ${numPages}`
 
-    refreshRecordsList()
+    window.refreshRecordsList()
 })
 
 
-batch_main.addEventListener("dragenter", event => uploadBatchCSVs("dragenter", event), false)
-batch_main.addEventListener("dragleave", event => uploadBatchCSVs("dragleave", event), false)
-batch_main.addEventListener("dragover", event => uploadBatchCSVs("dragover", event), false)
-batch_main.addEventListener("drop", event => uploadBatchCSVs("drop", event), false)
+batch_main.addEventListener("dragenter", event => window.uploadBatchCSVs("dragenter", event), false)
+batch_main.addEventListener("dragleave", event => window.uploadBatchCSVs("dragleave", event), false)
+batch_main.addEventListener("dragover", event => window.uploadBatchCSVs("dragover", event), false)
+batch_main.addEventListener("drop", event => window.uploadBatchCSVs("drop", event), false)
 
 
-batch_synthesizeBtn.addEventListener("click", startBatch)
-batch_pauseBtn.addEventListener("click", pauseResumeBatch)
-batch_stopBtn.addEventListener("click", () => stopBatch(true))
+batch_synthesizeBtn.addEventListener("click", window.startBatch)
+batch_pauseBtn.addEventListener("click", window.pauseResumeBatch)
+batch_stopBtn.addEventListener("click", () => window.stopBatch(true))
 batch_openDirBtn.addEventListener("click", openOutput)
 
-exports.uploadBatchCSVs = uploadBatchCSVs
-exports.startBatch = startBatch
+exports.uploadBatchCSVs = window.uploadBatchCSVs
+exports.startBatch = window.startBatch

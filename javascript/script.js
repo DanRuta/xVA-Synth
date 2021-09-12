@@ -376,7 +376,7 @@ window.changeGame = (meta) => {
                 // Set the vocoder select to quick-and-dirty if bespoke hifi-gan was selected
                 if (vocoder_select.value.includes(".hg.")) {
                     vocoder_select.value = "qnd"
-                    changeVocoder("qnd")
+                    window.changeVocoder("qnd")
                 }
                 // Remove the bespoke hifi option if there was one already there
                 Array.from(vocoder_select.children).forEach(opt => {
@@ -458,7 +458,7 @@ window.changeGame = (meta) => {
 
 }
 
-samplePlayPause.addEventListener("click", (event) => {
+window.samplePlayPauseHandler = event => {
     if (window.wavesurfer) {
         if (event.ctrlKey) {
             window.wavesurfer.setSinkId(window.userSettings.alt_speaker)
@@ -474,11 +474,10 @@ samplePlayPause.addEventListener("click", (event) => {
         samplePlayPause.innerHTML = window.i18n.PAUSE
         window.wavesurfer.playPause()
     }
+}
+samplePlayPause.addEventListener("click", window.samplePlayPauseHandler)
 
-
-})
-
-const makeSample = (src, newSample) => {
+window.makeSample = (src, newSample) => {
     const fileName = src.split("/").reverse()[0].split("%20").join(" ")
     const fileFormat = fileName.split(".").reverse()[0]
     const sample = createElem("div.sample", createElem("div", fileName))
@@ -655,9 +654,9 @@ generateVoiceButton.addEventListener("click", () => {
 
             if (window.userSettings.defaultToHiFi && window.currentModel.hifi) {
                 vocoder_select.value = Array.from(vocoder_select.children).find(opt => opt.innerHTML=="Bespoke HiFi GAN").value
-                changeVocoder(vocoder_select.value).then(() => dialogueInput.focus())
+                window.changeVocoder(vocoder_select.value).then(() => dialogueInput.focus())
             } else if (window.userSettings.vocoder.includes(".hg.pt")) {
-                changeVocoder("qnd").then(() => dialogueInput.focus())
+                window.changeVocoder("qnd").then(() => dialogueInput.focus())
             } else {
                 closeModal().then(() => dialogueInput.focus())
             }
@@ -915,11 +914,11 @@ window.refreshRecordsList = (directory) => {
             console.warn("sort by type not recognised", sortBy)
         }
     }).forEach(record => {
-        voiceSamples.appendChild(makeSample(record.jsonPath))
+        voiceSamples.appendChild(window.makeSample(record.jsonPath))
     })
 }
 
-const saveFile = (from, to, skipUIRecord=false) => {
+window.saveFile = (from, to, skipUIRecord=false) => {
     to = to.split("%20").join(" ")
     to = to.replace(".wav", `.${window.userSettings.audio.format}`)
 
@@ -1150,19 +1149,19 @@ window.keepSampleFunction = shiftClick => {
                                 window.appLogger.log(`Error in keepSample: ${err}`)
                             }
                             console.log(fromLocation, "finalOutLocation", finalOutLocation)
-                            saveFile(fromLocation, finalOutLocation, skipUIRecord)
+                            window.saveFile(fromLocation, finalOutLocation, skipUIRecord)
                         })
                         return
                     } else {
-                        saveFile(fromLocation, toLocationOut.join("/"), skipUIRecord)
+                        window.saveFile(fromLocation, toLocationOut.join("/"), skipUIRecord)
                         return
                     }
                 }
-                saveFile(fromLocation, toLocationOut.join("/"), skipUIRecord)
+                window.saveFile(fromLocation, toLocationOut.join("/"), skipUIRecord)
             })
 
         } else {
-            saveFile(fromLocation, toLocation, skipUIRecord)
+            window.saveFile(fromLocation, toLocation, skipUIRecord)
         }
     }
 }
@@ -1339,7 +1338,7 @@ voiceSamplesSearch.addEventListener("keyup", () => {
 
 
 vocoder_select.value = window.userSettings.vocoder.includes(".hg.") ? "qnd" : window.userSettings.vocoder
-const changeVocoder = vocoder => {
+window.changeVocoder = vocoder => {
     return new Promise(resolve => {
         spinnerModal(window.i18n.CHANGING_MODELS)
         doFetch(`http://localhost:8008/setVocoder`, {
@@ -1366,7 +1365,7 @@ const changeVocoder = vocoder => {
         })
     })
 }
-vocoder_select.addEventListener("change", () => changeVocoder(vocoder_select.value))
+vocoder_select.addEventListener("change", () => window.changeVocoder(vocoder_select.value))
 
 
 
@@ -1403,12 +1402,12 @@ const checkForUpdates = () => {
     doFetch("http://danruta.co.uk/xvasynth_updates.txt").then(r=>r.json()).then(data => {
         fs.writeFileSync(`${path}/updates.json`, JSON.stringify(data), "utf8")
         checkUpdates.innerHTML = window.i18n.CHECK_FOR_UPDATES
-        showUpdates()
+        window.showUpdates()
     }).catch(() => {
         checkUpdates.innerHTML = window.i18n.CANT_REACH_SERVER
     })
 }
-const showUpdates = () => {
+window.showUpdates = () => {
     window.updatesLog = fs.readFileSync(`${path}/updates.json`, "utf8")
     window.updatesLog = JSON.parse(window.updatesLog)
     const sortedLogVersions = Object.keys(window.updatesLog).map( a => a.split('.').map( n => +n+100000 ).join('.') ).sort()
@@ -1442,7 +1441,7 @@ checkUpdates.addEventListener("click", () => {
     checkUpdates.innerHTML = window.i18n.CHECKING_FOR_UPDATES
     checkForUpdates()
 })
-showUpdates()
+window.showUpdates()
 
 
 // Batch generation

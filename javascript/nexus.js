@@ -19,7 +19,7 @@ window.nexusState = {
 const http = require("http")
 const https = require("https")
 
-const download = (url, dest) => {
+window.nexusDownload = (url, dest) => {
     return new Promise((resolve, reject) => {
         const file = fs.createWriteStream(dest)
 
@@ -160,7 +160,7 @@ window.downloadFile = ([nexusGameId, nexusRepoId, outputFileName, fileId]) => {
             })
 
         } else {
-            await download(downloadLink[0].URI.replace("https", "http"), `${window.path}/downloads/${outputFileName}.zip`)
+            await window.nexusDownload(downloadLink[0].URI.replace("https", "http"), `${window.path}/downloads/${outputFileName}.zip`)
 
             const queueIndex = window.nexusState.downloadQueue.findIndex(it => it[1]==fileId)
             window.nexusState.downloadQueue.splice(queueIndex, 1)
@@ -640,7 +640,7 @@ nexusCheckNow.addEventListener("click", () => window.getLatestModelsList())
 
 window.setupModal(nexusManageReposButton, nexusReposContainer)
 
-const addRepoListItem = (link, li) => {
+window.addRepoListItem = (link, li) => {
     const isEnabled = link.startsWith("*")
     const cleanLink = link.replace(/^\*/, "")
     window.nexusState.repoLinks.push([cleanLink, isEnabled])
@@ -670,7 +670,7 @@ if (fs.existsSync(`${window.path}/repositories.txt`)) {
     const data = fs.readFileSync(`${window.path}/repositories.txt`, "utf8").split("\n").filter(line => line.length)
 
     data.forEach((link, li) => {
-        addRepoListItem(link, li)
+        window.addRepoListItem(link, li)
     })
 }
 nexusReposAddButton.addEventListener("click", () => {
@@ -691,7 +691,7 @@ nexusReposAddButton.addEventListener("click", () => {
         }
 
         const cleanLink = link.trim().toLowerCase().replace(/\/$/,"")
-        addRepoListItem("*"+cleanLink, window.nexusState.repoLinks.length)
+        window.addRepoListItem("*"+cleanLink, window.nexusState.repoLinks.length)
 
         // Write to file
         const fileText = []
