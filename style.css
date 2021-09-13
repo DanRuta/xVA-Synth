@@ -906,6 +906,17 @@ a {
 #plugins_main {
     width: 75vw;
 }
+.centeredSettingsSectionPlugins {
+    justify-content: center !important;
+}
+.centeredSettingsSectionPlugins > div {
+    flex-direction: row !important;
+    margin-top: -10px !important;
+    color: gray;
+}
+.centeredSettingsSectionPlugins > div > i {
+    margin-left: 20px;
+}
 #batchDropZoneNote {
     font-size: 30pt;
 }

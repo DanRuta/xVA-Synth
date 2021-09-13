@@ -435,6 +435,8 @@ window.i18n.setEnglish = () => {
     window.i18n.VEMB_NO_MODEL = "No model file available. Download it if you haven't already."
     window.i18n.VEMB_RECOMPUTING = "Re-computing embeddings and dimensionality reduction on voices. May take a minute the first time, subsequent runs should be instant."
 
+    window.i18n.SETTINGS_FOR_PLUGIN = "Settings for plugin: <i>_1</i>"
+
     // Useful during developing, to see if there are any strings left un-i18n-ed
     // Object.keys(window.i18n).forEach(key => {
     //     if (!["setEnglish", "updateUI"].includes(key)) {

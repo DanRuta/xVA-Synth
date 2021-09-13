@@ -60,6 +60,7 @@ class PluginsManager {
             }
         })
 
+        window.pluginsManager = this
         this.loadModules()
     }
 
@@ -441,6 +442,110 @@ class PluginsManager {
                 window.appLogger.log(`[${window.i18n.PLUGIN_RUN_ERROR} "${event}": ${pluginId}]: ${e}`)
             }
         })
+    }
+
+
+    registerINIFile (pluginId, settingsKey, filePath) {
+
+        if (!pluginId || !settingsKey || !filePath) {
+            return self.log(`You must provide the following to register an ini file: pluginId, settingsKey, filePath`)
+        }
+
+        if (fs.existsSync(filePath)) {
+
+            if (document.querySelectorAll(`.${pluginId}_plugin_setting`).length) {
+                return
+            }
+
+            const IniSettings = {}
+            const iniFileData = fs.readFileSync(filePath, "utf8").split("\n")
+
+            const hr = createElem(`hr.${pluginId}_plugin_setting`)
+            settingsOptionsContainer.appendChild(hr)
+            settingsOptionsContainer.appendChild(createElem("div.centeredSettingsSectionPlugins", createElem("div", window.i18n.SETTINGS_FOR_PLUGIN.replace("_1", pluginId)) ))
+
+            iniFileData.forEach(keyVal => {
+                if (!keyVal.trim().length) {
+                    return
+                }
+                let comment = keyVal.includes("#") ? keyVal.split("#")[1].trim() : undefined
+                keyVal = keyVal.split("#")[0].trim()
+                const key = keyVal.split("=")[0].trim()
+                const val = keyVal.split("=")[1].trim()
+                IniSettings[key.toLowerCase()] = val
+
+                const labelText = key[0].toUpperCase() + key.substring(1)
+                let label, input
+
+                if (comment && comment.includes("{") && comment.includes(":")) {
+
+                    const optionsList = comment.split("{")[1].split("}")[0].split(";").map(kv => {
+                        return [kv.split(":")[0], kv.split(":")[1]]
+                    })
+                    const optionElems = optionsList.map(data => {
+                        const opt = createElem("option", {value: data[1]})
+                        opt.innerHTML = data[0]
+                        return opt
+                    })
+
+                    comment = comment.split("}").reverse()[0].trim()
+                    label = createElem("div", labelText.replace(/_/g, " ") + (comment ? `<br>(${comment})` : ""))
+
+                    input = createElem("select", {name: key, comment: comment})
+                    optionElems.forEach(option => {
+                        input.appendChild(option)
+                    })
+                    input.value = val
+
+                } else {
+                    label = createElem("div", labelText.replace(/_/g, " ") + (comment ? `<br>(${comment})` : ""))
+                    const inputType = ["true","false"].includes(val.toLowerCase()) ? "checkbox" : "text"
+                    input = createElem("input", {
+                        type: inputType, name: key, comment: comment
+                    })
+                    if (inputType=="checkbox") {
+                        input.checked = val.toLowerCase() == "true"
+                    } else {
+                        input.value = val
+                    }
+                }
+
+
+                input.addEventListener("change", () => {
+                    const outputIni = []
+                    settingsOptionsContainer.querySelectorAll(`.${pluginId}_plugin_setting>div>input, .${pluginId}_plugin_setting>div>select`).forEach(input => {
+                        if (input.tagName=="SELECT") {
+                            const select = input
+                            const optionsList = Array.from(select.querySelectorAll("option")).map(option => {
+                                return [option.innerHTML, option.value]
+                            })
+                            const optionsListString = `{${optionsList.map(kv => kv.join(":")).join(";")}}`
+
+                            outputIni.push(`${select.name.toLowerCase()}=${select.value} # ${optionsListString} ${select.getAttribute("comment")!="undefined" ? select.getAttribute("comment") : ""}`)
+                            IniSettings[select.name.toLowerCase()] = select.value
+
+                        } else {
+                            const value = input.type=="checkbox" ? (input.checked ? "true" : "false") : input.value
+                            outputIni.push(`${input.name.toLowerCase()}=${value}${input.getAttribute("comment")!="undefined" ? " # "+input.getAttribute("comment") : ""}`)
+                            IniSettings[input.name.toLowerCase()] = value
+                        }
+                    })
+
+                    fs.writeFileSync(filePath, outputIni.join("\n"), "utf8")
+                    window.pluginsContext[settingsKey] = IniSettings
+                })
+
+                settingsOptionsContainer.appendChild(createElem(`div.${pluginId}_plugin_setting`, [label, createElem("div", input)]))
+            })
+
+            window.pluginsContext[settingsKey] = IniSettings
+
+
+
+        } else {
+            this.log(`Ini file does not exists here: ${filePath}`)
+        }
+
     }
 
 }
