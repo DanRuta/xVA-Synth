@@ -111,9 +111,52 @@ window.initWaveSurfer = (src) => {
             samplePlayPause.innerHTML = window.i18n.PAUSE
         }
     })
-    // wavesurferContainer.style.filter = "drop-shadow(1px 0px 0px rgba(255, 255, 255, 1)) drop-shadow(2px 0px 0px rgba(0, 0, 0, 1))"
 }
 
+
+window.registerModel = (modelsPath, gameFolder, model, {gameId, voiceId, voiceName, voiceDescription, gender}) => {
+    if (!window.games.hasOwnProperty(gameId)) {
+
+        const gameAsset = fs.readdirSync(`${path}/assets`).find(f => f.startsWith(gameId))
+        const option = document.createElement("option")
+        option.value = gameAsset
+        option.innerHTML = gameAsset.split("-").reverse()[0].split(".")[0]
+        window.games[gameId] = {
+            models: [],
+            gameAsset
+        }
+    }
+
+    const audioPreviewPath = `${modelsPath}/${model.games.find(({gameId}) => gameId==gameFolder).voiceId}`
+    const existingDuplicates = []
+    window.games[gameId].models.forEach((item,i) => {
+        if (item.voiceId==voiceId) {
+            existingDuplicates.push([item, i])
+        }
+    })
+
+    const modelData = {
+        model, modelsPath, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, gender,
+        modelVersion: model.modelVersion,
+        hifi: undefined,
+        num_speakers: model.emb_size,
+        modelType: model.modelType
+    }
+
+    const potentialHiFiPath = `${modelsPath}/${voiceId}.hg.pt`
+    if (fs.existsSync(potentialHiFiPath)) {
+        modelData.hifi = potentialHiFiPath
+    }
+
+    if (existingDuplicates.length) {
+        if (existingDuplicates[0][0].modelVersion<model.modelVersion) {
+            window.games[gameId].models.splice(existingDuplicates[0][1], 1)
+            window.games[gameId].models.push(modelData)
+        }
+    } else {
+        window.games[gameId].models.push(modelData)
+    }
+}
 
 window.loadAllModels = (forceUpdate=false) => {
     return new Promise(resolve => {
@@ -125,6 +168,37 @@ window.loadAllModels = (forceUpdate=false) => {
         let gameFolder
         let modelPathsKeys = Object.keys(window.userSettings).filter(key => key.includes("modelspath_"))
         window.games = {}
+
+        // Do the current game first, and stop blocking the render process
+        if (window.currentGame && window.currentGame.length) {
+            const currentGameFolder = window.userSettings[`modelspath_${window.currentGame[0]}`]
+            gameFolder = modelsPathKey.split("_")[1]
+            try {
+                const files = fs.readdirSync(modelsPath).filter(f => f.endsWith(".json"))
+                files.forEach(fileName => {
+                    try {
+                        if (!models.hasOwnProperty(`${gameFolder}/${fileName}`)) {
+                            models[`${gameFolder}/${fileName}`] = null
+                        }
+                        const model = JSON.parse(fs.readFileSync(`${modelsPath}/${fileName}`, "utf8"))
+                        model.games.forEach(({gameId, voiceId, voiceName, voiceDescription, gender}) => {
+                            window.registerModel(currentGameFolder, gameFolder, model, {gameId, voiceId, voiceName, voiceDescription, gender})
+                        })
+
+                    } catch (e) {
+                        console.log(e)
+                        window.appLogger.log(`${window.i18n.ERR_LOADING_MODELS_FOR_GAME_WITH_FILENAME.replace("_1", gameFolder)} `+fileName)
+                        window.appLogger.log(e)
+                        window.appLogger.log(e.stack)
+                    }
+                })
+            } catch (e) {
+                window.appLogger.log(`${window.i18n.ERR_LOADING_MODELS_FOR_GAME}: `+ gameFolder)
+                window.appLogger.log(e)
+            }
+            resolve() // Continue the rest but asynchronously
+        }
+
 
         modelPathsKeys.forEach(modelsPathKey => {
             const modelsPath = window.userSettings[modelsPathKey]
@@ -146,48 +220,7 @@ window.loadAllModels = (forceUpdate=false) => {
 
                         const model = JSON.parse(fs.readFileSync(`${modelsPath}/${fileName}`, "utf8"))
                         model.games.forEach(({gameId, voiceId, voiceName, voiceDescription, gender}) => {
-
-                            if (!window.games.hasOwnProperty(gameId)) {
-
-                                const gameAsset = fs.readdirSync(`${path}/assets`).find(f => f.startsWith(gameId))
-                                const option = document.createElement("option")
-                                option.value = gameAsset
-                                option.innerHTML = gameAsset.split("-").reverse()[0].split(".")[0]
-                                window.games[gameId] = {
-                                    models: [],
-                                    gameAsset
-                                }
-                            }
-
-                            const audioPreviewPath = `${modelsPath}/${model.games.find(({gameId}) => gameId==gameFolder).voiceId}`
-                            const existingDuplicates = []
-                            window.games[gameId].models.forEach((item,i) => {
-                                if (item.voiceId==voiceId) {
-                                    existingDuplicates.push([item, i])
-                                }
-                            })
-
-                            const modelData = {
-                                model, modelsPath, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, gender,
-                                modelVersion: model.modelVersion,
-                                hifi: undefined,
-                                num_speakers: model.emb_size,
-                                modelType: model.modelType
-                            }
-
-                            const potentialHiFiPath = `${modelsPath}/${voiceId}.hg.pt`
-                            if (fs.existsSync(potentialHiFiPath)) {
-                                modelData.hifi = potentialHiFiPath
-                            }
-
-                            if (existingDuplicates.length) {
-                                if (existingDuplicates[0][0].modelVersion<model.modelVersion) {
-                                    window.games[gameId].models.splice(existingDuplicates[0][1], 1)
-                                    window.games[gameId].models.push(modelData)
-                                }
-                            } else {
-                                window.games[gameId].models.push(modelData)
-                            }
+                            window.registerModel(modelsPath, gameFolder, model, {gameId, voiceId, voiceName, voiceDescription, gender})
                         })
                     } catch (e) {
                         console.log(e)
@@ -197,13 +230,12 @@ window.loadAllModels = (forceUpdate=false) => {
                     }
                 })
             } catch (e) {
-                // console.log(e)
                 window.appLogger.log(`${window.i18n.ERR_LOADING_MODELS_FOR_GAME}: `+ gameFolder)
                 window.appLogger.log(e)
             }
 
-            resolve()
         })
+        resolve()
     })
 }
 setting_models_path_input.addEventListener("change", () => {
