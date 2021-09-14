@@ -761,25 +761,36 @@ letterLengthNumb.addEventListener("change", () => {
 
 // Reset button
 reset_btn.addEventListener("click", () => {
-    window.sequenceEditor.dursNew = window.sequenceEditor.resetDurs.map(v => v)
-    window.sequenceEditor.pitchNew = window.sequenceEditor.resetPitch.map(p=>p)
+    if (seq_edit_edit_select.value=="energy") {
+        window.sequenceEditor.energyNew = window.sequenceEditor.resetEnergy.map(v => v)
+        window.sequenceEditor.energyGrabbers.forEach((slider, l) => {
+            slider.setValueFromValue(window.sequenceEditor.energyNew[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
 
-    // Update the editor pitch values
-    window.sequenceEditor.grabbers.forEach((slider, i) => {
-        slider.setValueFromValue(window.sequenceEditor.pitchNew[i])
-    })
+    } else if (seq_edit_edit_select.value=="pitch") {
+        window.sequenceEditor.dursNew = window.sequenceEditor.resetDurs.map(v => v)
+        window.sequenceEditor.pitchNew = window.sequenceEditor.resetPitch.map(p=>p)
 
-    // Update the editor lengths
-    window.sequenceEditor.sliderBoxes.forEach((box,i) => {
-        box.setValueFromValue(window.sequenceEditor.dursNew[i])
-    })
+        // Update the editor pitch values
+        window.sequenceEditor.grabbers.forEach((slider, i) => {
+            slider.setValueFromValue(window.sequenceEditor.pitchNew[i])
+        })
 
-    if (window.sequenceEditor.letterFocus.length==1) {
-        letterLengthNumb.value = parseFloat(window.sequenceEditor.dursNew[window.sequenceEditor.letterFocus[0]])
-        letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
-        energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]])
+        // Update the editor lengths
+        window.sequenceEditor.sliderBoxes.forEach((box,i) => {
+            box.setValueFromValue(window.sequenceEditor.dursNew[i])
+        })
+
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterLengthNumb.value = parseFloat(window.sequenceEditor.dursNew[window.sequenceEditor.letterFocus[0]])
+            letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
+            energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]])
+        }
+        pace_slid.value = 1
     }
-    pace_slid.value = 1
 })
 amplify_btn.addEventListener("click", () => {
     if (seq_edit_edit_select.value=="pitch") {
