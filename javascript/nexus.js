@@ -455,6 +455,7 @@ window.getLatestModelsList = async () => {
             })
         }
 
+        window.closeModal(undefined, nexusContainer)
         window.displayAllModels()
 
     } catch (e) {
