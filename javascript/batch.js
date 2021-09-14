@@ -329,10 +329,10 @@ window.uploadBatchCSVs = async (eType, event) => {
         window.appLogger.log("Preprocessing data...")
         const cleanedData = window.preProcessCSVData(dataLines)
         if (cleanedData.length) {
-            window.populateRecordsList(cleanedData)
+            window.populateBatchRecordsList(cleanedData)
             window.appLogger.log("Grouping up lines...")
-            const finalOrder = window.groupLines()
-            window.refreshRecordsList(finalOrder)
+            const finalOrder = window.groupBatchLines()
+            window.refreshBatchRecordsList(finalOrder)
             window.batch_state.lines = finalOrder
         } else {
             batch_clearBtn.click()
@@ -416,7 +416,7 @@ window.preProcessCSVData = data => {
     return data
 }
 
-window.populateRecordsList = records => {
+window.populateBatchRecordsList = records => {
     batch_synthesizeBtn.style.display = "inline-block"
     batchDropZoneNote.style.display = "none"
 
@@ -450,7 +450,7 @@ window.populateRecordsList = records => {
     })
 }
 
-window.refreshRecordsList = (finalOrder) => {
+window.refreshBatchRecordsList = (finalOrder) => {
     batchRecordsContainer.innerHTML = ""
     finalOrder = finalOrder ? finalOrder : window.batch_state.lines
 
@@ -465,7 +465,7 @@ window.refreshRecordsList = (finalOrder) => {
 }
 
 // Sort the lines by voice_id, and then by vocoder used
-window.groupLines = () => {
+window.groupBatchLines = () => {
     if (window.userSettings.batch_doGrouping) {
         const voices_order = []
 
@@ -1262,19 +1262,19 @@ const openOutput = () => {
 batch_paginationPrev.addEventListener("click", () => {
     batch_pageNum.value = Math.max(1, parseInt(batch_pageNum.value)-1)
     window.batch_state.paginationIndex = batch_pageNum.value-1
-    window.refreshRecordsList()
+    window.refreshBatchRecordsList()
 })
 batch_paginationNext.addEventListener("click", () => {
     const numPages = Math.ceil(window.batch_state.lines.length/window.userSettings.batch_paginationSize)
     batch_pageNum.value = Math.min(parseInt(batch_pageNum.value)+1, numPages)
     window.batch_state.paginationIndex = batch_pageNum.value-1
-    window.refreshRecordsList()
+    window.refreshBatchRecordsList()
 })
 batch_pageNum.addEventListener("change", () => {
     const numPages = Math.ceil(window.batch_state.lines.length/window.userSettings.batch_paginationSize)
     batch_pageNum.value = Math.max(1, Math.min(parseInt(batch_pageNum.value), numPages))
     window.batch_state.paginationIndex = batch_pageNum.value-1
-    window.refreshRecordsList()
+    window.refreshBatchRecordsList()
 })
 setting_batch_paginationSize.addEventListener("change", () => {
     const numPages = Math.ceil(window.batch_state.lines.length/window.userSettings.batch_paginationSize)
@@ -1282,7 +1282,7 @@ setting_batch_paginationSize.addEventListener("change", () => {
     window.batch_state.paginationIndex = batch_pageNum.value-1
     batch_total_pages.innerHTML = `of ${numPages}`
 
-    window.refreshRecordsList()
+    window.refreshBatchRecordsList()
 })
 
 
@@ -1296,6 +1296,3 @@ batch_synthesizeBtn.addEventListener("click", window.startBatch)
 batch_pauseBtn.addEventListener("click", window.pauseResumeBatch)
 batch_stopBtn.addEventListener("click", () => window.stopBatch(true))
 batch_openDirBtn.addEventListener("click", openOutput)
-
-exports.uploadBatchCSVs = window.uploadBatchCSVs
-exports.startBatch = window.startBatch

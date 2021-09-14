@@ -22,7 +22,7 @@ require("./javascript/totd.js")
 const {Editor} = require("./javascript/editor.js")
 const {saveUserSettings, deleteFolderRecursive} = require("./javascript/settingsMenu.js")
 const xVASpeech = require("./javascript/speech2speech.js")
-const {startBatch} = require("./javascript/batch.js")
+require("./javascript/batch.js")
 window.electronBrowserWindow = require("electron").remote.getCurrentWindow()
 const child = require("child_process").execFile
 const spawn = require("child_process").spawn
