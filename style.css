@@ -753,9 +753,9 @@ a {
      max-height: 50vh;
      overflow-y: auto;
  }
- /*#updatesLogList > div {
-     min-height: 25px;
- }*/
+ #updatesLogList > div {
+    text-align: left;
+ }
  #updatesLogList > div > div:first-child {
      width: 25%;
  }
