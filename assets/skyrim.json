@@ -1,0 +1,8 @@
+{
+    "gameName": "Skyrim",
+    "assetFile": "skyrim.png",
+    "themeColourPrimary": "8197ec",
+    "themeColourSecondary": null,
+    "gameCode": "SK",
+    "nexusGamePageIDs": [110, 1704]
+}

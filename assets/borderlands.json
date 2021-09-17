@@ -1,0 +1,8 @@
+{
+    "gameName": "Borderlands",
+    "assetFile": "borderlands.jpg",
+    "themeColourPrimary": "fecc0b",
+    "themeColourSecondary": null,
+    "gameCode": "BL",
+    "nexusGamePageIDs": [360, 428, 875, 2776, 2953]
+}

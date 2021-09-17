@@ -436,7 +436,7 @@ const setPromptTheme = () => {
 const updateDiscord = () => {
     let gameName = undefined
     if (window.userSettings.showDiscordStatus && window.currentGame) {
-        gameName = (window.currentGame.length==5 ? window.currentGame[4] : window.currentGame[3]).split(".")[0]
+        gameName = window.currentGame.gameName
     }
     ipcRenderer.send('updateDiscord', {details: gameName})
 }
@@ -444,7 +444,7 @@ const setPromptFontSize = () => {
     dialogueInput.style.fontSize = `${window.userSettings.prompt_fontSize}pt`
 }
 const updateBackground = () => {
-    const background = `linear-gradient(0deg, rgba(128,128,128,${window.userSettings.bg_gradient_opacity}) 0px, rgba(0,0,0,0)), url("assets/${window.currentGame.join("-")}")`
+    const background = `linear-gradient(0deg, rgba(128,128,128,${window.userSettings.bg_gradient_opacity}) 0px, rgba(0,0,0,0)), url("assets/${window.currentGame.assetFile}")`
     // Fade the background image transition
     rightBG1.style.background = background
     rightBG2.style.opacity = 0
@@ -540,8 +540,8 @@ initFilePickerButton(setting_waveglowPathButton, setting_256waveglow_path, "wave
 initMenuSetting(setting_bigwaveglow_path, "bigwaveglow_path", "text")
 initFilePickerButton(setting_bigwaveglowPathButton, setting_bigwaveglow_path, "bigwaveglow_path", ["openFile"], [{name: "Pytorch checkpoint", extensions: ["pt"]}])
 
-initFilePickerButton(setting_modelsPathButton, setting_models_path_input, ()=>`modelspath_${window.currentGame[0]}`, ["openDirectory"], undefined, undefined, ()=>window.updateGameList())
-initFilePickerButton(setting_outPathButton, setting_out_path_input, ()=>`outpath_${window.currentGame[0]}`, ["openDirectory"], undefined, undefined, ()=>{
+initFilePickerButton(setting_modelsPathButton, setting_models_path_input, ()=>`modelspath_${window.currentGame.gameId}`, ["openDirectory"], undefined, undefined, ()=>window.updateGameList())
+initFilePickerButton(setting_outPathButton, setting_out_path_input, ()=>`outpath_${window.currentGame.gameId}`, ["openDirectory"], undefined, undefined, ()=>{
     if (window.currentModelButton) {
         window.currentModelButton.click()
     }
@@ -570,7 +570,7 @@ fs.readdir(`${window.path}/models`, (err, gameDirs) => {
     })
 })
 setting_out_path_input.addEventListener("change", () => {
-    const gameFolder = window.currentGame[0]
+    const gameFolder = window.currentGame.gameId
 
     setting_out_path_input.value = setting_out_path_input.value.replace(/\/\//g, "/").replace(/\\/g,"/")
     window.userSettings[`outpath_${gameFolder}`] = setting_out_path_input.value
@@ -645,7 +645,7 @@ reset_paths_btn.addEventListener("click", () => {
                 delete window.userSettings[key]
             })
 
-            const currGame = window.currentGame ? window.currentGame[0] : undefined
+            const currGame = window.currentGame ? window.currentGame.gameId : undefined
 
             // Models paths
             const assetFiles = fs.readdirSync(`${path}/assets`)
@@ -675,7 +675,7 @@ reset_paths_btn.addEventListener("click", () => {
 
             window.loadAllModels().then(() => {
                 if (currGame) {
-                    window.changeGame(window.currentGame.join("-"))
+                    window.changeGame(window.currentGame)
                 }
             })
             saveUserSettings()

@@ -1,0 +1,8 @@
+{
+    "gameName": "Final Fantasy",
+    "assetFile": "finalfantasy.jpg",
+    "themeColourPrimary": "ffffff",
+    "themeColourSecondary": "000000",
+    "gameCode": "FF",
+    "nexusGamePageIDs": [790, 822, 941, 1121, 1515, 1948, 2086, 2304, 2319, 2701, 2906, 2948, 3187, 3328, 3688, 3750, 3934, 3942, 3958, 4022]
+}

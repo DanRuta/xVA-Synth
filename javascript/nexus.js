@@ -19,6 +19,17 @@ window.nexusState = {
 const http = require("http")
 const https = require("https")
 
+// Utility for printing out in the dev console all the numerical game IDs on the Nexus
+window.getAllNexusGameIDs = (gameName) => {
+    return new Promise((resolve) => {
+        getData("", undefined, "GET").then(results => {
+            results = gameName ? results.filter(x=>x.name.toLowerCase().includes(gameName)) : results
+            console.log(results)
+            resolve(results)
+        })
+    })
+}
+
 window.nexusDownload = (url, dest) => {
     return new Promise((resolve, reject) => {
         const file = fs.createWriteStream(dest)
@@ -332,7 +343,7 @@ window.openNexusWindow = () => {
 
     const gameColours = {}
     Object.keys(window.gameAssets).forEach(gameId => {
-        const colour = window.gameAssets[gameId].split("-")[1].toLowerCase()
+        const colour = window.gameAssets[gameId].themeColourPrimary
         gameColours[gameId] = colour
     })
 
@@ -347,7 +358,7 @@ window.openNexusWindow = () => {
         gameButton.style.alignItems = "center"
         gameButton.style.margin = "auto"
         gameButton.style.marginTop = "8px"
-        const buttonLabel = createElem("span", window.gameAssets[gameId].split("-").reverse()[0].split(".")[0])
+        const buttonLabel = createElem("span", window.gameAssets[gameId].gameName)
 
         gameButton.addEventListener("contextmenu", e => {
             if (e.target==gameButton || e.target==buttonLabel) {
@@ -367,7 +378,6 @@ window.openNexusWindow = () => {
             window.displayAllModels()
         })
 
-        // gameSelectContainer.appendChild(gameCheckbox)
         gameButton.appendChild(gameCheckbox)
         gameButton.appendChild(buttonLabel)
         gameSelectContainer.appendChild(gameButton)
@@ -391,7 +401,7 @@ window.getLatestModelsList = async () => {
 
         const idToGame = {}
         Object.keys(window.gameAssets).forEach(gameId => {
-            const id = window.gameAssets[gameId].split("-").reverse()[1].toLowerCase()
+            const id = window.gameAssets[gameId].gameCode
             idToGame[id] = gameId
         })
 
@@ -479,12 +489,12 @@ window.displayAllModels = (forceUpdate=false) => {
 
     const gameColours = {}
     Object.keys(window.gameAssets).forEach(gameId => {
-        const colour = window.gameAssets[gameId].split("-")[1].toLowerCase()
+        const colour = window.gameAssets[gameId].themeColourPrimary
         gameColours[gameId] = colour
     })
     const gameTitles = {}
     Object.keys(window.gameAssets).forEach(gameId => {
-        const title = window.gameAssets[gameId].split("-").reverse()[0].split(".")[0]
+        const title = window.gameAssets[gameId].gameName
         gameTitles[gameId] = title
     })
 
@@ -555,7 +565,6 @@ window.displayAllModels = (forceUpdate=false) => {
             endorseButton.style.background = "none"
             endorseButton.style.border = `2px solid #${gameColours[modelMeta.game]}`
         } else {
-            // endorseButton.style.background = `#${gameColours[modelMeta.game]} !important`
             endorseButton.style.setProperty("background-color", `#${gameColours[modelMeta.game]}`, "important")
         }
         endorseButton.addEventListener("click", async () => {

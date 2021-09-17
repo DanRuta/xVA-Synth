@@ -144,9 +144,9 @@ window.closeModal = (container=undefined, notThisOne=undefined) => {
 
 window.setTheme = (meta) => {
 
-    const primaryColour = meta[1]
-    const secondaryColour = meta.length==5?meta[2]:undefined
-    const gameName = (meta.length==5 ? meta[4] : meta[3]).split(".")[0]
+    const primaryColour = meta.themeColourPrimary
+    const secondaryColour = meta.themeColourSecondary
+    const gameName = meta.gameName
 
     if (window.userSettings.showDiscordStatus) {
         ipcRenderer.send('updateDiscord', {details: gameName})
@@ -170,7 +170,7 @@ window.setTheme = (meta) => {
         window.sequenceEditor.energyGrabbers.forEach(grabber => grabber.fillStyle = `#${primaryColour}`)
     } catch (e) {}
 
-    const background = `linear-gradient(0deg, rgba(128,128,128,${window.userSettings.bg_gradient_opacity}) 0px, rgba(0,0,0,0)), url("assets/${meta.join("-")}")`
+    const background = `linear-gradient(0deg, rgba(128,128,128,${window.userSettings.bg_gradient_opacity}) 0px, rgba(0,0,0,0)), url("assets/${meta.assetFile}")`
     Array.from(document.querySelectorAll("button:not(.fixedColour)")).forEach(e => e.style.background = `#${primaryColour}`)
     Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.background = `#${primaryColour}`)
     Array.from(document.querySelectorAll(".spinner")).forEach(e => e.style.borderLeftColor = `#${primaryColour}`)
@@ -188,7 +188,7 @@ window.setTheme = (meta) => {
     }
 
     if (window.wavesurfer) {
-        window.wavesurfer.setWaveColor(`#${window.currentGame[1]}`)
+        window.wavesurfer.setWaveColor(`#${window.currentGame.themeColourPrimary}`)
     }
 
     // Fade the background image transition

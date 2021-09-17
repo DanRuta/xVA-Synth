@@ -1,0 +1,8 @@
+{
+    "gameName": "Dragon Age",
+    "assetFile": "dragonage.jpg",
+    "themeColourPrimary": "bf8282",
+    "themeColourSecondary": null,
+    "gameCode": "DA",
+    "nexusGamePageIDs": [140, 141, 728]
+}

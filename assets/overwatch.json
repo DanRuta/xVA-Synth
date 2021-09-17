@@ -1,0 +1,8 @@
+{
+    "gameName": "Overwatch",
+    "assetFile": "overwatch.png",
+    "themeColourPrimary": "f2971d",
+    "themeColourSecondary": null,
+    "gameCode": "OW",
+    "nexusGamePageIDs": [2010]
+}

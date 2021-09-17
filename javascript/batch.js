@@ -351,7 +351,7 @@ window.preProcessCSVData = data => {
     batchDropZoneNote.style.display = "none"
     batchRecordsHeader.style.display = "flex"
     batch_clearBtn.style.display = "inline-block"
-    Array.from(batchRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${window.currentGame[1]}`)
+    Array.from(batchRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${window.currentGame.themeColourPrimary}`)
 
     const availableGames = Object.keys(window.games)
     for (let di=0; di<data.length; di++) {
@@ -743,7 +743,7 @@ window.addActionButtons = (records, ri) => {
 
     let audioPreview
     const playButton = createElem("button.smallButton", window.i18n.PLAY)
-    playButton.style.background = `#${window.currentGame[1]}`
+    playButton.style.background = `#${window.currentGame.themeColourPrimary}`
     playButton.addEventListener("click", () => {
 
         let audioPreviewPath = records[ri][0].fileOutputPath
@@ -766,7 +766,7 @@ window.addActionButtons = (records, ri) => {
         }
     })
     const editButton = createElem("button.smallButton", window.i18n.EDIT)
-    editButton.style.background = `#${window.currentGame[1]}`
+    editButton.style.background = `#${window.currentGame.themeColourPrimary}`
     editButton.addEventListener("click", () => {
         audioPreview = undefined
 
@@ -777,7 +777,7 @@ window.addActionButtons = (records, ri) => {
         }
 
         // Change app theme to the voice's game
-        if (window.currentGame[0]!=records[ri][0].game_id) {
+        if (window.currentGame.gameId!=records[ri][0].game_id) {
             window.changeGame(window.gameAssets[records[ri][0].game_id])
         }
 

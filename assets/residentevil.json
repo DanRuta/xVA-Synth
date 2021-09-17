@@ -1,0 +1,8 @@
+{
+    "gameName": "Resident Evil",
+    "assetFile": "residentevil.png",
+    "themeColourPrimary": "394452",
+    "themeColourSecondary": null,
+    "gameCode": "RE",
+    "nexusGamePageIDs": [441, 1724, 2702, 2720, 2743, 2760, 2768, 2821, 2907, 2997, 3104, 3111, 3191, 3250, 3252, 3669]
+}

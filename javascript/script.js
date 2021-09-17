@@ -95,7 +95,7 @@ window.initWaveSurfer = (src) => {
     }
     window.wavesurfer = WaveSurfer.create({
         container: '#wavesurferContainer',
-        waveColor: `#${window.currentGame[1]}`,
+        waveColor: `#${window.currentGame.themeColourPrimary}`,
         height: 100,
         progressColor: 'white',
         responsive: true,
@@ -170,9 +170,9 @@ window.loadAllModels = (forceUpdate=false) => {
         window.games = {}
 
         // Do the current game first, and stop blocking the render process
-        if (window.currentGame && window.currentGame.length) {
-            const currentGameFolder = window.userSettings[`modelspath_${window.currentGame[0]}`]
-            gameFolder = modelsPathKey.split("_")[1]
+        if (window.currentGame) {
+            const currentGameFolder = window.userSettings[`modelspath_${window.currentGame.gameId}`]
+            gameFolder = currentGameFolder
             try {
                 const files = fs.readdirSync(modelsPath).filter(f => f.endsWith(".json"))
                 files.forEach(fileName => {
@@ -239,19 +239,19 @@ window.loadAllModels = (forceUpdate=false) => {
     })
 }
 setting_models_path_input.addEventListener("change", () => {
-    const gameFolder = window.currentGame[0]
+    const gameFolder = window.currentGame.gameId
 
     setting_models_path_input.value = setting_models_path_input.value.replace(/\/\//g, "/").replace(/\\/g,"/")
     window.userSettings[`modelspath_${gameFolder}`] = setting_models_path_input.value
     saveUserSettings()
     loadAllModels().then(() => {
-        changeGame(window.currentGame.join("-"))
+        changeGame(window.currentGame)
     })
 
     if (!window.watchedModelsDirs.includes(setting_models_path_input.value)) {
         window.watchedModelsDirs.push(setting_models_path_input.value)
         fs.watch(setting_models_path_input.value, {recursive: false, persistent: true}, (eventType, filename) => {
-            changeGame(window.currentGame.join("-"))
+            changeGame(window.currentGame)
         })
     }
     window.updateGameList()
@@ -272,25 +272,19 @@ setting_models_path_input.addEventListener("change", () => {
 // Change game
 window.changeGame = (meta) => {
 
-    meta = meta.split("-")
     window.currentGame = meta
-    themeColour = meta[1]
-    let titleID
-    if (meta.length==5) {
-        secondaryThemeColour = meta[2]
-        titleID = meta[3]
-    } else {
-        secondaryThemeColour = undefined
-        titleID = meta[2]
-    }
+    themeColour = meta.themeColourPrimary
+    secondaryThemeColour = meta.themeColourSecondary
+    let titleID = meta.gameName
+
     generateVoiceButton.disabled = true
     generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
-    selectedGameDisplay.innerHTML = meta.length==5 ? meta[4].split(".")[0] : meta[3].split(".")[0]
+    selectedGameDisplay.innerHTML = meta.gameName
 
     // Change the app title
     title.innerHTML = window.i18n.SELECT_VOICE_TYPE
-    if (window.games[window.currentGame[0]] == undefined) {
-        title.innerHTML = `${window.i18n.NO_MODELS_IN}: ${window.userSettings[`modelspath_${window.currentGame[0]}`]}`
+    if (window.games[window.currentGame.gameId] == undefined) {
+        title.innerHTML = `${window.i18n.NO_MODELS_IN}: ${window.userSettings[`modelspath_${window.currentGame.gameId}`]}`
         console.log(title.innerHTML)
     } else if (titleID) {
         document.title = `${titleID}VA Synth`
@@ -301,7 +295,7 @@ window.changeGame = (meta) => {
     }
 
     const gameFolder = meta[0]
-    const gameName = meta[meta.length-1].split(".")[0]
+    const gameName = meta.gameName
 
     setting_models_path_container.style.display = "flex"
     setting_out_path_container.style.display = "flex"
@@ -315,22 +309,22 @@ window.changeGame = (meta) => {
         window.displayAllModels()
     } catch (e) {console.log(e)}
 
-    try {fs.mkdirSync(`${path}/output/${meta[0]}`)} catch (e) {/*Do nothing*/}
-    localStorage.setItem("lastGame", window.currentGame.join("-"))
+    try {fs.mkdirSync(`${path}/output/${meta.gameId}`)} catch (e) {/*Do nothing*/}
+    localStorage.setItem("lastGame", JSON.stringify(meta))
 
     // Populate models
     voiceTypeContainer.innerHTML = ""
     voiceSamples.innerHTML = ""
 
     const buttons = []
-    voiceSearchInput.placeholder = window.i18n.SEARCH_N_VOICES.replace("_", window.games[meta[0]] ? window.games[meta[0]].models.length : "0")
+    voiceSearchInput.placeholder = window.i18n.SEARCH_N_VOICES.replace("_", window.games[meta.gameId] ? window.games[meta.gameId].models.length : "0")
     voiceSearchInput.value = ""
 
-    if (!window.games[meta[0]]) {
+    if (!window.games[meta.gameId]) {
         return
     }
 
-    window.games[meta[0]].models.forEach(({model, modelsPath, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, hifi}) => {
+    window.games[meta.gameId].models.forEach(({model, modelsPath, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, hifi}) => {
 
         const button = createElem("div.voiceType", voiceName)
         button.style.background = `#${themeColour}`
@@ -480,7 +474,7 @@ window.changeGame = (meta) => {
 
             // Voice samples
             voiceSamples.innerHTML = ""
-            refreshRecordsList(`${window.userSettings[`outpath_${meta[0]}`]}/${button.dataset.modelId}`)
+            refreshRecordsList(`${window.userSettings[`outpath_${meta.gameId}`]}/${button.dataset.modelId}`)
         })
         buttons.push(button)
     })
@@ -656,7 +650,7 @@ window.makeSample = (src, newSample) => {
 
 generateVoiceButton.addEventListener("click", () => {
 
-    const game = window.currentGame[0]
+    const game = window.currentGame.gameId
 
     try {fs.mkdirSync(window.userSettings[`outpath_${game}`])} catch (e) {/*Do nothing*/}
     try {fs.mkdirSync(`${window.userSettings[`outpath_${game}`]}/${voiceId}`)} catch (e) {/*Do nothing*/}
@@ -860,7 +854,7 @@ generateVoiceButton.addEventListener("click", () => {
                 }
 
                 const extraInfo = {
-                    game: window.currentGame[0],
+                    game: window.currentGame.gameId,
                     voiceId: window.currentModel.voiceId,
                     voiceName: window.currentModel.voiceName,
                     inputSequence: sequence,
@@ -962,7 +956,7 @@ window.saveFile = (from, to, skipUIRecord=false) => {
 
     // For plugins
     const pluginData = {
-        game: window.currentGame[0],
+        game: window.currentGame.gameId,
         voiceId: window.currentModel.voiceId,
         voiceName: window.currentModel.voiceName,
         inputSequence: window.sequenceEditor.inputSequence,
@@ -1313,7 +1307,7 @@ if (Object.keys(window.userSettings).includes("voiceRecordsOrderByOrder")) {
 // Delete all output files for a voice
 voiceRecordsDeleteAllButton.addEventListener("click", () => {
     if (window.currentModel) {
-        const outDir = window.userSettings[`outpath_${window.currentGame[0]}`]+`/${currentModel.voiceId}`
+        const outDir = window.userSettings[`outpath_${window.currentGame.gameId}`]+`/${currentModel.voiceId}`
 
         const files = fs.readdirSync(outDir)
         if (files.length) {
@@ -1338,7 +1332,7 @@ voiceRecordsOrderByButton.addEventListener("click", () => {
     }
     voiceRecordsOrderByButton.innerHTML = labels[window.userSettings.voiceRecordsOrderBy]
     if (window.currentModel) {
-        const voiceRecordsList = window.userSettings[`outpath_${window.currentGame[0]}`]+`/${window.currentModel.voiceId}`
+        const voiceRecordsList = window.userSettings[`outpath_${window.currentGame.gameId}`]+`/${window.currentModel.voiceId}`
         refreshRecordsList(voiceRecordsList)
     }
 })
@@ -1351,13 +1345,13 @@ voiceRecordsOrderByOrderButton.addEventListener("click", () => {
     }
     voiceRecordsOrderByOrderButton.innerHTML = labels[window.userSettings.voiceRecordsOrderByOrder]
     if (window.currentModel) {
-        const voiceRecordsList = window.userSettings[`outpath_${window.currentGame[0]}`]+`/${window.currentModel.voiceId}`
+        const voiceRecordsList = window.userSettings[`outpath_${window.currentGame.gameId}`]+`/${window.currentModel.voiceId}`
         refreshRecordsList(voiceRecordsList)
     }
 })
 voiceSamplesSearch.addEventListener("keyup", () => {
     if (window.currentModel) {
-        const voiceRecordsList = window.userSettings[`outpath_${window.currentGame[0]}`]+`/${window.currentModel.voiceId}`
+        const voiceRecordsList = window.userSettings[`outpath_${window.currentGame.gameId}`]+`/${window.currentModel.voiceId}`
         refreshRecordsList(voiceRecordsList)
     }
 })
@@ -1499,13 +1493,19 @@ window.updateGameList = () => {
 
     const itemsToSort = []
 
-    fileNames.filter(fn=>(fn.endsWith(".jpg")||fn.endsWith(".png")) && (fn.split("-").length==4 || fn.split("-").length==5)).forEach(fileName => {
-        const gameSelection = createElem("div.gameSelection")
-        gameSelection.style.background = `url("assets/${fileName}")`
+    fileNames.filter(fn=>fn.endsWith(".json")).forEach(gameId => {
 
-        const gameId = fileName.split("-")[0]
-        const gameName = fileName.split("-").reverse()[0].split(".")[0]
+        const metadata = JSON.parse(fs.readFileSync(`${window.path}/assets/${gameId}`))
+        gameId = gameId.replace(".json", "")
+        metadata.gameId = gameId
+        const assetFile = metadata.assetFile
+
+        const gameSelection = createElem("div.gameSelection")
+        gameSelection.style.background = `url("assets/${assetFile}")`
+
+        const gameName = metadata.gameName
         const gameSelectionContent = createElem("div.gameSelectionContent")
+
 
         let numVoices = 0
         const modelsPath = window.userSettings[`modelspath_${gameId}`]
@@ -1526,9 +1526,9 @@ window.updateGameList = () => {
 
         gameSelection.appendChild(gameSelectionContent)
 
-        window.gameAssets[gameId] = fileName
+        window.gameAssets[gameId] = metadata
         gameSelectionContent.addEventListener("click", () => {
-            changeGame(fileName)
+            changeGame(metadata)
             closeModal(gameSelectionContainer)
         })
 
@@ -1542,12 +1542,14 @@ window.updateGameList = () => {
                 fs.watch(modelsDir, {recursive: false, persistent: true}, (eventType, filename) => {
                     if (window.userSettings.autoReloadVoices) {
                         // window.appLogger.log(`${eventType}: ${filename}`)
-                        loadAllModels().then(() => changeGame(fileName))
+                        loadAllModels().then(() => changeGame(metadata))
                     }
                 })
             } catch (e) {}
         }
+
     })
+
 
     itemsToSort.sort((a,b) => a[0]<b[0]?1:-1).forEach(([numVoices, elem]) => {
         gameSelectionListContainer.appendChild(elem)
@@ -1576,7 +1578,7 @@ window.updateGameList = () => {
         const lastGame = localStorage.getItem("lastGame")
 
         if (lastGame) {
-            changeGame(lastGame)
+            changeGame(JSON.parse(lastGame))
         }
     })
 }

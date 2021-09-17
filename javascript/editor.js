@@ -506,7 +506,7 @@ class SliderGrabber {
         this.isBeingDragged = false
         this.dragStart = {x: undefined, y: undefined}
 
-        this.fillStyle = `#${window.currentGame[1]}`
+        this.fillStyle = `#${window.currentGame.themeColourPrimary}`
     }
 
     render () {

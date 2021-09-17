@@ -164,9 +164,9 @@ class PluginsManager {
                             window.endorsedRepos.add(`plugin:${pluginId}`)
                             endorseButton.innerHTML = "Unendorse"
                             endorseButton.style.background = "none"
-                            endorseButton.style.border = `2px solid #${window.currentGame ? currentGame[1] : "ccc"}`
+                            endorseButton.style.border = `2px solid #${window.currentGame ? currentGame.themeColourPrimary : "ccc"}`
                         } else {
-                            endorseButton.style.setProperty("background-color", `#${window.currentGame ? currentGame[1] : "ccc"}`, "important")
+                            endorseButton.style.setProperty("background-color", `#${window.currentGame ? currentGame.themeColourPrimary : "ccc"}`, "important")
                         }
 
                         endorseButtonContainer.appendChild(endorseButton)

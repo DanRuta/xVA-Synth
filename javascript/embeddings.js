@@ -168,21 +168,21 @@ window.initDataMappings = () => {
 
     const idToGame = {}
     Object.keys(window.gameAssets).forEach(gameId => {
-        const id = window.gameAssets[gameId].split("-").reverse()[1].toLowerCase()
+        const id = window.gameAssets[gameId].gameCode
         idToGame[id] = gameId
     })
 
     Object.keys(window.gameAssets).forEach(gameId => {
         // Short game ID to full game ID
-        const gameShortId = window.gameAssets[gameId].split("-").reverse()[1].toLowerCase()
+        const gameShortId = window.gameAssets[gameId].gameCode
         window.embeddingsState.gameShortIdToGameId[gameShortId] = gameId
 
         // Game title
-        const title = window.gameAssets[gameId].split("-").reverse()[0].split(".")[0]
+        const title = window.gameAssets[gameId].gameName
         window.embeddingsState.gameTitles[gameId] = title
 
         // Game colour
-        let colour = window.gameAssets[gameId].split("-")[1].toLowerCase()
+        let colour = window.gameAssets[gameId].themeColourPrimary
         colour = colour.length==3 ? `${colour[0]}${colour[0]}${colour[1]}${colour[1]}${colour[2]}${colour[2]}` : colour
         window.embeddingsState.gameColours[gameId] = colour
     })
