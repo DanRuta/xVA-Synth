@@ -163,6 +163,12 @@ window.setTheme = (meta) => {
         Array.from(nexusRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${primaryColour}`)
     } catch (e) {}
     try {
+        Array.from(nexusSearchHeader.children).forEach(item => item.style.backgroundColor = `#${primaryColour}`)
+    } catch (e) {}
+    try {
+        Array.from(nexusReposUsedHeader.children).forEach(item => item.style.backgroundColor = `#${primaryColour}`)
+    } catch (e) {}
+    try {
         Array.from(embeddingsRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${primaryColour}`)
     } catch (e) {}
     try {

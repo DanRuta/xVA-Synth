@@ -357,6 +357,7 @@ window.i18n.setEnglish = () => {
     window.i18n.DOWNLOAD_ALL = "Download All"
     window.i18n.REPOSITORIES = "Repositories"
     window.i18n.ADD = "Add"
+    window.i18n.REMOVE = "Remove"
     window.i18n.V_EMB_VIS = "Voice embeddings visualiser"
     window.i18n.VOICES = "Voices"
     window.i18n.SHOW = "Show"
@@ -493,7 +494,6 @@ window.i18n.updateUI = () => {
     i18n_nexusFinished.innerHTML = window.i18n.FINISHED
     nexusDownloadAllBtn.innerHTML = window.i18n.DOWNLOAD_ALL
     i18n_repositories.innerHTML = window.i18n.REPOSITORIES
-    nexusReposAddButton.innerHTML = window.i18n.ADD
 
 
 

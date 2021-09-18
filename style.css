@@ -130,7 +130,7 @@ a {
     justify-content: center;
     height: 20px;
 }
- #voiceSearchInput, #searchGameInput, #nexusSearchBar, #embeddingsSearchBar, #voiceSamplesSearch, #searchSettingsInput {
+ #voiceSearchInput, #searchGameInput, #nexusSearchBar, #nexusReposSearchBar, #embeddingsSearchBar, #voiceSamplesSearch, #searchSettingsInput {
     width: calc(100% - 25px);
     text-align: center;
     background: none;
@@ -148,7 +148,7 @@ a {
  #voiceSamplesSearch::placeholder {
     color: rgba(200,200,200,0.7);
  }
- #voiceSearchInput:focus, #voiceSearchInput:active, #searchGameInput:focus, #searchGameInput:active, #nexusSearchBar:focus, #nexusSearchBar:active, #embeddingsSearchBar:focus, #embeddingsSearchBar:active, #voiceSamplesSearch:focus, #voiceSamplesSearch:active, #searchSettingsInput:focus, #searchSettingsInput:active {
+ #voiceSearchInput:focus, #voiceSearchInput:active, #searchGameInput:focus, #searchGameInput:active, #nexusSearchBar:focus, #nexusSearchBar:active, #nexusReposSearchBar:focus, #nexusReposSearchBar:active, #embeddingsSearchBar:focus, #embeddingsSearchBar:active, #voiceSamplesSearch:focus, #voiceSamplesSearch:active, #searchSettingsInput:focus, #searchSettingsInput:active {
     outline: none;
  }
  .content {
@@ -890,7 +890,7 @@ a {
     flex-direction: column;
     align-items: center;
 }
-#batch_main, #plugins_main, #nexus_main, #embeddings_main {
+#batch_main, #plugins_main, #nexus_main, #embeddings_main, #nexus_search_main, #nexus_reposUsed_main {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -974,11 +974,11 @@ a {
     justify-content: center;
     padding: 5px;
 }
-#batchRecordsHeader, #pluginsRecordsHeader, #nexusRecordsHeader, #embeddingsRecordsHeader {
+#batchRecordsHeader, #pluginsRecordsHeader, #nexusRecordsHeader, #embeddingsRecordsHeader, #nexusSearchHeader, #nexusReposUsedHeader {
     position: sticky;
     top: 0;
 }
-#batchRecordsHeader > div, #pluginsRecordsHeader > div, #nexusRecordsHeader > div, #embeddingsRecordsHeader > div {
+#batchRecordsHeader > div, #pluginsRecordsHeader > div, #nexusRecordsHeader > div, #embeddingsRecordsHeader > div, #nexusSearchHeader > div, #nexusReposUsedHeader > div {
     background-color: rgb(75,75,75);
     box-shadow: 0 1px 5px 1px rgba(0,0,0,0.3);
     text-shadow: 0 0 2px black;
@@ -987,13 +987,13 @@ a {
 #pluginsRecordsContainer > div {
     cursor: pointer;
 }
-#batchRecordsHeader, #batchRecordsContainer > div, #pluginsRecordsHeader, #pluginsRecordsContainer > div, #nexusRecordsHeader, #nexusRecordsContainer > div, #embeddingsRecordsHeader, #embeddingsRecordsContainer > div {
+#batchRecordsHeader, #batchRecordsContainer > div, #pluginsRecordsHeader, #pluginsRecordsContainer > div, #nexusRecordsHeader, #nexusRecordsContainer > div, #embeddingsRecordsHeader, #embeddingsRecordsContainer > div, #nexusSearchHeader, #nexusSearchContainer > div, #nexusReposUsedHeader, #nexusReposUsedContainer > div {
     width: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
 }
-#batchRecordsHeader > div, #batchRecordsContainer > div > div, #pluginsRecordsHeader > div, #pluginsRecordsContainer > div > div, #nexusRecordsHeader > div, #nexusRecordsContainer > div > div, #embeddingsRecordsHeader > div, #embeddingsRecordsContainer > div > div {
+#batchRecordsHeader > div, #batchRecordsContainer > div > div, #pluginsRecordsHeader > div, #pluginsRecordsContainer > div > div, #nexusRecordsHeader > div, #nexusRecordsContainer > div > div, #embeddingsRecordsHeader > div, #embeddingsRecordsContainer > div > div , #nexusSearchHeader > div, #nexusSearchContainer > div > div, #nexusReposUsedHeader > div, #nexusReposUsedContainer > div > div {
     padding: 2px;
     border: 1px solid;
     color: white;
@@ -1192,6 +1192,14 @@ a {
     padding-left: 10px;
     padding-top: 2px;
 }
+#nexusSearchControls {
+    display: flex;
+    align-items: center;
+    height: 45px;
+}
+#nexusSearchControls > * {
+    margin-left: 10px;
+}
 #nexusReposList {
     background: rgb(75,75,75);
     width: 600px;
@@ -1213,6 +1221,111 @@ a {
     text-align: center;
     align-items: center;
 }
+
+/*Nexus Repo search*/
+/*Add*/
+#nexusSearchHeader > div:nth-child(1), #nexusSearchContainer > div > div:nth-child(1) {
+    min-width: 50px;
+    max-width: 50px;
+}
+/*Link*/
+#nexusSearchHeader > div:nth-child(2), #nexusSearchContainer > div > div:nth-child(2) {
+    min-width: 60px;
+    max-width: 60px;
+}
+/*Game*/
+#nexusSearchHeader > div:nth-child(3), #nexusSearchContainer > div > div:nth-child(3) {
+    min-width: 150px;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/*Name*/
+#nexusSearchHeader > div:nth-child(4), #nexusSearchContainer > div > div:nth-child(4) {
+    min-width: 250px;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/*Author*/
+#nexusSearchHeader > div:nth-child(5), #nexusSearchContainer > div > div:nth-child(5) {
+    min-width: 175px;
+    max-width: 175px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/*Endorsements*/
+#nexusSearchHeader > div:nth-child(6), #nexusSearchContainer > div > div:nth-child(6) {
+    min-width: 125px;
+    max-width: 125px;
+}
+/*Downloads*/
+#nexusSearchHeader > div:nth-child(7), #nexusSearchContainer > div > div:nth-child(7) {
+    min-width: 125px;
+    /*max-width: 100px;*/
+}
+
+/*Nexus repos used*/
+/*Enabled*/
+#nexusReposUsedContainer > div > div:nth-child(1) > input {
+    margin: 0;
+}
+#nexusReposUsedHeader > div:nth-child(1), #nexusReposUsedContainer > div > div:nth-child(1) {
+    min-width: 30px;
+    max-width: 30px;
+}
+/*Link*/
+#nexusReposUsedHeader > div:nth-child(2), #nexusReposUsedContainer > div > div:nth-child(2) {
+    min-width: 60px;
+    max-width: 60px;
+}
+/*Game*/
+#nexusReposUsedHeader > div:nth-child(3), #nexusReposUsedContainer > div > div:nth-child(3) {
+    min-width: 150px;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/*Name*/
+#nexusReposUsedHeader > div:nth-child(4), #nexusReposUsedContainer > div > div:nth-child(4) {
+    min-width: 250px;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/*Author*/
+#nexusReposUsedHeader > div:nth-child(5), #nexusReposUsedContainer > div > div:nth-child(5) {
+    min-width: 175px;
+    max-width: 175px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/*Endorsements*/
+#nexusReposUsedHeader > div:nth-child(6), #nexusReposUsedContainer > div > div:nth-child(6) {
+    min-width: 125px;
+    max-width: 125px;
+}
+/*Downloads*/
+#nexusReposUsedHeader > div:nth-child(7), #nexusReposUsedContainer > div > div:nth-child(7) {
+    min-width: 125px;
+    max-width: 125px;
+}
+/*Remove*/
+#nexusReposUsedHeader > div:nth-child(8), #nexusReposUsedContainer > div > div:nth-child(8) {
+    min-width: 125px;
+    /*max-width: 125px;*/
+}
+
+
+
+
+
 
 
 

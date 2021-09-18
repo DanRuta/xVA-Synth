@@ -20,12 +20,34 @@ const http = require("http")
 const https = require("https")
 
 // Utility for printing out in the dev console all the numerical game IDs on the Nexus
+window.nexusGameIdToGameName = {}
 window.getAllNexusGameIDs = (gameName) => {
     return new Promise((resolve) => {
         getData("", undefined, "GET").then(results => {
             results = gameName ? results.filter(x=>x.name.toLowerCase().includes(gameName)) : results
-            console.log(results)
             resolve(results)
+        })
+    })
+}
+
+window.mod_search_nexus = (game_id, query) => {
+    return new Promise(resolve => {
+        doFetch(`https://search.nexusmods.com/mods/?game_id=${game_id}&terms=${encodeURI(query.split(' ').toString())}&include_adult=true`)
+        .then(r => r.json())
+        .then(r => {
+
+            const data = r.results.map(res => {
+                return {
+                    downloads: res.downloads,
+                    endorsements: res.endorsements,
+                    game_id: res.game_id,
+                    name: res.name,
+                    author: res.username,
+                    url: `https://www.nexusmods.com/${res.game_name}/mods/${res.mod_id}`
+                }
+            })
+
+            resolve([r.total, data])
         })
     })
 }
@@ -129,7 +151,6 @@ nexusLogInButton.addEventListener("click", () => {
             token: window.nexusState.token,
             protocol: 2
         }
-        console.log("data", data)
         window.nexusState.socket.send(JSON.stringify(data))
 
         shell.openExternal(`https://www.nexusmods.com/sso?id=${window.nexusState.uuid}&application=${window.nexusState.applicationSlug}`)
@@ -332,7 +353,7 @@ window.nexus_getData = getData
 
 
 
-
+let hasPopulatedNexusGameListDropdown = false
 window.openNexusWindow = () => {
     closeModal(undefined, nexusContainer).then(() => {
         nexusContainer.style.opacity = 0
@@ -383,6 +404,28 @@ window.openNexusWindow = () => {
         gameSelectContainer.appendChild(gameButton)
         nexusGamesList.appendChild(gameSelectContainer)
     })
+
+    // Populate the game IDs for the Nexus repo searching
+    if (!hasPopulatedNexusGameListDropdown) {
+        window.getAllNexusGameIDs().then(results => {
+            results = results.sort((a,b)=>a.name.toLowerCase()<b.name.toLowerCase()?-1:1)
+            results.forEach(res => {
+
+                window.nexusGameIdToGameName[res.id] = res.name
+
+                const opt = createElem("option", {value: res.id})
+                opt.innerHTML = res.name
+                nexusAllGamesSelect.appendChild(opt)
+            })
+            if (fs.existsSync(`${window.path}/repositories.json`)) {
+                const data = fs.readFileSync(`${window.path}/repositories.json`, "utf8")
+                window.nexusReposList = JSON.parse(data)
+                window.nexusUpdateModsUsedPanel()
+            }
+            hasPopulatedNexusGameListDropdown = true
+        })
+    }
+
 }
 window.setupModal(nexusMenuButton, nexusContainer, window.openNexusWindow)
 
@@ -401,16 +444,15 @@ window.getLatestModelsList = async () => {
 
         const idToGame = {}
         Object.keys(window.gameAssets).forEach(gameId => {
-            const id = window.gameAssets[gameId].gameCode
+            const id = window.gameAssets[gameId].gameCode.toLowerCase()
             idToGame[id] = gameId
         })
 
+        const repoLinks = window.nexusReposList.repos.filter(r=>r.enabled).map(r=>r.url)
 
-        for (let li=0; li<window.nexusState.repoLinks.length; li++) {
-            if (!window.nexusState.repoLinks[li][1]) {
-                continue
-            }
-            const link = window.nexusState.repoLinks[li][0].replace("\r","")
+        for (let li=0; li<repoLinks.length; li++) {
+
+            const link = repoLinks[li].replace("\r","")
             const repoInfo = await getData(`${link.split(".com/")[1]}.json`)
             const author = repoInfo.author
             const nexusRepoId = repoInfo.mod_id
@@ -472,7 +514,6 @@ window.getLatestModelsList = async () => {
         console.log(e)
         window.appLogger.log(e)
         window.errorModal(e.message)
-        resolve()
     }
 }
 
@@ -650,65 +691,117 @@ nexusCheckNow.addEventListener("click", () => window.getLatestModelsList())
 
 window.setupModal(nexusManageReposButton, nexusReposContainer)
 
-window.addRepoListItem = (link, li) => {
-    const isEnabled = link.startsWith("*")
-    const cleanLink = link.replace(/^\*/, "")
-    window.nexusState.repoLinks.push([cleanLink, isEnabled])
+window.nexusUpdateModsUsedPanel = () => {
+    nexusReposUsedContainer.innerHTML = ""
 
-    const checkbox = createElem(`input#repolink_${li}`, {type: "checkbox"})
-    checkbox.checked = isEnabled
-    checkbox.addEventListener("change", () => {
-        window.nexusState.repoLinks[li][1] = checkbox.checked
+    window.nexusReposList.repos.forEach((repo, ri) => {
+        const row = createElem("div")
 
-        // Write to file
-        const fileText = []
-        window.nexusState.repoLinks.forEach(linkAndEnabled => {
-            fileText.push(linkAndEnabled[1] ? `*${linkAndEnabled[0]}` : linkAndEnabled[0])
+        const enabledCkbx = createElem("input", {type: "checkbox"})
+        enabledCkbx.checked = repo.enabled
+        enabledCkbx.addEventListener("click", () => {
+            window.nexusReposList.repos[ri].enabled = enabledCkbx.checked
+            fs.writeFileSync(`${window.path}/repositories.json`, JSON.stringify(window.nexusReposList, null, 4), "utf8")
         })
-        fs.writeFileSync(`${window.path}/repositories.txt`, fileText.join("\n"), "utf8")
+        const enabledCkbxElem = createElem("div", enabledCkbx)
+
+        const removeButton = createElem("button.smallButton", window.i18n.REMOVE)
+        removeButton.style.background = `#${window.currentGame.themeColourPrimary}`
+        const removeButtonElem = createElem("div", removeButton)
+        const linkButton = createElem("button.smallButton", window.i18n.OPEN)
+        linkButton.style.background = `#${window.currentGame.themeColourPrimary}`
+        linkButton.addEventListener("click", () => {
+            shell.openExternal(repo.url)
+        })
+        const linkButtonElem = createElem("div", linkButton)
+        const gameElem = createElem("div", window.nexusGameIdToGameName[repo.game_id])
+        gameElem.title = window.nexusGameIdToGameName[repo.game_id]
+        const nameElem = createElem("div", repo.name)
+        nameElem.title = repo.name
+        const authorElem = createElem("div", repo.author)
+        authorElem.title = repo.author
+        const endorsementsElem = createElem("div", String(repo.endorsements))
+        const downloadsElem = createElem("div", String(repo.downloads))
+
+
+        row.appendChild(enabledCkbxElem)
+        row.appendChild(linkButtonElem)
+        row.appendChild(gameElem)
+        row.appendChild(nameElem)
+        row.appendChild(authorElem)
+        row.appendChild(endorsementsElem)
+        row.appendChild(downloadsElem)
+        row.appendChild(removeButtonElem)
+        nexusReposUsedContainer.appendChild(row)
     })
-    const linkDisplay = createElem("div", cleanLink)
-
-    const row = createElem("div")
-    row.appendChild(createElem("div", checkbox))
-    row.appendChild(linkDisplay)
-
-    nexusReposList.appendChild(row)
-
 }
-if (fs.existsSync(`${window.path}/repositories.txt`)) {
-    const data = fs.readFileSync(`${window.path}/repositories.txt`, "utf8").split("\n").filter(line => line.length)
 
-    data.forEach((link, li) => {
-        window.addRepoListItem(link, li)
-    })
+
+window.addRepoToApp = (repo) => {
+    repo.enabled = true
+    window.nexusReposList.repos.push(repo)
+    window.nexusReposList.repos = window.nexusReposList.repos.sort((a,b)=>a.endorsements<b.endorsements?1:-1)
+    fs.writeFileSync(`${window.path}/repositories.json`, JSON.stringify(window.nexusReposList, null, 4), "utf8")
+    window.nexusUpdateModsUsedPanel()
 }
-nexusReposAddButton.addEventListener("click", () => {
-    window.createModal("prompt", {prompt: window.i18n.NEXUS_ENTER_LINK, value: ""}).then(link => {
 
-        let alreadyExists = false
-        window.nexusState.repoLinks.forEach(linkAndEnabled => {
-            if (link.trim().toLowerCase().replace(/\/$/,"").replace("https", "http")==linkAndEnabled[0].trim().toLowerCase().replace("https", "http").replace(/\/$/,"")) {
-                alreadyExists = true
+
+
+
+nexusReposSearchBar.addEventListener("keydown", e => {
+    if (e.key.toLowerCase()=="enter" && nexusReposSearchBar.value.length) {
+        searchNexusButton.click()
+    }
+})
+searchNexusButton.addEventListener("click", () => {
+    const gameId = nexusAllGamesSelect.value ? parseInt(nexusAllGamesSelect.value) : undefined
+    const query = nexusReposSearchBar.value
+    nexusSearchContainer.innerHTML = ""
+    window.mod_search_nexus(gameId, query).then(results => {
+
+        const numResults = results[0]
+        results = results[1]
+
+        results.forEach(repo => {
+
+            const row = createElem("div")
+            const addButton = createElem("button.smallButton", window.i18n.ADD)
+            const addButtonElem = createElem("div", addButton)
+            addButton.style.background = `#${window.currentGame.themeColourPrimary}`
+            if (window.nexusReposList.repos.find(r=>r.url==repo.url)) {
+                addButton.disabled = true
             }
+            addButton.addEventListener("click", () => {
+                window.addRepoToApp(repo)
+                addButton.disabled = true
+            })
+
+            const linkButton = createElem("button.smallButton", window.i18n.OPEN)
+            linkButton.style.background = `#${window.currentGame.themeColourPrimary}`
+            linkButton.addEventListener("click", () => {
+                shell.openExternal(repo.url)
+            })
+            const linkButtonElem = createElem("div", linkButton)
+            const gameElem = createElem("div", window.nexusGameIdToGameName[repo.game_id])
+            gameElem.title = window.nexusGameIdToGameName[repo.game_id]
+            const nameElem = createElem("div", repo.name)
+            nameElem.title = repo.name
+            const authorElem = createElem("div", repo.author)
+            authorElem.title = repo.author
+            const endorsementsElem = createElem("div", String(repo.endorsements))
+            const downloadsElem = createElem("div", String(repo.downloads))
+
+
+            row.appendChild(addButtonElem)
+            row.appendChild(linkButtonElem)
+            row.appendChild(gameElem)
+            row.appendChild(nameElem)
+            row.appendChild(authorElem)
+            row.appendChild(endorsementsElem)
+            row.appendChild(downloadsElem)
+            nexusSearchContainer.appendChild(row)
         })
-        if (alreadyExists) {
-            setTimeout(() => {
-            window.errorModal(window.i18n.NEXUS_LINK_EXISTS)
 
-            }, 500)
-            return
-        }
-
-        const cleanLink = link.trim().toLowerCase().replace(/\/$/,"")
-        window.addRepoListItem("*"+cleanLink, window.nexusState.repoLinks.length)
-
-        // Write to file
-        const fileText = []
-        window.nexusState.repoLinks.forEach(linkAndEnabled => {
-            fileText.push(linkAndEnabled[1] ? `*${linkAndEnabled[0]}` : linkAndEnabled[0])
-        })
-        fs.writeFileSync(`${window.path}/repositories.txt`, fileText.join("\n"), "utf8")
     })
 })
 
