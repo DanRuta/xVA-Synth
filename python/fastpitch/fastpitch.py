@@ -372,6 +372,7 @@ class FastPitch(nn.Module):
                 return self.infer_using_vals(logger, plugin_manager, cleaned_text, pace, enc_out, max_duration, enc_mask, dur_pred_existing=dur_pred, pitch_pred_existing=pitch_pred, old_sequence=old_sequence, new_sequence=inputs)
             except:
                 print(traceback.format_exc())
+                logger.info(traceback.format_exc())
                 return self.infer_using_vals(logger, plugin_manager, cleaned_text, pace, enc_out, max_duration, enc_mask, None, None, None)
 
         else:

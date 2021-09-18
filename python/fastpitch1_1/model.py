@@ -181,6 +181,6 @@ class FastPitch1_1(object):
 
 
     def run_speech_to_speech (self, audiopath, text):
-        return self.model.run_speech_to_speech(self.device, self.logger, audiopath, text)
+        return self.model.run_speech_to_speech(self.device, self.logger, audiopath, text, text_to_sequence, sequence_to_text)
 
 

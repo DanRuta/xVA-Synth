@@ -144,7 +144,7 @@ window.useWavFileForspeech2speech = (fileName) => {
             let pitchData = res[0]
             let durationsData = res[1]
             let energyData = res[2]
-            let cleanedSequence = res[3]
+            let cleanedSequence = res[3].split("|").map(c=>c.replaceAll("{", "").replaceAll("}", "")).join("")
 
             dialogueInput.value = cleanedSequence
             sequence = cleanedSequence
@@ -221,7 +221,7 @@ window.micClickHandler = (ctrlKey) => {
             if (!Object.keys(window.userSettings).includes("s2s_voiceId") || !window.userSettings.s2s_voiceId) {
                 s2s_selectVoiceBtn.click()
             } else {
-                const speech2speechPath = window.userSettings.s2s_voiceId.split(",")[2]
+                const speech2speechPath = window.userSettings.s2s_voiceId.split(",")[3]
                 if (!fs.existsSync(speech2speechPath)) {
                     window.userSettings.s2s_voiceId = undefined
                     window.micClickHandler()

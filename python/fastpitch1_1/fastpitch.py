@@ -24,6 +24,8 @@
 #  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 # *****************************************************************************
+import re
+
 from typing import Optional
 
 import torch
@@ -491,7 +493,7 @@ class FastPitch(nn.Module):
             return self.infer_using_vals(logger, plugin_manager, cleaned_text, pace, enc_out, max_duration, enc_mask, None, None, None, None, None)
 
 
-    def run_speech_to_speech (self, device, logger, audiopath, in_text):
+    def run_speech_to_speech (self, device, logger, audiopath, in_text, text_to_sequence, sequence_to_text):
 
         self.device = device
         max_wav_value = 32768
@@ -505,6 +507,10 @@ class FastPitch(nn.Module):
         melspec = torch.squeeze(melspec, 0)
         melspec = melspec.to(device)
         mel = melspec
+
+        text = re.sub(r'[^a-zA-Z\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', in_text)
+        sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
+        in_text = sequence_to_text("english_basic", sequence).replace("|","")
 
         text = tp.encode_text(in_text)
         text = torch.LongTensor(text)
