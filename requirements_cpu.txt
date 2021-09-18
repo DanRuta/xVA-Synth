@@ -60,6 +60,6 @@ transformers==4.10.0
 typing==3.7.4.3
 typing-extensions==3.7.4.3
 Unidecode==1.1.1
-urllib3==1.26.2
+urllib3==1.26.5
 webrtcvad==2.0.10
 zipp==3.4.0
