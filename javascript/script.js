@@ -275,7 +275,7 @@ window.changeGame = (meta) => {
     window.currentGame = meta
     themeColour = meta.themeColourPrimary
     secondaryThemeColour = meta.themeColourSecondary
-    let titleID = meta.gameName
+    let titleID = meta.gameCode
 
     generateVoiceButton.disabled = true
     generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
