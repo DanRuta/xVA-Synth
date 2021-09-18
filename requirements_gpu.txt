@@ -63,7 +63,7 @@ pytorch-lightning==0.7.1
 pytz==2015.7
 pywin32==301
 pywin32-ctypes==0.2.0
-PyYAML==5.3.1
+PyYAML==5.4
 regex==2021.8.28
 requests==2.24.0
 requests-oauthlib==1.3.0

@@ -38,7 +38,7 @@ pyinstaller-hooks-contrib==2020.9
 pyparsing==2.4.7
 pywin32==301
 pywin32-ctypes==0.2.0
-PyYAML==5.4.1
+PyYAML==5.4
 regex==2021.8.28
 requests==2.25.1
 resampy==0.2.2
