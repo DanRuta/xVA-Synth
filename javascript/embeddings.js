@@ -69,23 +69,22 @@ window.populateGamesList = () => {
         gameButton.addEventListener("click", e => {
             if (e.target==gameButton || e.target==buttonLabel) {
                 gameCheckbox.click()
-                window.computeEmbsAndDimReduction()
                 window.populateVoicesList()
+                window.computeEmbsAndDimReduction()
             }
         })
         gameButton.addEventListener("contextmenu", e => {
             if (e.target==gameButton || e.target==buttonLabel) {
                 Array.from(embeddingsGamesListContainer.querySelectorAll("input")).forEach(ckbx => ckbx.checked = false)
                 gameCheckbox.click()
-                window.computeEmbsAndDimReduction()
                 window.populateVoicesList()
+                window.computeEmbsAndDimReduction()
             }
         })
-        gameCheckbox.addEventListener("change", () => {
-            window.computeEmbsAndDimReduction()
+        gameCheckbox.addEventListener("click", () => {
             window.populateVoicesList()
+            window.computeEmbsAndDimReduction()
         })
-
 
 
         gameButton.appendChild(gameCheckbox)
@@ -129,6 +128,14 @@ window.populateVoicesList = () => {
                 }
                 const point = window.embeddingsState.sceneData.points.find(point => point.data.voiceId==model.voiceId)
                 window.embeddingsState.sceneData.controls.target.set(point.position.x, point.position.y, point.position.z)
+
+                const cameraPos = window.embeddingsState.sceneData.camera.position
+                const deltaX = (point.position.x - cameraPos.x)
+                const deltaY = (point.position.y - cameraPos.y)
+                const deltaZ = (point.position.z - cameraPos.z)
+
+                window.embeddingsState.sceneData.camera.position.set(cameraPos.x+deltaX/2, cameraPos.y+deltaY/2, cameraPos.z+deltaZ/2)
+
             })
 
             const nameElem = createElem("div", model.voiceName)
@@ -174,8 +181,8 @@ window.initDataMappings = () => {
 
     Object.keys(window.gameAssets).forEach(gameId => {
         // Short game ID to full game ID
-        const gameShortId = window.gameAssets[gameId].gameCode
-        window.embeddingsState.gameShortIdToGameId[gameShortId] = gameId
+        const gameShortId = window.gameAssets[gameId].gameCode.toLowerCase()
+        window.embeddingsState.gameShortIdToGameId[gameShortId] = gameId.toLowerCase()
 
         // Game title
         const title = window.gameAssets[gameId].gameName
@@ -659,6 +666,10 @@ window.computeEmbsAndDimReduction = (includeAllVoices=false) => {
         .map(elem => [elem.checked, elem.id.replace("embsVoice_", "")])
         .filter(checkedId => checkedId[0])
         .map(checkedId => checkedId[1].replace("embsVoice_", ""))
+
+    if (enabledVoices.length<=2) {
+        return window.errorModal(window.i18n.EMBEDDINGS_NEED_AT_LEAST_3)
+    }
 
 
     // Get together a list of voiceId->.wav path mappings
