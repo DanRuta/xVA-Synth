@@ -459,6 +459,15 @@ window.i18n.setEnglish = () => {
     window.i18n.DISABLE_ALL = "Disable All"
     window.i18n.PREV = "Prev"
 
+    window.i18n.ALL = "All"
+    window.i18n.MOD_NAME = "Mod name"
+    window.i18n.MOD_TITLE = "Mod title"
+    window.i18n.SEARCH_NEXUS = "Search Nexus"
+    window.i18n.MOD_REPOS_USED = "Mod repos used"
+    window.i18n.LINK = "Link"
+    window.i18n.ENDORSEMENTS = "Endorsements"
+    window.i18n.DOWNLOADS = "Downloads"
+
     // Useful during developing, to see if there are any strings left un-i18n-ed
     // Object.keys(window.i18n).forEach(key => {
     //     if (!["setEnglish", "updateUI"].includes(key)) {
@@ -469,6 +478,30 @@ window.i18n.setEnglish = () => {
 
 
 window.i18n.updateUI = () => {
+
+
+    i18n_nexusRepos_mod_name.innerHTML = window.i18n.MOD_NAME
+    nexusReposSearchBar.placeholder = window.i18n.MOD_TITLE
+    i18n_nexusRepos_all.innerHTML = window.i18n.ALL
+    searchNexusButton.innerHTML = window.i18n.SEARCH_NEXUS
+    i18n_nexusRepos_game.innerHTML = window.i18n.GAME_IS
+    i18n_nexusRepos_modReposUsed.innerHTML = window.i18n.MOD_REPOS_USED
+
+    i18n_nexus_searchh_add.innerHTML = window.i18n.ADD
+    i18n_nexus_searchh_link.innerHTML = window.i18n.LINK
+    i18n_nexus_searchh_game.innerHTML = window.i18n.GAME
+    i18n_nexus_searchh_name.innerHTML = window.i18n.NAME
+    i18n_nexus_searchh_author.innerHTML = window.i18n.AUTHOR
+    i18n_nexus_searchh_endorsements.innerHTML = window.i18n.ENDORSEMENTS
+    i18n_nexus_searchh_downloads.innerHTML = window.i18n.DOWNLOADS
+
+    i18n_nexus_reposUsedh_link.innerHTML = window.i18n.LINK
+    i18n_nexus_reposUsedh_game.innerHTML = window.i18n.GAME
+    i18n_nexus_reposUsedh_name.innerHTML = window.i18n.NAME
+    i18n_nexus_reposUsedh_author.innerHTML = window.i18n.AUTHOR
+    i18n_nexus_reposUsedh_endorsements.innerHTML = window.i18n.ENDORSEMENTS
+    i18n_nexus_reposUsedh_downloads.innerHTML = window.i18n.DOWNLOADS
+    i18n_nexus_reposUsedh_remove.innerHTML = window.i18n.REMOVE
 
 
 
