@@ -412,7 +412,7 @@ const initMenuSetting = (elem, setting, type, callback=undefined, valFn=undefine
         })
     }
 }
-const initFilePickerButton = (button, input, setting, properties, filters=undefined, defaultPath=undefined, callback=undefined) => {
+window.initFilePickerButton = (button, input, setting, properties, filters=undefined, defaultPath=undefined, callback=undefined) => {
     button.addEventListener("click", () => {
         const defaultPath = input.value.replace(/\//g, "\\")
         let filePath = electron.remote.dialog.showOpenDialog({ properties, filters, defaultPath})
