@@ -404,11 +404,12 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_DOUBLE_AMP_DISPLAY = "Also display amplitude setting in the editor"
     window.i18n.SETTINGS_CSV_DELIMITER = "CSV delimiter"
     window.i18n.SETTINGS_PAGINATION_SIZE_BATCH = "Batch pagination size"
-    window.i18n.SETTINGS_PAGINATION_SIZE_ARPABET = "ARPABet pagination size"
+    window.i18n.SETTINGS_PAGINATION_SIZE_ARPABET = "ARPAbet pagination size"
     window.i18n.SETTINGS_GROUP_VOICEID = "Group voices by voiceId and vocoder in preprocessing to minimize model switching"
     window.i18n.SETTINGS_GROUP_VOCODER = "Also do a secondary group by the vocoder - can take long to do with big files (100k+ lines)"
 
     window.i18n.SEARCH_OUTPUT = "Search output file names..."
+    window.i18n.DELETE = "Delete"
     window.i18n.DELETE_ALL = "Delete all"
     window.i18n.DELETE_ALL_FILES_CONFIRM = "Are you sure you'd like to delete all files for this voice? This will delete all _1 files in the following output directory:<br>_2"
     window.i18n.DELETE_ALL_FILES_ERR_NO_FILES = "There are no files in the following output directory:<br>_1"
@@ -443,10 +444,11 @@ window.i18n.setEnglish = () => {
 
 
     window.i18n.ARPABET_ERROR_BAD_SYMBOLS = "Found non-ARPAbet symbols: _1"
-    window.i18n.ARPABET_ERROR_EMPTY_INPUT = "Words or ARPABet symbols can't be left empty"
+    window.i18n.ARPABET_ERROR_EMPTY_INPUT = "Words or ARPAbet symbols can't be left empty"
     window.i18n.PAGINATION_X_OF_Y = "_1 of _2"
     window.i18n.ARPABET_CONFIRM_ENABLE_ALL = "Are you sure you'd like to enable ALL words for the following dictionary?<br><br><i>_1</i>"
     window.i18n.ARPABET_CONFIRM_DISABLE_ALL = "Are you sure you'd like to enable ALL words for the following dictionary?<br><br><i>_1</i>"
+    window.i18n.ARPABET_CONFIRM_DELETE_WORD = "Are you sure you'd like to delete the following word?<br><br><i>_1</i>"
 
     window.i18n.DICTIONARIES = "Dictionaries"
     window.i18n.SAVE = "Save"
@@ -512,6 +514,7 @@ window.i18n.updateUI = () => {
     i18n_arpabet_word_is.innerHTML = window.i18n.WORD_IS
     arpabet_save.innerHTML = window.i18n.SAVE
     i18n_arpabetWordsListh_word.innerHTML = window.i18n.WORD
+    i18n_arpabetWordsListh_delete.innerHTML = window.i18n.DELETE
     arpabet_enableall_button.innerHTML = window.i18n.ENABLE_ALL
     arpabet_disableall_button.innerHTML = window.i18n.DISABLE_ALL
     arpabet_prev_btn.innerHTML = window.i18n.PREV

@@ -76,6 +76,18 @@ window.refreshDictWordList = () => {
             window.saveARPAbetDict(dictId)
         })
 
+        const deleteButton = createElem("button.smallButton.arpabetRowItem", window.i18n.DELETE)
+        deleteButton.addEventListener("click", () => {
+            window.confirmModal(window.i18n.ARPABET_CONFIRM_DELETE_WORD.replace("_1", word)).then(response => {
+                if (response) {
+                    delete window.arpabetMenuState.dictionaries[dictId].data[word]
+                    delete window.arpabetMenuState.dictionaries[dictId].filteredData[word]
+                    window.saveARPAbetDict(dictId)
+                    window.refreshDictWordList()
+                }
+            })
+        })
+
         const wordElem = createElem("div.arpabetRowItem", word)
         wordElem.title = word
 
@@ -84,6 +96,7 @@ window.refreshDictWordList = () => {
 
 
         rowElem.appendChild(createElem("div.arpabetRowItem", ckbx))
+        rowElem.appendChild(createElem("div.arpabetRowItem", deleteButton))
         rowElem.appendChild(wordElem)
         rowElem.appendChild(arpabetElem)
 

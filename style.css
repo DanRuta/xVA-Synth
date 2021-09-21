@@ -1510,13 +1510,17 @@ a {
     min-width: 50px;
     max-width: 50px;
 }
-/*Link*/
 #arpabetWordsListHeader > div:nth-child(2), #arpabetWordsListContainer > div > div:nth-child(2) {
+    min-width: 75px;
+    max-width: 75px;
+}
+/*Link*/
+#arpabetWordsListHeader > div:nth-child(3), #arpabetWordsListContainer > div > div:nth-child(3) {
     min-width: 200px;
     max-width: 200px;
 }
 /*Game*/
-#arpabetWordsListHeader > div:nth-child(3), #arpabetWordsListContainer > div > div:nth-child(3) {
+#arpabetWordsListHeader > div:nth-child(4), #arpabetWordsListContainer > div > div:nth-child(4) {
     min-width: 150px;
     /*max-width: 150px;*/
     white-space: nowrap;
