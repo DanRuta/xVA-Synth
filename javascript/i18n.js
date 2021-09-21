@@ -403,7 +403,8 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_PREAPPLY_FFMPEG = "(recommended) Pre-apply ffmpeg effects to the preview sample"
     window.i18n.SETTINGS_DOUBLE_AMP_DISPLAY = "Also display amplitude setting in the editor"
     window.i18n.SETTINGS_CSV_DELIMITER = "CSV delimiter"
-    window.i18n.SETTINGS_PAGINATION_SIZE = "Pagination size"
+    window.i18n.SETTINGS_PAGINATION_SIZE_BATCH = "Batch pagination size"
+    window.i18n.SETTINGS_PAGINATION_SIZE_ARPABET = "ARPABet pagination size"
     window.i18n.SETTINGS_GROUP_VOICEID = "Group voices by voiceId and vocoder in preprocessing to minimize model switching"
     window.i18n.SETTINGS_GROUP_VOCODER = "Also do a secondary group by the vocoder - can take long to do with big files (100k+ lines)"
 
@@ -439,6 +440,25 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_FOR_PLUGIN = "Settings for plugin: <i>_1</i>"
     window.i18n.EMBEDDINGS_NEED_AT_LEAST_3 = "You need at least 3 voices to run dimensionality reduction for the plot"
 
+
+
+    window.i18n.ARPABET_ERROR_BAD_SYMBOLS = "Found non-ARPAbet symbols: _1"
+    window.i18n.ARPABET_ERROR_EMPTY_INPUT = "Words or ARPABet symbols can't be left empty"
+    window.i18n.PAGINATION_X_OF_Y = "_1 of _2"
+    window.i18n.ARPABET_CONFIRM_ENABLE_ALL = "Are you sure you'd like to enable ALL words for the following dictionary?<br><br><i>_1</i>"
+    window.i18n.ARPABET_CONFIRM_DISABLE_ALL = "Are you sure you'd like to enable ALL words for the following dictionary?<br><br><i>_1</i>"
+
+    window.i18n.DICTIONARIES = "Dictionaries"
+    window.i18n.SAVE = "Save"
+    window.i18n.WORDS = "Words"
+    window.i18n.WORD_IS = "Word:"
+    window.i18n.WORD = "Word"
+    window.i18n.REFERENCE = "Reference"
+    window.i18n.SEARCH_WORDS = "Search words..."
+    window.i18n.ENABLE_ALL = "Enable All"
+    window.i18n.DISABLE_ALL = "Disable All"
+    window.i18n.PREV = "Prev"
+
     // Useful during developing, to see if there are any strings left un-i18n-ed
     // Object.keys(window.i18n).forEach(key => {
     //     if (!["setEnglish", "updateUI"].includes(key)) {
@@ -449,6 +469,21 @@ window.i18n.setEnglish = () => {
 
 
 window.i18n.updateUI = () => {
+
+
+
+    i18n_arpabet_dictionaries.innerHTML = window.i18n.DICTIONARIES
+    i18n_arpabet_words.innerHTML = window.i18n.WORDS
+    i18n_arpabet_reference.innerHTML = window.i18n.REFERENCE
+    arpabet_word_search_input.placeholder = window.i18n.SEARCH_WORDS
+    i18n_arpabet_word_is.innerHTML = window.i18n.WORD_IS
+    arpabet_save.innerHTML = window.i18n.SAVE
+    i18n_arpabetWordsListh_word.innerHTML = window.i18n.WORD
+    arpabet_enableall_button.innerHTML = window.i18n.ENABLE_ALL
+    arpabet_disableall_button.innerHTML = window.i18n.DISABLE_ALL
+    arpabet_prev_btn.innerHTML = window.i18n.PREV
+    arpabet_next_btn.innerHTML = window.i18n.NEXT
+
 
     selectedGameDisplay.innerHTML = window.i18n.SELECT_GAME
     voiceSearchInput.placeholder = window.i18n.SEARCH_VOICES
@@ -508,7 +543,8 @@ window.i18n.updateUI = () => {
     i18n_setting_ffmpeg_preapply.innerHTML = window.i18n.SETTINGS_PREAPPLY_FFMPEG
     i18n_settings_doubleAmpDisplay.innerHTML = window.i18n.SETTINGS_DOUBLE_AMP_DISPLAY
     i18n_settings_csv_delimiter.innerHTML = window.i18n.SETTINGS_CSV_DELIMITER
-    i18n_settings_paginationSize.innerHTML = window.i18n.SETTINGS_PAGINATION_SIZE
+    i18n_settings_paginationSize.innerHTML = window.i18n.SETTINGS_PAGINATION_SIZE_BATCH
+    i18n_settings_arpabetPagination.innerHTML = window.i18n.SETTINGS_PAGINATION_SIZE_ARPABET
     i18n_settings_groupVoiceID.innerHTML = window.i18n.SETTINGS_GROUP_VOICEID
     i18n_settings_groupVocoder.innerHTML = window.i18n.SETTINGS_GROUP_VOCODER
 

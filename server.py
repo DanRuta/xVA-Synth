@@ -208,9 +208,12 @@ if __name__ == '__main__':
                     post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])
                     n_speakers = post_data["model_speakers"] if "model_speakers" in post_data else None
 
+
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["pre"], event="pre load-model", data=post_data)
                     models_manager.load_model(modelType.lower().replace(".", "_").replace(" ", ""), ckpt+".pt", n_speakers=n_speakers)
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["post"], event="post load-model", data=post_data)
+
+                    models_manager.models_bank["fastpitch1_1"].init_arpabet_dicts()
 
                 if self.path == "/synthesize":
                     logger.info("POST {}".format(self.path))
@@ -359,6 +362,10 @@ if __name__ == '__main__':
                     modelsPaths = json.loads(post_data["modelsPaths"])
                     models_manager.set_device('cuda' if use_gpu else 'cpu')
                     req_response = "ready"
+
+                if self.path == "/updateARPABet":
+                    if "fastpitch1_1" in list(models_manager.models_bank.keys()):
+                        models_manager.models_bank["fastpitch1_1"].refresh_arpabet_dicts()
 
 
                 self._set_response()

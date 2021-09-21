@@ -181,6 +181,9 @@ if (!Object.keys(window.userSettings).includes("waveglow_path")) { // For backwa
 if (!Object.keys(window.userSettings).includes("bigwaveglow_path")) { // For backwards compatibility
     window.userSettings.bigwaveglow_path = `${__dirname.replace(/\\/g,"/")}/models/nvidia_waveglowpyt_fp32_20190427.pt`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
 }
+if (!Object.keys(window.userSettings).includes("arpabet_paginationSize")) { // For backwards compatibility
+    window.userSettings.arpabet_paginationSize = 200
+}
 
 const updateUIWithSettings = () => {
     useGPUCbx.checked = window.userSettings.useGPU
@@ -239,6 +242,8 @@ const updateUIWithSettings = () => {
 
     setting_256waveglow_path.value = window.userSettings.waveglow_path
     setting_bigwaveglow_path.value = window.userSettings.bigwaveglow_path
+
+    setting_arpabet_paginationSize.value = window.userSettings.arpabet_paginationSize
 
     const [height, width] = window.userSettings.customWindowSize.split(",").map(v => parseInt(v))
     ipcRenderer.send("resize", {height, width})
@@ -546,6 +551,8 @@ initFilePickerButton(setting_outPathButton, setting_out_path_input, ()=>`outpath
         window.currentModelButton.click()
     }
 })
+
+initMenuSetting(setting_arpabet_paginationSize, "arpabet_paginationSize", "number", undefined, parseInt)
 
 
 setPromptTheme()

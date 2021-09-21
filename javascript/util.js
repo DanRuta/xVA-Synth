@@ -105,7 +105,7 @@ window.createModal = (type, message) => {
 }
 window.closeModal = (container=undefined, notThisOne=undefined) => {
     return new Promise(resolve => {
-        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, pluginsContainer, modalContainer, s2sSelectContainer, nexusContainer, embeddingsContainer, totdContainer, nexusReposContainer, EULAContainer]
+        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, pluginsContainer, modalContainer, s2sSelectContainer, nexusContainer, embeddingsContainer, totdContainer, nexusReposContainer, EULAContainer, arpabetContainer]
         const containers = container==undefined ? allContainers : (Array.isArray(container) ? container.filter(c=>c!=undefined) : [container])
 
         notThisOne = Array.isArray(notThisOne) ? notThisOne : (notThisOne==undefined ? [] : [notThisOne])
@@ -170,6 +170,9 @@ window.setTheme = (meta) => {
     } catch (e) {}
     try {
         Array.from(embeddingsRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${primaryColour}`)
+    } catch (e) {}
+    try {
+        Array.from(arpabetWordsListHeader.children).forEach(item => item.style.backgroundColor = `#${primaryColour}`)
     } catch (e) {}
     try {
         window.sequenceEditor.grabbers.forEach(grabber => grabber.fillStyle = `#${primaryColour}`)

@@ -1,3 +1,4 @@
+import os
 import re
 import json
 import argparse
@@ -19,6 +20,8 @@ class FastPitch1_1(object):
         self.models_manager = models_manager
         self.device = device
         self.ckpt_path = None
+
+        self.arpabet_dict = {}
 
         torch.backends.cudnn.benchmark = True
 
@@ -64,6 +67,40 @@ class FastPitch1_1(object):
         self.model.eval()
 
 
+    def init_arpabet_dicts (self):
+        if len(list(self.arpabet_dict.keys()))==0:
+            self.refresh_arpabet_dicts()
+
+    def refresh_arpabet_dicts (self):
+        self.arpabet_dict = {}
+        json_files = sorted(os.listdir(f'{"./resources/app" if self.PROD else "."}/arpabet'))
+        json_files = [fname for fname in json_files if fname.endswith(".json")]
+
+        for fname in json_files:
+            with open(f'{"./resources/app" if self.PROD else "."}/arpabet/{fname}') as f:
+                json_data = json.load(f)
+
+                for word in list(json_data["data"].keys()):
+                    if json_data["data"][word]["enabled"]==True:
+                        self.arpabet_dict[word] = json_data["data"][word]["arpabet"]
+
+    def infer_arpabet_dict (self, sentence):
+        words = list(self.arpabet_dict.keys())
+        if len(words):
+
+            # Pad out punctuation, to make sure they don't get used in the word look-ups
+            sentence = " "+sentence.replace(",", " ,").replace(".", " .").replace("!", " !").replace("?", " ?")+" "
+
+            for word in words:
+                sentence = sentence.replace(f' {word} ', " {"+self.arpabet_dict[word]+"} ")
+
+            # Undo the punctuation padding, to retain the original sentence structure
+            sentence = sentence.replace(" ,", ",").replace(" .", ".").replace(" !", "!").replace(" ?", "?").strip()
+
+        return sentence
+
+
+
     def infer_batch(self, plugin_manager, linesBatch, vocoder, speaker_i, old_sequence=None):
         print(f'Inferring batch of {len(linesBatch)} lines')
 
@@ -77,6 +114,7 @@ class FastPitch1_1(object):
         for record in linesBatch:
             text = record[0]
             text = re.sub(r'[^a-zA-Z\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)
+            text = self.infer_arpabet_dict(text)
             sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
             cleaned_text_sequences.append(sequence_to_text("english_basic", sequence))
             text = torch.LongTensor(sequence)
@@ -129,6 +167,7 @@ class FastPitch1_1(object):
         denoising_strength = 0.01
 
         text = re.sub(r'[^a-zA-Z\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)
+        text = self.infer_arpabet_dict(text)
         sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
         cleaned_text = sequence_to_text("english_basic", sequence)
         text = torch.LongTensor(sequence)

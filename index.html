@@ -304,6 +304,12 @@
                             <input id="setting_playChangedAudio" type="checkbox">
                         </div>
                     </div>
+                    <div>
+                        <div id="i18n_settings_arpabetPagination">ARPABet pagination size</div>
+                        <div>
+                            <input id="setting_arpabet_paginationSize" type="number" value="200">
+                        </div>
+                    </div>
 
                     <hr style="width:100%">
 
@@ -1124,9 +1130,549 @@
             </div>
         </div>
 
+        <div id="arpabetContainer" style="display: none;">
+            <div id="arpabetModal" class="modal">
+                <h2 style="margin-bottom: 0;">ARPAbet</h2>
+                <div style="display:flex;flex-grow: 1;">
+
+                    <!-- Left -->
+                    <div id="arpabetMenu_left">
+                        <h3 id="i18n_arpabet_dictionaries">Dictionaries</h3>
+                        <div id="arpabet_dicts_list">
+
+                        </div>
+                        <div style="margin-top: 5px;">
+                            <button id="arpabet_enableall_button" disabled>Enable all</button>
+                            <button id="arpabet_disableall_button" disabled>Disable all</button>
+                        </div>
+                    </div>
+
+                    <!-- Middle -->
+                    <div id="arpabetMenu_middle">
+                        <div>
+                            <h3 id=i18n_arpabet_words>Words</h3>
+
+                            <input id="arpabet_word_search_input" style="width: 75%;" placeholder="Search words...">
+
+                        </div>
+
+                        <div id="arpabetWordsList_main" style="width: 100%;display: block;">
+                            <div id="arpabetWordsListHeader">
+                                <div id="i18n_arpabetWordsListh_enabled"></div>
+                                <div id="i18n_arpabetWordsListh_word">Word</div>
+                                <div>ARPAbet</div>
+                            </div>
+                            <div id="arpabetWordsListContainer">
+                                <span></span>
+                            </div>
+                        </div>
+
+
+
+                        <div id="arpabet_words_control" style="display: flex;height: 40px;align-items: center;justify-content: space-between;margin-top: 5px;">
+                            <div style="display: flex;align-items: center;width: 200px;">
+                                <button id="arpabet_prev_btn" style="margin-left: 0;">Prev</button>
+                                <div id="arpabet_pagination_numbers">
+                                    0 of 0
+                                </div>
+                                <button id="arpabet_next_btn">Next</button>
+                            </div>
+                            <div style="display: flex;height: 100%;align-items: center;justify-content: space-between;width: calc(85vw - 250px - 525px - 150px - 200px);">
+                                <div id="i18n_arpabet_word_is">Word:</div>
+                                <input id="arpabet_word_input" style="width: 75px;height: 50%;">
+                                <div>ARPAbet:</div>
+                                <input id="arpabet_arpabet_input" style="width: 75px;height: 50%;">
+                                <button id="arpabet_save" style="margin-right: 0;">Save</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right -->
+                    <div id="arpabetMenu_right">
+                        <h3 id="i18n_arpabet_reference">Reference</h3>
+                        <div style="background: rgb(75,75,75);">
+                            <div id="arpabetReferenceList" class="flexTable">
+
+
+                                <div>
+                                    <div>AA</div>
+                                    <div>
+                                        <div>
+                                            b<b>al</b>m, b<b>o</b>t, c<b>o</b>t
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div>AE</div>
+                                    <div>
+                                        <div>
+                                            b<b>a</b>t, f<b>a</b>st
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div>
+                                    <div>AH</div>
+                                    <div>
+                                        <div>
+                                            b<b>u</b>tt
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>AO</div>
+                                    <div>
+                                        <div>
+                                            st<b>o</b>ry
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>AW</div>
+                                    <div>
+                                        <div>
+                                            b<b>ou</b>t
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>AX</div>
+                                    <div>
+                                        <div>
+                                            comm<b>a</b>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>AXR</div>
+                                    <div>
+                                        <div>
+                                            lett<b>er</b>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>AY</div>
+                                    <div>
+                                        <div>
+                                            b<b>i</b>te
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div>B</div>
+                                    <div>
+                                        <div>
+                                            <b>b</b>uy
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>CH</div>
+                                    <div>
+                                        <div>
+                                            <b>ch</b>ina
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>D</div>
+                                    <div>
+                                        <div>
+                                            <b>d</b>ie
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>DH</div>
+                                    <div>
+                                        <div>
+                                            <b>th</b>y
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>DX</div>
+                                    <div>
+                                        <div>
+                                            bu<b>tt</b>er
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>EH</div>
+                                    <div>
+                                        <div>
+                                            b<b>e</b>t
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div>EL</div>
+                                    <div>
+                                        <div>
+                                            bott<b>le</b>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>EM</div>
+                                    <div>
+                                        <div>
+                                            rhyth<b>m</b>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>EN</div>
+                                    <div>
+                                        <div>
+                                            butt<b>on</b>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div>ER</div>
+                                    <div>
+                                        <div>
+                                            b<b>i</b>rd
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>EY</div>
+                                    <div>
+                                        <div>
+                                            b<b>ai</b>t
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>F</div>
+                                    <div>
+                                        <div>
+                                            <b>f</b>ight
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>G</div>
+                                    <div>
+                                        <div>
+                                            <b>g</b>uy
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>HH</div>
+                                    <div>
+                                        <div>
+                                            <b>h</b>igh
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div>IH</div>
+                                    <div>
+                                        <div>
+                                            b<b>i</b>t
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>IX</div>
+                                    <div>
+                                        <div>
+                                            ros<b>e</b>s, rabb<b>i</b>t
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div>IY</div>
+                                    <div>
+                                        <div>
+                                            b<b>ea</b>t
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>JH</div>
+                                    <div>
+                                        <div>
+                                            <b>j</b>ive
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>K</div>
+                                    <div>
+                                        <div>
+                                            <b>k</b>ite
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>L</div>
+                                    <div>
+                                        <div>
+                                            <b>l</b>ie
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>M</div>
+                                    <div>
+                                        <div>
+                                            <b>m</b>y
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>N</div>
+                                    <div>
+                                        <div>
+                                            <b>n</b>igh
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>NG</div>
+                                    <div>
+                                        <div>
+                                            si<b>ng</b>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div>OW</div>
+                                    <div>
+                                        <div>
+                                            b<b>oa</b>t
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>P</div>
+                                    <div>
+                                        <div>
+                                            <b>p</b>ie
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>R</div>
+                                    <div>
+                                        <div>
+                                            <b>r</b>ye
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>S</div>
+                                    <div>
+                                        <div>
+                                            <b>s</b>igh
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>SH</div>
+                                    <div>
+                                        <div>
+                                            <b>sh</b>y
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>T</div>
+                                    <div>
+                                        <div>
+                                            <b>t</b>ie
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>TH</div>
+                                    <div>
+                                        <div>
+                                            <b>th</b>igh
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div>UH</div>
+                                    <div>
+                                        <div>
+                                            b<b>oo</b>k
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>UW</div>
+                                    <div>
+                                        <div>
+                                            b<b>oo</b>t
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>UX</div>
+                                    <div>
+                                        <div>
+                                            d<b>u</b>de
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>V</div>
+                                    <div>
+                                        <div>
+                                            <b>v</b>ie
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>W</div>
+                                    <div>
+                                        <div>
+                                            <b>w</b>ise
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>WH</div>
+                                    <div>
+                                        <div>
+                                            <b>wh</b>y
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>Y</div>
+                                    <div>
+                                        <div>
+                                            <b>y</b>acht
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>Z</div>
+                                    <div>
+                                        <div>
+                                            <b>z</b>oo
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div>ZH</div>
+                                    <div>
+                                        <div>
+                                            plea<b>s</b>ure
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
 
         <div id="modalContainer" style="display:none"></div>
     </div>
+</div>
+
+<div id="arpabetIcon">
+    <svg width="30" height="25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="291.8918918918919" viewBox="0, 0, 400,291.8918918918919"><g id="svgg"><path id="path0" d="M72.973 27.879 C 32.451 42.782,17.396 97.297,53.802 97.297 C 79.544 97.297,91.701 72.242,74.370 54.910 C 57.283 37.823,127.302 30.250,150.720 46.652 C 165.423 56.951,178.378 85.094,178.378 106.737 C 178.378 121.690,177.667 122.026,133.043 128.111 C 63.835 137.548,24.390 162.533,18.168 200.875 C 8.105 262.887,127.891 288.561,186.634 236.983 L 205.405 220.502 224.177 236.983 C 279.158 285.258,383.632 260.162,383.764 198.649 C 383.794 184.437,374.252 187.264,365.517 204.054 C 328.367 275.463,232.983 251.601,219.541 167.536 C 214.378 135.247,214.669 135.135,303.691 135.135 L 385.122 135.135 382.638 105.181 C 376.173 27.218,271.272 -9.201,219.131 48.414 C 210.152 58.336,209.281 58.158,185.830 41.628 C 158.995 22.713,104.930 16.127,72.973 27.879 M326.220 52.019 C 339.715 65.513,351.256 94.410,351.321 114.865 C 351.348 123.350,344.670 124.324,286.486 124.324 L 221.622 124.324 221.649 109.459 C 221.751 55.079,291.156 16.954,326.220 52.019 M180.884 170.569 C 188.274 229.709,123.639 272.474,79.427 237.697 C 33.938 201.915,81.663 142.798,157.485 141.005 L 177.133 140.541 180.884 170.569 " stroke="none" fill="#ffffff" fill-rule="evenodd"></path></g></svg>
 </div>
 <div id="embeddingsIcon">
     <svg width="25" height="25" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0, 0, 400,400"><g id="svgg"><path id="path0" d="M150.000 20.230 C 65.534 26.594,5.904 105.137,22.679 187.932 C 41.869 282.642,149.542 329.959,232.409 280.098 L 237.105 277.272 288.552 328.719 L 340.000 380.166 360.083 360.083 L 380.166 340.000 328.719 288.552 L 277.272 237.105 280.098 232.409 C 316.949 171.163,301.885 92.110,245.067 48.568 C 218.394 28.128,183.443 17.709,150.000 20.230 M166.667 70.498 C 215.683 73.046,254.682 119.552,249.348 169.093 C 244.601 213.185,208.627 247.470,164.854 249.622 C 102.308 252.696,55.953 193.244,74.215 133.374 C 85.585 96.097,124.114 68.164,161.333 70.215 C 162.342 70.271,164.742 70.398,166.667 70.498 " stroke="none" fill="#ffffff" fill-rule="evenodd"></path></g></svg>

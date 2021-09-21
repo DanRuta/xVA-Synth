@@ -19,6 +19,7 @@ require("./javascript/util.js")
 require("./javascript/nexus.js")
 require("./javascript/embeddings.js")
 require("./javascript/totd.js")
+require("./javascript/arpabet.js")
 const {Editor} = require("./javascript/editor.js")
 const {saveUserSettings, deleteFolderRecursive} = require("./javascript/settingsMenu.js")
 const xVASpeech = require("./javascript/speech2speech.js")
@@ -285,7 +286,6 @@ window.changeGame = (meta) => {
     title.innerHTML = window.i18n.SELECT_VOICE_TYPE
     if (window.games[window.currentGame.gameId] == undefined) {
         title.innerHTML = `${window.i18n.NO_MODELS_IN}: ${window.userSettings[`modelspath_${window.currentGame.gameId}`]}`
-        console.log(title.innerHTML)
     } else if (titleID) {
         document.title = `${titleID}VA Synth`
         dragBar.innerHTML = `${titleID}VA Synth`
@@ -294,7 +294,7 @@ window.changeGame = (meta) => {
         dragBar.innerHTML = `xVA Synth`
     }
 
-    const gameFolder = meta[0]
+    const gameFolder = meta.gameId
     const gameName = meta.gameName
 
     setting_models_path_container.style.display = "flex"
@@ -1607,6 +1607,10 @@ window.setupModal(embeddingsIcon, embeddingsContainer, () => {
 }, () => {
     window.embeddingsState.isOpen = false
 })
+
+// Arpabet
+// =======
+window.setupModal(arpabetIcon, arpabetContainer)
 
 
 // Plugins
