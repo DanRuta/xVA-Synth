@@ -273,6 +273,7 @@ setting_models_path_input.addEventListener("change", () => {
 // Change game
 window.changeGame = (meta) => {
 
+    titleInfo.style.display = "none"
     window.currentGame = meta
     themeColour = meta.themeColourPrimary
     secondaryThemeColour = meta.themeColourSecondary
@@ -283,9 +284,9 @@ window.changeGame = (meta) => {
     selectedGameDisplay.innerHTML = meta.gameName
 
     // Change the app title
-    title.innerHTML = window.i18n.SELECT_VOICE_TYPE
+    titleName.innerHTML = window.i18n.SELECT_VOICE_TYPE
     if (window.games[window.currentGame.gameId] == undefined) {
-        title.innerHTML = `${window.i18n.NO_MODELS_IN}: ${window.userSettings[`modelspath_${window.currentGame.gameId}`]}`
+        titleName.innerHTML = `${window.i18n.NO_MODELS_IN}: ${window.userSettings[`modelspath_${window.currentGame.gameId}`]}`
     } else if (titleID) {
         document.title = `${titleID}VA Synth`
         dragBar.innerHTML = `${titleID}VA Synth`
@@ -467,7 +468,17 @@ window.changeGame = (meta) => {
             }
             generateVoiceButton.disabled = false
 
-            title.innerHTML = button.innerHTML
+            titleName.innerHTML = button.innerHTML
+            titleInfo.style.display = "flex"
+            titleInfoName.innerHTML = window.currentModel.voiceName
+            titleInfoVoiceID.innerHTML = voiceId
+            titleInfoGender.innerHTML = window.currentModel.games[0].gender || "?"
+            titleInfoAppVersion.innerHTML = window.currentModel.version || "?"
+            titleInfoModelVersion.innerHTML = window.currentModel.modelVersion || "?"
+            titleInfoModelType.innerHTML = window.currentModel.modelType || "?"
+            titleInfoLanguage.innerHTML = window.currentModel.lang || window.currentModel.games[0].lang || "en"
+            titleInfoAuthor.innerHTML = window.currentModel.author || "?"
+
             title.dataset.modelId = voiceId
             keepSampleButton.style.display = "none"
             samplePlayPause.style.display = "none"

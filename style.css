@@ -176,8 +176,53 @@ a {
  #title {
      display: flex;
      justify-content: center;
+     align-items: center;
      font-weight: bold;
      font-family: Arial;
+ }
+ #titleInfo {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    width: 21px;
+    height: 20px;
+    background: rgba(0,0,0,0.5);
+    text-shadow: none;
+    color: rgb(200,200,200);
+    text-align: center;
+    border-radius: 50%;
+    font-size: 12pt;
+    margin-right: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 1px 1px white;
+ }
+ #titleInfo:hover ~ #titleDetails {
+    display: block;
+ }
+ #titleDetails {
+    display: none;
+    position: absolute;
+    height: 300px;
+    width: 400px;
+    margin-left: -10px;
+    margin-top: 180px;
+    background: rgba(0,0,0,0.7);
+    font-size: 12pt;
+    color: white;
+    font-weight: normal;
+    border-radius: 5px;
+    z-index: 100;
+ }
+ #titleDetails > div > div:first-child {
+    text-align: center;
+    width: 100px;
+ }
+ #titleDetails > div > div:last-child {
+    align-items: flex-start;
+    width: 270px;
+    margin-left: 20px;
+ }
+ #titleName {
      text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
      color: black;
  }
@@ -1483,6 +1528,9 @@ a {
 #arpabetMenu_right {
     width: 525px;
     height: calc(75vh - 150px);
+}
+#arpabetReferenceList > div > div > div > b {
+    font-style: italic;
 }
 #arpabetReferenceList {
     height: calc(75vh - 150px);

@@ -470,6 +470,14 @@ window.i18n.setEnglish = () => {
     window.i18n.ENDORSEMENTS = "Endorsements"
     window.i18n.DOWNLOADS = "Downloads"
 
+    window.i18n.VOICE_ID_IS = "Voice ID:"
+    window.i18n.APP_VERSION_IS = "App version:"
+    window.i18n.MODEL_VERSION_IS = "Model version:"
+    window.i18n.MODEL_TYPE_IS = "Model type:"
+    window.i18n.LANGUAGE_IS = "Language:"
+    window.i18n.TRAINED_BY_IS = "Trained by:"
+
+
     // Useful during developing, to see if there are any strings left un-i18n-ed
     // Object.keys(window.i18n).forEach(key => {
     //     if (!["setEnglish", "updateUI"].includes(key)) {
@@ -480,6 +488,17 @@ window.i18n.setEnglish = () => {
 
 
 window.i18n.updateUI = () => {
+
+
+
+    i18n_voiceInfo_name.innerHTML = window.i18n.VOICE_NAME_IS
+    i18n_voiceInfo_id.innerHTML = window.i18n.VOICE_ID_IS
+    i18n_voiceInfo_gender.innerHTML = window.i18n.GENDER_IS
+    i18n_voiceInfo_appVersion.innerHTML = window.i18n.APP_VERSION_IS
+    i18n_voiceInfo_modelVersion.innerHTML = window.i18n.MODEL_VERSION_IS
+    i18n_voiceInfo_modelType.innerHTML = window.i18n.MODEL_TYPE_IS
+    i18n_voiceInfo_lang.innerHTML = window.i18n.LANGUAGE_IS
+    i18n_voiceInfo_author.innerHTML = window.i18n.TRAINED_BY_IS
 
 
     i18n_nexusRepos_mod_name.innerHTML = window.i18n.MOD_NAME
@@ -523,7 +542,7 @@ window.i18n.updateUI = () => {
 
     selectedGameDisplay.innerHTML = window.i18n.SELECT_GAME
     voiceSearchInput.placeholder = window.i18n.SEARCH_VOICES
-    title.innerHTML = window.i18n.SELECT_VOICE_TYPE
+    titleName.innerHTML = window.i18n.SELECT_VOICE_TYPE
     generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
     keepSampleButton.innerHTML = window.i18n.KEEP_SAMPLE
 
