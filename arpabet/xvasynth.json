@@ -1,0 +1,29 @@
+{
+    "title": "xVASynth Terminology",
+    "description": "Some technical words specific to xVASynth related tech",
+    "version": "1.0.0",
+    "author": "Dan Ruta",
+    "nexusLink": null,
+    "data": {
+        "xvasynth": {
+            "enabled": true,
+            "arpabet": "EH1 G S V EY0 IH0 S IH0 N TH"
+        },
+        "model": {
+            "enabled": true,
+            "arpabet": "M AA1 D AH0 L"
+        },
+        "hifi": {
+            "enabled": true,
+            "arpabet": "HH AA0 IH0 F AA0 IH0"
+        },
+        "fastpitch": {
+            "enabled": true,
+            "arpabet": "F AE1 S T P IH0 T CH"
+        },
+        "tacotron": {
+            "enabled": true,
+            "arpabet": "T AA0 K OW0 T R OW0 N"
+        }
+    }
+}

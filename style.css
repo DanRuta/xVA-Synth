@@ -1539,10 +1539,12 @@ a {
 }
 #arpabetReferenceList > div {
     width: 175px;
+    margin-bottom: 10px;
 }
 #arpabetReferenceList > div > div:first-child {
-    width: 25%;
-    margin-right: 5px;
+    width: 50%;
+    padding-right: 10px;
+    padding-left: 0;
 }
 #arpabetReferenceList > div > div:last-child {
     text-align: left;
