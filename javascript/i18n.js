@@ -449,6 +449,7 @@ window.i18n.setEnglish = () => {
     window.i18n.ARPABET_CONFIRM_ENABLE_ALL = "Are you sure you'd like to enable ALL words for the following dictionary?<br><br><i>_1</i>"
     window.i18n.ARPABET_CONFIRM_DISABLE_ALL = "Are you sure you'd like to disable ALL words for the following dictionary?<br><br><i>_1</i>"
     window.i18n.ARPABET_CONFIRM_DELETE_WORD = "Are you sure you'd like to delete the following word?<br><br><i>_1</i>"
+    window.i18n.ONLY_ENABLED = "Only enabled"
 
     window.i18n.DICTIONARIES = "Dictionaries"
     window.i18n.SAVE = "Save"
@@ -530,6 +531,7 @@ window.i18n.updateUI = () => {
     i18n_arpabet_words.innerHTML = window.i18n.WORDS
     i18n_arpabet_reference.innerHTML = window.i18n.REFERENCE
     arpabet_word_search_input.placeholder = window.i18n.SEARCH_WORDS
+    i18n_arpabet_ckbx_only_enabled.placeholder = window.i18n.ONLY_ENABLED
     i18n_arpabet_word_is.innerHTML = window.i18n.WORD_IS
     arpabet_save.innerHTML = window.i18n.SAVE
     i18n_arpabetWordsListh_word.innerHTML = window.i18n.WORD

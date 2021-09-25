@@ -195,9 +195,17 @@ window.arpabetRunSearch = () => {
     const query = arpabet_word_search_input.value.trim().toLowerCase()
 
     if (!query.length) {
-        window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].filteredData = window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data
+        if (arpabet_search_only_enabled.checked) {
+            const filteredKeys = Object.keys(window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data).filter(key => window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data[key].enabled)
+            window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].filteredData = {}
+            filteredKeys.forEach(key => {
+                window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].filteredData[key] = window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data[key]
+            })
+        } else {
+            window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].filteredData = window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data
+        }
     } else {
-        const filteredKeys = Object.keys(window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data).filter(key => key.includes(query))
+        const filteredKeys = Object.keys(window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data).filter(key => key.includes(query) && (arpabet_search_only_enabled.checked ? (window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data[key].enabled) : true))
 
         window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].filteredData = {}
         filteredKeys.forEach(key => {
@@ -246,6 +254,7 @@ arpabet_disableall_button.addEventListener("click", () => {
         }
     })
 })
+arpabet_search_only_enabled.addEventListener("click", () => window.arpabetRunSearch())
 
 
 

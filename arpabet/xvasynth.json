@@ -24,6 +24,14 @@
         "tacotron": {
             "enabled": true,
             "arpabet": "T AA0 K OW0 T R OW0 N"
+        },
+        "ai": {
+            "enabled": true,
+            "arpabet": "EY1 IY0 AA0 IY0"
+        },
+        "cmudict": {
+            "enabled": true,
+            "arpabet": "S IY1 IY1 EH0 M Y UW1 D IH1 K T"
         }
     }
 }

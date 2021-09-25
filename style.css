@@ -138,6 +138,12 @@ a {
     border: none;
     border-bottom: 1px solid white;
  }
+#arpabet_word_search_input {
+    width: auto;
+    margin-right: 30px;
+    margin-left: 30px;
+    flex-grow: 1;
+ }
  #searchGameInput {
     width: 50vw;
     font-size: 16pt;
@@ -1538,8 +1544,10 @@ a {
     overflow: auto;
 }
 #arpabetReferenceList > div {
-    width: 175px;
+    width: 170px;
     margin-bottom: 10px;
+    background: rgba(0,0,0,0.1);
+    margin-right: 2px;
 }
 #arpabetReferenceList > div > div:first-child {
     width: 50%;
