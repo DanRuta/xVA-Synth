@@ -9,9 +9,9 @@ if __name__ == '__main__':
     APP_VERSION = "2.0.0"
 
     PROD = False
-    PROD = True
+    # PROD = True
     CPU_ONLY = False
-    CPU_ONLY = True
+    # CPU_ONLY = True
 
 
 
@@ -205,15 +205,17 @@ if __name__ == '__main__':
                     logger.info(post_data)
                     ckpt = post_data["model"]
                     modelType = post_data["modelType"]
+                    modelType = modelType.lower().replace(".", "_").replace(" ", "")
                     post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])
                     n_speakers = post_data["model_speakers"] if "model_speakers" in post_data else None
 
 
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["pre"], event="pre load-model", data=post_data)
-                    models_manager.load_model(modelType.lower().replace(".", "_").replace(" ", ""), ckpt+".pt", n_speakers=n_speakers)
+                    models_manager.load_model(modelType, ckpt+".pt", n_speakers=n_speakers)
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["post"], event="post load-model", data=post_data)
 
-                    models_manager.models_bank["fastpitch1_1"].init_arpabet_dicts()
+                    if modelType=="fastpitch1_1":
+                        models_manager.models_bank["fastpitch1_1"].init_arpabet_dicts()
 
                 if self.path == "/synthesize":
                     logger.info("POST {}".format(self.path))
