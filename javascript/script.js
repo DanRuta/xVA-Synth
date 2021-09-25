@@ -1492,6 +1492,7 @@ window.setupModal(settingsCog, settingsContainer)
 // Change Game
 // ===========
 window.setupModal(changeGameButton, gameSelectionContainer)
+changeGameButton.addEventListener("click", () => searchGameInput.focus())
 
 window.gameAssets = {}
 
