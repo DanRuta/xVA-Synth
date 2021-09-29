@@ -62,7 +62,7 @@ class FastPitch1_1(object):
         else:
             self.model.speaker_emb = nn.Embedding(1 if n_speakers is None else n_speakers, symbols_embedding_dim).to(self.device)
 
-        self.model.load_state_dict(ckpt, strict=True)
+        self.model.load_state_dict(ckpt, strict=False)
         self.model = self.model.float()
         self.model.eval()
 
@@ -207,7 +207,7 @@ class FastPitch1_1(object):
 
             del mel, mel_lens
 
-        [pitch, durations, energy] = [pitch_pred.squeeze().cpu().detach().numpy(), dur_pred.cpu().detach().numpy()[0], energy_pred.cpu().detach().numpy()[0]]
+        [pitch, durations, energy] = [pitch_pred.squeeze().cpu().detach().numpy(), dur_pred.cpu().detach().numpy()[0], energy_pred.cpu().detach().numpy()[0] if energy_pred is not None else []]
         pitch_durations_energy_text = ",".join([str(v) for v in pitch]) + "\n" + ",".join([str(v) for v in durations]) + "\n" + ",".join([str(v) for v in energy])
 
         del pitch_pred, dur_pred, energy_pred, text, sequence

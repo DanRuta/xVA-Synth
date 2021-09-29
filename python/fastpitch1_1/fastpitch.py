@@ -188,14 +188,16 @@ class FastPitch(nn.Module):
         self.register_buffer('pitch_mean', torch.zeros(1))
         self.register_buffer('pitch_std', torch.zeros(1))
 
+        energy_conditioning = True
         self.energy_conditioning = energy_conditioning
         if energy_conditioning:
             self.energy_predictor = TemporalPredictor(
                 in_fft_output_size, filter_size=energy_predictor_filter_size, kernel_size=energy_predictor_kernel_size, dropout=p_energy_predictor_dropout, n_layers=energy_predictor_n_layers, n_predictions=1
             )
 
-            self.energy_emb = nn.Conv1d(
-                1, symbols_embedding_dim, kernel_size=energy_embedding_kernel_size, padding=int((energy_embedding_kernel_size - 1) / 2))
+            self.energy_emb = nn.Conv1d(1, symbols_embedding_dim, kernel_size=energy_embedding_kernel_size, padding=int((energy_embedding_kernel_size - 1) / 2))
+        else:
+            self.energy_predictor = None
 
         self.proj = nn.Linear(out_fft_output_size, n_mel_channels, bias=True)
 
@@ -415,39 +417,42 @@ class FastPitch(nn.Module):
         enc_out = enc_out + pitch_emb
 
         # Energy
-        if energy_pred_existing is None:
-            energy_pred = self.energy_predictor(enc_out, enc_mask).squeeze(-1)
+        if self.energy_conditioning:
+            if energy_pred_existing is None:
+                energy_pred = self.energy_predictor(enc_out, enc_mask).squeeze(-1)
+            else:
+                # Splice/replace pitch/duration values from the old input if simulating only a partial re-generation
+                if start_index is not None or end_index is not None:
+                    energy_pred_np = list(energy_pred.cpu().detach().numpy())[0]
+                    energy_pred_existing_np = list(energy_pred_existing.cpu().detach().numpy())[0]
+                    if start_index is not None: # Replace starting values
+                        for i in range(start_index+1):
+                            energy_pred_np[i] = energy_pred_existing_np[i]
+
+                    if end_index is not None: # Replace end values
+                        for i in range(len(old_sequence_np)-end_index):
+                            energy_pred_np[-i-1] = energy_pred_existing_np[-i-1]
+                    energy_pred = torch.tensor(energy_pred_np).to(self.device).unsqueeze(0)
+                    energy_pred = torch.clamp(energy_pred, min=3.7, max=4.3)
+
+
+            if len(plugin_manager.plugins["synth-line"]["pre_energy"]):
+                pitch_pred = pitch_pred.cpu().detach().numpy()
+                plugin_data = {
+                    "duration": dur_pred.cpu().detach().numpy(),
+                    "pitch": pitch_pred.reshape((pitch_pred.shape[0],pitch_pred.shape[2])),
+                    "energy": energy_pred.cpu().detach().numpy(),
+                    "text": sequence, "is_fresh_synth": pitch_pred_existing is None and dur_pred_existing is None
+                }
+                plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["pre_energy"], event="pre_energy synth-line", data=plugin_data)
+
+                energy_pred = torch.tensor(plugin_data["energy"]).to(self.device)
+
+            # Apply the energy
+            energy_emb = self.energy_emb(energy_pred.unsqueeze(1)).transpose(1, 2)
+            enc_out = enc_out + energy_emb
         else:
-            # Splice/replace pitch/duration values from the old input if simulating only a partial re-generation
-            if start_index is not None or end_index is not None:
-                energy_pred_np = list(energy_pred.cpu().detach().numpy())[0]
-                energy_pred_existing_np = list(energy_pred_existing.cpu().detach().numpy())[0]
-                if start_index is not None: # Replace starting values
-                    for i in range(start_index+1):
-                        energy_pred_np[i] = energy_pred_existing_np[i]
-
-                if end_index is not None: # Replace end values
-                    for i in range(len(old_sequence_np)-end_index):
-                        energy_pred_np[-i-1] = energy_pred_existing_np[-i-1]
-                energy_pred = torch.tensor(energy_pred_np).to(self.device).unsqueeze(0)
-                energy_pred = torch.clamp(energy_pred, min=3.7, max=4.3)
-
-
-        if len(plugin_manager.plugins["synth-line"]["pre_energy"]):
-            pitch_pred = pitch_pred.cpu().detach().numpy()
-            plugin_data = {
-                "duration": dur_pred.cpu().detach().numpy(),
-                "pitch": pitch_pred.reshape((pitch_pred.shape[0],pitch_pred.shape[2])),
-                "energy": energy_pred.cpu().detach().numpy(),
-                "text": sequence, "is_fresh_synth": pitch_pred_existing is None and dur_pred_existing is None
-            }
-            plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["pre_energy"], event="pre_energy synth-line", data=plugin_data)
-
-            energy_pred = torch.tensor(plugin_data["energy"]).to(self.device)
-
-        # Apply the energy
-        energy_emb = self.energy_emb(energy_pred.unsqueeze(1)).transpose(1, 2)
-        enc_out = enc_out + energy_emb
+            energy_pred = None
 
         len_regulated, dec_lens = regulate_len(dur_pred, enc_out, pace, mel_max_len=None)
         dec_out, dec_mask = self.decoder(len_regulated, dec_lens)
