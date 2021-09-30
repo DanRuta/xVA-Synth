@@ -178,8 +178,6 @@ window.i18n.setEnglish = () => {
     window.i18n.BATCH_OPENOUT = "Open Output"
 
     window.i18n.S2S_SELECTVOICE = "Select Speech-to-Speech voice"
-    window.i18n.S2S_EXPERIMENTAL = "Experimental"
-    window.i18n.S2S_EXPERIMENTALNOTE = "The speech to speech feature is in active research/development. All is subject to change, and will be improved over time. This notice will be removed when the research is complete."
     window.i18n.S2S_RECORD_NOTE = "You can record a few seconds of silence to capture background noise to remove from your future recordings."
     window.i18n.S2S_RECORD_NOISE = "Record noise"
     window.i18n.S2S_INSTRUCTIONS = "Pick from the available FastPitch 1.1 models which voice sounds most like yours. If you have a model trained for your own voice, make sure you use that one. You can record a short sample here, for comparison. For this to work well, your voice/microphone/volume should sound as similar as possible to the audio of the voice you select."
@@ -331,6 +329,9 @@ window.i18n.setEnglish = () => {
     window.i18n.TOTD_25 = "You can enable/disable error sounds in the settings. You can also pick a different sound, if you'd prefer something else"
     window.i18n.TOTD_26 = "You can resize the window by dragging one of the bottom corners"
     window.i18n.TOTD_27 = "You can right-click game buttons in the nexus window 'Games' list and voice embeddings 'Games' list, to de-select all other games apart from the one you right-clicked"
+    window.i18n.TOTD_28 = "You can right-click the speech-to-speech microphone icon to play back the recorded (or drag+dropped) input audio"
+    window.i18n.TOTD_29 = "You can ctrl+click the speech-to-speech microphone icon to quickly bring up the speech-to-speech menu"
+    window.i18n.TOTD_30 = "You can either enter the text you want for the speech-to-speech mode, or leave the input text field blank to let the app automatically generate it for you"
 
     window.i18n.TOTD_NO_UNSEEN = "There are no unseen tips left to show. Untick the 'Only show unseen tips' setting to show all tips."
 
@@ -803,8 +804,6 @@ window.i18n.updateUI = () => {
     batch_openDirBtn.innerHTML = window.i18n.BATCH_OPENOUT
 
     i18n_s2s_selectvoice.innerHTML = window.i18n.S2S_SELECTVOICE
-    i18n_s2s_experimental.innerHTML = window.i18n.S2S_EXPERIMENTAL
-    i18n_s2s_experimental_note.innerHTML = window.i18n.S2S_EXPERIMENTALNOTE
     i18n_s2s_record_note.innerHTML = window.i18n.S2S_RECORD_NOTE
     s2sNoiseRecordSampleBtn.innerHTML = window.i18n.S2S_RECORD_NOISE
     i18n_s2s_instructions.innerHTML = window.i18n.S2S_INSTRUCTIONS
