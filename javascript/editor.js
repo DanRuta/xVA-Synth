@@ -39,6 +39,8 @@ class Editor {
         this.MAX_LETTER_LENGTH = 100
         this.SPACE_BETWEEN_LETTERS = 5
 
+        this.pitchSliderRange = 4
+
         this.MIN_ENERGY = 3.6
         this.MAX_ENERGY = 4.3
         this.ENERGY_GRABBER_RADIUS = 8
@@ -326,8 +328,8 @@ class Editor {
             this.letterClasses.push(letterClass)
 
             // Slider grabber thing
-            const pitchPercent = 1-(this.pitchNew[li]+3)/6
-            const grabber = new SliderGrabber(this.context, li, sliderBox, (this.LETTERS_Y_OFFSET+1)+(this.SLIDER_GRABBER_H/2)+((this.EDITOR_HEIGHT-2)-this.SLIDER_GRABBER_H)*pitchPercent-this.SLIDER_GRABBER_H/2, width-2, this.SLIDER_GRABBER_H)
+            const pitchPercent = 1-(this.pitchNew[li]+this.pitchSliderRange)/(this.pitchSliderRange*2)
+            const grabber = new SliderGrabber(this.context, li, sliderBox, (this.LETTERS_Y_OFFSET+1)+(this.SLIDER_GRABBER_H/2)+((this.EDITOR_HEIGHT-2)-this.SLIDER_GRABBER_H)*pitchPercent-this.SLIDER_GRABBER_H/2, width-2, this.SLIDER_GRABBER_H, this.pitchSliderRange)
             grabber.render()
             this.grabbers.push(grabber)
 
@@ -494,7 +496,7 @@ class Letter {
 
 class SliderGrabber {
 
-    constructor (context, index, sliderBox, topLeftY, width, height) {
+    constructor (context, index, sliderBox, topLeftY, width, height, sliderRange) {
         this.type = "slider"
         this.context = context
         this.sliderBox = sliderBox
@@ -502,6 +504,7 @@ class SliderGrabber {
         this.width = width
         this.height = height
         this.index = index
+        this.sliderRange = sliderRange
 
         this.isBeingDragged = false
         this.dragStart = {x: undefined, y: undefined}
@@ -530,13 +533,13 @@ class SliderGrabber {
         this.topLeftY = Math.min(this.topLeftY, window.sequenceEditor.LETTERS_Y_OFFSET+window.sequenceEditor.EDITOR_HEIGHT-this.height-1)
 
         this.percentUp = (this.topLeftY-window.sequenceEditor.LETTERS_Y_OFFSET) / (window.sequenceEditor.EDITOR_HEIGHT-this.height)
-        window.sequenceEditor.pitchNew[this.index] = (1-this.percentUp)*6-3
+        window.sequenceEditor.pitchNew[this.index] = (1-this.percentUp)*(this.sliderRange*2)-this.sliderRange
     }
 
     setValueFromValue (value) {
-        value = Math.max(-3, value)
-        value = Math.min(value, 3)
-        this.percentUp = (value+3)/6
+        value = Math.max(-this.sliderRange, value)
+        value = Math.min(value, this.sliderRange)
+        this.percentUp = (value+this.sliderRange)/(this.sliderRange*2)
 
         this.topLeftY = (1-this.percentUp) * (window.sequenceEditor.EDITOR_HEIGHT-this.height) + window.sequenceEditor.LETTERS_Y_OFFSET
     }
@@ -546,8 +549,8 @@ class SliderGrabber {
 
 class EnergyGrabber extends SliderGrabber {
 
-    constructor (context, index, sliderBox, topLeftY, width, height) {
-        super(context, index, sliderBox, topLeftY, width, height)
+    constructor (context, index, sliderBox, topLeftY, width, height, sliderRange) {
+        super(context, index, sliderBox, topLeftY, width, height, sliderRange)
         this.type = "energy_slider"
     }
 
@@ -799,7 +802,7 @@ amplify_btn.addEventListener("click", () => {
                 return p
             }
             const newVal = p*1.025
-            return newVal>0 ? Math.min(3, newVal) : Math.max(-3, newVal)
+            return newVal>0 ? Math.min(window.sequenceEditor.pitchSliderRange, newVal) : Math.max(-window.sequenceEditor.pitchSliderRange, newVal)
         })
         window.sequenceEditor.grabbers.forEach((slider, l) => {
             slider.setValueFromValue(window.sequenceEditor.pitchNew[l])

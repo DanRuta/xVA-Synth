@@ -368,7 +368,7 @@ class FastPitch(nn.Module):
 
             # Pitch over chars
             pitch_pred = self.pitch_predictor(enc_out, enc_mask).permute(0, 2, 1)
-            pitch_pred = torch.clamp(pitch_pred, min=-3, max=3)
+            # pitch_pred = torch.clamp(pitch_pred, min=-3, max=3)
 
         else:
             dur_pred = dur_pred_existing
@@ -557,7 +557,7 @@ class FastPitch(nn.Module):
 
         pitch_final = list(pitch_tgt.squeeze().cpu().detach().numpy())
         pitch_final = normalize_pitch_vectors(logger, pitch_final)
-        pitch_final = [max(-3, min(v, 3)) for v in pitch_final]
+        # pitch_final = [max(-3, min(v, 3)) for v in pitch_final]
         durs_final = list(durs[0])
 
         return [in_text, pitch_final, durs_final, energy_final]
