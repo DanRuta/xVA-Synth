@@ -90,6 +90,7 @@ window.refreshDictWordList = () => {
         })
 
         const deleteButton = createElem("button.smallButton.arpabetRowItem", window.i18n.DELETE)
+        deleteButton.style.background = window.currentGame ? `#${window.currentGame.themeColourPrimary}` : "#ccc"
         deleteButton.addEventListener("click", () => {
             window.confirmModal(window.i18n.ARPABET_CONFIRM_DELETE_WORD.replace("_1", word)).then(response => {
                 if (response) {
