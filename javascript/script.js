@@ -689,6 +689,18 @@ generateVoiceButton.addEventListener("click", () => {
             generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
             generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
 
+            // Set the editor pitch/energy dropdowns to pitch, and freeze them, if energy is not supported by the model
+            if (window.currentModel.modelType.toLowerCase()!="fastpitch1.1") {
+                seq_edit_view_select.value = "pitch"
+                seq_edit_edit_select.value = "pitch"
+                seq_edit_view_select.disabled = true
+                seq_edit_edit_select.disabled = true
+            } else {
+                seq_edit_view_select.value = "pitch_energy"
+                seq_edit_view_select.disabled = false
+                seq_edit_edit_select.disabled = false
+            }
+
             if (window.userSettings.defaultToHiFi && window.currentModel.hifi) {
                 vocoder_select.value = Array.from(vocoder_select.children).find(opt => opt.innerHTML=="Bespoke HiFi GAN").value
                 window.changeVocoder(vocoder_select.value).then(() => dialogueInput.focus())
