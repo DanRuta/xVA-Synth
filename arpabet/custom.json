@@ -1,0 +1,17 @@
+{
+    "title": "Custom Dictionary",
+    "description": "Your own custom dictionary",
+    "version": "1.0.0",
+    "author": "Your name",
+    "nexusLink": null,
+    "data": {
+        "stuff": {
+            "enabled": false,
+            "arpabet": "S T AA0 F"
+        },
+        "things": {
+            "enabled": false,
+            "arpabet": "T HH IH N G S"
+        }
+    }
+}
