@@ -8,7 +8,7 @@ window.path = path
 
 const fs = require("fs")
 const zipdir = require('zip-dir')
-const {shell, ipcRenderer} = require("electron")
+const {shell, ipcRenderer, clipboard} = require("electron")
 const doFetch = require("node-fetch")
 const {xVAAppLogger} = require("./javascript/appLogger.js")
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
@@ -1416,6 +1416,24 @@ window.changeVocoder = vocoder => {
 }
 vocoder_select.addEventListener("change", () => window.changeVocoder(vocoder_select.value))
 
+
+
+dialogueInput.addEventListener("contextmenu", event => {
+    event.preventDefault()
+    ipcRenderer.send('show-context-menu')
+})
+ipcRenderer.on('context-menu-command', (e, command) => {
+    if (command=="context-copy") {
+        if (dialogueInput.selectionStart != dialogueInput.selectionEnd) {
+            clipboard.writeText(dialogueInput.value.slice(dialogueInput.selectionStart, dialogueInput.selectionEnd))
+        }
+    } else if (command=="context-paste") {
+        if (clipboard.readText().length) {
+            let newString = dialogueInput.value.slice(0, dialogueInput.selectionStart) + clipboard.readText() + dialogueInput.value.slice(dialogueInput.selectionEnd, dialogueInput.value.length)
+            dialogueInput.value = newString
+        }
+    }
+})
 
 
 // Info

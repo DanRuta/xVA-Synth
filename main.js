@@ -3,7 +3,7 @@ const PRODUCTION = process.mainModule.filename.includes("resources")
 const path = PRODUCTION ? "resources/app" : "."
 
 const fs = require("fs")
-const {shell, app, BrowserWindow, ipcMain} = require("electron")
+const {shell, app, BrowserWindow, ipcMain, Menu} = require("electron")
 const {spawn} = require("child_process")
 
 let pythonProcess
@@ -68,6 +68,21 @@ ipcMain.on("updateDiscord", (event, arg) => {
         smallImageText: "xVASynth",
         instance: true,
     })
+})
+ipcMain.on("show-context-menu", (event) => {
+    const template = [
+        {
+            label: 'Copy',
+            click: () => { event.sender.send('context-menu-command', 'context-copy') }
+        },
+        {
+            label: 'Paste',
+            click: () => { event.sender.send('context-menu-command', 'context-paste') }
+        },
+        // { type: 'separator' },
+    ]
+    const menu = Menu.buildFromTemplate(template)
+    menu.popup(BrowserWindow.fromWebContents(event.sender))
 })
 
 // This method will be called when Electron has finished
