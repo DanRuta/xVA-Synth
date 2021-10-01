@@ -807,3 +807,64 @@ searchNexusButton.addEventListener("click", () => {
 
 nexusOnlyNewUpdatedCkbx.addEventListener("change", () => window.displayAllModels())
 window.initNexus()
+
+
+// The app will support voice installation via Steam workshop. However, workshop installations can only install voices into the game directory
+// Moreover, users can pick their own locations for voice models. To handle this, I'll have all voices go into the "workshop" folder. From here,
+// the app will (on start-up) check if there's anything there, and it will move it to the correct location
+window.checkForWorkshopInstallations = () => {
+
+    let voicesInstalled = 0
+    let badGameIDs = []
+
+    if (fs.existsSync(`${window.path}/workshop`) && fs.existsSync(`${window.path}/workshop/voices`)) {
+
+        const gameFolders = fs.readdirSync(`${window.path}/workshop/voices`)
+
+        gameFolders.forEach(gameId => {
+
+            const userModelDir = window.userSettings[`modelspath_${gameId}`]
+
+            if (!userModelDir) {
+                badGameIDs.push(gameId)
+                return
+            }
+
+            const voiceIDs_jsons = fs.readdirSync(`${window.path}/workshop/voices/${gameId}`).filter(fName => fName.endsWith(".json"))
+
+            voiceIDs_jsons.forEach(voiceIDs_json => {
+                const voiceID = voiceIDs_json.replace(".json", "")
+                const voiceFiles = fs.readdirSync(`${window.path}/workshop/voices/${gameId}`).filter(fName => fName.includes(voiceID))
+
+                voiceFiles.forEach(voiceFileName => {
+                    if (!fs.existsSync(`${userModelDir}/${voiceFileName}`)) {
+                        fs.copyFileSync(`${window.path}/workshop/voices/${gameId}/${voiceFileName}`, `${userModelDir}/${voiceFileName}`)
+                    }
+                    fs.unlinkSync(`${window.path}/workshop/voices/${gameId}/${voiceFileName}`)
+                })
+
+                voicesInstalled++
+            })
+        })
+    }
+
+    if (voicesInstalled || badGameIDs.length) {
+        setTimeout(() => {
+
+            let modalMessage = ""
+
+            if (voicesInstalled) {
+                modalMessage += window.i18n.X_WORKSHOP_VOICES_INSTALLED.replace("_1", voicesInstalled)
+            }
+            if (voicesInstalled && badGameIDs.length) {
+                modalMessage += "<br><br>"
+            }
+            if (badGameIDs) {
+                modalMessage += window.i18n.WORKSHOP_GAMES_NOT_RECOGNISED.replace("_1", badGameIDs.join(","))
+            }
+
+            createModal("error", modalMessage)
+            window.updateGameList()
+        }, 1000)
+    }
+}

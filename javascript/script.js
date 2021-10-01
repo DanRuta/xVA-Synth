@@ -1247,6 +1247,7 @@ window.doWeirdServerStartupCheck = () => {
                                 window.pluginsManager.hasRunPostStartPlugins = true
                                 window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["start"]["post"], event="post start")
                                 window.electronBrowserWindow.setProgressBar(-1)
+                                window.checkForWorkshopInstallations()
                             }
                         })
                         window.serverIsUp = true
@@ -1684,7 +1685,7 @@ voiceSearchInput.addEventListener("keyup", () => {
     }
 })
 
-// ELUA
+// EULA
 EULA_closeButon.addEventListener("click", () => {
     if (EULA_accept_ckbx.checked) {
         closeModal(EULAContainer)
