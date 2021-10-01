@@ -731,6 +731,8 @@ window.prepareLinesBatchForSynth = () => {
         }
         outFolder = outFolder.length ? outFolder : window.userSettings.batchOutFolder
 
+        outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
+
         linesBatch.push([sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder])
         records.push(record)
     }
@@ -979,7 +981,7 @@ window.batchKickOffGeneration = () => {
                 if (!window.batch_state.outPathsChecked.includes(outFolder)) {
                     window.batch_state.outPathsChecked.push(outFolder)
                     if (!fs.existsSync(outFolder)) {
-                        fs.mkdirSync(outFolder)
+                        window.createFolderRecursive(outFolder)
                     }
                 }
             })
