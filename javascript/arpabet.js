@@ -35,7 +35,7 @@ window.refreshDictionariesList = () => {
 
             const dictButton = createElem("button", jsonData.title)
             dictButton.title = jsonData.description
-            dictButton.style.background = window.currentGame ? `#${window.currentGame.themeColourPrimary}` : "#ccc"
+            dictButton.style.background = window.currentGame ? `#${window.currentGame.themeColourPrimary}` : "#aaa"
             arpabet_dicts_list.appendChild(dictButton)
 
             window.arpabetMenuState.dictionaries[dictId] = jsonData
@@ -90,7 +90,7 @@ window.refreshDictWordList = () => {
         })
 
         const deleteButton = createElem("button.smallButton.arpabetRowItem", window.i18n.DELETE)
-        deleteButton.style.background = window.currentGame ? `#${window.currentGame.themeColourPrimary}` : "#ccc"
+        deleteButton.style.background = window.currentGame ? `#${window.currentGame.themeColourPrimary}` : "#aaa"
         deleteButton.addEventListener("click", () => {
             window.confirmModal(window.i18n.ARPABET_CONFIRM_DELETE_WORD.replace("_1", word)).then(response => {
                 if (response) {
