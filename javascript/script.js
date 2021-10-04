@@ -93,16 +93,19 @@ window.initWaveSurfer = (src) => {
     if (window.wavesurfer) {
         window.wavesurfer.stop()
         wavesurferContainer.innerHTML = ""
+    } else {
+        window.wavesurfer = WaveSurfer.create({
+            container: '#wavesurferContainer',
+            waveColor: `#${window.currentGame.themeColourPrimary}`,
+            height: 100,
+            progressColor: 'white',
+            responsive: true,
+        })
     }
-    window.wavesurfer = WaveSurfer.create({
-        container: '#wavesurferContainer',
-        waveColor: `#${window.currentGame.themeColourPrimary}`,
-        height: 100,
-        progressColor: 'white',
-        responsive: true,
-    })
     window.wavesurfer.setSinkId(window.userSettings.base_speaker)
-    window.wavesurfer.load(src)
+    if (src) {
+        window.wavesurfer.load(src)
+    }
     window.wavesurfer.on("finish", () => {
         samplePlayPause.innerHTML = window.i18n.PLAY
     })
@@ -734,7 +737,7 @@ generateVoiceButton.addEventListener("click", () => {
 
         if (window.wavesurfer) {
             window.wavesurfer.stop()
-            wavesurferContainer.innerHTML = ""
+            wavesurferContainer.style.opacity = 0
         }
         toggleSpinnerButtons()
 
@@ -792,6 +795,7 @@ generateVoiceButton.addEventListener("click", () => {
             }
 
             dialogueInput.focus()
+
             isGenerating = false
             res = res.split("\n")
             let pitchData = res[0]
@@ -842,8 +846,15 @@ generateVoiceButton.addEventListener("click", () => {
 
 
                 // Wavesurfer
-                window.initWaveSurfer(`${__dirname.replace("/javascript", "")}/output/${tempFileLocation.split("/").reverse()[0]}`)
+                if (!window.wavesurfer) {
+                    window.initWaveSurfer(`${__dirname.replace("/javascript", "")}/output/${tempFileLocation.split("/").reverse()[0]}`)
+                } else {
+                    window.wavesurfer.load(`${__dirname.replace("/javascript", "")}/output/${tempFileLocation.split("/").reverse()[0]}`)
+                }
+
                 window.wavesurfer.on("ready",  () => {
+
+                    wavesurferContainer.style.opacity = 1
 
                     if (window.userSettings.autoPlayGen) {
 
@@ -1571,6 +1582,7 @@ window.updateGameList = () => {
 
         window.gameAssets[gameId] = metadata
         gameSelectionContent.addEventListener("click", () => {
+            voiceSearchInput.focus()
             changeGame(metadata)
             closeModal(gameSelectionContainer)
         })

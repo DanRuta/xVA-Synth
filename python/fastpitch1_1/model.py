@@ -85,6 +85,7 @@ class FastPitch1_1(object):
                         self.arpabet_dict[word] = json_data["data"][word]["arpabet"]
 
     def infer_arpabet_dict (self, sentence):
+        sentence = sentence.lower()
         words = list(self.arpabet_dict.keys())
         if len(words):
 
