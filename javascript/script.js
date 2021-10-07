@@ -1466,9 +1466,10 @@ window.setupModal(patreonIcon, patreonContainer, () => {
     names.forEach(name => content += `<br>${name}`)
     creditsList.innerHTML = content
 })
-patreonButton.addEventListener("click", () => {
-    shell.openExternal("https://patreon.com")
-})
+// Steam does not like patreon
+// patreonButton.addEventListener("click", () => {
+    // shell.openExternal("https://patreon.com")
+// })
 doFetch("http://danruta.co.uk/patreon.txt").then(r=>r.text()).then(data => fs.writeFileSync(`${path}/patreon.txt`, data, "utf8")).catch(e => {})
 
 
