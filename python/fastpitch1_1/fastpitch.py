@@ -404,7 +404,7 @@ class FastPitch(nn.Module):
         if len(plugin_manager.plugins["synth-line"]["mid"]):
             pitch_pred = pitch_pred.cpu().detach().numpy()
             plugin_data = {
-                "duration": dur_pred.cpu().detach().numpy(), "pitch": pitch_pred.reshape((pitch_pred.shape[0],pitch_pred.shape[2])), "text": sequence, "is_fresh_synth": pitch_pred_existing is None and dur_pred_existing is None
+                "duration": dur_pred.cpu().detach().numpy(), "pitch": pitch_pred.reshape((pitch_pred.shape[0],pitch_pred.shape[2])), "text": [val.split("|") for val in sequence], "is_fresh_synth": pitch_pred_existing is None and dur_pred_existing is None
             }
             plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["mid"], event="mid synth-line", data=plugin_data)
 
@@ -442,7 +442,7 @@ class FastPitch(nn.Module):
                     "duration": dur_pred.cpu().detach().numpy(),
                     "pitch": pitch_pred.reshape((pitch_pred.shape[0],pitch_pred.shape[2])),
                     "energy": energy_pred.cpu().detach().numpy(),
-                    "text": sequence, "is_fresh_synth": pitch_pred_existing is None and dur_pred_existing is None
+                    "text": [val.split("|") for val in sequence], "is_fresh_synth": pitch_pred_existing is None and dur_pred_existing is None
                 }
                 plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["pre_energy"], event="pre_energy synth-line", data=plugin_data)
 

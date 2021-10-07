@@ -326,7 +326,7 @@ class FastPitch(nn.Module):
             plugin_data = {
                 "duration": dur_pred.cpu().detach().numpy(),
                 "pitch": pitch_pred.cpu().detach().numpy(),
-                "text": sequence,
+                "text": [val.split("|") for val in sequence],
                 "is_fresh_synth": pitch_pred_existing is None and dur_pred_existing is None
             }
             plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["mid"], event="mid synth-line", data=plugin_data)
