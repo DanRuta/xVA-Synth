@@ -1121,7 +1121,7 @@ window.keepSampleFunction = shiftClick => {
 
 
         // Numerical file name counter
-        if (window.userSettings.filenameNumericalSeq) {
+        if (!skipUIRecord && window.userSettings.filenameNumericalSeq) {
             let existingFiles = []
             try {
                 existingFiles = fs.readdirSync(toLocation.slice(0, toLocation.length-1).join("/")).filter(fname => !fname.endsWith(".json"))
@@ -1208,7 +1208,6 @@ window.keepSampleFunction = shiftClick => {
                                 console.log(err)
                                 window.appLogger.log(`Error in keepSample: ${err}`)
                             }
-                            console.log(fromLocation, "finalOutLocation", finalOutLocation)
                             window.saveFile(fromLocation, finalOutLocation, skipUIRecord)
                         })
                         return
