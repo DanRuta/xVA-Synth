@@ -85,15 +85,17 @@ class FastPitch1_1(object):
                         self.arpabet_dict[word] = json_data["data"][word]["arpabet"]
 
     def infer_arpabet_dict (self, sentence):
-        sentence = sentence.lower()
-        words = list(self.arpabet_dict.keys())
-        if len(words):
+        dict_words = list(self.arpabet_dict.keys())
+        if len(dict_words):
 
             # Pad out punctuation, to make sure they don't get used in the word look-ups
             sentence = " "+sentence.replace(",", " ,").replace(".", " .").replace("!", " !").replace("?", " ?")+" "
 
-            for word in words:
-                sentence = sentence.replace(f' {word} ', " {"+self.arpabet_dict[word]+"} ")
+            for dict_word in dict_words:
+                sentence = re.sub(f' {dict_word} ', " {"+self.arpabet_dict[dict_word]+"} ", sentence, flags=re.IGNORECASE)
+                # Do it twice, because re will not re-use spaces, so if you have two neighbouring words to be replaced,
+                # and they share a space character, one of them won't get changed
+                sentence = re.sub(f' {dict_word} ', " {"+self.arpabet_dict[dict_word]+"} ", sentence, flags=re.IGNORECASE)
 
             # Undo the punctuation padding, to retain the original sentence structure
             sentence = sentence.replace(" ,", ",").replace(" .", ".").replace(" !", "!").replace(" ?", "?").strip()
