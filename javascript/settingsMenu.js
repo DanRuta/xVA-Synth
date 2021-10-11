@@ -589,9 +589,9 @@ setting_out_path_input.addEventListener("change", () => {
 // Models path
 const assetFiles = fs.readdirSync(`${window.path}/assets`)
 
-assetFiles.filter(fn=>(fn.endsWith(".jpg")||fn.endsWith(".png"))&&fn.split("-").length==4).forEach(assetFileName => {
-    const gameId = assetFileName.split("-")[0]
-    const gameName = assetFileName.split("-").reverse()[0].split(".")[0]
+assetFiles.filter(fn=>fn.endsWith(".json")).forEach(assetFileName => {
+    const gameId = assetFileName.split(".json")[0]
+
     // Initialize the default models directory setting for this game
     if (!Object.keys(window.userSettings).includes(`modelspath_${gameId}`)) {
         window.userSettings[`modelspath_${gameId}`] = `${__dirname.replace(/\\/g,"/")}/models/${gameId}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
