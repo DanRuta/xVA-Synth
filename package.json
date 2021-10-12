@@ -12,7 +12,7 @@
   "repository": "https://github.com/DanRuta/xVA-Synth",
   "author": "DanRuta",
   "devDependencies": {
-    "electron": "2.0.0"
+    "electron": "11.5.0"
   },
   "dependencies": {
     "discord-rich-presence": "0.0.8",
