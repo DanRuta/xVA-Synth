@@ -202,7 +202,7 @@ window.readFile = (file) => {
                 if (line.trim().length) {
                     const parts = CSVToArray(line, window.userSettings.batch_delimiter)[0]
                     parts.forEach((val, vi) => {
-                        record[header[vi].replace(/^"/, "").replace(/"$/, "")] = val.replace(/\\/, "/")
+                        record[header[vi].replace(/^"/, "").replace(/"$/, "")] = (val||"").replace(/\\/, "/")
                     })
                     dataLines.push(record)
                 }
