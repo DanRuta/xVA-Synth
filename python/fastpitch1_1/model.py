@@ -11,6 +11,7 @@ from scipy.io.wavfile import write
 from torch.nn.utils.rnn import pad_sequence
 from python.common.text import text_to_sequence, sequence_to_text
 
+
 class FastPitch1_1(object):
     def __init__(self, logger, PROD, device, models_manager):
         super(FastPitch1_1, self).__init__()
@@ -92,10 +93,10 @@ class FastPitch1_1(object):
             sentence = " "+sentence.replace(",", " ,").replace(".", " .").replace("!", " !").replace("?", " ?")+" "
 
             for dict_word in dict_words:
-                sentence = re.sub(f' {dict_word} ', " {"+self.arpabet_dict[dict_word]+"} ", sentence, flags=re.IGNORECASE)
+                sentence = re.sub("(?<!\{)\s"+dict_word.strip().replace(".", "")+"\s(?![\w\s]*[\}])", " {"+self.arpabet_dict[dict_word]+"} ", sentence, flags=re.IGNORECASE)
                 # Do it twice, because re will not re-use spaces, so if you have two neighbouring words to be replaced,
                 # and they share a space character, one of them won't get changed
-                sentence = re.sub(f' {dict_word} ', " {"+self.arpabet_dict[dict_word]+"} ", sentence, flags=re.IGNORECASE)
+                sentence = re.sub("(?<!\{)\s"+dict_word.strip().replace(".", "")+"\s(?![\w\s]*[\}])", " {"+self.arpabet_dict[dict_word]+"} ", sentence, flags=re.IGNORECASE)
 
             # Undo the punctuation padding, to retain the original sentence structure
             sentence = sentence.replace(" ,", ",").replace(" .", ".").replace(" !", "!").replace(" ?", "?").strip()
