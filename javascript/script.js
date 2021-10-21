@@ -1583,8 +1583,10 @@ window.updateGameList = () => {
         window.gameAssets[gameId] = metadata
         gameSelectionContent.addEventListener("click", () => {
             voiceSearchInput.focus()
+            searchGameInput.value = ""
             changeGame(metadata)
             closeModal(gameSelectionContainer)
+            Array.from(gameSelectionListContainer.children).forEach(elem => elem.style.display="flex")
         })
 
         itemsToSort.push([numVoices, gameSelection])
@@ -1596,7 +1598,6 @@ window.updateGameList = () => {
             try {
                 fs.watch(modelsDir, {recursive: false, persistent: true}, (eventType, filename) => {
                     if (window.userSettings.autoReloadVoices) {
-                        // window.appLogger.log(`${eventType}: ${filename}`)
                         loadAllModels().then(() => changeGame(metadata))
                     }
                 })
@@ -1610,7 +1611,16 @@ window.updateGameList = () => {
         gameSelectionListContainer.appendChild(elem)
     })
 
-    searchGameInput.addEventListener("keyup", () => {
+    searchGameInput.addEventListener("keyup", (event) => {
+
+        if (event.key=="Enter") {
+            const voiceElems = Array.from(gameSelectionListContainer.children).filter(elem => elem.style.display=="flex")
+            if (voiceElems.length==1) {
+                voiceElems[0].children[0].click()
+                searchGameInput.value = ""
+            }
+        }
+
         const voiceElems = Array.from(gameSelectionListContainer.children)
         if (searchGameInput.value.length) {
             voiceElems.forEach(elem => {
@@ -1682,7 +1692,18 @@ window.setupModal(s2s_settingsRecNoiseBtn, s2sSelectContainer, () => window.popu
 // Other
 // =====
 voiceSearchInput.addEventListener("keyup", () => {
+
+    if (event.key=="Enter") {
+        const voiceElems = Array.from(voiceTypeContainer.children).filter(elem => elem.style.display=="block")
+        if (voiceElems.length==1) {
+            voiceElems[0].click()
+            generateVoiceButton.click()
+            voiceSearchInput.value = ""
+        }
+    }
+
     const voiceElems = Array.from(voiceTypeContainer.children)
+
     if (voiceSearchInput.value.length) {
         voiceElems.forEach(elem => {
             if (elem.innerHTML.toLowerCase().includes(voiceSearchInput.value)) {
