@@ -11,7 +11,7 @@ output/*.ogg
 output/**/*.ogg
 output/**/*.json
 *.ckpt
-Plan.todo
+*.todo
 __pycache__/
 .cache/
 *.pyc
