@@ -296,7 +296,7 @@ class FastPitch(nn.Module):
             energy_tgt = average_pitch(energy_dense.unsqueeze(1), dur_tgt)
             energy_tgt = torch.log(1.0 + energy_tgt)
 
-            energy_tgt = torch.clamp(energy_tgt, min=3.7, max=4.3)
+            energy_tgt = torch.clamp(energy_tgt, min=3.6, max=4.3)
             energy_emb = self.energy_emb(energy_tgt)
             energy_tgt = energy_tgt.squeeze(1)
             enc_out = enc_out + energy_emb.transpose(1, 2)
@@ -313,6 +313,7 @@ class FastPitch(nn.Module):
         return (mel_out, dec_mask, dur_pred, log_dur_pred, pitch_pred, pitch_tgt, energy_pred, energy_tgt, attn_soft, attn_hard, attn_hard_dur, attn_logprob)
 
     def infer_using_vals (self, logger, plugin_manager, sequence, pace, enc_out, max_duration, enc_mask, dur_pred_existing, pitch_pred_existing, energy_pred_existing, old_sequence, new_sequence):
+
         start_index = None
         end_index = None
 
@@ -411,7 +412,6 @@ class FastPitch(nn.Module):
             dur_pred = torch.tensor(plugin_data["duration"]).to(self.device)
             pitch_pred = torch.tensor(plugin_data["pitch"]).unsqueeze(1).to(self.device)
 
-        # pitch_emb = self.pitch_emb(pitch_pred.unsqueeze(1)).transpose(1, 2)
         pitch_emb = self.pitch_emb(pitch_pred).transpose(1, 2)
 
         enc_out = enc_out + pitch_emb
@@ -433,7 +433,7 @@ class FastPitch(nn.Module):
                         for i in range(len(old_sequence_np)-end_index):
                             energy_pred_np[-i-1] = energy_pred_existing_np[-i-1]
                     energy_pred = torch.tensor(energy_pred_np).to(self.device).unsqueeze(0)
-                    energy_pred = torch.clamp(energy_pred, min=3.7, max=4.3)
+                    energy_pred = torch.clamp(energy_pred, min=3.6, max=4.3)
 
 
             if len(plugin_manager.plugins["synth-line"]["pre_energy"]):
@@ -513,11 +513,13 @@ class FastPitch(nn.Module):
         melspec = melspec.to(device)
         mel = melspec
 
+        in_text = f' {in_text} '
         text = re.sub(r'[^a-zA-Z\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', in_text)
         sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
         in_text = sequence_to_text("english_basic", sequence).replace("|","")
 
         text = tp.encode_text(in_text)
+        in_text = in_text.strip()
         text = torch.LongTensor(text)
         text = text.to(device)
 
@@ -540,9 +542,25 @@ class FastPitch(nn.Module):
         durs = durs.cpu().detach().numpy()
 
 
-        pitch = estimate_pitch(audiopath, mel.size(-1), "praat", None, None)
+        mean = None
+        std = None
+        mean = self.pitch_mean
+        std = self.pitch_std
+
+
+
+        pitch = estimate_pitch(audiopath, mel.size(-1), "praat", mean, std)
         # Average pitch over characters
         pitch_tgt = average_pitch(pitch.unsqueeze(0), attn_hard_dur)
+
+
+        # Input FFT
+        enc_out, enc_mask = self.encoder(inputs)
+        # Predict pitch
+        pitch_pred = self.pitch_predictor(enc_out, enc_mask).permute(0, 2, 1)
+        pitch_pred = pitch_pred.squeeze().cpu().detach().numpy()
+
+        pitch_tgt = (pitch_tgt + pitch_pred) / 2
 
 
         # Energy stuff
@@ -551,13 +569,13 @@ class FastPitch(nn.Module):
         energy_dense = torch.norm(mel.float(), dim=0, p=2)
         energy = average_pitch(energy_dense.unsqueeze(0).unsqueeze(0), attn_hard_dur)
         energy = torch.log(1.0 + energy)
-        energy = torch.clamp(energy, min=3.7, max=4.3)
+        energy = torch.clamp(energy, min=3.6, max=4.3)
         energy_final = list(energy.squeeze().cpu().detach().numpy())
         # ============
 
         pitch_final = list(pitch_tgt.squeeze().cpu().detach().numpy())
-        pitch_final = normalize_pitch_vectors(logger, pitch_final)
-        # pitch_final = [max(-3, min(v, 3)) for v in pitch_final]
+        # pitch_final = normalize_pitch_vectors(logger, pitch_final)
+        pitch_final = [max(-3, min(v, 3)) for v in pitch_final]
         durs_final = list(durs[0])
 
         return [in_text, pitch_final, durs_final, energy_final]
