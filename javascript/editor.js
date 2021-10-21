@@ -41,7 +41,7 @@ class Editor {
 
         this.pitchSliderRange = 4
 
-        this.MIN_ENERGY = 3.6
+        this.MIN_ENERGY = 3.5
         this.MAX_ENERGY = 4.3
         this.ENERGY_GRABBER_RADIUS = 8
 
@@ -92,8 +92,8 @@ class Editor {
 
         // Mouse cursor
         this.canvas.addEventListener("mousemove", event => {
-            const mouseX = parseInt(event.layerX)
-            const mouseY = parseInt(event.layerY)
+            const mouseX = parseInt(event.offsetX)
+            const mouseY = parseInt(event.offsetY)
             this.canvas.style.cursor = "default"
 
             // Check energy grabber hover
@@ -136,8 +136,8 @@ class Editor {
         let elemDragged = undefined
         let mouseDownStart = {x: undefined, y: undefined}
         this.canvas.addEventListener("mousedown", event => {
-            const mouseX = parseInt(event.layerX)
-            const mouseY = parseInt(event.layerY)
+            const mouseX = parseInt(event.offsetX)
+            const mouseY = parseInt(event.offsetY)
             mouseDownStart.x = mouseX
             mouseDownStart.y = mouseY
 
@@ -210,7 +210,7 @@ class Editor {
         this.canvas.addEventListener("mousemove", event => {
             if (mouseDownStart.x && mouseDownStart.y) {
 
-                if (elemDragged && (parseInt(event.layerX)-mouseDownStart.x || parseInt(event.layerY)-mouseDownStart.y)) {
+                if (elemDragged && (parseInt(event.offsetX)-mouseDownStart.x || parseInt(event.offsetY)-mouseDownStart.y)) {
                     this.hasChanged = true
                     this.letterFocus.forEach(index => this.adjustedLetters.add(index))
                 }
@@ -218,7 +218,7 @@ class Editor {
                 if (elemDragged) {
                     if (elemDragged.type=="slider") {
 
-                        elemDragged.setValueFromCoords(parseInt(event.layerY)-elemDragged.height/2)
+                        elemDragged.setValueFromCoords(parseInt(event.offsetY)-elemDragged.height/2)
 
                         // If there's a multi-selection, update all of their values, otherwise update the numerical input
                         if (this.letterFocus.length>1) {
@@ -234,7 +234,7 @@ class Editor {
 
                     } else if (elemDragged.type=="box") {
 
-                        let newWidth = elemDragged.dragStart.width + parseInt(event.layerX)-mouseDownStart.x
+                        let newWidth = elemDragged.dragStart.width + parseInt(event.offsetX)-mouseDownStart.x
                         newWidth = Math.max(20, newWidth)
                         newWidth = Math.min(newWidth, this.MAX_LETTER_LENGTH)
                         elemDragged.width = newWidth
@@ -249,7 +249,7 @@ class Editor {
 
                     } else if (elemDragged.type="energy_slider") {
 
-                        elemDragged.setValueFromCoords(parseInt(event.layerY)-elemDragged.height/2)
+                        elemDragged.setValueFromCoords(parseInt(event.offsetY)-elemDragged.height/2)
 
                         // If there's a multi-selection, update all of their values, otherwise update the numerical input
                         if (this.letterFocus.length>1) {
