@@ -121,12 +121,12 @@ window.initWaveSurfer = (src) => {
 window.registerModel = (modelsPath, gameFolder, model, {gameId, voiceId, voiceName, voiceDescription, gender}) => {
     if (!window.games.hasOwnProperty(gameId)) {
 
-        const gameAsset = fs.readdirSync(`${path}/assets`).find(f => f.startsWith(gameId))
-        const option = document.createElement("option")
-        option.value = gameAsset
-        option.innerHTML = gameAsset.split("-").reverse()[0].split(".")[0]
+        const gameAsset = fs.readdirSync(`${path}/assets`).find(f => f==gameId+".json")
+        const gameTheme = JSON.parse(fs.readFileSync(`${path}/assets/${gameAsset}`))
+
         window.games[gameId] = {
             models: [],
+            gameTheme,
             gameAsset
         }
     }

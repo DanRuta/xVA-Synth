@@ -270,14 +270,14 @@ window.populateS2SVoiceList = () => {
 
                     const modelPath = window.userSettings[`modelspath_${modelGame.gameId}`] + `/${modelGame.voiceId}.pt`
 
-                    models.push([modelPath, model.num_speakers||0, model.audioPreviewPath, modelGame.voiceName, modelGame.voiceId, window.games[modelGame.gameId].gameAsset.split("-")[1]])
+                    const themeColour = window.games[modelGame.gameId].gameTheme.themeColourPrimary
+                    models.push([modelPath, model.num_speakers||0, model.audioPreviewPath, modelGame.voiceName, modelGame.voiceId, themeColour] )
                 })
             }
         })
     })
 
     s2sVoiceList.innerHTML = ""
-
 
     models.forEach(([modelPath, num_speakers, audioPreviewPath, voiceName, voiceId, themeColour]) => {
         const record = createElem("div")
