@@ -1,0 +1,8 @@
+{
+    "gameName": "Baldur's Gate",
+    "assetFile": "baldursgate.jpg",
+    "themeColourPrimary": "604b36",
+    "themeColourSecondary": null,
+    "gameCode": "BG",
+    "nexusGamePageIDs": [1931, 775, 3474]
+}

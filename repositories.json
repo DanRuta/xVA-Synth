@@ -4,7 +4,7 @@
             "downloads": 100008,
             "endorsements": 1110,
             "game_id": 1704,
-            "name": "SKVA Synth - xVASynth",
+            "name": "xVASynth 2 - SKVA Synth",
             "author": "DanRuta",
             "url": "https://www.nexusmods.com/skyrimspecialedition/mods/44184",
             "enabled": true
@@ -13,7 +13,7 @@
             "downloads": 38290,
             "endorsements": 346,
             "game_id": 1151,
-            "name": "F4VA Synth - xVASynth",
+            "name": "xVASynth 2 - F4VA Synth",
             "author": "DanRuta",
             "url": "https://www.nexusmods.com/fallout4/mods/49340",
             "enabled": true
@@ -22,7 +22,7 @@
             "downloads": 5890,
             "endorsements": 98,
             "game_id": 101,
-            "name": "OBVA Synth - xVASynth",
+            "name": "xVASynth 2 - OBVA Synth",
             "author": "DanRuta",
             "url": "https://www.nexusmods.com/oblivion/mods/50697",
             "enabled": true
@@ -31,7 +31,7 @@
             "downloads": 5895,
             "endorsements": 93,
             "game_id": 130,
-            "name": "NVVA Synth - xVASynth",
+            "name": "xVASynth 2 - NVVA Synth",
             "author": "DanRuta",
             "url": "https://www.nexusmods.com/newvegas/mods/70815",
             "enabled": true
@@ -40,7 +40,7 @@
             "downloads": 4354,
             "endorsements": 91,
             "game_id": 3333,
-            "name": "CPVA Synth - xVASynth",
+            "name": "xVASynth 2 - CPVA Synth",
             "author": "DanRuta",
             "url": "https://www.nexusmods.com/cyberpunk2077/mods/2162",
             "enabled": true
@@ -49,7 +49,7 @@
             "downloads": 3151,
             "endorsements": 61,
             "game_id": 100,
-            "name": "MWVA Synth - xVASynth",
+            "name": "xVASynth 2 - MWVA Synth",
             "author": "DanRuta",
             "url": "https://www.nexusmods.com/morrowind/mods/49210",
             "enabled": true
@@ -58,7 +58,7 @@
             "downloads": 2883,
             "endorsements": 46,
             "game_id": 952,
-            "name": "WVA Synth - xVASynth",
+            "name": "xVASynth 2 - WVA Synth",
             "author": "DanRuta",
             "url": "https://www.nexusmods.com/witcher3/mods/5676",
             "enabled": true
@@ -67,7 +67,7 @@
             "downloads": 2650,
             "endorsements": 45,
             "game_id": 120,
-            "name": "F3VA Synth - xVASynth",
+            "name": "xVASynth 2 - F3VA Synth",
             "author": "DanRuta",
             "url": "https://www.nexusmods.com/fallout3/mods/24502",
             "enabled": true
@@ -76,7 +76,7 @@
             "downloads": 2965,
             "endorsements": 37,
             "game_id": 208,
-            "name": "MEVA Synth - xVASynth",
+            "name": "xVASynth 2 - MEVA Synth",
             "author": "DanRuta",
             "url": "https://www.nexusmods.com/masseffect3/mods/930",
             "enabled": true
@@ -85,7 +85,7 @@
             "downloads": 687,
             "endorsements": 11,
             "game_id": 2590,
-            "name": "F76VA Synth - xVASynth",
+            "name": "xVASynth 2 - F76VA Synth",
             "author": "DanRuta",
             "url": "https://www.nexusmods.com/fallout76/mods/928",
             "enabled": true
@@ -94,7 +94,7 @@
             "downloads": 224,
             "endorsements": 6,
             "game_id": 1694,
-            "name": "CIVVA Synth - xVASynth",
+            "name": "xVASynth 2 - CIVVA Synth",
             "author": "DanRuta",
             "url": "https://www.nexusmods.com/civilisationvi/mods/109",
             "enabled": true
@@ -103,9 +103,27 @@
             "downloads": 71,
             "endorsements": 1,
             "game_id": 3966,
-            "name": "HKVA Synth - xVASynth",
+            "name": "xVASynth 2 - HKVA Synth",
             "author": "DanRuta",
             "url": "https://www.nexusmods.com/humankind/mods/1",
+            "enabled": true
+        },
+        {
+            "downloads": 0,
+            "endorsements": 0,
+            "game_id": 2010,
+            "name": "xVASynth 2 - OWVA Synth",
+            "author": "DanRuta",
+            "url": "https://www.nexusmods.com/overwatch/mods/3",
+            "enabled": true
+        },
+        {
+            "downloads": 0,
+            "endorsements": 0,
+            "game_id": 728,
+            "name": "xVASynth 2 - DAVA Synth",
+            "author": "DanRuta",
+            "url": "https://www.nexusmods.com/dragonageinquisition/mods/3545",
             "enabled": true
         }
     ]

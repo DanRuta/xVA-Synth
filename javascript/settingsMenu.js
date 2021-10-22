@@ -52,7 +52,7 @@ if (!Object.keys(window.userSettings).includes("showDiscordStatus")) { // For ba
     window.userSettings.showDiscordStatus = true
 }
 if (!Object.keys(window.userSettings).includes("prompt_fontSize")) { // For backwards compatibility
-    window.userSettings.prompt_fontSize = 13
+    window.userSettings.prompt_fontSize = 15
 }
 if (!Object.keys(window.userSettings).includes("bg_gradient_opacity")) { // For backwards compatibility
     window.userSettings.bg_gradient_opacity = 13

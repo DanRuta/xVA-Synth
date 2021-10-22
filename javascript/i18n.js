@@ -141,7 +141,7 @@ window.i18n.setEnglish = () => {
     window.i18n.KEYBOARD_CTRLA_DO = "Select all editor sequence letters"
 
     window.i18n.SUPPORT = "Support"
-    window.i18n.SUPPORT_LINK = "You can support development on patreon"
+    window.i18n.SUPPORT_LINK = "You can support 'xVASynth' development on patreon"
     window.i18n.SUPPORT_THANKS = "Special thanks:"
 
     window.i18n.SUPPORT_GAMES = "Search games..."
