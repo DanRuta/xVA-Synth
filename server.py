@@ -6,13 +6,15 @@ import multiprocessing
 if __name__ == '__main__':
     multiprocessing.freeze_support()
 
-    APP_VERSION = "2.0.0"
-
     PROD = False
     # PROD = True
     CPU_ONLY = False
     # CPU_ONLY = True
 
+    # Saves me having to do backend re-compilations for every little UI hotfix
+    with open(f'{"./resources/app" if PROD else "."}/javascript/script.js') as f:
+        lines = f.read().split("\n")
+        APP_VERSION = lines[1].split('"v')[1].split('"')[0]
 
 
     # Imports and logger setup
