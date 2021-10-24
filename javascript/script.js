@@ -547,6 +547,8 @@ window.makeSample = (src, newSample) => {
             let editData = fs.readFileSync(`${src}.json`, "utf8")
             editData = JSON.parse(editData)
 
+            generateVoiceButton.dataset.modelIDLoaded = editData.pitchEditor ? editData.pitchEditor.currentVoice : editData.currentVoice
+
             window.sequenceEditor.inputSequence = editData.inputSequence
             window.sequenceEditor.pacing = editData.pacing
             window.sequenceEditor.letters = editData.pitchEditor ? editData.pitchEditor.letters : editData.letters
@@ -573,7 +575,13 @@ window.makeSample = (src, newSample) => {
 
             window.sequenceEditor.sliderBoxes.forEach((box, i) => {box.setValueFromValue(window.sequenceEditor.dursNew[i])})
             window.sequenceEditor.update()
-            window.initWaveSurfer(src)
+
+            if (!window.wavesurfer) {
+                window.initWaveSurfer(src)
+            } else {
+                window.wavesurfer.load(src)
+            }
+
             samplePlayPause.style.display = "block"
         })
         audioControls.appendChild(editButton)
@@ -765,7 +773,7 @@ generateVoiceButton.addEventListener("click", () => {
             speech2speechState.s2s_autogenerate = false
             pitch = window.sequenceEditor.pitchNew.map(v=> v==undefined?0:v)
             duration = window.sequenceEditor.dursNew.map(v => v*pace_slid.value).map(v=> v==undefined?0:v)
-            energy = window.sequenceEditor.energyNew.map(v => v==undefined?0:v).filter(v => !isNaN(v))
+            energy = window.sequenceEditor.energyNew ? window.sequenceEditor.energyNew.map(v => v==undefined?0:v).filter(v => !isNaN(v)) : []
             isFreshRegen = false
         }
         window.sequenceEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
