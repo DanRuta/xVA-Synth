@@ -5,7 +5,8 @@ window.arpabetMenuState = {
     dictionaries: {},
     paginationIndex: 0,
     totalPages: 0,
-    clickedRecord: undefined
+    clickedRecord: undefined,
+    skipRefresh: false
 }
 
 // window.ARPAbetSymbols = ["AA", "AE", "AH", "AO", "AW", "AX", "AXR", "AY", "B", "CH", "D", "DH", "EH", "EL", "EM", "EN", "ER", "EY", "F", "G", "HH", "IH", "IX", "IY", "JH", "K", "L", "M", "N", "NG", "OW", "P", "R", "S", "SH", "T", "TH", "UH", "UW", "UX", "V", "W", "WH", "Y", "Z", "ZH"]
@@ -23,6 +24,10 @@ window.ARPAbetSymbols = [
 
 window.refreshDictionariesList = () => {
     return new Promise(resolve => {
+        if (window.arpabetMenuState.skipRefresh) {
+            resolve()
+            return
+        }
         window.arpabetMenuState.dictionaries = {}
         arpabet_dicts_list.innerHTML = ""
 
@@ -86,7 +91,9 @@ window.refreshDictWordList = () => {
         ckbx.style.marginTop = 0
         ckbx.addEventListener("click", () => {
             window.arpabetMenuState.dictionaries[dictId].data[wordKeys[i]].enabled = ckbx.checked
+            window.arpabetMenuState.skipRefresh = true
             window.saveARPAbetDict(dictId)
+            setTimeout(() => window.arpabetMenuState.skipRefresh = false, 1000)
         })
 
         const deleteButton = createElem("button.smallButton.arpabetRowItem", window.i18n.DELETE)
