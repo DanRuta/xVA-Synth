@@ -87,6 +87,8 @@ window.nexusDownload = (url, dest) => {
 }
 
 window.initNexus = () => {
+    const data = fs.readFileSync(`${window.path}/repositories.json`, "utf8")
+    window.nexusReposList = JSON.parse(data)
     return new Promise((resolve) => {
 
         window.nexusState.key = localStorage.getItem("nexus_API_key")
@@ -408,21 +410,23 @@ window.openNexusWindow = () => {
     // Populate the game IDs for the Nexus repo searching
     if (!hasPopulatedNexusGameListDropdown) {
         window.getAllNexusGameIDs().then(results => {
-            results = results.sort((a,b)=>a.name.toLowerCase()<b.name.toLowerCase()?-1:1)
-            results.forEach(res => {
+            if (results && results.length) {
+                results = results.sort((a,b)=>a.name.toLowerCase()<b.name.toLowerCase()?-1:1)
+                results.forEach(res => {
 
-                window.nexusGameIdToGameName[res.id] = res.name
+                    window.nexusGameIdToGameName[res.id] = res.name
 
-                const opt = createElem("option", {value: res.id})
-                opt.innerHTML = res.name
-                nexusAllGamesSelect.appendChild(opt)
-            })
-            if (fs.existsSync(`${window.path}/repositories.json`)) {
-                const data = fs.readFileSync(`${window.path}/repositories.json`, "utf8")
-                window.nexusReposList = JSON.parse(data)
-                window.nexusUpdateModsUsedPanel()
+                    const opt = createElem("option", {value: res.id})
+                    opt.innerHTML = res.name
+                    nexusAllGamesSelect.appendChild(opt)
+                })
+                if (fs.existsSync(`${window.path}/repositories.json`)) {
+                    const data = fs.readFileSync(`${window.path}/repositories.json`, "utf8")
+                    window.nexusReposList = JSON.parse(data)
+                    window.nexusUpdateModsUsedPanel()
+                }
+                hasPopulatedNexusGameListDropdown = true
             }
-            hasPopulatedNexusGameListDropdown = true
         })
     }
 
@@ -438,82 +442,86 @@ nexusSearchBar.addEventListener("keyup", () => {
 
 
 window.getLatestModelsList = async () => {
-    try {
-        window.spinnerModal(window.i18n.CHECKING_NEXUS)
-        window.nexusModelsList = []
+    if (!nexusState.key) {
+        return window.errorModal(window.i18n.YOU_MUST_BE_LOGGED_IN)
+    } else {
+        try {
+            window.spinnerModal(window.i18n.CHECKING_NEXUS)
+            window.nexusModelsList = []
 
-        const idToGame = {}
-        Object.keys(window.gameAssets).forEach(gameId => {
-            const id = window.gameAssets[gameId].gameCode.toLowerCase()
-            idToGame[id] = gameId
-        })
+            const idToGame = {}
+            Object.keys(window.gameAssets).forEach(gameId => {
+                const id = window.gameAssets[gameId].gameCode.toLowerCase()
+                idToGame[id] = gameId
+            })
 
-        const repoLinks = window.nexusReposList.repos.filter(r=>r.enabled).map(r=>r.url)
+            const repoLinks = window.nexusReposList.repos.filter(r=>r.enabled).map(r=>r.url)
 
-        for (let li=0; li<repoLinks.length; li++) {
+            for (let li=0; li<repoLinks.length; li++) {
 
-            const link = repoLinks[li].replace("\r","")
-            const repoInfo = await getData(`${link.split(".com/")[1]}.json`)
-            const author = repoInfo.author
-            const nexusRepoId = repoInfo.mod_id
-            const nexusRepoVersion = repoInfo.version
-            const nexusGameId = repoInfo.domain_name
+                const link = repoLinks[li].replace("\r","")
+                const repoInfo = await getData(`${link.split(".com/")[1]}.json`)
+                const author = repoInfo.author
+                const nexusRepoId = repoInfo.mod_id
+                const nexusRepoVersion = repoInfo.version
+                const nexusGameId = repoInfo.domain_name
 
-            const files = await getData(`${link.split(".com/")[1]}/files.json`)
-            files["files"].forEach(file => {
+                const files = await getData(`${link.split(".com/")[1]}/files.json`)
+                files["files"].forEach(file => {
 
-                if (file.category_name=="OPTIONAL" || file.category_name=="OPTIONAL") {
+                    if (file.category_name=="OPTIONAL" || file.category_name=="OPTIONAL") {
 
-                    if (!file.description.includes("Voice model")) {
-                        return
-                    }
+                        if (!file.description.includes("Voice model")) {
+                            return
+                        }
 
-                    const description = file.description
-                    const parts = description.split("<br />")
-                    let voiceId = parts.filter(line => line.startsWith("Voice ID:") || line.startsWith("VoiceID:"))[0]
-                    voiceId = voiceId.includes("Voice ID: ") ? voiceId.split("Voice ID: ")[1].split(" ")[0] : voiceId.split("VoiceID: ")[1].split(" ")[0]
-                    const game = idToGame[voiceId.split("_")[0]]
-                    const name = parts.filter(line => line.startsWith("Voice model"))[0].split(" - ")[1]
-                    const date = file.uploaded_time
-                    const nexus_file_id = file.file_id
+                        const description = file.description
+                        const parts = description.split("<br />")
+                        let voiceId = parts.filter(line => line.startsWith("Voice ID:") || line.startsWith("VoiceID:"))[0]
+                        voiceId = voiceId.includes("Voice ID: ") ? voiceId.split("Voice ID: ")[1].split(" ")[0] : voiceId.split("VoiceID: ")[1].split(" ")[0]
+                        const game = idToGame[voiceId.split("_")[0]]
+                        const name = parts.filter(line => line.startsWith("Voice model"))[0].split(" - ")[1]
+                        const date = file.uploaded_time
+                        const nexus_file_id = file.file_id
 
-                    if (repoInfo.endorsement.endorse_status=="Endorsed") {
-                        window.endorsedRepos.add(game)
-                    }
+                        if (repoInfo.endorsement.endorse_status=="Endorsed") {
+                            window.endorsedRepos.add(game)
+                        }
 
-                    const hasT2 = description.includes("Tacotron2")
-                    const hasHiFi = description.includes("HiFi-GAN")
-                    const version = file.version
+                        const hasT2 = description.includes("Tacotron2")
+                        const hasHiFi = description.includes("HiFi-GAN")
+                        const version = file.version
 
-                    let type
-                    if (description.includes("Model:")) {
-                        type = parts.filter(line => line.startsWith("Model: "))[0].split("Model: ")[1]
-                    } else {
-                        type = "FastPitch"
-                        if (type=="FastPitch") {
-                            if (hasT2) {
-                                type = "T2+"+type
+                        let type
+                        if (description.includes("Model:")) {
+                            type = parts.filter(line => line.startsWith("Model: "))[0].split("Model: ")[1]
+                        } else {
+                            type = "FastPitch"
+                            if (type=="FastPitch") {
+                                if (hasT2) {
+                                    type = "T2+"+type
+                                }
+                            }
+                            if (hasHiFi) {
+                                type += "+HiFi"
                             }
                         }
-                        if (hasHiFi) {
-                            type += "+HiFi"
-                        }
+
+                        const notes = description.includes("Notes:") ? parts.filter(line => line.startsWith("Notes: "))[0].split("Notes: ")[1] : ""
+                        const meta = {author, description, version, voiceId, game, name, type, notes, date, nexusRepoId, nexusRepoVersion, nexusGameId, nexus_file_id, repoLink: link}
+                        window.nexusModelsList.push(meta)
                     }
+                })
+            }
 
-                    const notes = description.includes("Notes:") ? parts.filter(line => line.startsWith("Notes: "))[0].split("Notes: ")[1] : ""
-                    const meta = {author, description, version, voiceId, game, name, type, notes, date, nexusRepoId, nexusRepoVersion, nexusGameId, nexus_file_id, repoLink: link}
-                    window.nexusModelsList.push(meta)
-                }
-            })
+            window.closeModal(undefined, nexusContainer)
+            window.displayAllModels()
+
+        } catch (e) {
+            console.log(e)
+            window.appLogger.log(e)
+            window.errorModal(e.message)
         }
-
-        window.closeModal(undefined, nexusContainer)
-        window.displayAllModels()
-
-    } catch (e) {
-        console.log(e)
-        window.appLogger.log(e)
-        window.errorModal(e.message)
     }
 }
 

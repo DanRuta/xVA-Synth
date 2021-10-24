@@ -482,6 +482,8 @@ window.i18n.setEnglish = () => {
     window.i18n.X_WORKSHOP_VOICES_INSTALLED = "_1 workshop voices installed"
     window.i18n.WORKSHOP_GAMES_NOT_RECOGNISED = "The following workshop games were not recognised. Do you have the asset file installed?<i>_1</i>"
 
+    window.i18n.YOU_MUST_BE_LOGGED_IN = "You must be logged in to check what voices there are available on the nexus."
+
 
     // Useful during developing, to see if there are any strings left un-i18n-ed
     // Object.keys(window.i18n).forEach(key => {
