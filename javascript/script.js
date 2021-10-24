@@ -1,5 +1,5 @@
 "use strict"
-window.appVersion = "v2.0.1"
+window.appVersion = "v2.0.2"
 
 window.PRODUCTION = module.filename.includes("resources")
 const path = window.PRODUCTION ? "./resources/app" : "."
@@ -500,9 +500,13 @@ window.changeGame = (meta) => {
 window.samplePlayPauseHandler = event => {
     if (window.wavesurfer) {
         if (event.ctrlKey) {
-            window.wavesurfer.setSinkId(window.userSettings.alt_speaker)
+            if (window.wavesurfer.sink_id!=window.userSettings.alt_speaker) {
+                window.wavesurfer.setSinkId(window.userSettings.alt_speaker)
+            }
         } else {
-            window.wavesurfer.setSinkId(window.userSettings.base_speaker)
+            if (window.wavesurfer.sink_id!=window.userSettings.base_speaker) {
+                window.wavesurfer.setSinkId(window.userSettings.base_speaker)
+            }
         }
     }
 
@@ -1419,7 +1423,7 @@ window.changeVocoder = vocoder => {
                 setTimeout(() => {
                     if (res=="ENOENT") {
                         vocoder_select.value = window.userSettings.vocoder
-                        window.errorModal(`${window.i18n.BATCH_MODEL_NOT_FOUND}.${vocoderId.includes("waveglow")?" "+window.i18n.BATCH_DOWNLOAD_WAVEGLOW:""}`)
+                        window.errorModal(`${window.i18n.BATCH_MODEL_NOT_FOUND}.${vocoder.includes("waveglow")?" "+window.i18n.BATCH_DOWNLOAD_WAVEGLOW:""}`)
                         resolve()
                     } else {
                         window.batch_state.lastVocoder = vocoder
