@@ -196,7 +196,7 @@ window.i18n.setEnglish = () => {
     window.i18n.SURE_RESET_PATHS = `Are you sure you'd like to reset your paths? This includes the paths for models, and output.`
     window.i18n.LOAD_MODEL = "Load model"
     window.i18n.LOAD_TARGET_MODEL = "Please load a target voice from the panel on the left, first."
-    window.i18n.NO_XVASPEECH_MODELS = "No xVASpeech models are installed"
+    window.i18n.NO_XVASPEECH_MODELS = "No FastPitch1.1 models are installed"
     window.i18n.ONLY_WAV_S2S = "Only .wav files are supported for speech-to-speech file input at the moment."
     window.i18n.NO_MODELS_IN = "No models in"
     window.i18n.NO_MODELS_FOUND = "No models found"
