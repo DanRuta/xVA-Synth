@@ -87,12 +87,17 @@ class FastPitch1_1(object):
 
     def infer_arpabet_dict (self, sentence):
         dict_words = list(self.arpabet_dict.keys())
-        if len(dict_words):
+
+        # Don't run the ARPAbet replacement for every single word, as it would be too slow. Instead, do it only for words that are actually present in the prompt
+        words_in_prompt = (sentence+" ").replace("}","").replace("{","").replace(",","").replace("?","").replace("!","").replace(". "," ").lower().split(" ")
+        words_in_prompt = [word.strip() for word in words_in_prompt if len(word.strip()) and word in dict_words]
+
+        if len(words_in_prompt):
 
             # Pad out punctuation, to make sure they don't get used in the word look-ups
             sentence = " "+sentence.replace(",", " ,").replace(".", " .").replace("!", " !").replace("?", " ?")+" "
 
-            for dict_word in dict_words:
+            for dict_word in words_in_prompt:
                 sentence = re.sub("(?<!\{)\s"+dict_word.strip().replace(".", "\.")+"\s(?![\w\s]*[\}])", " {"+self.arpabet_dict[dict_word]+"} ", sentence, flags=re.IGNORECASE)
                 # Do it twice, because re will not re-use spaces, so if you have two neighbouring words to be replaced,
                 # and they share a space character, one of them won't get changed

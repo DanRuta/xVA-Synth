@@ -447,7 +447,7 @@ window.i18n.setEnglish = () => {
     window.i18n.ARPABET_ERROR_BAD_SYMBOLS = "Found non-ARPAbet symbols: _1"
     window.i18n.ARPABET_ERROR_EMPTY_INPUT = "Words or ARPAbet symbols can't be left empty"
     window.i18n.PAGINATION_X_OF_Y = "_1 of _2"
-    window.i18n.ARPABET_CONFIRM_ENABLE_ALL = "Are you sure you'd like to enable ALL words for the following dictionary?<br><br><i>_1</i><br><br>Having thousands of words enabled might make line generation slower."
+    window.i18n.ARPABET_CONFIRM_ENABLE_ALL = "Are you sure you'd like to enable ALL words for the following dictionary?<br><br><i>_1</i>"
     window.i18n.ARPABET_CONFIRM_DISABLE_ALL = "Are you sure you'd like to disable ALL words for the following dictionary?<br><br><i>_1</i>"
     window.i18n.ARPABET_CONFIRM_DELETE_WORD = "Are you sure you'd like to delete the following word?<br><br><i>_1</i>"
     window.i18n.ONLY_ENABLED = "Only enabled"
