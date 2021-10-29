@@ -166,16 +166,40 @@ arpabet_save.addEventListener("click", () => {
 
     const wordKeys = Object.keys(window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data)
 
+    const doTheRest_updateDict = () => {
+        window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data[word] = {enabled: true, arpabet: arpabet}
+        window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].filteredData = window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data
+
+        window.refreshDictWordList()
+        window.saveARPAbetDict(window.arpabetMenuState.currentDict)
+    }
+
+
     // Delete the old record
     if (window.arpabetMenuState.clickedRecord && window.arpabetMenuState.clickedRecord.word != word) {
         delete window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data[window.arpabetMenuState.clickedRecord.word]
     }
 
-    window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data[word] = {enabled: true, arpabet: arpabet}
-    window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].filteredData = window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data
+    let wordExists = []
+    Object.keys(window.arpabetMenuState.dictionaries).forEach(dictName => {
+        if (dictName==window.arpabetMenuState.currentDict) {
+            return
+        }
 
-    window.refreshDictWordList()
-    window.saveARPAbetDict(window.arpabetMenuState.currentDict)
+        if (Object.keys(window.arpabetMenuState.dictionaries[dictName].data).includes(word)) {
+            wordExists.push(dictName)
+        }
+    })
+
+    if (wordExists.length) {
+        window.confirmModal(window.i18n.ARPABET_CONFIRM_SAME_WORD.replace("_1", word).replace("_2", wordExists.join("<br>"))).then(response => {
+            if (response) {
+                doTheRest_updateDict()
+            }
+        })
+    } else {
+        doTheRest_updateDict()
+    }
 })
 
 arpabetModal.addEventListener("click", (event) => {

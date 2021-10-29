@@ -450,6 +450,8 @@ window.i18n.setEnglish = () => {
     window.i18n.ARPABET_CONFIRM_ENABLE_ALL = "Are you sure you'd like to enable ALL words for the following dictionary?<br><br><i>_1</i>"
     window.i18n.ARPABET_CONFIRM_DISABLE_ALL = "Are you sure you'd like to disable ALL words for the following dictionary?<br><br><i>_1</i>"
     window.i18n.ARPABET_CONFIRM_DELETE_WORD = "Are you sure you'd like to delete the following word?<br><br><i>_1</i>"
+    window.i18n.ARPABET_CONFIRM_SAME_WORD = "The word '_1' already exists in the following dictionaries:<br><br><i>_2</i><br><br>Are you sure you'd like to add it?"
+
     window.i18n.ONLY_ENABLED = "Only enabled"
 
     window.i18n.DICTIONARIES = "Dictionaries"
