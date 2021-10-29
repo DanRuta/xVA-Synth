@@ -218,7 +218,6 @@ window.installDownloadedModel = ([game, zipName]) => {
                 fs.mkdirSync(`${window.path}/downloads`)
             }
 
-
             fs.createReadStream(zipPath).pipe(unzipper.Parse()).on("entry", entry => {
                 const fileName = entry.path
                 const dirOrFile = entry.type
@@ -279,7 +278,9 @@ nexusDownloadAllBtn.addEventListener("click", async () => {
         window.nexusState.finished += 1
         nexusFinishedCount.innerHTML = window.nexusState.finished
         window.displayAllModels(true)
-        window.loadAllModels(true)
+        window.loadAllModels(true).then(() => {
+            changeGame(window.currentGame)
+        })
     }
 })
 
@@ -596,6 +597,9 @@ window.displayAllModels = (forceUpdate=false) => {
                 window.nexusState.finished += 1
                 nexusFinishedCount.innerHTML = window.nexusState.finished
                 window.displayAllModels()
+                window.loadAllModels(true).then(() => {
+                    changeGame(window.currentGame)
+                })
 
             } catch (e) {}
 
