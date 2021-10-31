@@ -1,19 +1,17 @@
 # xVA Synth
 
-xVASynth is a machine learning based speech synthesis app, using voices from characters/voice sets from Bethesda games.
+xVASynth 2.0 is a machine learning based speech synthesis app, using voices from characters/voice sets from Bethesda games.
 
 Patreon: https://www.patreon.com/xvasynth
 
 ## See it in action (YouTube link)
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=xqJ-ujWvu7s
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=W-9SFoNuTtM
 " target="_blank"><img src="http://img.youtube.com/vi/xqJ-ujWvu7s/0.jpg"
 alt="xVASynth YouTube demo" width="240" height="180" border="10" /></a>
 
 
 <img width="100%" src="readme images/github-README.png">
-
-Article: https://becominghuman.ai/generating-neural-speech-synthesis-voice-acting-using-xvasynth-fc978fdf24c1
 
 This is an Electron UI wrapped around inference of FastPitch models trained on voice data from video games. The app serves as a framework, which loads and uses whichever models are given to it. As such, the app does nothing by itself, and models need to be installed. Models which have a corresponding asset file will be loaded in their respective game/category. Anything else gets loaded in the "Other" category.
 
@@ -35,38 +33,18 @@ Watch the above video for a summary of this section.
 
 To start, download the latest release (from here: https://github.com/DanRuta/xVA-Synth/releases), double click the xVASynth.exe file, and make sure to click Allow, if Windows asks for permission to run the python server script (this is used internally). Alternatively, check out the `Development` section, to see how to run the non-packaged dev code.
 
-
 Once the app is up and running, select the voice set category (the game) from the top left dropdown, then click a specific voice set.
 
 A list of already synthesized audio files for that voice set, if any, is displayed. For synthesis, click the `Load model` button. This may take a minute, on a slow machine.
 
 Once finished, type your text in the text area and click the `Generate Voice` button. Once generated, you will be shown a preview of the output. Click the `Keep sample` button to save to file, or click the `Generate Voice` after making ammends to the text input, to discard it and re-generate.
 
-You can adjust the pitch and durations of individual letters by moving the letter sliders up and down, or by using the tools in the toolbars below.
+You can adjust the pitch, durations, and energy of individual letters by moving the letter sliders up and down, or by using the tools in the toolbars below.
 
 In the list of audio files, you can preview, re-name, click to open the containing folder, or delete each one.
 
 If the required CUDA dependencies are installed on your system, you can enable GPU inference by switching the toggle in the settings menu (click the setting cog at the top right).
 
-Finally, a low-quality but high-speed vocoder model is available through the "Quick-and-dirty" checkbox, to speed up pitch editing. Use the high quality model when generating the final audio.
-
-**Note about synthesis quality**
-
-The best approach I have found is to generate samples of at least 2 seconds in length, and not much more than 5 (short is good for the less good voices). If you need a lot of text to be synthesized, the current best approach is to synthesize smaller clauses, and splicing them together in Audacity. You can vary the punctuation and spelling of words to get different output.
-
-All models have been trained on my personal machine, with a GTX 1080, meaning that `batch_size` had to be limited, to stay within memory constraints. With any luck, I may get access to some beefier machines in the future to train higher quality models.
-
-## Pro tips:
-
-- Right click a voice set in the left bar to hear a sample of the voice.
-
-- You can change the spelling to change pronounciation for difficult words
-
-- You can use full stops and commas to change timing
-
-- Acronyms should be spelled out phonetically. EG: xVA -> Ex vee ay
-
-- Numbers automatically get converted to text. However, if you need to pronounce years, such as 1990 -> nineteen ninety, instead of one thousand nine hundred and ninety, you should split the two numbers, like 19 90.
 
 ## Development
 
@@ -89,22 +67,7 @@ Though, if you're just tweaking small things in JS/HTML/CSS, it may be easier to
 
 A large number of models have been trained for this app. They are publicly hosted on the nexus.com website, on the game page respective to the game the voice belongs to.
 
-Some of these voices share the same model, due to having the same voice actor, across games. Some voices were trained together for the majority of iterations, and only fine-tuned at the end, independently.
-
 ## Future Plans
 
 Future plans are currently to continue training models for more voices, with plenty more remaining.
 
-### Games
-
-Models are being trained for the following games:
-
-- The Elder Scrolls V: Skyrim
-- The Elder Scrolls IV: Oblivion
-- The Elder Scrolls III: Morrowind
-- Fallout 4
-- Fallout New Vegas
-- Fallout 3
-- Starfield
-
-Time/interest/data permitting, other games/categories may be explored.
