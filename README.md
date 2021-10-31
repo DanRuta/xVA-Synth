@@ -1,6 +1,6 @@
 # xVA Synth
 
-xVASynth 2.0 is a machine learning based speech synthesis app, using voices from characters/voice sets from Bethesda games.
+xVASynth 2.0 is a machine learning based speech synthesis app, using voices from characters/voice sets from video games.
 
 Patreon: https://www.patreon.com/xvasynth
 
