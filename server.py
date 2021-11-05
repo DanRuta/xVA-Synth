@@ -293,6 +293,7 @@ if __name__ == '__main__':
 
                     models_manager.init_model("s2s_fastpitch1_1")
                     models_manager.load_model("s2s_fastpitch1_1", modelPath, n_speakers=n_speakers)
+                    models_manager.models_bank["s2s_fastpitch1_1"].init_arpabet_dicts()
                     text, pitch, durs, energy = models_manager.models("s2s_fastpitch1_1").run_speech_to_speech(final_path, text=text)
 
                     data_out = ""

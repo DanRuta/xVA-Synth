@@ -122,7 +122,7 @@ class FastPitch1_1(object):
         cleaned_text_sequences = []
         for record in linesBatch:
             text = record[0]
-            text = re.sub(r'[^a-zA-Z\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)
+            text = re.sub(r'[^a-zA-ZäöüÄÖÜß\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)
             text = self.infer_arpabet_dict(text)
             sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
             cleaned_text_sequences.append(sequence_to_text("english_basic", sequence))
@@ -197,7 +197,7 @@ class FastPitch1_1(object):
         sampling_rate = 22050
         denoising_strength = 0.01
 
-        text = re.sub(r'[^a-zA-Z\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)
+        text = re.sub(r'[^a-zA-ZäöüÄÖÜß\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)
         text = self.infer_arpabet_dict(text)
         sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
         cleaned_text = sequence_to_text("english_basic", sequence)
@@ -251,6 +251,6 @@ class FastPitch1_1(object):
 
 
     def run_speech_to_speech (self, audiopath, text):
-        return self.model.run_speech_to_speech(self.device, self.logger, audiopath, text, text_to_sequence, sequence_to_text)
+        return self.model.run_speech_to_speech(self.device, self.logger, audiopath, text, text_to_sequence, sequence_to_text, self)
 
 

@@ -146,7 +146,10 @@ window.useWavFileForspeech2speech = (fileName) => {
             let energyData = res[2]
             let cleanedSequence = res[3].split("|").map(c=>c.replaceAll("{", "").replaceAll("}", "")).join("")
 
-            dialogueInput.value = cleanedSequence
+            if (!dialogueInput.value.length) {
+                dialogueInput.value = cleanedSequence
+            }
+
             sequence = cleanedSequence
 
             pitchData = pitchData.split(",").map(v => parseFloat(v))

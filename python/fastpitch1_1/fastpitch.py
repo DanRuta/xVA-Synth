@@ -499,7 +499,7 @@ class FastPitch(nn.Module):
             return self.infer_using_vals(logger, plugin_manager, cleaned_text, pace, enc_out, max_duration, enc_mask, None, None, None, None, None)
 
 
-    def run_speech_to_speech (self, device, logger, audiopath, in_text, text_to_sequence, sequence_to_text):
+    def run_speech_to_speech (self, device, logger, audiopath, in_text, text_to_sequence, sequence_to_text, model_instance):
 
         self.device = device
         max_wav_value = 32768
@@ -514,23 +514,24 @@ class FastPitch(nn.Module):
         melspec = melspec.to(device)
         mel = melspec
 
-        in_text = f' {in_text} '
-        text = re.sub(r'[^a-zA-Z\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', in_text)
-        sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
-        in_text = sequence_to_text("english_basic", sequence).replace("|","")
+        text = in_text
+        text = re.sub(r'[^a-zA-ZäöüÄÖÜß\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)
+        text = model_instance.infer_arpabet_dict(text)
 
-        text = tp.encode_text(in_text)
-        in_text = in_text.strip()
-        text = torch.LongTensor(text)
+
+        sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
+        cleaned_text = sequence_to_text("english_basic", sequence)
+        text = torch.LongTensor(sequence)
+        text = pad_sequence([text], batch_first=True).to(self.device)
         text = text.to(device)
 
-        attn_prior = beta_binomial_prior_distribution(text.shape[0], mel.shape[1]).unsqueeze(0)
+        attn_prior = beta_binomial_prior_distribution(text.shape[1], mel.shape[1]).unsqueeze(0)
         attn_prior = attn_prior.to(device)
 
-        inputs = text.unsqueeze(0)
+        inputs = text
         mel_tgt = mel.unsqueeze(0)
         text_emb = self.encoder.word_emb(inputs).to(device)
-        input_lens = torch.tensor([len(text)]).to(device)
+        input_lens = torch.tensor([len(text[0])]).to(device)
         mel_lens = torch.tensor([mel.size(1)]).to(device)
         attn_mask = mask_from_lens(input_lens)[..., None] == 0
         attn_soft, attn_logprob = self.attention(mel_tgt, text_emb.permute(0, 2, 1), mel_lens, attn_mask, key_lens=input_lens, attn_prior=attn_prior)
@@ -583,7 +584,7 @@ class FastPitch(nn.Module):
         pitch_final = [max(-3, min(v, 3)) for v in pitch_final]
         durs_final = list(durs[0])
 
-        return [in_text, pitch_final, durs_final, energy_final]
+        return [cleaned_text, pitch_final, durs_final, energy_final]
 
 
 

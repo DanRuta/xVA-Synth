@@ -187,7 +187,6 @@ class TextProcessing(object):
                 raise Exception("{} handle_arpabet is not supported".format(
                     self.handle_arpabet))
 
-        # print("[encode_text]", text)
         text = self.capitalize_repetitions(text)
 
         text_encoded = self.text_to_sequence(text)
