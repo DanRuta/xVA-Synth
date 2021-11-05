@@ -1587,7 +1587,9 @@ a {
 }
 
 
-
+#wavesurferContainer, wave {
+    overflow-x: hidden;
+}
 
 
 

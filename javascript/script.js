@@ -816,8 +816,33 @@ generateVoiceButton.addEventListener("click", () => {
             const start_index = res[4]
             const end_index = res[5]
             pitchData = pitchData.split(",").map(v => parseFloat(v))
+
+            // For use in adjusting editor range
+            const maxPitchVal = pitchData.reduce((p,c)=>Math.max(p, Math.abs(c)), 0)
+            if (maxPitchVal>window.sequenceEditor.default_pitchSliderRange) {
+                window.sequenceEditor.pitchSliderRange = maxPitchVal
+            } else {
+                window.sequenceEditor.pitchSliderRange = window.sequenceEditor.default_pitchSliderRange
+            }
+
             if (energyData.length) {
                 energyData = energyData.split(",").map(v => parseFloat(v)).filter(v => !isNaN(v))
+
+                // For use in adjusting editor range
+                const maxEnergyVal = energyData.reduce((p,c)=>Math.max(p, c), 0)
+                const minEnergyVal = energyData.reduce((p,c)=>Math.min(p, c), 100)
+
+                if (minEnergyVal<window.sequenceEditor.default_MIN_ENERGY) {
+                    window.sequenceEditor.MIN_ENERGY = minEnergyVal
+                } else {
+                    window.sequenceEditor.MIN_ENERGY = window.sequenceEditor.default_MIN_ENERGY
+                }
+                if (maxEnergyVal>window.sequenceEditor.default_MAX_ENERGY) {
+                    window.sequenceEditor.MAX_ENERGY = maxEnergyVal
+                } else {
+                    window.sequenceEditor.MAX_ENERGY = window.sequenceEditor.default_MAX_ENERGY
+                }
+
             } else {
                 energyData = []
             }
@@ -1686,7 +1711,7 @@ window.setupModal(embeddingsIcon, embeddingsContainer, () => {
 
 // Arpabet
 // =======
-window.setupModal(arpabetIcon, arpabetContainer)
+window.setupModal(arpabetIcon, arpabetContainer, () => setTimeout(()=> window.refreshDictionariesList(), 100))
 
 
 // Plugins

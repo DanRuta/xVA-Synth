@@ -39,10 +39,13 @@ class Editor {
         this.MAX_LETTER_LENGTH = 100
         this.SPACE_BETWEEN_LETTERS = 5
 
+        this.default_pitchSliderRange = 4
         this.pitchSliderRange = 4
 
-        this.MIN_ENERGY = 3.5
-        this.MAX_ENERGY = 4.3
+        this.default_MIN_ENERGY = 3.45
+        this.MIN_ENERGY = 3.45
+        this.default_MAX_ENERGY = 4.35
+        this.MAX_ENERGY = 4.35
         this.ENERGY_GRABBER_RADIUS = 8
 
         this.multiLetterPitchDelta = undefined
