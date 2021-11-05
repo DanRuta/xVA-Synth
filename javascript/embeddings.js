@@ -726,6 +726,10 @@ window.computeEmbsAndDimReduction = (includeAllVoices=false) => {
         })
     }
 
+    if (mappings.length<=2) {
+        return window.errorModal(window.i18n.EMBEDDINGS_NEED_AT_LEAST_3)
+    }
+
 
     window.spinnerModal(window.i18n.VEMB_RECOMPUTING)
 
