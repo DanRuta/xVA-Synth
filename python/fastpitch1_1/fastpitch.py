@@ -446,6 +446,7 @@ class FastPitch(nn.Module):
                 }
                 plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["pre_energy"], event="pre_energy synth-line", data=plugin_data)
 
+                pitch_pred = torch.tensor(plugin_data["pitch"]).unsqueeze(1).to(self.device)
                 energy_pred = torch.tensor(plugin_data["energy"]).to(self.device)
 
             # Apply the energy

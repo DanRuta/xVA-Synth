@@ -60,10 +60,13 @@ class PluginManager(object):
             active_plugins.append(["custom-event", None])
 
         for key in self.plugins.keys():
-            for trigger_type in ["pre", "mid", "post"]:
-                if trigger_type in self.plugins[key]:
-                    for plugin in self.plugins[key][trigger_type]:
-                        active_plugins.append([key, trigger_type])
+            if key=="custom-event":
+                continue
+            plugin_triggers = list(self.plugins[key].keys())
+
+            for trigger_type in plugin_triggers:
+                for plugin in self.plugins[key][trigger_type]:
+                    active_plugins.append([key, trigger_type])
         return len(active_plugins)
 
 
@@ -112,7 +115,9 @@ class PluginManager(object):
                             if key=="custom-event":
                                 self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", "custom-event"], [])
                             else:
-                                for trigger_type in ["pre", "mid", "post"]:
+                                plugin_triggers = list(self.plugins[key].keys())
+
+                                for trigger_type in plugin_triggers:
                                     self.load_module_function(plugin_json, plugin_id, ["back-end-hooks", key, trigger_type], [])
 
                         self.enabledPlugins.add(plugin_id)
