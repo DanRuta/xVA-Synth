@@ -190,9 +190,6 @@ class TextProcessing(object):
         text = self.capitalize_repetitions(text)
 
         text_encoded = self.text_to_sequence(text)
-        # print("[text_processing] text_clean", text_clean)
-        # print("[text_processing] text_encoded", text_encoded)
-        # print("[text_processing] sequence_to_text", self.sequence_to_text(text_encoded))
 
         if return_all:
             return text_encoded, text_clean, text_arpabet

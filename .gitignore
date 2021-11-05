@@ -2,6 +2,7 @@ xVAEnv
 xVAEnvCPU
 node_modules
 *.wav
+downloads/*
 output/*
 output/*.wav
 output/**/*.wav
