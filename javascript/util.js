@@ -133,6 +133,7 @@ window.closeModal = (container=undefined, notThisOne=undefined) => {
                     }
                 }
             })
+            // resolve()
         }, 200)
         try {
             activeModal.remove()
@@ -421,14 +422,20 @@ window.addEventListener("keydown", event => {
 window.setupModal = (openingButton, modalContainerElem, callback, exitCallback) => {
     if (openingButton) {
         openingButton.addEventListener("click", () => {
-            if (callback) {
-                callback()
-            }
             closeModal(undefined, modalContainerElem).then(() => {
                 modalContainerElem.style.opacity = 0
                 modalContainerElem.style.display = "flex"
-                requestAnimationFrame(() => requestAnimationFrame(() => modalContainerElem.style.opacity = 1))
-                requestAnimationFrame(() => requestAnimationFrame(() => chromeBar.style.opacity = 1))
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    modalContainerElem.style.opacity = 1
+                    chromeBar.style.opacity = 1
+                    requestAnimationFrame(() => {
+                        setTimeout(() => {
+                            if (callback) {
+                                callback()
+                            }
+                        }, 250)
+                    })
+                }))
             })
         })
     }

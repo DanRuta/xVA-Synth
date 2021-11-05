@@ -1711,7 +1711,7 @@ window.setupModal(embeddingsIcon, embeddingsContainer, () => {
 
 // Arpabet
 // =======
-window.setupModal(arpabetIcon, arpabetContainer, () => setTimeout(()=> window.refreshDictionariesList(), 100))
+window.setupModal(arpabetIcon, arpabetContainer, () => setTimeout(()=> !window.arpabetMenuState.hasInitialised && window.refreshDictionariesList(), 100))
 
 
 // Plugins

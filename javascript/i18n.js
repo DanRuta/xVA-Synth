@@ -180,7 +180,7 @@ window.i18n.setEnglish = () => {
     window.i18n.S2S_SELECTVOICE = "Select Speech-to-Speech voice"
     window.i18n.S2S_RECORD_NOTE = "You can record a few seconds of silence to capture background noise to remove from your future recordings."
     window.i18n.S2S_RECORD_NOISE = "Record noise"
-    window.i18n.S2S_INSTRUCTIONS = "Pick from the available FastPitch 1.1 models which voice sounds most like yours. If you have a model trained for your own voice, make sure you use that one. You can record a short sample here, for comparison. For this to work well, your voice/microphone/volume should sound as similar as possible to the audio of the voice you select."
+    window.i18n.S2S_INSTRUCTIONS = "Pick from the available FastPitch 1.1 models which voice sounds most like yours. If you have a model trained for your own voice, make sure you use that one. You can record a short sample here, for comparison (not used for s2s). For this to work well, your voice/microphone/volume should sound as similar as possible to the audio of the voice you select."
     window.i18n.S2S_RECORD_SAMPLE = "Record sample"
     window.i18n.FEMALE = "Female"
     window.i18n.MALE = "Male"
@@ -464,6 +464,7 @@ window.i18n.setEnglish = () => {
     window.i18n.ENABLE_ALL = "Enable All"
     window.i18n.DISABLE_ALL = "Disable All"
     window.i18n.PREV = "Prev"
+    window.i18n.LOADING_DICTIONARIES = "Loading ARPAbet dictionaries..."
 
     window.i18n.ALL = "All"
     window.i18n.MOD_NAME = "Mod name"
@@ -485,6 +486,7 @@ window.i18n.setEnglish = () => {
     window.i18n.WORKSHOP_GAMES_NOT_RECOGNISED = "The following workshop games were not recognised. Do you have the asset file installed?<i>_1</i>"
 
     window.i18n.YOU_MUST_BE_LOGGED_IN = "You must be logged in to check what voices there are available on the nexus."
+
 
 
     // Useful during developing, to see if there are any strings left un-i18n-ed

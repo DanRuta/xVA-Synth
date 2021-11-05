@@ -6,7 +6,8 @@ window.arpabetMenuState = {
     paginationIndex: 0,
     totalPages: 0,
     clickedRecord: undefined,
-    skipRefresh: false
+    skipRefresh: false,
+    hasInitialised: false
 }
 
 // window.ARPAbetSymbols = ["AA", "AE", "AH", "AO", "AW", "AX", "AXR", "AY", "B", "CH", "D", "DH", "EH", "EL", "EM", "EN", "ER", "EY", "F", "G", "HH", "IH", "IX", "IY", "JH", "K", "L", "M", "N", "NG", "OW", "P", "R", "S", "SH", "T", "TH", "UH", "UW", "UX", "V", "W", "WH", "Y", "Z", "ZH"]
@@ -23,6 +24,9 @@ window.ARPAbetSymbols = [
 ]
 
 window.refreshDictionariesList = () => {
+    spinnerModal(window.i18n.LOADING_DICTIONARIES)
+
+    window.arpabetMenuState.hasInitialised = true
     return new Promise(resolve => {
         if (window.arpabetMenuState.skipRefresh) {
             resolve()
@@ -32,24 +36,45 @@ window.refreshDictionariesList = () => {
         arpabet_dicts_list.innerHTML = ""
 
         const jsonFiles = fs.readdirSync(`${window.path}/arpabet`)
-        jsonFiles.forEach(fname => {
 
+
+        const readFile = (fileCounter) => {
+
+            const fname = jsonFiles[fileCounter]
+            if (!fname.includes(".json")) {
+                if ((fileCounter+1)<jsonFiles.length) {
+                    readFile(fileCounter+1)
+                } else {
+                    window.arpabetRunSearch()
+                    closeModal(undefined, arpabetContainer)
+                    resolve()
+                }
+                return
+            }
             const dictId = fname.replace(".json", "")
 
-            const jsonData = JSON.parse(fs.readFileSync(`${window.path}/arpabet/${fname}`, "utf8"))
+            fs.readFile(`${window.path}/arpabet/${fname}`, "utf8", (err, data) => {
+                const jsonData = JSON.parse(data)
 
-            const dictButton = createElem("button", jsonData.title)
-            dictButton.title = jsonData.description
-            dictButton.style.background = window.currentGame ? `#${window.currentGame.themeColourPrimary}` : "#aaa"
-            arpabet_dicts_list.appendChild(dictButton)
+                const dictButton = createElem("button", jsonData.title)
+                dictButton.title = jsonData.description
+                dictButton.style.background = window.currentGame ? `#${window.currentGame.themeColourPrimary}` : "#aaa"
+                arpabet_dicts_list.appendChild(dictButton)
 
-            window.arpabetMenuState.dictionaries[dictId] = jsonData
+                window.arpabetMenuState.dictionaries[dictId] = jsonData
 
-            dictButton.addEventListener("click", ()=>handleDictClick(dictId))
+                dictButton.addEventListener("click", ()=>handleDictClick(dictId))
 
-        })
-
-        window.arpabetRunSearch()
+                if ((fileCounter+1)<jsonFiles.length) {
+                    readFile(fileCounter+1)
+                } else {
+                    window.arpabetRunSearch()
+                    closeModal(undefined, arpabetContainer)
+                    resolve()
+                }
+            })
+        }
+        readFile(0)
     })
 }
 
@@ -291,6 +316,4 @@ arpabet_search_only_enabled.addEventListener("click", () => window.arpabetRunSea
 
 
 
-
 fs.watch(`${window.path}/arpabet`, {recursive: false, persistent: true}, (eventType, filename) => {refreshDictionariesList()})
-refreshDictionariesList()
