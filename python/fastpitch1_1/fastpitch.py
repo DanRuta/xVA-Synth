@@ -571,7 +571,11 @@ class FastPitch(nn.Module):
         energy = average_pitch(energy_dense.unsqueeze(0).unsqueeze(0), attn_hard_dur)
         energy = torch.log(1.0 + energy)
         energy = torch.clamp(energy, min=3.6, max=4.3)
-        energy_final = list(energy.squeeze().cpu().detach().numpy())
+        energy_final = []
+        try:
+            energy_final = list(energy.squeeze().cpu().detach().numpy())
+        except:
+            logger.info(traceback.format_exc())
         # ============
 
         pitch_final = list(pitch_tgt.squeeze().cpu().detach().numpy())
@@ -599,8 +603,8 @@ def normalize_pitch_vectors(logger, pitch_vecs):
     return pitch_vecs
 def normalize_pitch(pitch, mean, std):
     zeros = (pitch == 0.0)
-    pitch -= mean[:, None]
-    pitch /= std[:, None]
+    pitch -= mean[:, None].to(pitch.device)
+    pitch /= std[:, None].to(pitch.device)
     pitch[zeros] = 0.0
     return pitch
 def estimate_pitch(wav, mel_len, method='pyin', normalize_mean=None, normalize_std=None, n_formants=1):
