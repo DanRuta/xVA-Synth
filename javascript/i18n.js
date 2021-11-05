@@ -487,6 +487,7 @@ window.i18n.setEnglish = () => {
     window.i18n.WORKSHOP_GAMES_NOT_RECOGNISED = "The following workshop games were not recognised. Do you have the asset file installed?<i>_1</i>"
 
     window.i18n.YOU_MUST_BE_LOGGED_IN = "You must be logged in to check what voices there are available on the nexus."
+    window.i18n.JOIN_DISCORD = "Join xVASynth server"
 
 
 
@@ -822,6 +823,8 @@ window.i18n.updateUI = () => {
     i18n_s2s_female.innerHTML = window.i18n.FEMALE
     i18n_s2s_male.innerHTML = window.i18n.MALE
     i18n_s2s_other.innerHTML = window.i18n.S2S_OTHER
+
+    openDiscord.innerHTML = window.i18n.JOIN_DISCORD
 }
 
 

@@ -537,13 +537,10 @@ initMenuSetting(batch_batchSizeInput, "batch_batchSize", "text", undefined, pars
 initMenuSetting(setting_batch_delimiter, "batch_delimiter")
 initMenuSetting(setting_batch_paginationSize, "batch_paginationSize", "number", undefined, parseInt)
 
-
 initMenuSetting(setting_s2s_autogenerate, "s2s_autogenerate", "checkbox")
 // initMenuSetting(setting_s2s_prePitchShift, "s2s_prePitchShift", "checkbox")
 initMenuSetting(setting_s2s_removeNoise, "s2s_removeNoise", "checkbox")
 initMenuSetting(setting_s2s_noiseRemStrength, "s2s_noiseRemStrength", "number", undefined, parseFloat)
-
-
 
 initMenuSetting(setting_256waveglow_path, "waveglow_path", "text")
 initFilePickerButton(setting_waveglowPathButton, setting_256waveglow_path, "waveglow_path", ["openFile"], [{name: "Pytorch checkpoint", extensions: ["pt"]}])
@@ -556,7 +553,6 @@ initFilePickerButton(setting_outPathButton, setting_out_path_input, ()=>`outpath
         window.currentModelButton.click()
     }
 })
-
 initMenuSetting(setting_arpabet_paginationSize, "arpabet_paginationSize", "number", undefined, parseInt)
 
 
@@ -570,6 +566,13 @@ setting_audio_pad_end.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_bitdepth.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_amplitude.disabled = !window.userSettings.audio.ffmpeg
 setting_editor_audio_amplitude.disabled = !window.userSettings.audio.ffmpeg
+
+
+openDiscord.addEventListener("click", () => {
+    shell.openExternal("https://discord.gg/nv7c6E2TzV")
+})
+
+
 
 // Output path
 fs.readdir(`${window.path}/models`, (err, gameDirs) => {
