@@ -1517,6 +1517,7 @@ a {
 }
 #arpabet_dicts_list {
     height: 100%;
+    overflow-y: auto;
     background: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.05) 35px, rgba(255,255,255,.05) 70px), linear-gradient(0deg, #444 0, rgba(0,0,0,0)), gray;
 }
 #arpabet_dicts_list > button {

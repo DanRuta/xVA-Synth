@@ -7,7 +7,8 @@ window.arpabetMenuState = {
     totalPages: 0,
     clickedRecord: undefined,
     skipRefresh: false,
-    hasInitialised: false
+    hasInitialised: false,
+    isRefreshing: false
 }
 
 // window.ARPAbetSymbols = ["AA", "AE", "AH", "AO", "AW", "AX", "AXR", "AY", "B", "CH", "D", "DH", "EH", "EL", "EM", "EN", "ER", "EY", "F", "G", "HH", "IH", "IX", "IY", "JH", "K", "L", "M", "N", "NG", "OW", "P", "R", "S", "SH", "T", "TH", "UH", "UW", "UX", "V", "W", "WH", "Y", "Z", "ZH"]
@@ -27,6 +28,11 @@ window.refreshDictionariesList = () => {
     spinnerModal(window.i18n.LOADING_DICTIONARIES)
 
     window.arpabetMenuState.hasInitialised = true
+    if (window.arpabetMenuState.isRefreshing) {
+        return
+    }
+    window.arpabetMenuState.isRefreshing = true
+
     return new Promise(resolve => {
         if (window.arpabetMenuState.skipRefresh) {
             resolve()
@@ -46,6 +52,7 @@ window.refreshDictionariesList = () => {
                     readFile(fileCounter+1)
                 } else {
                     window.arpabetRunSearch()
+                    window.arpabetMenuState.isRefreshing = false
                     closeModal(undefined, arpabetContainer)
                     resolve()
                 }
@@ -69,6 +76,7 @@ window.refreshDictionariesList = () => {
                     readFile(fileCounter+1)
                 } else {
                     window.arpabetRunSearch()
+                    window.arpabetMenuState.isRefreshing = false
                     closeModal(undefined, arpabetContainer)
                     resolve()
                 }
@@ -126,10 +134,12 @@ window.refreshDictWordList = () => {
         deleteButton.addEventListener("click", () => {
             window.confirmModal(window.i18n.ARPABET_CONFIRM_DELETE_WORD.replace("_1", word)).then(response => {
                 if (response) {
-                    delete window.arpabetMenuState.dictionaries[dictId].data[word]
-                    delete window.arpabetMenuState.dictionaries[dictId].filteredData[word]
-                    window.saveARPAbetDict(dictId)
-                    window.refreshDictWordList()
+                    setTimeout(() => {
+                        delete window.arpabetMenuState.dictionaries[dictId].data[word]
+                        delete window.arpabetMenuState.dictionaries[dictId].filteredData[word]
+                        window.saveARPAbetDict(dictId)
+                        window.refreshDictWordList()
+                    }, 210)
                 }
             })
         })
@@ -286,13 +296,15 @@ arpabet_enableall_button.addEventListener("click", () => {
     const dictName = window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].title
     window.confirmModal(window.i18n.ARPABET_CONFIRM_ENABLE_ALL.replace("_1", dictName)).then(response => {
         if (response) {
-            const wordKeys = Object.keys(window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data)
-            wordKeys.forEach(word => {
-                window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data[word].enabled = true
-            })
+            setTimeout(() => {
+                const wordKeys = Object.keys(window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data)
+                wordKeys.forEach(word => {
+                    window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data[word].enabled = true
+                })
 
-            window.saveARPAbetDict(window.arpabetMenuState.currentDict)
-            window.arpabetRunSearch()
+                window.saveARPAbetDict(window.arpabetMenuState.currentDict)
+                window.arpabetRunSearch()
+            }, 210)
         }
     })
 })
@@ -302,13 +314,15 @@ arpabet_disableall_button.addEventListener("click", () => {
     const dictName = window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].title
     window.confirmModal(window.i18n.ARPABET_CONFIRM_DISABLE_ALL.replace("_1", dictName)).then(response => {
         if (response) {
-            const wordKeys = Object.keys(window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data)
-            wordKeys.forEach(word => {
-                window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data[word].enabled = false
-            })
+            setTimeout(() => {
+                const wordKeys = Object.keys(window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data)
+                wordKeys.forEach(word => {
+                    window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data[word].enabled = false
+                })
 
-            window.saveARPAbetDict(window.arpabetMenuState.currentDict)
-            window.arpabetRunSearch()
+                window.saveARPAbetDict(window.arpabetMenuState.currentDict)
+                window.arpabetRunSearch()
+            }, 210)
         }
     })
 })
