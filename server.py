@@ -256,11 +256,12 @@ if __name__ == '__main__':
                     linesBatch = post_data["linesBatch"]
                     speaker_i = post_data["speaker_i"]
                     vocoder = post_data["vocoder"]
+                    outputJSON = post_data["outputJSON"]
                     post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])
 
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["batch-synth-line"]["pre"], event="pre batch-synth-line", data=post_data)
                     try:
-                        req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", "")).infer_batch(plugin_manager, linesBatch, vocoder=vocoder, speaker_i=speaker_i)
+                        req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", "")).infer_batch(plugin_manager, linesBatch, outputJSON=outputJSON, vocoder=vocoder, speaker_i=speaker_i)
                     except RuntimeError as e:
                         if "CUDA out of memory" in str(e):
                             req_response = "CUDA OOM"

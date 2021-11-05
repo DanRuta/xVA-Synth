@@ -954,6 +954,7 @@ window.batchKickOffGeneration = () => {
             batchSize: window.userSettings.batch_batchSize,
             defaultOutFolder: window.userSettings.batchOutFolder,
             pluginsContext: JSON.stringify(window.pluginsContext),
+            outputJSON: window.userSettings.batch_json,
             speaker_i, vocoder, linesBatch
         }
         doFetch(`http://localhost:8008/synthesize_batch`, {

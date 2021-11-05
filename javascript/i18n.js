@@ -61,6 +61,7 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_FFMPEG_PADEND = "Silence padding end (ms)"
     window.i18n.SETTINGS_FFMPEG_BITDEPTH = "Audio bit depth"
     window.i18n.SETTINGS_FFMPEG_AMPLITUDE = "Amplitude multiplier"
+    window.i18n.SETTINGS_BATCH_JSON = "Output .json editor data for batch lines"
     window.i18n.SETTINGS_BATCH_FASTMODE = "Use fast mode for Batch synth"
     window.i18n.SETTINGS_BATCH_USEMULTIP = "Use multi-processing for batch mode ffmpeg output"
     window.i18n.SETTINGS_BATCH_MULTIPCOUNT = "Number of processes (0 for cpu threads count -1)"
@@ -698,6 +699,7 @@ window.i18n.updateUI = () => {
     i18n_setting_ffmpeg_padend.innerHTML = window.i18n.SETTINGS_FFMPEG_PADEND
     i18n_setting_ffmpeg_bitdepth.innerHTML = window.i18n.SETTINGS_FFMPEG_BITDEPTH
     i18n_setting_ffmpeg_amplitude.innerHTML = window.i18n.SETTINGS_FFMPEG_AMPLITUDE
+    i18n_setting_batch_json.innerHTML = window.i18n.SETTINGS_BATCH_JSON
     i18n_setting_batch_fastmode.innerHTML = window.i18n.SETTINGS_BATCH_FASTMODE
     i18n_setting_batch_multip.innerHTML = window.i18n.SETTINGS_BATCH_USEMULTIP
     i18n_setting_batch_multip_count.innerHTML = window.i18n.SETTINGS_BATCH_MULTIPCOUNT

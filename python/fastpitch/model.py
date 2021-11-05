@@ -60,7 +60,7 @@ class FastPitch(object):
         self.model.eval()
 
 
-    def infer_batch(self, plugin_manager, linesBatch, vocoder, speaker_i, old_sequence=None):
+    def infer_batch(self, plugin_manager, linesBatch, outputJSON, vocoder, speaker_i, old_sequence=None):
         print(f'Inferring batch of {len(linesBatch)} lines')
 
         sigma_infer = 0.9
@@ -110,6 +110,27 @@ class FastPitch(object):
                     audio = audio.astype('int16')
                     output = linesBatch[i][4]
                     write(output, sampling_rate, audio)
+
+            if outputJSON:
+                for ri, record in enumerate(linesBatch):
+                    # linesBatch: sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder
+                    output_fname = linesBatch[ri][5].replace(".wav", ".json")
+
+                    with open(output_fname, "w+") as f:
+                        data = {}
+                        data["inputSequence"] = str(linesBatch[ri][0])
+                        data["pacing"] = float(linesBatch[ri][3])
+                        data["letters"] = [char.replace("{", "").replace("}", "") for char in list(cleaned_text_sequences[ri].split("|"))]
+                        data["currentVoice"] = self.ckpt_path.split("/")[-1].replace(".pt", "")
+                        data["resetEnergy"] = []
+                        data["resetPitch"] = [float(val) for val in list(pitch_pred[ri].cpu().detach().numpy())]
+                        data["resetDurs"] = [float(val) for val in list(dur_pred[ri].cpu().detach().numpy())]
+                        data["ampFlatCounter"] = 0
+                        data["pitchNew"] = data["resetPitch"]
+                        data["energyNew"] = data["resetEnergy"]
+                        data["dursNew"] = data["resetDurs"]
+
+                        f.write(json.dumps(data, indent=4))
 
             del mel, mel_lens
 

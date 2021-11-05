@@ -99,6 +99,9 @@ if (!Object.keys(window.userSettings).includes("batch_clearDirFirst")) { // For 
 if (!Object.keys(window.userSettings).includes("batch_fastMode")) { // For backwards compatibility
     window.userSettings.batch_fastMode = false
 }
+if (!Object.keys(window.userSettings).includes("batch_json")) { // For backwards compatibility
+    window.userSettings.batch_json = false
+}
 if (!Object.keys(window.userSettings).includes("batch_useMP")) { // For backwards compatibility
     window.userSettings.batch_useMP = false
 }
@@ -228,6 +231,7 @@ const updateUIWithSettings = () => {
     setting_s2s_removeNoise.checked = window.userSettings.s2s_removeNoise
     setting_s2s_noiseRemStrength.value = window.userSettings.s2s_noiseRemStrength
 
+    setting_batch_json.checked = window.userSettings.batch_json
     setting_batch_fastmode.checked = window.userSettings.batch_fastMode
     setting_batch_multip.checked = window.userSettings.batch_useMP
     setting_batch_multip_count.value = window.userSettings.batch_MPCount
@@ -521,6 +525,7 @@ initMenuSetting(setting_show_editor_ffmpegamplitude, "showEditorFFMPEGAmplitude"
     editor_amplitude_options.style.display = window.userSettings.showEditorFFMPEGAmplitude ? "flex" : "none"
 })
 
+initMenuSetting(setting_batch_json, "batch_json", "checkbox")
 initMenuSetting(setting_batch_fastmode, "batch_fastMode", "checkbox")
 initMenuSetting(setting_batch_multip, "batch_useMP", "checkbox")
 initMenuSetting(setting_batch_multip_count, "batch_MPCount", "number", undefined, parseInt)
