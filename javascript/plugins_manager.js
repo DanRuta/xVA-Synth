@@ -16,6 +16,7 @@ class PluginsManager {
             ticked: [],
             unticked: []
         }
+        this.teardownModules = {}
         this.resetModules()
 
 
@@ -66,7 +67,6 @@ class PluginsManager {
 
     resetModules () {
         this.setupModules = new Set()
-        this.teardownModules = {}
         this.pluginsModules = {
             "start": {
                 "pre": [],
@@ -118,7 +118,7 @@ class PluginsManager {
         window.userSettings.plugins.loadOrder.split(",").forEach(pluginId => {
             for (let i=0; i<plugins.length; i++) {
                 if (pluginId.replace("*", "")==plugins[i][0]) {
-                    plugins[i][2] = pluginId.includes("*")
+                    plugins[i][2] = pluginId.includes("*") && plugins[i][3] && plugins[i][4]
                     orderedPlugins.push(plugins[i])
                     plugins.splice(i,1)
                     break
