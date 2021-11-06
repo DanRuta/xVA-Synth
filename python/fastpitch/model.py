@@ -1,4 +1,5 @@
 import re
+import os
 import json
 import argparse
 
@@ -115,6 +116,9 @@ class FastPitch(object):
                 for ri, record in enumerate(linesBatch):
                     # linesBatch: sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder
                     output_fname = linesBatch[ri][5].replace(".wav", ".json")
+
+                    containing_folder = "/".join(output_fname.split("/")[:-1])
+                    os.makedirs(containing_folder, exist_ok=True)
 
                     with open(output_fname, "w+") as f:
                         data = {}
