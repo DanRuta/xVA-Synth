@@ -25,24 +25,25 @@ window.ARPAbetSymbols = [
 ]
 
 window.refreshDictionariesList = () => {
-    spinnerModal(window.i18n.LOADING_DICTIONARIES)
-
-    window.arpabetMenuState.hasInitialised = true
-    if (window.arpabetMenuState.isRefreshing) {
-        return
-    }
-    window.arpabetMenuState.isRefreshing = true
 
     return new Promise(resolve => {
+
+        window.arpabetMenuState.hasInitialised = true
+        if (window.arpabetMenuState.isRefreshing) {
+            resolve()
+            return
+        }
+        window.arpabetMenuState.isRefreshing = true
+
         if (window.arpabetMenuState.skipRefresh) {
             resolve()
             return
         }
+        spinnerModal(window.i18n.LOADING_DICTIONARIES)
         window.arpabetMenuState.dictionaries = {}
         arpabet_dicts_list.innerHTML = ""
 
-        const jsonFiles = fs.readdirSync(`${window.path}/arpabet`)
-
+        const jsonFiles = fs.readdirSync(`${window.path}/arpabet`).filter(fname => fname.includes(".json"))
 
         const readFile = (fileCounter) => {
 
@@ -82,7 +83,13 @@ window.refreshDictionariesList = () => {
                 }
             })
         }
-        readFile(0)
+        if (jsonFiles.length) {
+            readFile(0)
+        } else {
+            window.arpabetMenuState.isRefreshing = false
+            closeModal(undefined, arpabetContainer)
+            resolve()
+        }
     })
 }
 
