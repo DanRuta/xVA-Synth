@@ -925,6 +925,10 @@ decrease_btn.addEventListener("click", () => {
     kickOffAutoInferTimer()
 })
 
+pace_slid.addEventListener("input", () => {
+    paceNumbInput.value = pace_slid.value
+})
+
 pace_slid.addEventListener("change", () => {
     editorTooltip.style.display = "none"
     if (autoplay_ckbx.checked) {
