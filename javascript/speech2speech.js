@@ -123,6 +123,7 @@ window.useWavFileForspeech2speech = (fileName) => {
         method: "Post",
         body: JSON.stringify({
             input_path: fileName,
+            s2s_components: window.userSettings.s2s_components,
             text: sequence,
             doPitchShift: window.userSettings.s2s_prePitchShift,
             removeNoise: window.userSettings.s2s_removeNoise,
@@ -136,7 +137,10 @@ window.useWavFileForspeech2speech = (fileName) => {
         mic_progress_SVG.style.animation = "none"
         clearProgress()
 
-        if (res.includes("ERROR:APP_VERSION")) {
+        if (res.includes("Traceback")) {
+            window.errorModal(`<h3>${window.i18n.SOMETHING_WENT_WRONG}</h3>${res.replaceAll("\n", "<br>")}`)
+
+        } else if (res.includes("ERROR:APP_VERSION")) {
             const speech2speechModelVersion = "v"+res.split(",")[1]
             window.errorModal(`${window.i18n.ERR_XVASPEECH_MODEL_VERSION.replace("_1", speech2speechModelVersion)} ${window.appVersion}`)
         } else {
@@ -434,9 +438,6 @@ s2sVLRecordSampleBtn.addEventListener("click", () => {
     }, 1000)
     s2sVLSampleRecordTimer.innerHTML = `5s`
 })
-
-
-
 
 
 

@@ -908,6 +908,43 @@
 
                 <hr>
 
+                <div id="i18n_s2s_components">Select which aspects to clone from the reference voice, and with how much strength</div>
+
+                <div id="s2sSliders" class="flexTable" style="width: 50%;height: 300px;margin-left: -100px;">
+                    <div>
+                        <div id="i18n_s2s_components_pitch">Pitch</div>
+                        <div>
+                            <div>
+                                <input id="s2s_components_pitch_enabled" type="checkbox">
+                                <input id="s2s_components_pitch_range" type="range" step="0.05" min="0" max="1">
+                                <input id="s2s_components_pitch_strength" type="number" step="0.05" min="0" max="1">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div id="i18n_s2s_components_duration">Duration</div>
+                        <div>
+                            <div>
+                                <input id="s2s_components_durations_enabled" type="checkbox">
+                                <input id="s2s_components_durations_range" type="range" step="0.05" min="0" max="1">
+                                <input id="s2s_components_durations_strength" type="number" step="0.05" min="0" max="1">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div id="i18n_s2s_components_energy">Energy</div>
+                        <div>
+                            <div>
+                                <input id="s2s_components_energy_enabled" type="checkbox">
+                                <input id="s2s_components_energy_range" type="range" step="0.05" min="0" max="1">
+                                <input id="s2s_components_energy_strength" type="number" step="0.05" min="0" max="1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
                 <div id="i18n_s2s_instructions">Pick from the available xVASpeech models which voice sounds most like yours. If you have an xVASpeech model trained for your own voice, make sure you use that one. You can record a short sample here, for comparison. Ensure the volume is also similar. For this to work well, your voice/microphone should sound as similar as possible to the audio of the voice you select.</div>
 
                 <div id="s2sVLSampleRecordContainer">

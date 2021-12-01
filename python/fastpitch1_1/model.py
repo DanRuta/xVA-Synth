@@ -286,7 +286,7 @@ class FastPitch1_1(object):
         self.model.device = device
 
 
-    def run_speech_to_speech (self, audiopath, text):
-        return self.model.run_speech_to_speech(self.device, self.logger, audiopath, text, text_to_sequence, sequence_to_text, self)
+    def run_speech_to_speech (self, audiopath, s2s_components, text):
+        return self.model.run_speech_to_speech(self.device, self.logger, s2s_components, audiopath, text, text_to_sequence, sequence_to_text, self)
 
 

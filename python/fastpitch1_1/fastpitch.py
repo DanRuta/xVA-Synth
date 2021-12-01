@@ -168,6 +168,7 @@ class FastPitch(nn.Module):
         # else:
         #     self.speaker_emb = None
         self.speaker_emb = nn.Linear(256, symbols_embedding_dim)
+        self.speaker_emb = None
         self.speaker_emb_weight = speaker_emb_weight
 
         self.duration_predictor = TemporalPredictor(
@@ -358,24 +359,21 @@ class FastPitch(nn.Module):
             new_sequence_np.reverse()
 
         # Calculate its own pitch, duration, and energy vals if these were not already provided
-        if (dur_pred_existing is None or pitch_pred_existing is None) or old_sequence is not None:
-
-            # Embedded for predictors
-            pred_enc_out, pred_enc_mask = enc_out, enc_mask
+        if (dur_pred_existing is None or dur_pred_existing.shape[1]==0) or old_sequence is not None:
             # Predict durations
-            log_dur_pred = self.duration_predictor(pred_enc_out, pred_enc_mask).squeeze(-1)
+            log_dur_pred = self.duration_predictor(enc_out, enc_mask).squeeze(-1)
             dur_pred = torch.clamp(torch.exp(log_dur_pred) - 1, 0, max_duration)
-
             dur_pred = torch.clamp(dur_pred, 0.25)
-
-            # Pitch over chars
-            pitch_pred = self.pitch_predictor(enc_out, enc_mask).permute(0, 2, 1)
-            # pitch_pred = torch.clamp(pitch_pred, min=-3, max=3)
-
         else:
             dur_pred = dur_pred_existing
+
+        if (pitch_pred_existing is None or pitch_pred_existing.shape[1]==0) or old_sequence is not None:
+            # Pitch over chars
+            pitch_pred = self.pitch_predictor(enc_out, enc_mask).permute(0, 2, 1)
+        else:
             pitch_pred = pitch_pred_existing.unsqueeze(1)
-            energy_pred = energy_pred_existing
+
+        energy_pred = energy_pred_existing
 
         # Splice/replace pitch/duration values from the old input if simulating only a partial re-generation
         if start_index is not None or end_index is not None:
@@ -500,7 +498,7 @@ class FastPitch(nn.Module):
             return self.infer_using_vals(logger, plugin_manager, cleaned_text, pace, enc_out, max_duration, enc_mask, None, None, None, None, None)
 
 
-    def run_speech_to_speech (self, device, logger, audiopath, in_text, text_to_sequence, sequence_to_text, model_instance):
+    def run_speech_to_speech (self, device, logger, s2s_components, audiopath, in_text, text_to_sequence, sequence_to_text, model_instance):
 
         self.device = device
         max_wav_value = 32768
@@ -529,7 +527,10 @@ class FastPitch(nn.Module):
         attn_prior = beta_binomial_prior_distribution(text.shape[1], mel.shape[1]).unsqueeze(0)
         attn_prior = attn_prior.to(device)
 
+
         inputs = text
+        # Input FFT
+        enc_out, enc_mask = self.encoder(inputs)
         mel_tgt = mel.unsqueeze(0)
         text_emb = self.encoder.word_emb(inputs).to(device)
         input_lens = torch.tensor([len(text[0])]).to(device)
@@ -542,7 +543,17 @@ class FastPitch(nn.Module):
         attn_hard_dur = attn_hard.sum(2)[:, 0, :]
         durs = attn_hard_dur
         durs = torch.clamp(durs, 0.25)
-        durs = durs.cpu().detach().numpy()
+        durs = durs.cpu().detach().numpy()[0]
+
+        log_dur_pred = self.duration_predictor(enc_out, enc_mask).squeeze(-1)
+        max_duration = 75
+        dur_pred = torch.clamp(torch.exp(log_dur_pred) - 1, 0, max_duration).cpu().detach().numpy()[0]
+
+        # Apply configured interpolation
+        if s2s_components["durations"]["enabled"]:
+            durations_final = (durs*s2s_components["durations"]["strength"] + dur_pred*(1-s2s_components["durations"]["strength"]))
+        else:
+            durations_final = dur_pred
 
 
         mean = None
@@ -557,13 +568,17 @@ class FastPitch(nn.Module):
         pitch_tgt = average_pitch(pitch.unsqueeze(0), attn_hard_dur)
 
 
-        # Input FFT
-        enc_out, enc_mask = self.encoder(inputs)
         # Predict pitch
         pitch_pred = self.pitch_predictor(enc_out, enc_mask).permute(0, 2, 1)
         pitch_pred = pitch_pred.squeeze().cpu().detach().numpy()
 
         pitch_tgt = (pitch_tgt + pitch_pred) / 2
+
+        # Apply configured interpolation
+        if s2s_components["pitch"]["enabled"]:
+            pitch_final = (pitch_tgt*s2s_components["pitch"]["strength"] + pitch_pred*(1-s2s_components["pitch"]["strength"]))
+        else:
+            pitch_final = pitch_pred
 
 
         # Energy stuff
@@ -573,19 +588,30 @@ class FastPitch(nn.Module):
         energy = average_pitch(energy_dense.unsqueeze(0).unsqueeze(0), attn_hard_dur)
         energy = torch.log(1.0 + energy)
         energy = torch.clamp(energy, min=3.6, max=4.3)
-        energy_final = []
+        energy_tgt = []
         try:
-            energy_final = list(energy.squeeze().cpu().detach().numpy())
+            energy_tgt = energy.squeeze().cpu().detach().numpy()
         except:
             logger.info(traceback.format_exc())
+
+
+        pitch_pred = torch.tensor(pitch_final).to(self.device)#.unsqueeze(0).unsqueeze(0)
+        pitch_emb = self.pitch_emb(pitch_pred).transpose(1, 2)
+        energy_pred = self.energy_predictor(enc_out + pitch_emb, enc_mask).squeeze(-1).squeeze().cpu().detach().numpy()
+
+        # Apply configured interpolation
+        if s2s_components["energy"]["enabled"]:
+            energy_final = (energy_tgt*s2s_components["energy"]["strength"] + energy_pred*(1-s2s_components["energy"]["strength"]))
+        else:
+            energy_final = energy_pred
         # ============
 
-        pitch_final = list(pitch_tgt.squeeze().cpu().detach().numpy())
+        pitch_final = list(pitch_final.squeeze().cpu().detach().numpy())
         # pitch_final = normalize_pitch_vectors(logger, pitch_final)
         pitch_final = [max(-3, min(v, 3)) for v in pitch_final]
-        durs_final = list(durs[0])
+        durs_final = list(durations_final)
 
-        return [cleaned_text, pitch_final, durs_final, energy_final]
+        return [cleaned_text, pitch_final, durs_final, list(energy_final)]
 
 
 

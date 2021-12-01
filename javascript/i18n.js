@@ -14,6 +14,7 @@ window.i18n.setEnglish = () => {
     window.i18n.PITCH_AND_ENERGY = "Pitch+Energy"
     window.i18n.PITCH = "Pitch"
     window.i18n.ENERGY = "Energy"
+    window.i18n.DURATIONS = "Durations"
 
     window.i18n.VIEW_IS = "View:"
     window.i18n.ENERGY_IS = "Energy:"
@@ -187,6 +188,7 @@ window.i18n.setEnglish = () => {
     window.i18n.FEMALE = "Female"
     window.i18n.MALE = "Male"
     window.i18n.S2S_OTHER = "Other"
+    window.i18n.S2S_COMPONENTS = "Select which aspects to clone from the reference voice, and with how much strength"
 
 
 
@@ -834,6 +836,10 @@ window.i18n.updateUI = () => {
 
     openDiscord.innerHTML = window.i18n.JOIN_DISCORD
 
+    i18n_s2s_components.innerHTML = window.i18n.S2S_COMPONENTS
+    i18n_s2s_components_pitch.innerHTML = window.i18n.PITCH
+    i18n_s2s_components_duration.innerHTML = window.i18n.DURATIONS
+    i18n_s2s_components_energy.innerHTML = window.i18n.ENERGY
 
     arpabetIcon.title = "ARPAbet"
     embeddingsIcon.title = "Embeddings visualiser"
@@ -843,6 +849,7 @@ window.i18n.updateUI = () => {
     patreonIcon.title = "Patreon"
     infoIcon.title = "Info"
     settingsCog.title = "Settings"
+
 }
 
 

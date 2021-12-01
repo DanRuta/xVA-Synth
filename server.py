@@ -277,6 +277,7 @@ if __name__ == '__main__':
                     logger.info(post_data)
                     input_path = post_data["input_path"]
                     modelPath = post_data["modelPath"]
+                    s2s_components = post_data["s2s_components"]
                     n_speakers = int(post_data["n_speakers"]) if "n_speakers" in post_data else 0
                     text = post_data["text"]
 
@@ -294,15 +295,20 @@ if __name__ == '__main__':
                     models_manager.init_model("s2s_fastpitch1_1")
                     models_manager.load_model("s2s_fastpitch1_1", modelPath, n_speakers=n_speakers)
                     models_manager.models_bank["s2s_fastpitch1_1"].init_arpabet_dicts()
-                    text, pitch, durs, energy = models_manager.models("s2s_fastpitch1_1").run_speech_to_speech(final_path, text=text)
+                    try:
+                        text, pitch, durs, energy = models_manager.models("s2s_fastpitch1_1").run_speech_to_speech(final_path, s2s_components=s2s_components, text=text)
 
-                    data_out = ""
-                    data_out += ",".join([str(v) for v in pitch])+"\n"
-                    data_out += ",".join([str(v) for v in durs])+"\n"
-                    data_out += ",".join([str(v) for v in energy])+"\n"
-                    data_out += f'{text.lower()}'
+                        data_out = ""
+                        data_out += ",".join([str(v) for v in pitch])+"\n"
+                        data_out += ",".join([str(v) for v in durs])+"\n"
+                        data_out += ",".join([str(v) for v in energy])+"\n"
+                        data_out += f'{text.lower()}'
+                        req_response = data_out
 
-                    req_response = data_out
+                    except RuntimeError:
+                        req_response = traceback.format_exc()
+                        logger.info(req_response)
+
 
 
                 if self.path == "/batchOutputAudio":

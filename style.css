@@ -928,6 +928,11 @@ a {
 #s2sVoiceList > div > audio:last-child {
     width: 200px;
 }
+#s2sSliders > div > div > div {
+    display: flex;
+    margin-left: 100px;
+    margin-bottom: 25px;
+}
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
