@@ -11,7 +11,9 @@ window.nexusState = {
     downloadQueue: [],
     installQueue: [],
     finished: 0,
-    repoLinks: []
+    repoLinks: [],
+    primaryColumnSort: "game",
+    columnSortModifier: -1
 }
 
 // TEMP, maybe move to utils
@@ -534,6 +536,53 @@ window.getLatestModelsList = async () => {
     }
 }
 
+const clearColumsFocus = () => {
+    nexusRecordsHeader.querySelectorAll("div").forEach(elem => elem.style.textDecoration = "none")
+}
+const setColumnSort = (elem, key) => {
+    clearColumsFocus()
+    elem.style.textDecoration = "underline"
+    if (window.nexusState.primaryColumnSort==key) {
+        window.nexusState.columnSortModifier = window.nexusState.columnSortModifier * -1
+    }
+    window.nexusState.primaryColumnSort = key
+    window.displayAllModels()
+}
+i18n_nexush_game.addEventListener("click", () => setColumnSort(i18n_nexush_game, "game"))
+i18n_nexush_name.addEventListener("click", () => setColumnSort(i18n_nexush_game, "name"))
+i18n_nexush_author.addEventListener("click", () => setColumnSort(i18n_nexush_author, "author"))
+i18n_nexush_version.addEventListener("click", () => setColumnSort(i18n_nexush_version, "version"))
+i18n_nexush_date.addEventListener("click", () => setColumnSort(i18n_nexush_date, "date"))
+i18n_nexush_type.addEventListener("click", () => setColumnSort(i18n_nexush_type, "type"))
+
+
+const runNestedSort = (modelsList, primKey) => {
+    // Perform the primary sorting
+    const primaryGroup = {}
+    let modelsOrder = []
+    modelsList.forEach(item => {
+        if (!Object.keys(primaryGroup).includes(item[primKey]||"")) {
+            modelsOrder.push(item[primKey]||"")
+            primaryGroup[item[primKey]||""] = []
+        }
+        primaryGroup[item[primKey]||""].push(item)
+    })
+
+    // Sort the primary key in the correct direction
+    modelsOrder = modelsOrder.sort((a,b) => a<b?window.nexusState.columnSortModifier:-window.nexusState.columnSortModifier)
+
+    // Sort the secondary criteria (the voice names) within the primary groups
+    modelsOrder.forEach(primaryKey => {
+        primaryGroup[primaryKey] = primaryGroup[primaryKey].sort((a,b) => (a.name||"").toLowerCase()<(b.name||"").toLowerCase()?window.nexusState.columnSortModifier:-window.nexusState.columnSortModifier)
+    })
+    // Collate everything back into the final order
+    const finalOrder = []
+    modelsOrder.forEach(primaryKey => {
+        primaryGroup[primaryKey].forEach(record => finalOrder.push(record))
+    })
+    return finalOrder
+}
+
 window.displayAllModels = (forceUpdate=false) => {
 
     if (!forceUpdate && window.nexusState.installQueue.length) {
@@ -560,7 +609,17 @@ window.displayAllModels = (forceUpdate=false) => {
 
     window.nexusState.filteredDownloadableModels = []
 
-    window.nexusModelsList.forEach(modelMeta => {
+
+    let sortedModelsList = []
+    // Allow sorting by another column. But should still sort based on voice name alphabetically, as a secondary criteria
+    // Primary sortable columns: Game, VoiceName, Author, Version, Date, Type
+    if (window.nexusState.primaryColumnSort=="name") {
+        sortedModelsList = window.nexusModelsList.sort((a,b) => (a.name||"").toLowerCase()<(b.name||"").toLowerCase()?window.nexusState.columnSortModifier:-window.nexusState.columnSortModifier)
+    } else {
+        sortedModelsList = runNestedSort(window.nexusModelsList, window.nexusState.primaryColumnSort)
+    }
+
+    sortedModelsList.forEach(modelMeta => {
         if (!enabledGames.includes(modelMeta.game)) {
             return
         }
