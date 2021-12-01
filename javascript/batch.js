@@ -259,7 +259,7 @@ window.uploadBatchCSVs = async (eType, event) => {
                                     } else {
                                         outPath = window.userSettings.batchOutFolder
                                     }
-                                    outPath = `${outPath}/${item.voice_id}_${item.vocoder}_${item.text.replace(/[\/\\:\*?<>"|]*/g, "").slice(0, 75).replace(/\.$/, "")}.${window.userSettings.audio.format}`
+                                    outPath = `${outPath}/${item.voice_id}_${item.vocoder}_${item.text.replace(/[\/\\:\*?<>"|]*/g, "").slice(0, window.userSettings.max_filename_chars-10).replace(/\.$/, "")}.${window.userSettings.audio.format}`
                                 }
 
                                 outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
@@ -301,7 +301,7 @@ window.uploadBatchCSVs = async (eType, event) => {
                         } else {
                             outPath = window.userSettings.batchOutFolder
                         }
-                        outPath = `${outPath}/${item.voice_id}_${item.vocoder}_${item.text.replace(/[\/\\:\*?<>"|]*/g, "").slice(0, 75).replace(/\.$/, "")}.${window.userSettings.audio.format}`
+                        outPath = `${outPath}/${item.voice_id}_${item.vocoder}_${item.text.replace(/[\/\\:\*?<>"|]*/g, "").slice(0, window.userSettings.max_filename_chars-10).replace(/\.$/, "")}.${window.userSettings.audio.format}`
                     }
 
                     outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
@@ -714,7 +714,8 @@ window.prepareLinesBatchForSynth = () => {
         const pitch = undefined // maybe later
         const duration = undefined // maybe later
         speaker_i = model.games[0].emb_i || 0
-        const pace = record[0].pacing
+        let pace = record[0].pacing
+        pace = Number.isNaN(pace) ? 1.0 : pace
 
         const tempFileNum = `${Math.random().toString().split(".")[1]}`
         const tempFileLocation = `${window.path}/output/temp-${tempFileNum}.wav`
@@ -726,7 +727,8 @@ window.prepareLinesBatchForSynth = () => {
             outPath = record[0].out_path
             outFolder = String(record[0].out_path).split("/").reverse().slice(1,10000).reverse().join("/")
         } else {
-            outPath = `${record[0].out_path}/${record[0].voice_id}_${record[0].vocoder}_${sequence.replace(/[\/\\:\*?<>"|]*/g, "")}.${window.userSettings.audio.format}`
+            const trimmedFileName = sequence.replace(/[\/\\:\*?<>"|]*/g, "").slice(0, window.userSettings.max_filename_chars-10).replace(/\.$/, "")
+            outPath = `${record[0].out_path}/${record[0].voice_id}_${record[0].vocoder}_${trimmedFileName}.${window.userSettings.audio.format}`
             outFolder = record[0].out_path
         }
         outFolder = outFolder.length ? outFolder : window.userSettings.batchOutFolder
@@ -966,7 +968,7 @@ window.batchKickOffGeneration = () => {
                 if (res=="CUDA OOM") {
                     window.errorModal(window.i18n.BATCH_ERR_CUDA_OOM)
                 } else {
-                    window.errorModal(res)
+                    window.errorModal(res.replace(/\n/g, "<br>"))
                 }
                 if (window.batch_state.state) {
                     batch_pauseBtn.click()

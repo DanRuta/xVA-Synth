@@ -87,6 +87,9 @@ if (!Object.keys(window.userSettings).includes("vocoder")) { // For backwards co
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("amplitude")) { // For backwards compatibility
     window.userSettings.audio.amplitude = 1
 }
+if (!Object.keys(window.userSettings).includes("max_filename_chars")) { // For backwards compatibility
+    window.userSettings.max_filename_chars = 70
+}
 if (!Object.keys(window.userSettings).includes("keepPaceOnNew")) { // For backwards compatibility
     window.userSettings.keepPaceOnNew = true
 }
@@ -252,6 +255,7 @@ const updateUIWithSettings = () => {
     setting_bigwaveglow_path.value = window.userSettings.bigwaveglow_path
 
     setting_arpabet_paginationSize.value = window.userSettings.arpabet_paginationSize
+    setting_max_filename_chars.value = window.userSettings.max_filename_chars
 
     const [height, width] = window.userSettings.customWindowSize.split(",").map(v => parseInt(v))
     ipcRenderer.send("resize", {height, width})
@@ -559,6 +563,7 @@ initFilePickerButton(setting_outPathButton, setting_out_path_input, ()=>`outpath
     }
 })
 initMenuSetting(setting_arpabet_paginationSize, "arpabet_paginationSize", "number", undefined, parseInt)
+initMenuSetting(setting_max_filename_chars, "max_filename_chars", "number", undefined, parseInt)
 
 
 setPromptTheme()

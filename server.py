@@ -266,7 +266,7 @@ if __name__ == '__main__':
                         if "CUDA out of memory" in str(e):
                             req_response = "CUDA OOM"
                         else:
-                            req_response = str(e)
+                            req_response = traceback.format_exc()
                     post_data["req_response"] = req_response
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["batch-synth-line"]["post"], event="post batch-synth-line", data=post_data)
 

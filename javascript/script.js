@@ -1152,7 +1152,7 @@ window.keepSampleFunction = shiftClick => {
         if (!skipUIRecord) {
             toLocation = toLocation.split("/")
             toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/[\/\\:\*?<>"|]*/g, "")
-            toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/\.wav$/, "").slice(0, 75).replace(/\.$/, "")
+            toLocation[toLocation.length-1] = toLocation[toLocation.length-1].replace(/\.wav$/, "").slice(0, window.userSettings.max_filename_chars).replace(/\.$/, "")
         }
 
 
