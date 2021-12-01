@@ -584,6 +584,8 @@ window.i18n.updateUI = () => {
     i18n_etaFinished.innerHTML = window.i18n.ETA_FINISHED
     nexusNameDisplay.innerHTML = window.i18n.LOGGED_IN_AS
     i18n_games.innerHTML = window.i18n.GAMES
+    nexusGamesListEnableAllBtn.innerHTML = window.i18n.ENABLE_ALL
+    nexusGamesListDisableAllBtn.innerHTML = window.i18n.DISABLE_ALL
     i18n_models.innerHTML = window.i18n.MODELS
     i18n_showNewUpdated.innerHTML = window.i18n.SHOW_NEW_UPDATED
     nexusCheckNow.innerHTML = window.i18n.CHECK_NOW

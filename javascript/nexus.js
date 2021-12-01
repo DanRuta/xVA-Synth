@@ -434,6 +434,14 @@ window.openNexusWindow = () => {
 }
 window.setupModal(nexusMenuButton, nexusContainer, window.openNexusWindow)
 
+nexusGamesListEnableAllBtn.addEventListener("click", () => {
+    Array.from(nexusGamesList.querySelectorAll("input")).forEach(ckbx => ckbx.checked = true)
+    window.displayAllModels()
+})
+nexusGamesListDisableAllBtn.addEventListener("click", () => {
+    Array.from(nexusGamesList.querySelectorAll("input")).forEach(ckbx => ckbx.checked = false)
+    window.displayAllModels()
+})
 
 
 
