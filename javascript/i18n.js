@@ -829,6 +829,16 @@ window.i18n.updateUI = () => {
     i18n_s2s_other.innerHTML = window.i18n.S2S_OTHER
 
     openDiscord.innerHTML = window.i18n.JOIN_DISCORD
+
+
+    arpabetIcon.title = "ARPAbet"
+    embeddingsIcon.title = "Embeddings visualiser"
+    pluginsIcon.title = "Plugins"
+    batchIcon.title = "Batch mode"
+    updatesIcon.title = "Changelog"
+    patreonIcon.title = "Patreon"
+    infoIcon.title = "Info"
+    settingsCog.title = "Settings"
 }
 
 
