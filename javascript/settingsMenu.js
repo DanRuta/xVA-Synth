@@ -90,6 +90,9 @@ if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.u
 if (!Object.keys(window.userSettings).includes("max_filename_chars")) { // For backwards compatibility
     window.userSettings.max_filename_chars = 70
 }
+if (!Object.keys(window.userSettings).includes("clear_text_after_synth")) { // For backwards compatibility
+    window.userSettings.clear_text_after_synth = false
+}
 if (!Object.keys(window.userSettings).includes("keepPaceOnNew")) { // For backwards compatibility
     window.userSettings.keepPaceOnNew = true
 }
@@ -256,6 +259,7 @@ const updateUIWithSettings = () => {
 
     setting_arpabet_paginationSize.value = window.userSettings.arpabet_paginationSize
     setting_max_filename_chars.value = window.userSettings.max_filename_chars
+    setting_clear_text_after_synth.checked = window.userSettings.clear_text_after_synth
 
     const [height, width] = window.userSettings.customWindowSize.split(",").map(v => parseInt(v))
     ipcRenderer.send("resize", {height, width})
@@ -564,6 +568,7 @@ initFilePickerButton(setting_outPathButton, setting_out_path_input, ()=>`outpath
 })
 initMenuSetting(setting_arpabet_paginationSize, "arpabet_paginationSize", "number", undefined, parseInt)
 initMenuSetting(setting_max_filename_chars, "max_filename_chars", "number", undefined, parseInt)
+initMenuSetting(setting_clear_text_after_synth, "clear_text_after_synth", "checkbox")
 
 
 setPromptTheme()

@@ -409,6 +409,7 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_PAGINATION_SIZE_BATCH = "Batch pagination size"
     window.i18n.SETTINGS_PAGINATION_SIZE_ARPABET = "ARPAbet pagination size"
     window.i18n.SETTINGS_MAX_FILENAME_LENGTH = "Maximum filename characters (trimming for maximum windows filepath length)"
+    window.i18n.SETTINGS_CLEAR_TEXT_AFTER_GENERATION = "Clear the text input after generation"
     window.i18n.SETTINGS_GROUP_VOICEID = "Group voices by voiceId and vocoder in preprocessing to minimize model switching"
     window.i18n.SETTINGS_GROUP_VOCODER = "Also do a secondary group by the vocoder - can take long to do with big files (100k+ lines)"
 
@@ -619,6 +620,7 @@ window.i18n.updateUI = () => {
     i18n_settings_paginationSize.innerHTML = window.i18n.SETTINGS_PAGINATION_SIZE_BATCH
     i18n_settings_arpabetPagination.innerHTML = window.i18n.SETTINGS_PAGINATION_SIZE_ARPABET
     i18n_settings_max_filename_chars.innerHTML = window.i18n.SETTINGS_MAX_FILENAME_LENGTH
+    i18n_settings_clear_text_after_synth.innerHTML = window.i18n.SETTINGS_CLEAR_TEXT_AFTER_GENERATION
     i18n_settings_groupVoiceID.innerHTML = window.i18n.SETTINGS_GROUP_VOICEID
     i18n_settings_groupVocoder.innerHTML = window.i18n.SETTINGS_GROUP_VOCODER
 

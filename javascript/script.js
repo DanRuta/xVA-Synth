@@ -807,6 +807,10 @@ generateVoiceButton.addEventListener("click", () => {
 
             dialogueInput.focus()
 
+            if (window.userSettings.clear_text_after_synth) {
+                dialogueInput.value = ""
+            }
+
             isGenerating = false
             res = res.split("\n")
             let pitchData = res[0]
