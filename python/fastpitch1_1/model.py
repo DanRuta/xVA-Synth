@@ -13,6 +13,27 @@ from torch.nn.utils.rnn import pad_sequence
 from python.common.text import text_to_sequence, sequence_to_text
 
 
+ARPAbet_replacements_dict = {
+    "YO": "IY0 UW0",
+    "UH": "UH0",
+    "AR": "R",
+    "EY": "EY0",
+    "A": "AA0",
+    "AW": "AW0",
+    "X": "K S",
+    "CX": "K HH",
+    "AO": "AO0",
+    "PF": "P F",
+    "AY": "AY0",
+    "OE": "OW0 IY0",
+    "IY": "IY0",
+    "EH": "EH0",
+    "OY": "OY0",
+    "IH": "IH0",
+    "H": "HH"
+}
+
+
 class FastPitch1_1(object):
     def __init__(self, logger, PROD, device, models_manager):
         super(FastPitch1_1, self).__init__()
@@ -93,10 +114,25 @@ class FastPitch1_1(object):
             sentence = " "+sentence.replace(",", " ,").replace(".", " .").replace("!", " !").replace("?", " ?")+" "
 
             for dict_word in words_in_prompt:
-                sentence = re.sub("(?<!\{)\s"+dict_word.strip().replace(".", "\.")+"\s(?![\w\s]*[\}])", " {"+self.arpabet_dict[dict_word]+"} ", sentence, flags=re.IGNORECASE)
+
+
+                arpabet_string = " "+self.arpabet_dict[dict_word]+" "
+                if "CX" in arpabet_string:
+                    # German:
+                    # hhhhh sound After "a", "o", "u" and "au"
+                    # The usual K HH otherwise
+                    # Need to account for multiple ch per word
+                    pass
+                for key in ARPAbet_replacements_dict.keys():
+                    arpabet_string = arpabet_string.replace(f' {key} ', f' {ARPAbet_replacements_dict[key]} ')
+
+
+                arpabet_string = arpabet_string.strip()
+
+                sentence = re.sub("(?<!\{)\s"+dict_word.strip().replace(".", "\.").replace("(", "\(").replace(")", "\)")+"\s(?![\w\s\(\)]*[\}])", " {"+arpabet_string+"} ", sentence, flags=re.IGNORECASE)
                 # Do it twice, because re will not re-use spaces, so if you have two neighbouring words to be replaced,
                 # and they share a space character, one of them won't get changed
-                sentence = re.sub("(?<!\{)\s"+dict_word.strip().replace(".", "\.")+"\s(?![\w\s]*[\}])", " {"+self.arpabet_dict[dict_word]+"} ", sentence, flags=re.IGNORECASE)
+                sentence = re.sub("(?<!\{)\s"+dict_word.strip().replace(".", "\.").replace("(", "\(").replace(")", "\)")+"\s(?![\w\s\(\)]*[\}])", " {"+arpabet_string+"} ", sentence, flags=re.IGNORECASE)
 
             # Undo the punctuation padding, to retain the original sentence structure
             sentence = sentence.replace(" ,", ",").replace(" .", ".").replace(" !", "!").replace(" ?", "?").strip()
@@ -119,6 +155,7 @@ class FastPitch1_1(object):
             text = record[0]
             text = re.sub(r'[^a-zA-ZäöüÄÖÜß\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)
             text = self.infer_arpabet_dict(text)
+            text = text.replace("(", "").replace(")", "")
             sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
             cleaned_text_sequences.append(sequence_to_text("english_basic", sequence))
             text = torch.LongTensor(sequence)
@@ -197,6 +234,7 @@ class FastPitch1_1(object):
 
         text = re.sub(r'[^a-zA-ZäöüÄÖÜß\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)
         text = self.infer_arpabet_dict(text)
+        text = text.replace("(", "").replace(")", "")
         sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
         cleaned_text = sequence_to_text("english_basic", sequence)
         text = torch.LongTensor(sequence)
