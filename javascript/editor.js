@@ -50,6 +50,7 @@ class Editor {
 
         this.multiLetterPitchDelta = undefined
         this.multiLetterStartPitchVals = []
+        this.multiLetterStartDursVals = []
         this.multiLetterEnergyDelta = undefined
         this.multiLetterStartEnergyVals = []
 
@@ -186,6 +187,8 @@ class Editor {
                 return (mouseY>box.topY && mouseY<box.topY+box.height) && (mouseX>(boxX+box.width-10) && mouseX<(boxX+box.width+10)+5)
             })
             if (isBetweenBoxes) {
+                this.multiLetterStartDursVals = this.sliderBoxes.map(box => box.width)
+
                 isBetweenBoxes.dragStart.width = isBetweenBoxes.width
                 elemDragged = isBetweenBoxes
                 return
@@ -237,6 +240,27 @@ class Editor {
 
                     } else if (elemDragged.type=="box") {
 
+                        // If there's a multi-selection, update all of their values, otherwise update the numerical input
+                        if (this.letterFocus.length>1) {
+                            this.letterFocus.forEach(li => {
+                                let newWidth = this.multiLetterStartDursVals[li] + parseInt(elemDragged.width - elemDragged.dragStart.width)
+                                newWidth = Math.max(20, newWidth)
+                                newWidth = Math.min(newWidth, this.MAX_LETTER_LENGTH)
+
+                                this.sliderBoxes[li].width = newWidth
+
+                                this.sliderBoxes[li].percentAcross = (this.sliderBoxes[li].width-20) / (this.MAX_LETTER_LENGTH-20)
+                                this.dursNew[this.sliderBoxes[li].index] = Math.max(0.1, this.sliderBoxes[li].percentAcross*20)
+
+                                this.sliderBoxes[li].grabber.width = this.sliderBoxes[li].width-2
+                                this.sliderBoxes[li].letter.centerX = this.sliderBoxes[li].leftX + this.sliderBoxes[li].width/2
+                            })
+                        } else {
+
+                            letterLengthNumb.value = parseInt(this.dursNew[elemDragged.index]*100)/100
+                        }
+
+
                         let newWidth = elemDragged.dragStart.width + parseInt(event.offsetX)-mouseDownStart.x
                         newWidth = Math.max(20, newWidth)
                         newWidth = Math.min(newWidth, this.MAX_LETTER_LENGTH)
@@ -247,8 +271,6 @@ class Editor {
 
                         elemDragged.grabber.width = elemDragged.width-2
                         elemDragged.letter.centerX = elemDragged.leftX + elemDragged.width/2
-
-                        letterLengthNumb.value = parseInt(this.dursNew[elemDragged.index]*100)/100
 
                     } else if (elemDragged.type="energy_slider") {
 
