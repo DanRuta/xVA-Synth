@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import codecs
 import argparse
 
 import torch
@@ -56,13 +57,6 @@ class FastPitch1_1(object):
         if 'state_dict' in ckpt:
             ckpt = ckpt['state_dict']
 
-        symbols_embedding_dim = 384
-        self.logger.info(f'n_speakers: {n_speakers}')
-        if n_speakers is None or n_speakers==0:
-            self.model.speaker_emb = None
-        else:
-            self.model.speaker_emb = nn.Embedding(1 if n_speakers is None else n_speakers, symbols_embedding_dim).to(self.device)
-
         self.model.load_state_dict(ckpt, strict=False)
         self.model = self.model.float()
         self.model.eval()
@@ -78,12 +72,13 @@ class FastPitch1_1(object):
         json_files = [fname for fname in json_files if fname.endswith(".json")]
 
         for fname in json_files:
-            with open(f'{"./resources/app" if self.PROD else "."}/arpabet/{fname}') as f:
+            with codecs.open(f'{"./resources/app" if self.PROD else "."}/arpabet/{fname}', encoding="utf-8") as f:
                 json_data = json.load(f)
 
                 for word in list(json_data["data"].keys()):
                     if json_data["data"][word]["enabled"]==True:
                         self.arpabet_dict[word] = json_data["data"][word]["arpabet"]
+
 
     def infer_arpabet_dict (self, sentence):
         dict_words = list(self.arpabet_dict.keys())

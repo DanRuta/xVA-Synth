@@ -163,10 +163,11 @@ class FastPitch(nn.Module):
         self.encoder = FFTransformer(
             n_layer=in_fft_n_layers, n_head=in_fft_n_heads, d_model=symbols_embedding_dim, d_head=in_fft_d_head, d_inner=in_fft_conv1d_filter_size, kernel_size=in_fft_conv1d_kernel_size, dropout=p_in_fft_dropout, dropatt=p_in_fft_dropatt, dropemb=p_in_fft_dropemb, embed_input=True, d_embed=symbols_embedding_dim, n_embed=n_symbols, padding_idx=padding_idx)
 
-        if n_speakers > 1:
-            self.speaker_emb = nn.Embedding(n_speakers, symbols_embedding_dim)
-        else:
-            self.speaker_emb = None
+        # if n_speakers > 1:
+        #     self.speaker_emb = nn.Embedding(n_speakers, symbols_embedding_dim)
+        # else:
+        #     self.speaker_emb = None
+        self.speaker_emb = nn.Linear(256, symbols_embedding_dim)
         self.speaker_emb_weight = speaker_emb_weight
 
         self.duration_predictor = TemporalPredictor(
@@ -418,7 +419,7 @@ class FastPitch(nn.Module):
 
         # Energy
         if self.energy_conditioning:
-            if energy_pred_existing is None:
+            if (energy_pred_existing is None or energy_pred_existing.shape[1]==0):
                 energy_pred = self.energy_predictor(enc_out, enc_mask).squeeze(-1)
             else:
                 # Splice/replace pitch/duration values from the old input if simulating only a partial re-generation
@@ -476,7 +477,7 @@ class FastPitch(nn.Module):
         # Input FFT
         enc_out, enc_mask = self.encoder(inputs, conditioning=spk_emb)
 
-        if (pitch_data is not None) and (pitch_data[0] is not None and len(pitch_data[0])) and (pitch_data[1] is not None and len(pitch_data[1])):
+        if (pitch_data is not None) and ((pitch_data[0] is not None and len(pitch_data[0])) or (pitch_data[1] is not None and len(pitch_data[1]))):
             pitch_pred, dur_pred, energy_pred = pitch_data
             dur_pred = torch.tensor(dur_pred)
             dur_pred = dur_pred.view((1, dur_pred.shape[0])).float().to(self.device)
