@@ -1109,7 +1109,7 @@ window.batchKickOffGeneration = () => {
 
 window.performSynthesis = async () => {
 
-    if (batch_state.lineIndex-batch_state.fastModeActuallyFinishedTasks > 1000) {
+    if (batch_state.lineIndex-batch_state.fastModeActuallyFinishedTasks > window.userSettings.batch_fastModeMaxParallelizations) {
         console.log(`Ahead by ${batch_state.lineIndex-batch_state.fastModeActuallyFinishedTasks} tasks. Waiting...`)
         setTimeout(() => {window.performSynthesis()}, 1000)
         return

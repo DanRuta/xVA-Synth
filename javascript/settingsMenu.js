@@ -99,6 +99,9 @@ if (!Object.keys(window.userSettings).includes("batch_clearDirFirst")) { // For 
 if (!Object.keys(window.userSettings).includes("batch_fastMode")) { // For backwards compatibility
     window.userSettings.batch_fastMode = false
 }
+if (!Object.keys(window.userSettings).includes("batch_fastModeMaxParallelizations")) { // For backwards compatibility
+    window.userSettings.batch_fastModeMaxParallelizations = 1000
+}
 if (!Object.keys(window.userSettings).includes("batch_json")) { // For backwards compatibility
     window.userSettings.batch_json = false
 }
@@ -233,6 +236,7 @@ const updateUIWithSettings = () => {
 
     setting_batch_json.checked = window.userSettings.batch_json
     setting_batch_fastmode.checked = window.userSettings.batch_fastMode
+    setting_batch_maxFastModeParallelizations.value = window.userSettings.batch_fastModeMaxParallelizations
     setting_batch_multip.checked = window.userSettings.batch_useMP
     setting_batch_multip_count.value = window.userSettings.batch_MPCount
     setting_batch_delimiter.value = window.userSettings.batch_delimiter
@@ -527,6 +531,7 @@ initMenuSetting(setting_show_editor_ffmpegamplitude, "showEditorFFMPEGAmplitude"
 
 initMenuSetting(setting_batch_json, "batch_json", "checkbox")
 initMenuSetting(setting_batch_fastmode, "batch_fastMode", "checkbox")
+initMenuSetting(setting_batch_maxFastModeParallelizations, "batch_fastModeMaxParallelizations", "number")
 initMenuSetting(setting_batch_multip, "batch_useMP", "checkbox")
 initMenuSetting(setting_batch_multip_count, "batch_MPCount", "number", undefined, parseInt)
 initMenuSetting(setting_batch_doGrouping, "batch_doGrouping", "checkbox")
