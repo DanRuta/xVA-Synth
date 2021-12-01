@@ -25,6 +25,7 @@ librosa==0.8.0
 llvmlite==0.34.0
 numba==0.51.2
 numpy==1.19.5
+praat-parselmouth==0.4.0
 omegaconf==2.1.1
 packaging==21.0
 pefile==2019.4.18
