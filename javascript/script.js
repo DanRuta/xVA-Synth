@@ -771,6 +771,11 @@ generateVoiceButton.addEventListener("click", () => {
                 old_sequence = window.sequenceEditor.inputSequence
             }
         }
+        // Don't use the old_sequence if running speech-to-speech
+        if (window.speech2speechState.s2s_running) {
+            old_sequence = undefined
+            window.speech2speechState.s2s_running = false
+        }
 
         if (speech2speechState.s2s_autogenerate || (editorContainer.innerHTML && editorContainer.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice))) {
             speech2speechState.s2s_autogenerate = false

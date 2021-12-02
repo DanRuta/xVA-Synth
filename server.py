@@ -277,6 +277,7 @@ if __name__ == '__main__':
                     logger.info(post_data)
                     input_path = post_data["input_path"]
                     modelPath = post_data["modelPath"]
+                    modelType = post_data["modelType"]
                     s2s_components = post_data["s2s_components"]
                     n_speakers = int(post_data["n_speakers"]) if "n_speakers" in post_data else 0
                     text = post_data["text"]
@@ -296,7 +297,7 @@ if __name__ == '__main__':
                     models_manager.load_model("s2s_fastpitch1_1", modelPath, n_speakers=n_speakers)
                     models_manager.models_bank["s2s_fastpitch1_1"].init_arpabet_dicts()
                     try:
-                        text, pitch, durs, energy = models_manager.models("s2s_fastpitch1_1").run_speech_to_speech(final_path, s2s_components=s2s_components, text=text)
+                        text, pitch, durs, energy = models_manager.models("s2s_fastpitch1_1").run_speech_to_speech(final_path, models_manager, modelType, s2s_components=s2s_components, text=text)
 
                         data_out = ""
                         data_out += ",".join([str(v) for v in pitch])+"\n"

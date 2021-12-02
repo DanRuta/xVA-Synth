@@ -4,7 +4,8 @@ window.speech2speechState = {
     isReadingMic: false,
     elapsedRecording: 0,
     recorder: null,
-    stream: null
+    stream: null,
+    s2s_running: false
 }
 
 // Populate the microphone dropdown with the available options
@@ -123,6 +124,7 @@ window.useWavFileForspeech2speech = (fileName) => {
         method: "Post",
         body: JSON.stringify({
             input_path: fileName,
+            modelType: window.currentModel.modelType,
             s2s_components: window.userSettings.s2s_components,
             text: sequence,
             doPitchShift: window.userSettings.s2s_prePitchShift,
@@ -134,6 +136,7 @@ window.useWavFileForspeech2speech = (fileName) => {
         })
     }).then(r=>r.text()).then(res => {
 
+        window.speech2speechState.s2s_running = true
         mic_progress_SVG.style.animation = "none"
         clearProgress()
 
