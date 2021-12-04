@@ -358,7 +358,9 @@ window.changeGame = (meta) => {
                             padStart: window.userSettings.audio.padStart,
                             padEnd: window.userSettings.audio.padEnd,
                             bit_depth: window.userSettings.audio.bitdepth,
-                            amplitude: window.userSettings.audio.amplitude
+                            amplitude: window.userSettings.audio.amplitude,
+                            pitchMult: window.userSettings.audio.pitchMult,
+                            tempo: window.userSettings.audio.tempo
                         }
 
                         doFetch(`http://localhost:8008/outputAudio`, {
@@ -929,7 +931,9 @@ generateVoiceButton.addEventListener("click", () => {
                     padStart: window.userSettings.audio.padStart,
                     padEnd: window.userSettings.audio.padEnd,
                     bit_depth: window.userSettings.audio.bitdepth,
-                    amplitude: window.userSettings.audio.amplitude
+                    amplitude: window.userSettings.audio.amplitude,
+                    pitchMult: window.userSettings.audio.pitchMult,
+                    tempo: window.userSettings.audio.tempo
                 }
 
                 const extraInfo = {
@@ -1050,7 +1054,9 @@ window.saveFile = (from, to, skipUIRecord=false) => {
         padStart: window.userSettings.audio.padStart,
         padEnd: window.userSettings.audio.padEnd,
         bit_depth: window.userSettings.audio.bitdepth,
-        amplitude: window.userSettings.audio.amplitude
+        amplitude: window.userSettings.audio.amplitude,
+        pitchMult: window.userSettings.audio.pitchMult,
+        tempo: window.userSettings.audio.tempo
     }
     pluginData.audioOptions = options
     window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["pre"], event="pre keep-sample", pluginData)

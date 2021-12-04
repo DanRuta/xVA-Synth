@@ -60,6 +60,8 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_FFMPEG_HZ = "Audio sample rate (Hz)"
     window.i18n.SETTINGS_FFMPEG_PADSTART = "Silence padding start (ms)"
     window.i18n.SETTINGS_FFMPEG_PADEND = "Silence padding end (ms)"
+    window.i18n.SETTINGS_FFMPEG_PITCHMULT = "Pitch multiplier"
+    window.i18n.SETTINGS_FFMPEG_TEMPO = "Tempo"
     window.i18n.SETTINGS_FFMPEG_BITDEPTH = "Audio bit depth"
     window.i18n.SETTINGS_FFMPEG_AMPLITUDE = "Amplitude multiplier"
     window.i18n.SETTINGS_BATCH_JSON = "Output .json editor data for batch lines"
@@ -707,6 +709,8 @@ window.i18n.updateUI = () => {
     i18n_setting_ffmpeg_hz.innerHTML = window.i18n.SETTINGS_FFMPEG_HZ
     i18n_setting_ffmpeg_padstart.innerHTML = window.i18n.SETTINGS_FFMPEG_PADSTART
     i18n_setting_ffmpeg_padend.innerHTML = window.i18n.SETTINGS_FFMPEG_PADEND
+    i18n_setting_ffmpeg_pitchMult.innerHTML = window.i18n.SETTINGS_FFMPEG_PITCHMULT
+    i18n_setting_ffmpeg_tempo.innerHTML = window.i18n.SETTINGS_FFMPEG_TEMPO
     i18n_setting_ffmpeg_bitdepth.innerHTML = window.i18n.SETTINGS_FFMPEG_BITDEPTH
     i18n_setting_ffmpeg_amplitude.innerHTML = window.i18n.SETTINGS_FFMPEG_AMPLITUDE
     i18n_setting_batch_json.innerHTML = window.i18n.SETTINGS_BATCH_JSON

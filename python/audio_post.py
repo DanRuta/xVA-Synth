@@ -45,6 +45,12 @@ def run_audio_post(PROD, logger, input, output, options=None):
         if options["padEnd"]:
             ffmpeg_options["af"].append(f'apad=pad_dur={options["padEnd"]}ms')
 
+
+        # Pitch
+        ffmpeg_options["af"].append(f'asetrate={22050*(options["pitchMult"])},atempo=1/{options["pitchMult"]}')
+        # Tempo
+        ffmpeg_options["af"].append(f'atempo={options["tempo"]}')
+
         ffmpeg_options["af"].append(f'volume={options["amplitude"]}')
         ffmpeg_options["af"] = ",".join(ffmpeg_options["af"])
 
