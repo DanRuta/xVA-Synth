@@ -12,7 +12,7 @@ if __name__ == '__main__':
     # CPU_ONLY = True
 
     # Saves me having to do backend re-compilations for every little UI hotfix
-    with open(f'{"./resources/app" if PROD else "."}/javascript/script.js') as f:
+    with open(f'{"./resources/app" if PROD else "."}/javascript/script.js', encoding="utf8") as f:
         lines = f.read().split("\n")
         APP_VERSION = lines[1].split('"v')[1].split('"')[0]
 
