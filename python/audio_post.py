@@ -63,7 +63,10 @@ def run_audio_post(PROD, logger, input, output, options=None):
 
 
         if os.path.exists(output):
-            os.remove(output)
+            try:
+                os.remove(output)
+            except:
+                pass
 
         stream = ffmpeg.output(stream, output, **ffmpeg_options)
 

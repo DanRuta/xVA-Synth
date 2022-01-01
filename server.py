@@ -230,6 +230,7 @@ if __name__ == '__main__':
                     duration = post_data["duration"] if "duration" in post_data else None
                     speaker_i = post_data["speaker_i"] if "speaker_i" in post_data else None
                     vocoder = post_data["vocoder"]
+                    globalAmplitudeModifier = float(post_data["globalAmplitudeModifier"]) if "globalAmplitudeModifier" in post_data else None
                     pitch_data = [pitch, duration, energy]
                     old_sequence = post_data["old_sequence"] if "old_sequence" in post_data else None
                     post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])
@@ -245,9 +246,10 @@ if __name__ == '__main__':
                     models_manager.set_device(models_manager.device_label)
 
                     if continue_synth:
+                        plugin_manager.set_context(post_data["pluginsContext"])
                         plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["pre"], event="pre synth-line", data=post_data)
                         req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", "")).infer(plugin_manager, text, out_path, vocoder=vocoder, \
-                            speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence)
+                            speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence, globalAmplitudeModifier=globalAmplitudeModifier)
                         plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["post"], event="post synth-line", data=post_data)
 
 
@@ -259,6 +261,7 @@ if __name__ == '__main__':
                     outputJSON = post_data["outputJSON"]
                     post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])
 
+                    plugin_manager.set_context(post_data["pluginsContext"])
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["batch-synth-line"]["pre"], event="pre batch-synth-line", data=post_data)
                     try:
                         req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", "")).infer_batch(plugin_manager, linesBatch, outputJSON=outputJSON, vocoder=vocoder, speaker_i=speaker_i)

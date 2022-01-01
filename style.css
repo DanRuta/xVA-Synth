@@ -298,12 +298,17 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 5px;
+    margin: 3px;
     background: white;
-    padding: 2px;
+    /*padding: 1px;*/
     padding-left: 15px;
     border-radius: 3px;
-    height: 30px;
+    height: 28px;
+}
+.sample > div > audio::-webkit-media-controls-panel {
+    height: 25px;
+    background: none;
+    margin-top: 3px;
 }
  .sample > div:first-child {
      display: -webkit-box;

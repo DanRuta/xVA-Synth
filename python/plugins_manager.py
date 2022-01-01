@@ -69,8 +69,9 @@ class PluginManager(object):
                     active_plugins.append([key, trigger_type])
         return len(active_plugins)
 
-
-
+    # For ease of access
+    def set_context (self, data):
+        self.context = data
 
 
     def refresh_active_plugins (self):

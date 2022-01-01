@@ -701,6 +701,8 @@ generateVoiceButton.addEventListener("click", () => {
             method: "Post",
             body: JSON.stringify(body)
         }).then(r=>r.text()).then(res => {
+
+            window.currentModel.loaded = true
             generateVoiceButton.dataset.modelQuery = null
             generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
             generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad

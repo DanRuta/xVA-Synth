@@ -460,7 +460,7 @@ class PluginsManager {
                 IniSettings[select.name.toLowerCase()] = select.value
 
             } else {
-                const value = input.type=="checkbox" ? (input.checked ? "true" : "false") : input.value
+                const value = input.type=="checkbox" ? (input.checked ? true : false) : input.value
                 outputIni.push(`${input.name.toLowerCase()}=${value}${input.getAttribute("comment")!="undefined" ? " # "+input.getAttribute("comment") : ""}`)
                 IniSettings[input.name.toLowerCase()] = value
             }
@@ -496,7 +496,9 @@ class PluginsManager {
                 let comment = keyVal.includes("#") ? keyVal.split("#")[1].trim() : undefined
                 keyVal = keyVal.split("#")[0].trim()
                 const key = keyVal.split("=")[0].trim()
-                const val = keyVal.split("=")[1].trim()
+                let val = keyVal.split("=")[1].trim()
+                if (val=="false") val = false
+                if (val=="true") val = true
                 IniSettings[key.toLowerCase()] = val
 
                 const labelText = key[0].toUpperCase() + key.substring(1)
@@ -547,12 +549,12 @@ class PluginsManager {
                     input.value = val
 
                 } else {
-                    const inputType = ["true","false"].includes(val.toLowerCase()) ? "checkbox" : "text"
+                    const inputType = [true,false].includes(val) ? "checkbox" : "text"
                     input = createElem("input", {
                         type: inputType, name: key, comment: comment
                     })
                     if (inputType=="checkbox") {
-                        input.checked = val.toLowerCase() == "true"
+                        input.checked = val
                     } else {
                         input.value = val
                     }

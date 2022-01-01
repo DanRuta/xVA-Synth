@@ -223,9 +223,7 @@ class FastPitch1_1(object):
 
         return ""
 
-    def infer(self, plugin_manager, text, output, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None):
-
-        print(f'Inferring: "{text}" ({len(text)})')
+    def infer(self, plugin_manager, text, output, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None):
 
         sigma_infer = 0.9
         stft_hop_length = 256

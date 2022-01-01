@@ -995,7 +995,9 @@ window.batchKickOffGeneration = () => {
                     padStart: window.userSettings.audio.padStart,
                     padEnd: window.userSettings.audio.padEnd,
                     bit_depth: window.userSettings.audio.bitdepth,
-                    amplitude: window.userSettings.audio.amplitude
+                    amplitude: window.userSettings.audio.amplitude,
+                    pitchMult: window.userSettings.audio.pitchMult,
+                    tempo: window.userSettings.audio.tempo
                 }
 
                 if (window.batch_state.state) {
