@@ -97,3 +97,4 @@ webrtcvad==2.0.10
 Werkzeug==2.0.1
 yarl==1.6.3
 zipp==3.3.0
+ffmpeg-normalize==1.22.4

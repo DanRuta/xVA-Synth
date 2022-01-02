@@ -28,7 +28,7 @@ if __name__ == '__main__':
         import json
         from http.server import BaseHTTPRequestHandler, HTTPServer
         from socketserver     import ThreadingMixIn
-        from python.audio_post import run_audio_post, prepare_input_audio, mp_ffmpeg_output
+        from python.audio_post import run_audio_post, prepare_input_audio, mp_ffmpeg_output, normalize_audio
         import ffmpeg
     except:
         print(traceback.format_exc())
@@ -191,6 +191,11 @@ if __name__ == '__main__':
                     logger.info("POST {}".format(self.path))
                     logger.info("STOPPING SERVER")
                     sys.exit()
+
+                if self.path == "/normalizeAudio":
+                    input_path = post_data["input_path"]
+                    output_path = post_data["output_path"]
+                    req_response = normalize_audio(input_path, output_path)
 
                 if self.path == "/customEvent":
                     logger.info("POST {}".format(self.path))

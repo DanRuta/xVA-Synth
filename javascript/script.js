@@ -452,10 +452,21 @@ window.changeGame = (meta) => {
                             body: JSON.stringify({
                                 input_path: `./output/${files[0]}`,
                                 isBatchMode: false,
-                                output_path: `${modelsPath}/${voiceId}.wav`,
+                                output_path: `${modelsPath}/${voiceId}_raw.wav`,
                                 options: JSON.stringify(options)
                             })
-                        }).then(r=>r.text()).then(console.log)
+                        }).then(r=>r.text()).then(() => {
+                            doFetch(`http://localhost:8008/normalizeAudio`, {
+                                method: "Post",
+                                body: JSON.stringify({
+                                    input_path: `${modelsPath}/${voiceId}_raw.wav`,
+                                    output_path: `${modelsPath}/${voiceId}.wav`
+                                })
+                            }).then(r=>r.text()).then((resp) => {
+                                console.log(resp)
+                                fs.unlinkSync(`${modelsPath}/${voiceId}_raw.wav`)
+                            })
+                        })
                     }
 
                 } else {

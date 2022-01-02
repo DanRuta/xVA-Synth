@@ -179,3 +179,17 @@ def prepare_input_audio(PROD, logger, path, removeNoise, removeNoiseStrength):
     # logger.info(f'final_path: {final_path}')
 
     return final_path
+
+def normalize_audio (input_path, output_path):
+    startupinfo = subprocess.STARTUPINFO()
+    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
+    sp = subprocess.Popen(f'ffmpeg-normalize -ar 22050 "{input_path}" -o "{output_path}"', startupinfo=startupinfo, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = sp.communicate()
+    stderr = stderr.decode("utf-8")
+
+    if len(stderr) and "duration of less than 3 seconds" not in stderr:
+        print("stderr", stderr)
+        return "stderr: "+ stderr
+
+    return ""
