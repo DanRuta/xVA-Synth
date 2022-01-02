@@ -487,7 +487,7 @@ class PluginsManager {
 
             const hr = createElem(`hr.${pluginId}_plugin_setting`)
             settingsOptionsContainer.appendChild(hr)
-            settingsOptionsContainer.appendChild(createElem("div.centeredSettingsSectionPlugins", createElem("div", window.i18n.SETTINGS_FOR_PLUGIN.replace("_1", pluginId)) ))
+            settingsOptionsContainer.appendChild(createElem(`div.centeredSettingsSectionPlugins.${pluginId}_plugin_setting`, createElem("div", window.i18n.SETTINGS_FOR_PLUGIN.replace("_1", pluginId)) ))
 
             iniFileData.forEach(keyVal => {
                 if (!keyVal.trim().length) {
