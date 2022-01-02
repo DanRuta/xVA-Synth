@@ -94,7 +94,7 @@ stft = TacotronSTFT(1024, 256, 1024, 80, 22050, 0, 8000)
 def regulate_len(durations, enc_out, pace: float = 1.0, mel_max_len: Optional[int] = None):
     """If target=None, then predicted durations are applied"""
     dtype = enc_out.dtype
-    reps = durations.float() / pace
+    reps = durations.float() * pace
     reps = (reps + 0.5).long()
     dec_lens = reps.sum(dim=1)
 
