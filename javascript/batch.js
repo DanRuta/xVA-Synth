@@ -196,18 +196,40 @@ window.readFile = (file) => {
         reader.readAsText(file)
         reader.onloadend = () => {
             const lines = reader.result.replace(/\r\n/g, "\n").split("\n")
-            const header = lines.shift().split(window.userSettings.batch_delimiter).map(head => head.replace(/\r/, ""))
-            lines.forEach(line => {
-                const record = {}
-                if (line.trim().length) {
-                    const parts = CSVToArray(line, window.userSettings.batch_delimiter)[0]
-                    parts.forEach((val, vi) => {
-                        record[header[vi].replace(/^"/, "").replace(/"$/, "")] = (val||"").replace(/\\/g, "/")
-                    })
-                    dataLines.push(record)
-                }
-            })
-            resolve(dataLines)
+            const headerLine = lines.shift()
+
+            const doRest = () => {
+
+                const header = headerLine.split(window.userSettings.batch_delimiter).map(head => head.replace(/\r/, ""))
+
+                lines.forEach(line => {
+                    const record = {}
+                    if (line.trim().length) {
+                        const parts = CSVToArray(line, window.userSettings.batch_delimiter)[0]
+                        parts.forEach((val, vi) => {
+                            record[header[vi].replace(/^"/, "").replace(/"$/, "")] = (val||"").replace(/\\/g, "/")
+                        })
+                        dataLines.push(record)
+                    }
+                })
+                resolve(dataLines)
+            }
+
+            const headerLine_clean = headerLine.replaceAll("\"", "")
+            if (headerLine_clean.includes(window.userSettings.batch_delimiter)) {
+                doRest()
+            } else {
+                const potentialDelimiter = headerLine_clean.split("voice_id")[0].split("game_id")[1]
+
+                window.confirmModal(window.i18n.BATCH_CHANGE_DELIMITER.replace("_1", window.userSettings.batch_delimiter).replace("_2", potentialDelimiter)).then(response => {
+                    if (response) {
+                        window.userSettings.batch_delimiter = potentialDelimiter
+                        setting_batch_delimiter.value = potentialDelimiter
+                        window.saveUserSettings()
+                        doRest()
+                    }
+                })
+            }
         }
     })
 }

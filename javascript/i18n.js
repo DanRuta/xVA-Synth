@@ -497,6 +497,7 @@ window.i18n.setEnglish = () => {
     window.i18n.JOIN_DISCORD = "Join xVASynth server"
 
 
+    window.i18n.BATCH_CHANGE_DELIMITER = "The .csv delimiter is not found in the data. The delimiter in the settings is '_1', but the one in the .csv file is potentially '_2'. Do you want to change the delimiter used, and try again using this?"
 
     // Useful during developing, to see if there are any strings left un-i18n-ed
     // Object.keys(window.i18n).forEach(key => {
