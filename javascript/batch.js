@@ -540,7 +540,19 @@ window.startBatch = () => {
          }, '');
     }
     if (batch_clearDirFirstCkbx.checked) {
-        window.deleteFolderRecursive(window.userSettings.batchOutFolder, true)
+        const filesAndFolders = fs.readdirSync(window.userSettings.batchOutFolder)
+        filesAndFolders.forEach(faf => {
+            // Ignore .csv and .txt files
+            if (faf.endsWith(".csv") || faf.endsWith(".txt")) {
+                return
+            }
+            if (fs.lstatSync(`${window.userSettings.batchOutFolder}/${faf}`).isDirectory()) {
+                window.deleteFolderRecursive(`${window.userSettings.batchOutFolder}/${faf}`, false)
+            } else {
+                fs.unlinkSync(`${window.userSettings.batchOutFolder}/${faf}`)
+            }
+            console.log(`${window.userSettings.batchOutFolder}/${faf}`,  )
+        })
     }
 
     batch_synthesizeBtn.style.display = "none"
