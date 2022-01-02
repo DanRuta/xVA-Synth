@@ -21,9 +21,11 @@ const deleteFolderRecursive = function (directoryPath) {
 
 // Load user settings
 window.userSettings = localStorage.getItem("userSettings") ||
+// window.userSettings =
     {
         useGPU: false,
         customWindowSize:`${window.innerHeight},${window.innerWidth}`,
+        base_speaker: "default",
         autoplay: false,
         autoPlayGen: false,
         audio: {
@@ -691,21 +693,15 @@ reset_paths_btn.addEventListener("click", () => {
 
             const currGame = window.currentGame ? window.currentGame.gameId : undefined
 
-            // Models paths
+            // Models and output paths
             const assetFiles = fs.readdirSync(`${path}/assets`)
-            assetFiles.filter(fn=>(fn.endsWith(".jpg")||fn.endsWith(".png"))&&fn.split("-").length==4).forEach(assetFileName => {
-                const gameId = assetFileName.split("-")[0]
-                window.userSettings[`modelspath_${gameId}`] = `${__dirname.replace(/\\/g,"/")}/models/${gameId}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
-                if (gameId==currGame) {
-                    setting_models_path_input.value = window.userSettings[`modelspath_${gameId}`]
-                }
-            })
+            assetFiles.filter(fn=>fn.endsWith(".json")).forEach(jsonFileName => {
 
-            // Output paths
-            const gameDirs = fs.readdirSync(`${path}/models`)
-            gameDirs.filter(name => !name.includes(".")).forEach(gameId => {
+                const gameId = jsonFileName.split(".")[0]
+                window.userSettings[`modelspath_${gameId}`] = `${__dirname.replace(/\\/g,"/")}/models/${gameId}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
                 window.userSettings[`outpath_${gameId}`] = `${__dirname.replace(/\\/g,"/")}/output/${gameId}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
                 if (gameId==currGame) {
+                    setting_models_path_input.value = window.userSettings[`modelspath_${gameId}`]
                     setting_out_path_input.value = window.userSettings[`outpath_${gameId}`]
                 }
             })
