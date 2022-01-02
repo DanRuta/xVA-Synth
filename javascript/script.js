@@ -1,5 +1,5 @@
 "use strict"
-window.appVersion = "v2.0.6"
+window.appVersion = "v2.1.0"
 
 window.PRODUCTION = module.filename.includes("resources")
 const path = window.PRODUCTION ? "./resources/app" : "."
