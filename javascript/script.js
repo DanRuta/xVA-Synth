@@ -117,7 +117,8 @@ window.initWaveSurfer = (src) => {
 }
 
 
-window.registerModel = (modelsPath, gameFolder, model, {gameId, voiceId, voiceName, voiceDescription, gender}) => {
+window.registerModel = (modelsPath, gameFolder, model, {gameId, voiceId, voiceName, voiceDescription, gender, variant, modelType, emb_i}) => {
+    // Add game, if the game hasn't been added yet
     if (!window.games.hasOwnProperty(gameId)) {
 
         const gameAsset = fs.readdirSync(`${path}/assets`).find(f => f==gameId+".json")
@@ -131,34 +132,78 @@ window.registerModel = (modelsPath, gameFolder, model, {gameId, voiceId, voiceNa
     }
 
     const audioPreviewPath = `${modelsPath}/${model.games.find(({gameId}) => gameId==gameFolder).voiceId}`
-    const existingDuplicates = []
+
+    // Catch duplicates, for when/if a model is registered for multiple games, but there's already the same model in that game, from another version
+    // const existingDuplicates = []
+    // window.games[gameId].models.forEach((item,i) => {
+    //     if (item.voiceId==voiceId) {
+    //         existingDuplicates.push([item, i])
+    //     }
+    // })
+
+    // Check if a variant has already been added for this voice name, for this game
+    let foundVariantIndex = undefined
     window.games[gameId].models.forEach((item,i) => {
-        if (item.voiceId==voiceId) {
-            existingDuplicates.push([item, i])
+        if (foundVariantIndex!=undefined) return
+
+        if (item.voiceName.toLowerCase().trim()==voiceName.toLowerCase().trim()) {
+            foundVariantIndex = i
         }
     })
 
-    const modelData = {
-        model, modelsPath, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, gender,
+    // Add the initial model metadata, if no existing variant has been added (will happen most of the time)
+    if (!foundVariantIndex) {
+        const modelData = {
+            gameId,
+            modelsPath,
+            voiceName,
+            variants: []
+        }
+        window.games[gameId].models.push(modelData)
+        foundVariantIndex = window.games[gameId].models.length-1
+    }
+
+    const variantData = {
+        author: model.author,
+        version: model.version,
         modelVersion: model.modelVersion,
+        voiceId,
+        audioPreviewPath,
         hifi: undefined,
         num_speakers: model.emb_size,
-        modelType: model.modelType
+        emb_i,
+        variantName: variant ? variant.replace("Default :", "Default:").replace("Default:", "").trim() : "Default",
+        voiceDescription,
+        lang: model.lang,
+        gender,
+        modelType: modelType||model.modelType,
+        model,
     }
-
     const potentialHiFiPath = `${modelsPath}/${voiceId}.hg.pt`
     if (fs.existsSync(potentialHiFiPath)) {
-        modelData.hifi = potentialHiFiPath
+        variantData.hifi = potentialHiFiPath
     }
 
-    if (existingDuplicates.length) {
-        if (existingDuplicates[0][0].modelVersion<model.modelVersion) {
-            window.games[gameId].models.splice(existingDuplicates[0][1], 1)
-            window.games[gameId].models.push(modelData)
-        }
+    const isDefaultVariant = !variant || variant.toLowerCase().startsWith("default")
+
+    if (isDefaultVariant) {
+        // Place first in the list, if it's default
+        window.games[gameId].models[foundVariantIndex].audioPreviewPath = audioPreviewPath
+        window.games[gameId].models[foundVariantIndex].variants.splice(0,0,variantData)
     } else {
-        window.games[gameId].models.push(modelData)
+        window.games[gameId].models[foundVariantIndex].variants.push(variantData)
     }
+
+
+    // // Using the detected duplicates, use only the latest version
+    // if (existingDuplicates.length) {
+    //     if (existingDuplicates[0][0].modelVersion<model.modelVersion) {
+    //         window.games[gameId].models.splice(existingDuplicates[0][1], 1)
+    //         window.games[gameId].models.push(modelData)
+    //     }
+    // } else {
+    //     window.games[gameId].models.push(modelData)
+    // }
 }
 
 window.loadAllModels = (forceUpdate=false) => {
@@ -184,8 +229,8 @@ window.loadAllModels = (forceUpdate=false) => {
                             models[`${gameFolder}/${fileName}`] = null
                         }
                         const model = JSON.parse(fs.readFileSync(`${modelsPath}/${fileName}`, "utf8"))
-                        model.games.forEach(({gameId, voiceId, voiceName, voiceDescription, gender}) => {
-                            window.registerModel(currentGameFolder, gameFolder, model, {gameId, voiceId, voiceName, voiceDescription, gender})
+                        model.games.forEach(({gameId, voiceId, voiceName, voiceDescription, gender, variant, modelType, emb_i}) => {
+                            window.registerModel(currentGameFolder, gameFolder, model, {gameId, voiceId, voiceName, voiceDescription, gender, variant, modelType, emb_i})
                         })
 
                     } catch (e) {
@@ -222,8 +267,8 @@ window.loadAllModels = (forceUpdate=false) => {
                         }
 
                         const model = JSON.parse(fs.readFileSync(`${modelsPath}/${fileName}`, "utf8"))
-                        model.games.forEach(({gameId, voiceId, voiceName, voiceDescription, gender}) => {
-                            window.registerModel(modelsPath, gameFolder, model, {gameId, voiceId, voiceName, voiceDescription, gender})
+                        model.games.forEach(({gameId, voiceId, voiceName, voiceDescription, gender, variant, modelType, emb_i}) => {
+                            window.registerModel(modelsPath, gameFolder, model, {gameId, voiceId, voiceName, voiceDescription, gender, variant, modelType, emb_i})
                         })
                     } catch (e) {
                         console.log(e)
@@ -271,6 +316,41 @@ setting_models_path_input.addEventListener("change", () => {
         })
     })
 })
+
+// Change variant
+let oldVariantSelection = undefined // For reverting, if versioning checks fail
+variant_select.addEventListener("change", () => {
+
+    const model = window.games[window.currentGame.gameId].models.find(model => model.voiceName== window.currentModel.voiceName)
+    const variant = model.variants.find(variant => variant.variantName==variant_select.value)
+
+    const appVersionOk = window.checkVersionRequirements(variant.version, appVersion)
+    if (!appVersionOk) {
+        window.errorModal(`${window.i18n.MODEL_REQUIRES_VERSION} v${variant.version}<br><br>${window.i18n.THIS_APP_VERSION}: ${window.appVersion}`)
+        variant_select.value = oldVariantSelection
+        return
+    }
+
+    generateVoiceButton.dataset.modelQuery = JSON.stringify({
+        outputs: parseInt(model.outputs),
+        model: `${model.modelsPath}/${variant.voiceId}`,
+        modelType: variant.modelType,
+        version: variant.version,
+        model_speakers: model.num_speakers,
+    })
+    oldVariantSelection = variant_select.value
+
+    titleInfoVoiceID.innerHTML = variant.voiceId
+    titleInfoGender.innerHTML = variant.gender || "?"
+    titleInfoAppVersion.innerHTML = variant.version || "?"
+    titleInfoModelVersion.innerHTML = variant.modelVersion || "?"
+    titleInfoModelType.innerHTML = variant.modelType || "?"
+    titleInfoLanguage.innerHTML = variant.lang || window.currentModel.games[0].lang || "en"
+    titleInfoAuthor.innerHTML = variant.author || "?"
+
+    generateVoiceButton.click()
+})
+
 
 // Change game
 window.changeGame = (meta) => {
@@ -320,14 +400,18 @@ window.changeGame = (meta) => {
     voiceSamples.innerHTML = ""
 
     const buttons = []
-    voiceSearchInput.placeholder = window.i18n.SEARCH_N_VOICES.replace("_", window.games[meta.gameId] ? window.games[meta.gameId].models.length : "0")
+    const totalNumVoices = window.games[meta.gameId].models.reduce((p,c)=>p+c.variants.length, 0)
+    voiceSearchInput.placeholder = window.i18n.SEARCH_N_VOICES.replace("_", window.games[meta.gameId] ? totalNumVoices : "0")
     voiceSearchInput.value = ""
 
     if (!window.games[meta.gameId]) {
         return
     }
 
-    window.games[meta.gameId].models.forEach(({model, modelsPath, audioPreviewPath, gameId, voiceId, voiceName, voiceDescription, hifi}) => {
+    window.games[meta.gameId].models.forEach(({modelsPath, audioPreviewPath, gameId, variants, voiceName}) => {
+
+        const {voiceId, voiceDescription, hifi, model} = variants[0]
+        const modelVersion = variants[0].version
 
         const button = createElem("div.voiceType", voiceName)
         button.style.background = `#${themeColour}`
@@ -391,6 +475,24 @@ window.changeGame = (meta) => {
                 return
             }
 
+
+            variant_select.innerHTML = ""
+            oldVariantSelection = undefined
+            if (variants.length==1) {
+                variantElements.style.display = "none"
+            } else {
+                variantElements.style.display = "flex"
+                variants.forEach(variant => {
+                    const option = createElem("option", {value: variant.variantName})
+                    option.innerHTML = variant.variantName
+                    variant_select.appendChild(option)
+                    if (!oldVariantSelection) {
+                        oldVariantSelection = variant.variantName
+                    }
+                })
+            }
+
+
             if (hifi) {
                 // Remove the bespoke hifi option if there was one already there
                 Array.from(vocoder_select.children).forEach(opt => {
@@ -417,30 +519,6 @@ window.changeGame = (meta) => {
                 })
             }
 
-            const appVersionRequirement = model.version.toString().split(".").map(v=>parseInt(v))
-            const appVersionInts = appVersion.replace("v", "").split(".").map(v=>parseInt(v))
-            let appVersionOk = true
-            if (appVersionRequirement[0] <= appVersionInts[0] ) {
-                if (appVersionRequirement.length>1 && parseInt(appVersionRequirement[0]) == appVersionInts[0]) {
-                    if (appVersionRequirement[1] <= appVersionInts[1] ) {
-                        if (appVersionRequirement.length>2 && parseInt(appVersionRequirement[1]) == appVersionInts[1]) {
-                            if (appVersionRequirement[2] <= appVersionInts[2] ) {
-                            } else {
-                                appVersionOk = false
-                            }
-                        }
-                    } else {
-                        appVersionOk = false
-                    }
-                }
-            } else {
-                appVersionOk = false
-            }
-            if (!appVersionOk) {
-                window.errorModal(`${window.i18n.MODEL_REQUIRES_VERSION} v${model.version}<br><br>${window.i18n.THIS_APP_VERSION}: ${window.appVersion}`)
-                return
-            }
-
             window.currentModel = model
             window.currentModel.voiceId = voiceId
             window.currentModel.voiceName = button.innerHTML
@@ -465,6 +543,7 @@ window.changeGame = (meta) => {
                     outputs: parseInt(model.outputs),
                     model: `${modelsPath}/${voiceId}`,
                     modelType: model.modelType,
+                    version: model.version,
                     model_speakers: model.emb_size,
                     cmudict: model.cmudict
                 })
@@ -690,10 +769,18 @@ generateVoiceButton.addEventListener("click", () => {
             return
         }
 
+        const body = JSON.parse(generateVoiceButton.dataset.modelQuery)
+
+        const appVersionOk = window.checkVersionRequirements(body.version, appVersion)
+        if (!appVersionOk) {
+            window.errorModal(`${window.i18n.MODEL_REQUIRES_VERSION} v${body.version}<br><br>${window.i18n.THIS_APP_VERSION}: ${window.appVersion}`)
+            return
+        }
+
+
         window.appLogger.log(`${window.i18n.LOADING_VOICE}: ${JSON.parse(generateVoiceButton.dataset.modelQuery).model}`)
         window.batch_state.lastModel = JSON.parse(generateVoiceButton.dataset.modelQuery).model.split("/").reverse()[0]
 
-        const body = JSON.parse(generateVoiceButton.dataset.modelQuery)
         body["pluginsContext"] = JSON.stringify(window.pluginsContext)
 
         spinnerModal(`${window.i18n.LOADING_VOICE}`)

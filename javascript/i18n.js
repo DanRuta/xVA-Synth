@@ -22,6 +22,7 @@ window.i18n.setEnglish = () => {
     window.i18n.RESET_LETTER = "Reset Letter"
     window.i18n.AUTO_REGEN = "Auto regenerate"
     window.i18n.VOCODER = "Vocoder:"
+    window.i18n.VARIANT_IS = "Variant:"
 
     window.i18n.SEARCH_GAMES = "Search games..."
     window.i18n.SEARCH_SETTINGS = "Search settings..."
@@ -845,6 +846,9 @@ window.i18n.updateUI = () => {
     i18n_s2s_components_pitch.innerHTML = window.i18n.PITCH
     i18n_s2s_components_duration.innerHTML = window.i18n.DURATIONS
     i18n_s2s_components_energy.innerHTML = window.i18n.ENERGY
+
+
+    i18n_variant.innerHTML = window.i18n.VARIANT_IS
 
     arpabetIcon.title = "ARPAbet"
     embeddingsIcon.title = "Embeddings visualiser"

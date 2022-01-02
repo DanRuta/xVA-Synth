@@ -112,49 +112,51 @@ window.populateVoicesList = () => {
 
         window.games[gameId].models.forEach(model => {
 
-            const voiceRowElem = createElem("div")
+            model.variants.forEach(variant => {
+                const voiceRowElem = createElem("div")
 
-            const voiceCkbx = createElem(`input#embsVoice_${model.voiceId}`, {type: "checkbox"})
-            voiceCkbx.checked = true
-            voiceCkbx.addEventListener("click", () => {
-                window.computeEmbsAndDimReduction()
-            })
-            checkboxes.push(voiceCkbx)
-            const showVoiceBtn = createElem("button.smallButton.fixedColour", "Show")
-            showVoiceBtn.style.background = `#${window.embeddingsState.gameColours[model.gameId]}`
-            showVoiceBtn.addEventListener("click", () => {
-                if (!voiceCkbx.checked) {
-                    return window.errorModal(window.i18n.VEMB_VOICE_NOT_ENABLED)
+                const voiceCkbx = createElem(`input#embsVoice_${variant.voiceId}`, {type: "checkbox"})
+                voiceCkbx.checked = true
+                voiceCkbx.addEventListener("click", () => {
+                    window.computeEmbsAndDimReduction()
+                })
+                checkboxes.push(voiceCkbx)
+                const showVoiceBtn = createElem("button.smallButton.fixedColour", "Show")
+                showVoiceBtn.style.background = `#${window.embeddingsState.gameColours[model.gameId]}`
+                showVoiceBtn.addEventListener("click", () => {
+                    if (!voiceCkbx.checked) {
+                        return window.errorModal(window.i18n.VEMB_VOICE_NOT_ENABLED)
+                    }
+                    const point = window.embeddingsState.sceneData.points.find(point => point.data.voiceId==variant.voiceId)
+                    window.embeddingsState.sceneData.controls.target.set(point.position.x, point.position.y, point.position.z)
+
+                    const cameraPos = window.embeddingsState.sceneData.camera.position
+                    const deltaX = (point.position.x - cameraPos.x)
+                    const deltaY = (point.position.y - cameraPos.y)
+                    const deltaZ = (point.position.z - cameraPos.z)
+
+                    window.embeddingsState.sceneData.camera.position.set(cameraPos.x+deltaX/2, cameraPos.y+deltaY/2, cameraPos.z+deltaZ/2)
+
+                })
+
+                const nameElem = createElem("div", model.voiceName+(model.variants.length>1?` (${variant.variantName})`:""))
+                nameElem.title = model.voiceName
+                const gameElem = createElem("div", window.embeddingsState.gameTitles[model.gameId])
+                gameElem.title = window.embeddingsState.gameTitles[model.gameId]
+                const voiceGender = createElem("div", variant.gender)
+                voiceGender.title = variant.gender
+
+                voiceRowElem.appendChild(createElem("div", voiceCkbx))
+                voiceRowElem.appendChild(createElem("div", showVoiceBtn))
+                voiceRowElem.appendChild(nameElem)
+                voiceRowElem.appendChild(gameElem)
+                voiceRowElem.appendChild(voiceGender)
+
+                if (embeddingsSearchBar.value.length && !model.voiceName.toLowerCase().trim().includes(embeddingsSearchBar.value.toLowerCase().trim())) {
+                    return
                 }
-                const point = window.embeddingsState.sceneData.points.find(point => point.data.voiceId==model.voiceId)
-                window.embeddingsState.sceneData.controls.target.set(point.position.x, point.position.y, point.position.z)
-
-                const cameraPos = window.embeddingsState.sceneData.camera.position
-                const deltaX = (point.position.x - cameraPos.x)
-                const deltaY = (point.position.y - cameraPos.y)
-                const deltaZ = (point.position.z - cameraPos.z)
-
-                window.embeddingsState.sceneData.camera.position.set(cameraPos.x+deltaX/2, cameraPos.y+deltaY/2, cameraPos.z+deltaZ/2)
-
+                embeddingsRecordsContainer.appendChild(voiceRowElem)
             })
-
-            const nameElem = createElem("div", model.voiceName)
-            nameElem.title = model.voiceName
-            const gameElem = createElem("div", window.embeddingsState.gameTitles[model.gameId])
-            gameElem.title = window.embeddingsState.gameTitles[model.gameId]
-            const voiceGender = createElem("div", model.gender)
-            voiceGender.title = model.gender
-
-            voiceRowElem.appendChild(createElem("div", voiceCkbx))
-            voiceRowElem.appendChild(createElem("div", showVoiceBtn))
-            voiceRowElem.appendChild(nameElem)
-            voiceRowElem.appendChild(gameElem)
-            voiceRowElem.appendChild(voiceGender)
-
-            if (embeddingsSearchBar.value.length && !model.voiceName.toLowerCase().trim().includes(embeddingsSearchBar.value.toLowerCase().trim())) {
-                return
-            }
-            embeddingsRecordsContainer.appendChild(voiceRowElem)
         })
     })
 
@@ -197,7 +199,14 @@ window.initDataMappings = () => {
     Object.keys(window.games).forEach(gameId => {
         // Voice Id to model data
         window.games[gameId].models.forEach(model => {
-            window.embeddingsState.voiceIdToModel[model.voiceId] = model
+            model.variants.forEach(variant => {
+                window.embeddingsState.voiceIdToModel[variant.voiceId] = JSON.parse(JSON.stringify(model))
+                if (model.variants.length>1) {
+                    let voiceName = window.embeddingsState.voiceIdToModel[variant.voiceId].voiceName
+                    voiceName = `${voiceName} (${variant.variantName})`
+                    window.embeddingsState.voiceIdToModel[variant.voiceId].voiceName = voiceName
+                }
+            })
         })
     })
 }
@@ -626,7 +635,14 @@ embeddingsLoadButton.addEventListener("click", () => {
             window.changeGame(window.gameAssets[gameId])
 
             // Simulate voice loading through the UI
-            const voiceName = window.games[gameId].models.find(model => model.voiceId==voiceId).voiceName
+            let voiceName
+            window.games[gameId].models.forEach(model => {
+                model.variants.forEach(variant => {
+                    if (variant.voiceId==voiceId) {
+                        voiceName = model.voiceName
+                    }
+                })
+            })
             const voiceButton = Array.from(voiceTypeContainer.children).find(button => button.innerHTML==voiceName)
             voiceButton.click()
             closeModal().then(() => {
@@ -681,10 +697,12 @@ window.computeEmbsAndDimReduction = (includeAllVoices=false) => {
             const modelsPathForGame = window.userSettings[`modelspath_${gameId}`]
 
             window.games[gameId].models.forEach(model => {
-                const audioPreviewPath = `${modelsPathForGame}/${model.voiceId}.wav`
-                if (fs.existsSync(audioPreviewPath)) {
-                    mappings.push(`${model.voiceId}=${audioPreviewPath}=${model.voiceName}=${model.gender}=${gameId}`)
-                }
+                model.variants.forEach(variant => {
+                    const audioPreviewPath = `${modelsPathForGame}/${variant.voiceId}.wav`
+                    if (fs.existsSync(audioPreviewPath)) {
+                        mappings.push(`${variant.voiceId}=${audioPreviewPath}=${model.voiceName}=${variant.gender}=${gameId}`)
+                    }
+                })
             })
         })
 

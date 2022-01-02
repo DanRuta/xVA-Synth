@@ -141,7 +141,7 @@ batch_generateSample.addEventListener("click", () => {
     sampleText.forEach(line => {
         const game = games[parseInt(Math.random()*games.length)]
         const gameModels = window.games[game].models
-        const model = gameModels[parseInt(Math.random()*gameModels.length)]
+        const model = gameModels[parseInt(Math.random()*gameModels.length)].variants[0]
 
         console.log("game", game, "model", model)
 
@@ -401,7 +401,11 @@ window.preProcessCSVData = data => {
                 return []
             }
             // Check that the voice_id exists
-            const gameVoices = window.games[record.game_id].models.map(item => item.voiceId)
+            const gameVoices = []
+            window.games[record.game_id].models.forEach(model => {
+                model.variants.forEach(variant => gameVoices.push(variant.voiceId))
+            })
+
             if (!gameVoices.includes(record.voice_id)) {
                 window.errorModal(`[${window.i18n.LINE}: ${di+2}] ${window.i18n.ERROR}: voice_id "${record.voice_id}" ${window.i18n.BATCH_ERR_VOICEID}: ${record.game_id}`)
                 return []
@@ -412,7 +416,19 @@ window.preProcessCSVData = data => {
                 return []
             }
 
-            data[di].modelType = window.games[data[di].game_id].models.find(rec => rec.voiceId==data[di].voice_id).model.modelType
+            data[di].modelType = undefined
+            let hasHifi = false
+            window.games[data[di].game_id].models.forEach(model => {
+                model.variants.forEach(variant => {
+                    if (variant.voiceId==data[di].voice_id) {
+                        data[di].modelType = variant.modelType || model.modelType
+                        record.voiceName = model.voiceName // For easy access later on
+                        if (variant.hifi) {
+                            hasHifi = variant.hifi
+                        }
+                    }
+                })
+            })
 
             // Fill with defaults
             // ==================
@@ -423,15 +439,15 @@ window.preProcessCSVData = data => {
                 record.pacing = 1
             }
             record.pacing = parseFloat(record.pacing)
-            if (!record.vocoder || (record.vocoder=="hifi" && !window.games[record.game_id].models.find(rec => rec.voiceId==record.voice_id).hifi)) {
-                record.vocoder = "waveglow"
+
+            if (!record.vocoder || (record.vocoder=="hifi" && !hasHifi)) {
+                record.vocoder = "quickanddirty"
             }
         } catch (e) {
             console.log(e)
             window.appLogger.log(e)
             console.log(data[di])
             console.log(window.games[data[di].game_id])
-            console.log(window.games[data[di].game_id].models.find(rec => rec.voiceId==data[di].voice_id))
         }
     }
 
@@ -629,14 +645,22 @@ window.batchChangeVoice = (game, voice, modelType) => {
             batch_progressNotes.innerHTML = `${window.i18n.BATCH_CHANGING_MODEL_TO}: ${voice}`
         }
 
-        const model = window.games[game].models.find(model => model.voiceId==voice).model
+        let model
+        window.games[game].models.forEach(gameModel => {
+            gameModel.variants.forEach(variant => {
+                if (variant.voiceId==voice) {
+                    model = variant
+                }
+            })
+        })
+
         doFetch(`http://localhost:8008/loadModel`, {
             method: "Post",
             body: JSON.stringify({
                 "modelType": modelType,
                 "outputs": null,
                 "model": `${window.userSettings[`modelspath_${game}`]}/${voice}`,
-                "model_speakers": model.emb_size,
+                "model_speakers": model.num_speakers,
                 "pluginsContext": JSON.stringify(window.pluginsContext)
             })
         }).then(r=>r.text()).then(res => {
@@ -742,12 +766,19 @@ window.prepareLinesBatchForSynth = () => {
             break
         }
 
-        const model = window.games[record[0].game_id].models.find(model => model.voiceId==record[0].voice_id).model
+        let model
+        window.games[record[0].game_id].models.forEach(gamesModel => {
+            gamesModel.variants.forEach(variant => {
+                if (variant.voiceId==record[0].voice_id) {
+                    model = variant
+                }
+            })
+        })
 
         const sequence = record[0].text
         const pitch = undefined // maybe later
         const duration = undefined // maybe later
-        speaker_i = model.games[0].emb_i || 0
+        speaker_i = model.emb_i || 0
         let pace = record[0].pacing
         pace = Number.isNaN(pace) ? 1.0 : pace
 
@@ -823,7 +854,7 @@ window.addActionButtons = (records, ri) => {
 
         // Simulate voice loading through the UI
         if (!window.currentModel || window.currentModel.voiceId != records[ri][0].voice_id) {
-            const voiceName = window.games[records[ri][0].game_id].models.find(model => model.voiceId==records[ri][0].voice_id).voiceName
+            const voiceName = records[ri][0].voiceName
             const voiceButton = Array.from(voiceTypeContainer.children).find(button => button.innerHTML==voiceName)
             voiceButton.click()
             vocoder_select.value = records[ri][0].vocoder=="hifi" ? `${records[ri][0].game_id}/${records[ri][0].voice_id}.hg.pt` : records[ri][0].vocoder
@@ -1051,7 +1082,7 @@ window.batchKickOffGeneration = () => {
                     const extraInfo = {
                         game: records.map(rec => rec[0].game_id),
                         voiceId: records.map(rec => rec[0].voice_id),
-                        voiceName: records.map(rec => window.games[rec[0].game_id].models.find(m=>m.voiceId==rec[0].voice_id).voiceName),
+                        voiceName: records.map(rec => rec[0].voiceName),
                         inputSequence: records.map(rec => rec[0].text)
                     }
                     if (window.userSettings.batch_fastMode) {
@@ -1070,7 +1101,7 @@ window.batchKickOffGeneration = () => {
                                 const extraInfo = {
                                     game: records[ri][0].game_id,
                                     voiceId: records[ri][0].voiceId,
-                                    voiceName: window.games[records[ri][0].game_id].models.find(m=>m.voiceId==records[ri][0].voice_id).voiceName,
+                                    voiceName: records[ri][0].voiceName,
                                     letters: records[ri][0].text
                                 }
 

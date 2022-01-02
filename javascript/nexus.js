@@ -626,7 +626,22 @@ window.displayAllModels = (forceUpdate=false) => {
         if (nexusSearchBar.value.toLowerCase().trim().length && !modelMeta.name.toLowerCase().includes(nexusSearchBar.value.toLowerCase().trim())) {
             return
         }
-        const existingModel = Object.keys(window.games).includes(modelMeta.game) ? window.games[modelMeta.game].models.find(model => model.voiceId==modelMeta.voiceId) : undefined
+        let existingModel = undefined
+        if (Object.keys(window.games).includes(modelMeta.game)) {
+            for (let mi=0; mi<window.games[modelMeta.game].models.length; mi++) {
+                if (existingModel) continue
+
+                const variants = window.games[modelMeta.game].models[mi].variants
+
+                for (let vi=0; vi<variants.length; vi++) {
+                    if (variants[vi].voiceId==modelMeta.voiceId) {
+                        existingModel = variants[vi]
+                        break
+                    }
+                }
+            }
+        }
+
         if (existingModel && nexusOnlyNewUpdatedCkbx.checked && (window.checkVersionRequirements(modelMeta.version, String(existingModel.modelVersion)) || (modelMeta.version.replace(".0","")==String(existingModel.modelVersion))) ){
             return
         }
