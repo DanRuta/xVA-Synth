@@ -45,7 +45,7 @@ oauthlib==3.1.1
 omegaconf==2.1.1
 packaging==20.4
 pefile==2019.4.18
-Pillow==7.2.0
+Pillow==9.0.0
 pooch==1.2.0
 portalocker==2.3.2
 praat-parselmouth==0.4.0
