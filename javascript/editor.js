@@ -909,7 +909,7 @@ jitter_btn.addEventListener("click", () => {
                 return e
             }
             const distFromMiddle = (e-window.sequenceEditor.MIN_ENERGY) - (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)/2
-            const newVal = e + distFromMiddle*(Math.random()*0.2+0.05) * ((Math.random()-0.5)>0 ? 1 : -1)
+            const newVal = e + distFromMiddle*(Math.random()*0.1+0.05) * ((Math.random()-0.5)>0 ? 1 : -1)
             return newVal>0 ? Math.min(window.sequenceEditor.MAX_ENERGY, newVal) : Math.max(window.sequenceEditor.MIN_ENERGY, newVal)
         })
         window.sequenceEditor.energyGrabbers.forEach((slider, l) => {
@@ -929,7 +929,7 @@ increase_btn.addEventListener("click", () => {
             if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(pi)==-1) {
                 return p
             }
-            return p+0.025
+            return p+0.1
         })
         window.sequenceEditor.grabbers.forEach((slider, l) => {
             slider.setValueFromValue(window.sequenceEditor.pitchNew[l])
@@ -942,7 +942,7 @@ increase_btn.addEventListener("click", () => {
             if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
                 return e
             }
-            return e-0.01
+            return e-0.04
         })
         window.sequenceEditor.energyGrabbers.forEach((slider, l) => {
             slider.setValueFromValue(window.sequenceEditor.energyNew[l])
@@ -959,7 +959,7 @@ decrease_btn.addEventListener("click", () => {
             if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(pi)==-1) {
                 return p
             }
-            return p-0.025
+            return p-0.1
         })
         window.sequenceEditor.grabbers.forEach((slider, l) => {
             slider.setValueFromValue(window.sequenceEditor.pitchNew[l])
@@ -972,7 +972,7 @@ decrease_btn.addEventListener("click", () => {
             if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
                 return e
             }
-            return e+0.01
+            return e+0.04
         })
         window.sequenceEditor.energyGrabbers.forEach((slider, l) => {
             slider.setValueFromValue(window.sequenceEditor.energyNew[l])
