@@ -784,6 +784,22 @@ searchSettingsInput.addEventListener("keyup", () => {
 })
 
 
+const currentWindow = require("electron").remote.getCurrentWindow()
+currentWindow.on("move", () => {
+    const bounds = remote.getCurrentWindow().webContents.getOwnerBrowserWindow().getBounds()
+    window.userSettings.customWindowPosition = `${bounds.x},${bounds.y}`
+    saveUserSettings()
+})
+
+if (window.userSettings.customWindowPosition) {
+    ipcRenderer.send('updatePosition', {details: window.userSettings.customWindowPosition.split(",")})
+}
+
+
+
+
+
+
 
 // Speech-to-speech settings
 if (!Object.keys(window.userSettings).includes("s2s_components")) { // For backwards compatibility
