@@ -559,3 +559,76 @@ window.shuffle = (array) => {
 
     return array;
 }
+
+
+// Just for easier packaging of the voice models for publishing - yes, lazy
+window.packageVoice_variantIndex = 0
+window.packageVoice = (doVoicePreviewCreate, variants, {modelsPath, gameId}={}) => {
+
+    const {voiceId, hifi} = variants[window.packageVoice_variantIndex]
+
+    if (doVoicePreviewCreate) {
+        const files = fs.readdirSync(`./output`).filter(fname => fname.includes("temp-") && fname.includes(".wav"))
+        if (files.length) {
+            const options = {
+                hz: window.userSettings.audio.hz,
+                padStart: window.userSettings.audio.padStart,
+                padEnd: window.userSettings.audio.padEnd,
+                bit_depth: window.userSettings.audio.bitdepth,
+                amplitude: window.userSettings.audio.amplitude,
+                pitchMult: window.userSettings.audio.pitchMult,
+                tempo: window.userSettings.audio.tempo
+            }
+
+            doFetch(`http://localhost:8008/outputAudio`, {
+                method: "Post",
+                body: JSON.stringify({
+                    input_path: `./output/${files[0]}`,
+                    isBatchMode: false,
+                    output_path: `${modelsPath}/${voiceId}_raw.wav`,
+                    options: JSON.stringify(options)
+                })
+            }).then(r=>r.text()).then(() => {
+                try {
+                    fs.unlinkSync(`${modelsPath}/${voiceId}.wav`)
+                } catch (e) {}
+                doFetch(`http://localhost:8008/normalizeAudio`, {
+                    method: "Post",
+                    body: JSON.stringify({
+                        input_path: `${modelsPath}/${voiceId}_raw.wav`,
+                        output_path: `${modelsPath}/${voiceId}.wav`
+                    })
+                }).then(r=>r.text()).then((resp) => {
+                    console.log(resp)
+                    fs.unlinkSync(`${modelsPath}/${voiceId}_raw.wav`)
+                })
+            })
+        }
+    } else {
+        fs.mkdirSync(`./build/${voiceId}`)
+        fs.mkdirSync(`./build/${voiceId}/resources`)
+        fs.mkdirSync(`./build/${voiceId}/resources/app`)
+        fs.mkdirSync(`./build/${voiceId}/resources/app/models`)
+        fs.mkdirSync(`./build/${voiceId}/resources/app/models/${gameId}`)
+        fs.copyFileSync(`${modelsPath}/${voiceId}.json`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.json`)
+        fs.copyFileSync(`${modelsPath}/${voiceId}.wav`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.wav`)
+        fs.copyFileSync(`${modelsPath}/${voiceId}.pt`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.pt`)
+        if (hifi) {
+            fs.copyFileSync(`${modelsPath}/${voiceId}.hg.pt`, `./build/${voiceId}/resources/app/models/${gameId}/${voiceId}.hg.pt`)
+        }
+        zipdir(`./build/${voiceId}`, {saveTo: `./build/${voiceId}.zip`}, (err, buffer) => deleteFolderRecursive(`./build/${voiceId}`))
+    }
+}
+
+
+const assetFiles = fs.readdirSync(`${window.path}/assets`)
+const jsonFiles = fs.readdirSync(`${window.path}/assets`).filter(fn => fn.endsWith(".json"))
+const missingAssetFiles = jsonFiles.filter(jsonFile => !(assetFiles.includes(jsonFile.replace(".json", ".png"))||assetFiles.includes(jsonFile.replace(".json", ".jpg"))) )
+if (missingAssetFiles.length) {
+    noAssetFilesFoundMessage.style.display = "block"
+    assetDirLink.addEventListener("click", () => {
+        shell.showItemInFolder((require("path")).resolve(`${window.path}/assets/other.jpg`))
+    })
+}
+
+
