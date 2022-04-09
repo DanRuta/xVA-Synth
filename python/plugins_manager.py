@@ -57,6 +57,19 @@ class PluginManager(object):
             },
         }
 
+        self.plugins_context_cache = {}
+        for key in self.plugins.keys():
+            if key=="custom-event":
+                pass
+            else:
+                self.plugins_context_cache[key] = {}
+                for sub_key in self.plugins[key].keys():
+                    self.plugins_context_cache[key][sub_key] = {}
+
+    def set_context_cache (self, event, hook, plugin_id, data):
+        self.plugins_context_cache[event][hook][plugin_id] = data
+
+
     def get_active_plugins_count (self):
         active_plugins = []
 
@@ -197,10 +210,19 @@ class PluginManager(object):
             if event=="custom-event" and plugin_name!=data["pluginId"]:
                 continue
 
+            hook, eventName = event.split(" ")
+            if plugin_name in self.plugins_context_cache[eventName][hook].keys():
+                data["context_cache"] = self.plugins_context_cache[eventName][hook][plugin_name]
+            # else:
+            #     data["context_cache"] = None
+
             try:
                 self.logger.info(plugin_name)
                 self.logger.set_logger_prefix(plugin_name)
                 function(data)
+
+                if "context_cache" in data.keys():
+                    self.plugins_context_cache[eventName][hook][plugin_name] = data["context_cache"]
 
                 self.logger.set_logger_prefix("")
             except:
