@@ -660,6 +660,12 @@ window.makeSample = (src, newSample) => {
                 if (fs.existsSync(`${oldPathComposed}.json`)) {
                     fs.renameSync(oldPathComposed+".json", newPathComposed+".json")
                 }
+                if (fs.existsSync(`${oldPathComposed.replace(/\.wav$/, "")}.lip`)) {
+                    fs.renameSync(oldPathComposed.replace(/\.wav$/, "")+".lip", newPathComposed.replace(/\.wav$/, "")+".lip")
+                }
+                if (fs.existsSync(`${oldPathComposed.replace(/\.wav$/, "")}.fuz`)) {
+                    fs.renameSync(oldPathComposed.replace(/\.wav$/, "")+".fuz", newPathComposed.replace(/\.wav$/, "")+".fuz")
+                }
 
                 oldPath.reverse()
                 oldPath.splice(0,1)
