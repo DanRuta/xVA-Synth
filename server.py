@@ -228,25 +228,13 @@ if __name__ == '__main__':
 
                 if self.path == "/synthesize":
                     logger.info("POST {}".format(self.path))
-                    modelType = post_data["modelType"]
-                    text = post_data["sequence"]
-                    pace = float(post_data["pace"])
-                    out_path = post_data["outfile"]
-                    pitch = post_data["pitch"] if "pitch" in post_data else None
-                    energy = post_data["energy"] if "energy" in post_data else None
-                    duration = post_data["duration"] if "duration" in post_data else None
-                    speaker_i = post_data["speaker_i"] if "speaker_i" in post_data else None
-                    vocoder = post_data["vocoder"]
-                    globalAmplitudeModifier = float(post_data["globalAmplitudeModifier"]) if "globalAmplitudeModifier" in post_data else None
-                    pitch_data = [pitch, duration, energy]
-                    old_sequence = post_data["old_sequence"] if "old_sequence" in post_data else None
                     post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])
 
                     # Handle the case where the vocoder remains selected on app start-up, with auto-HiFi turned off, but no setVocoder call is made before synth
                     continue_synth = True
-                    if "waveglow" in vocoder:
+                    if "waveglow" in post_data["vocoder"]:
                         waveglowPath = post_data["waveglowPath"]
-                        req_response = models_manager.load_model(vocoder, waveglowPath)
+                        req_response = models_manager.load_model(post_data["vocoder"], waveglowPath)
                         if req_response=="ENOENT":
                             continue_synth = False
 
@@ -255,21 +243,36 @@ if __name__ == '__main__':
                     if continue_synth:
                         plugin_manager.set_context(post_data["pluginsContext"])
                         plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["pre"], event="pre synth-line", data=post_data)
+
+                        modelType = post_data["modelType"]
+                        text = post_data["sequence"]
+                        pace = float(post_data["pace"])
+                        out_path = post_data["outfile"]
+                        pitch = post_data["pitch"] if "pitch" in post_data else None
+                        energy = post_data["energy"] if "energy" in post_data else None
+                        duration = post_data["duration"] if "duration" in post_data else None
+                        speaker_i = post_data["speaker_i"] if "speaker_i" in post_data else None
+                        vocoder = post_data["vocoder"]
+                        globalAmplitudeModifier = float(post_data["globalAmplitudeModifier"]) if "globalAmplitudeModifier" in post_data else None
+                        pitch_data = [pitch, duration, energy]
+                        old_sequence = post_data["old_sequence"] if "old_sequence" in post_data else None
+
                         req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", "")).infer(plugin_manager, text, out_path, vocoder=vocoder, \
                             speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence, globalAmplitudeModifier=globalAmplitudeModifier)
                         plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["post"], event="post synth-line", data=post_data)
 
 
                 if self.path == "/synthesize_batch":
+                    post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])
+
+                    plugin_manager.set_context(post_data["pluginsContext"])
+                    plugin_manager.run_plugins(plist=plugin_manager.plugins["batch-synth-line"]["pre"], event="pre batch-synth-line", data=post_data)
                     modelType = post_data["modelType"]
                     linesBatch = post_data["linesBatch"]
                     speaker_i = post_data["speaker_i"]
                     vocoder = post_data["vocoder"]
                     outputJSON = post_data["outputJSON"]
-                    post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])
 
-                    plugin_manager.set_context(post_data["pluginsContext"])
-                    plugin_manager.run_plugins(plist=plugin_manager.plugins["batch-synth-line"]["pre"], event="pre batch-synth-line", data=post_data)
                     try:
                         req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", "")).infer_batch(plugin_manager, linesBatch, outputJSON=outputJSON, vocoder=vocoder, speaker_i=speaker_i)
                     except RuntimeError as e:
@@ -323,7 +326,6 @@ if __name__ == '__main__':
 
 
                 if self.path == "/batchOutputAudio":
-                    logger.info("POST {}".format(self.path))
                     input_paths = post_data["input_paths"]
                     output_paths = post_data["output_paths"]
                     processes = post_data["processes"]
@@ -363,6 +365,9 @@ if __name__ == '__main__':
                         extraInfo["ffmpeg"] = ffmpeg
 
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["output-audio"]["pre"], event="pre output-audio", data=extraInfo)
+                    input_path = post_data["input_path"]
+                    output_path = post_data["output_path"]
+
                     req_response = run_audio_post(PROD, None if isBatchMode else logger, input_path, output_path, options)
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["output-audio"]["post"], event="post output-audio", data=extraInfo)
 
