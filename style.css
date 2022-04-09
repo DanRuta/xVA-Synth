@@ -1535,10 +1535,11 @@ a {
 }
 
 #arpabetMenu_middle {
-    width: calc(85vw - 250px - 525px - 100px);
+    width: calc(95vw - 250px - 525px - 100px);
     height: calc(75vh - 150px);
     margin-right: 25px;
     margin-left: 25px;
+    min-width: 400px;
 }
 #arpabetMenu_middle > div:nth-child(2) {
     background: rgb(75,75,75);
@@ -1546,7 +1547,8 @@ a {
     width: 100%;
 }
 #arpabetMenu_right {
-    width: 525px;
+    width: calc(90vw - 250px - 400px);
+    max-width: 550px;
     height: calc(75vh - 150px);
 }
 #arpabetReferenceList > div > div > div > b {
@@ -1554,6 +1556,8 @@ a {
 }
 #arpabetReferenceList {
     height: calc(75vh - 150px);
+    flex-direction: row;
+    justify-content: space-around;
     flex-wrap: wrap;
     overflow: auto;
 }
