@@ -8,7 +8,8 @@ window.arpabetMenuState = {
     clickedRecord: undefined,
     skipRefresh: false,
     hasInitialised: false,
-    isRefreshing: false
+    isRefreshing: false,
+    hasChangedARPAbet: false
 }
 
 // window.ARPAbetSymbols = ["AA", "AE", "AH", "AO", "AW", "AX", "AXR", "AY", "B", "CH", "D", "DH", "EH", "EL", "EM", "EN", "ER", "EY", "F", "G", "HH", "IH", "IX", "IY", "JH", "K", "L", "M", "N", "NG", "OW", "P", "R", "S", "SH", "T", "TH", "UH", "UW", "UX", "V", "W", "WH", "Y", "Z", "ZH"]
@@ -28,6 +29,11 @@ window.refreshDictionariesList = () => {
 
     return new Promise(resolve => {
 
+        // Don't spam with changes when the menu isn't open
+        if (arpabetModal.parentElement.style.display!="flex" && window.arpabetMenuState.hasInitialised) {
+            return
+        }
+
         window.arpabetMenuState.hasInitialised = true
         if (window.arpabetMenuState.isRefreshing) {
             resolve()
@@ -39,6 +45,7 @@ window.refreshDictionariesList = () => {
             resolve()
             return
         }
+
         spinnerModal(window.i18n.LOADING_DICTIONARIES)
         window.arpabetMenuState.dictionaries = {}
         arpabet_dicts_list.innerHTML = ""
@@ -133,6 +140,7 @@ window.refreshDictWordList = () => {
             window.arpabetMenuState.dictionaries[dictId].data[wordKeys[i]].enabled = ckbx.checked
             window.arpabetMenuState.skipRefresh = true
             window.saveARPAbetDict(dictId)
+            window.arpabetMenuState.hasChangedARPAbet = true
             setTimeout(() => window.arpabetMenuState.skipRefresh = false, 1000)
         })
 
@@ -346,4 +354,4 @@ arpabet_search_only_enabled.addEventListener("click", () => window.arpabetRunSea
 
 
 
-fs.watch(`${window.path}/arpabet`, {recursive: false, persistent: true}, (eventType, filename) => {refreshDictionariesList()})
+fs.watch(`${window.path}/arpabet`, {recursive: false, persistent: true}, (eventType, filename) => {console.log(eventType, filename);refreshDictionariesList()})
