@@ -1,0 +1,8 @@
+{
+    "gameName": "Metal Gear Solid",
+    "assetFile": "metalgearsolid.jpg",
+    "themeColourPrimary": "363636",
+    "themeColourSecondary": "c0c0c0",
+    "gameCode": "MGS",
+    "nexusGamePageIDs": [755, 1091, 2324, 2554, 3461, 3766]
+}
