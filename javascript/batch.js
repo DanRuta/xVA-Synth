@@ -448,6 +448,10 @@ window.preProcessCSVData = data => {
             }
             record.pacing = parseFloat(record.pacing)
 
+            if (!record.out_path.includes(":/") && !record.out_path.startsWith("./")) {
+                record.out_path = `./${record.out_path}`
+            }
+
             if (!record.vocoder || (record.vocoder=="hifi" && !hasHifi)) {
                 record.vocoder = "quickanddirty"
             }

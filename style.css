@@ -960,7 +960,7 @@ a {
     justify-content: center;
     align-items: center;
     height: 50vh;
-    width: 80vw;
+    width: 94vw;
     background: rgb(75,75,75);
     color: gray;
     overflow: auto;
@@ -993,7 +993,7 @@ a {
     justify-content: space-between;
     align-items: center;
     padding-bottom: 20px;
-    width: 80vw;
+    width: 94vw;
 }
 #batch_intro > div:first-child {
     display: flex;
