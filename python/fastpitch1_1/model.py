@@ -101,11 +101,19 @@ class FastPitch1_1(object):
                         self.arpabet_dict[word] = json_data["data"][word]["arpabet"]
 
 
-    def infer_arpabet_dict (self, sentence):
+    def infer_arpabet_dict (self, sentence, plugin_manager=None):
         dict_words = list(self.arpabet_dict.keys())
 
+        data_context = {}
+        data_context["sentence"] = sentence
+        data_context["dict_words"] = dict_words
+        data_context["language"] = "en"
+        plugin_manager.run_plugins(plist=plugin_manager.plugins["arpabet-replace"]["pre"], event="pre arpabet-replace", data=data_context)
+        sentence = data_context["sentence"]
+        dict_words = data_context["dict_words"]
+
         # Don't run the ARPAbet replacement for every single word, as it would be too slow. Instead, do it only for words that are actually present in the prompt
-        words_in_prompt = (sentence+" ").replace("}","").replace("{","").replace(",","").replace("?","").replace("!","").replace(". "," ").lower().split(" ")
+        words_in_prompt = (sentence+" ").replace("}","").replace("{","").replace(",","").replace("?","").replace("!","").replace("...",".").replace(". "," ").lower().split(" ")
         words_in_prompt = [word.strip() for word in words_in_prompt if len(word.strip()) and word in dict_words]
 
         if len(words_in_prompt):
@@ -139,6 +147,10 @@ class FastPitch1_1(object):
             sentence = re.sub("^\s+", " ", sentence) if sentence.startswith("  ") else re.sub("^\s*", "", sentence)
             sentence = re.sub("\s+$", " ", sentence) if sentence.endswith("  ") else re.sub("\s*$", "", sentence)
 
+        data_context = {}
+        data_context["sentence"] = sentence
+        plugin_manager.run_plugins(plist=plugin_manager.plugins["arpabet-replace"]["post"], event="post arpabet-replace", data=data_context)
+        sentence = data_context["sentence"]
         return sentence
 
 
@@ -156,7 +168,7 @@ class FastPitch1_1(object):
         for record in linesBatch:
             text = record[0]
             text = re.sub(r'[^a-zA-ZäöüÄÖÜß\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)
-            text = self.infer_arpabet_dict(text)
+            text = self.infer_arpabet_dict(text, plugin_manager)
             text = text.replace("(", "").replace(")", "")
             sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
             cleaned_text_sequences.append(sequence_to_text("english_basic", sequence))
@@ -233,7 +245,7 @@ class FastPitch1_1(object):
         denoising_strength = 0.01
 
         text = re.sub(r'[^a-zA-ZäöüÄÖÜß\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)
-        text = self.infer_arpabet_dict(text)
+        text = self.infer_arpabet_dict(text, plugin_manager)
         text = text.replace("(", "").replace(")", "")
         sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
         cleaned_text = sequence_to_text("english_basic", sequence)

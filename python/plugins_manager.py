@@ -46,6 +46,10 @@ class PluginManager(object):
                 "pre": [],
                 "post": []
             },
+            "arpabet-replace": {
+                "pre": [],
+                "post": []
+            },
             "output-audio": {
                 "pre": [],
                 "mid": [],
