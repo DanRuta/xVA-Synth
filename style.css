@@ -1107,15 +1107,20 @@ a {
 }
 /*Out path*/
 #batchRecordsHeader > div:nth-child(8), #batchRecordsContainer > div > div:nth-child(8) {
-    min-width: 300px;
-    max-width: 300px;
+    min-width: 250px;
+    max-width: 250px;
     direction: rtl;
     text-align: left;
 }
 /*Pacing*/
 #batchRecordsHeader > div:nth-child(9), #batchRecordsContainer > div > div:nth-child(9) {
-    min-width: 75px;
-    /*max-width: 50px;*/
+    min-width: 80px;
+    max-width: 80px;
+}
+/*Pitch amplification*/
+#batchRecordsHeader > div:nth-child(10), #batchRecordsContainer > div > div:nth-child(10) {
+    min-width: 85px;
+    max-width: 85px;
 }
 
 #batch_ETA_container {

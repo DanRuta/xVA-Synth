@@ -83,8 +83,9 @@ class FastPitch(object):
 
         with torch.no_grad():
             pace = torch.tensor([record[3] for record in linesBatch]).unsqueeze(1).to(self.device)
+            pitch_amp = torch.tensor([record[7] for record in linesBatch]).unsqueeze(1).to(self.device)
             pitch_data = None # Maybe in the future
-            mel, mel_lens, dur_pred, pitch_pred, start_index, end_index = self.model.infer_advanced(self.logger, plugin_manager, cleaned_text_sequences, text_sequences, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=None)
+            mel, mel_lens, dur_pred, pitch_pred, start_index, end_index = self.model.infer_advanced(self.logger, plugin_manager, cleaned_text_sequences, text_sequences, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=None, pitch_amp=pitch_amp)
 
             if "waveglow" in vocoder:
 

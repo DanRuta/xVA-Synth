@@ -448,6 +448,12 @@ window.preProcessCSVData = data => {
             }
             record.pacing = parseFloat(record.pacing)
 
+
+            if (!record.pitch_amp) {
+                record.pitch_amp = 1
+            }
+            record.pitch_amp = parseFloat(record.pitch_amp)
+
             if (!record.out_path.includes(":/") && !record.out_path.startsWith("./")) {
                 record.out_path = `./${record.out_path}`
             }
@@ -484,6 +490,7 @@ window.populateBatchRecordsList = records => {
         const rOutPathElem = createElem("div", "&lrm;"+record.out_path+"&lrm;")
         rOutPathElem.title = record.out_path
         const rPacingElem = createElem("div", (record.pacing||" ").toString())
+        const rPitchAmpElem = createElem("div", (record.pitch_amp||" ").toString())
 
 
         row.appendChild(rNumElem)
@@ -495,6 +502,7 @@ window.populateBatchRecordsList = records => {
         row.appendChild(rVocoderElem)
         row.appendChild(rOutPathElem)
         row.appendChild(rPacingElem)
+        row.appendChild(rPitchAmpElem)
 
         window.batch_state.lines.push([record, row, ri])
     })
@@ -793,6 +801,8 @@ window.prepareLinesBatchForSynth = () => {
         speaker_i = model.emb_i || 0
         let pace = record[0].pacing
         pace = Number.isNaN(pace) ? 1.0 : pace
+        let pitch_amp = record[0].pitch_amp
+        pitch_amp = Number.isNaN(pitch_amp) ? 1.0 : pitch_amp
 
         const tempFileNum = `${Math.random().toString().split(".")[1]}`
         const tempFileLocation = `${window.path}/output/temp-${tempFileNum}.wav`
@@ -812,7 +822,7 @@ window.prepareLinesBatchForSynth = () => {
 
         outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
 
-        linesBatch.push([sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder])
+        linesBatch.push([sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder, pitch_amp])
         records.push(record)
     }
 

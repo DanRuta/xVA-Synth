@@ -238,7 +238,7 @@ class FastPitch(nn.Module):
 
 
 
-    def infer_using_vals (self, logger, plugin_manager, sequence, pace, enc_out, max_duration, enc_mask, dur_pred_existing=None, pitch_pred_existing=None, old_sequence=None, new_sequence=None):
+    def infer_using_vals (self, logger, plugin_manager, sequence, pace, enc_out, max_duration, enc_mask, dur_pred_existing=None, pitch_pred_existing=None, old_sequence=None, new_sequence=None, pitch_amp=None):
 
         start_index = None
         end_index = None
@@ -322,6 +322,8 @@ class FastPitch(nn.Module):
             dur_pred = torch.tensor(dur_pred_np).to(self.device).unsqueeze(0)
             pitch_pred = torch.tensor(pitch_pred_np).to(self.device).unsqueeze(0)
 
+        if pitch_amp is not None:
+            pitch_pred = pitch_pred * pitch_amp
         if plugin_manager and len(plugin_manager.plugins["synth-line"]["mid"]):
             plugin_data = {
                 "duration": dur_pred.cpu().detach().numpy(),
@@ -346,7 +348,7 @@ class FastPitch(nn.Module):
         return mel_out, dec_lens, dur_pred, pitch_pred, start_index, end_index
 
 
-    def infer_advanced (self, logger, plugin_manager, cleaned_text, inputs, speaker_i, pace=1.0, pitch_data=None, max_duration=75, old_sequence=None):
+    def infer_advanced (self, logger, plugin_manager, cleaned_text, inputs, speaker_i, pace=1.0, pitch_data=None, max_duration=75, old_sequence=None, pitch_amp=None):
 
         if speaker_i is not None:
             speaker = torch.ones(inputs.size(0)).long().to(inputs.device) * speaker_i
@@ -369,13 +371,13 @@ class FastPitch(nn.Module):
             del spk_emb
             # Try using the provided pitch/duration data, but fall back to using its own, otherwise
             try:
-                return self.infer_using_vals(logger, plugin_manager, cleaned_text, pace, enc_out, max_duration, enc_mask, dur_pred_existing=dur_pred, pitch_pred_existing=pitch_pred, old_sequence=old_sequence, new_sequence=inputs)
+                return self.infer_using_vals(logger, plugin_manager, cleaned_text, pace, enc_out, max_duration, enc_mask, dur_pred_existing=dur_pred, pitch_pred_existing=pitch_pred, old_sequence=old_sequence, new_sequence=inputs, pitch_amp=pitch_amp)
             except:
                 print(traceback.format_exc())
                 logger.info(traceback.format_exc())
-                return self.infer_using_vals(logger, plugin_manager, cleaned_text, pace, enc_out, max_duration, enc_mask, None, None, None)
+                return self.infer_using_vals(logger, plugin_manager, cleaned_text, pace, enc_out, max_duration, enc_mask, None, None, None, pitch_amp=pitch_amp)
 
         else:
             del spk_emb
-            return self.infer_using_vals(logger, plugin_manager, cleaned_text, pace, enc_out, max_duration, enc_mask, None, None, None)
+            return self.infer_using_vals(logger, plugin_manager, cleaned_text, pace, enc_out, max_duration, enc_mask, None, None, None, pitch_amp=pitch_amp)
 
