@@ -886,6 +886,43 @@ flatten_btn.addEventListener("click", () => {
     }
     kickOffAutoInferTimer()
 })
+
+
+jitter_btn.addEventListener("click", () => {
+    if (seq_edit_edit_select.value=="pitch") {
+        window.sequenceEditor.pitchNew = window.sequenceEditor.pitchNew.map((p, pi) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(pi)==-1) {
+                return p
+            }
+            const newVal = p*(1+ (Math.random()*0.2+0.05) * ((Math.random()-0.5)>0 ? 1 : -1)  )
+            return newVal>0 ? Math.min(window.sequenceEditor.pitchSliderRange, newVal) : Math.max(-window.sequenceEditor.pitchSliderRange, newVal)
+        })
+        window.sequenceEditor.grabbers.forEach((slider, l) => {
+            slider.setValueFromValue(window.sequenceEditor.pitchNew[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
+    } else if (seq_edit_edit_select.value=="energy") {
+        window.sequenceEditor.energyNew = window.sequenceEditor.energyNew.map((e, ei) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
+                return e
+            }
+            const distFromMiddle = (e-window.sequenceEditor.MIN_ENERGY) - (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)/2
+            const newVal = e + distFromMiddle*(Math.random()*0.2+0.05) * ((Math.random()-0.5)>0 ? 1 : -1)
+            return newVal>0 ? Math.min(window.sequenceEditor.MAX_ENERGY, newVal) : Math.max(window.sequenceEditor.MIN_ENERGY, newVal)
+        })
+        window.sequenceEditor.energyGrabbers.forEach((slider, l) => {
+            slider.setValueFromValue(window.sequenceEditor.energyNew[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
+    }
+    kickOffAutoInferTimer()
+})
+
+
 increase_btn.addEventListener("click", () => {
     if (seq_edit_edit_select.value=="pitch") {
         window.sequenceEditor.pitchNew = window.sequenceEditor.pitchNew.map((p,pi) => {

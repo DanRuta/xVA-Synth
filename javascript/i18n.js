@@ -30,6 +30,7 @@ window.i18n.setEnglish = () => {
     window.i18n.SEARCH_N_GAMES_WITH_N2_VOICES = "Search _1 games with _2 voices..."
     window.i18n.RESET = "Reset"
     window.i18n.AMPLIFY = "Amplify"
+    window.i18n.JITTER = "Jitter"
     window.i18n.FLATTEN = "Flatten"
     window.i18n.RAISE = "Raise"
     window.i18n.LOWER = "Lower"
@@ -685,6 +686,7 @@ window.i18n.updateUI = () => {
 
     reset_btn.innerHTML = window.i18n.RESET
     amplify_btn.innerHTML = window.i18n.AMPLIFY
+    jitter_btn.innerHTML = window.i18n.JITTER
     flatten_btn.innerHTML = window.i18n.FLATTEN
     increase_btn.innerHTML = window.i18n.RAISE
     decrease_btn.innerHTML = window.i18n.LOWER
