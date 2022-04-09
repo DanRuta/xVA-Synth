@@ -252,8 +252,8 @@ a {
      opacity: 0.9;
      height: 50px;
      width: calc(95vw - 306px);
-     margin-left: 2.5vw;
-     margin-right: 2.5vw;
+     margin-left: 10px;
+     margin-right: 6px;
      margin-top: 9px;
      overflow-x: hidden;
      text-align: center;
@@ -286,11 +286,11 @@ a {
      user-select: none;
  }
  #voiceSamples {
-     width: calc(95vw - 300px);
+     /*width: calc(95vw - 300px);*/
      height: calc(91vh - 185px - 290px - 45px - 50px);
      background: rgba(255,255,255,0.1);
-     margin-left: 2.5vw;
-     margin-right: 2.5vw;
+     margin-left: 10px;
+     margin-right: 6px;
      margin-top: 70px;
      overflow-y: auto;
  }
@@ -374,7 +374,7 @@ a {
  #mic_SVG {
      height: 40px;
      width: 40px;
-     margin-left: 50px;
+     margin-left: 40px;
      margin-top: 16px;
      margin-bottom: 2px;
      filter: drop-shadow( 1px 1px 1px rgba(0, 0, 0, 1));
@@ -385,7 +385,7 @@ a {
      margin-top: -50px;
      margin-top: -61px;
      pointer-events: none;
-     margin-left: 33px;
+     margin-left: 23px;
  }
 
  #mic_progress_SVG_circle{
@@ -395,7 +395,7 @@ a {
      transform-origin: 50% 50%;
  }
  #dialogueInput {
-     width: calc(95vw - 380px) !important;
+     width: calc(95vw - 300px) !important;
      margin-left: 1vw;
  }
 
@@ -588,8 +588,8 @@ a {
 
  #editorContainer {
      overflow-x: scroll;
-     margin-left: 2.5vw;
-     margin-right: 2.5vw;
+     margin-left: 10px;
+     margin-right: 6px;
  }
  #letterLength {
      width: 150px;

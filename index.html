@@ -102,13 +102,13 @@
                           <circle id="mic_progress_SVG_circle" stroke-width="5" fill="transparent" stroke="white" r="35" cx="37" cy="37" />
                         </svg>
                         <div id="s2s_voiceId_selected_label_container" style="width: 125px;display: flex;justify-content: center;">
-                            <div id="s2s_voiceId_selected_label" style="display:none;color: white;margin-left: 10px;position: absolute;background: rgba(0,0,0,0.5);z-index: 100;padding: 2px;font-size: 9pt;margin-top: -10px;"></div>
+                            <div id="s2s_voiceId_selected_label" style="display:none;color: white;position: absolute;background: rgba(0,0,0,0.5);z-index: 100;padding: 2px;font-size: 9pt;margin-top: -10px;"></div>
                         </div>
                     </div>
                     <textarea id="dialogueInput" placeholder="Type your text here..."></textarea>
                 </div>
-                <div id="wavesurferContainerContainer" style="display: flex;justify-content: center;height: 100px; max-height: 100px; width: 100%;    overflow: hidden;">
-                    <div id="wavesurferContainer" style="height: 200px; width: calc(100% - 5vw);cursor: text;filter: drop-shadow(1px 0px 0px rgba(0, 0, 0, 1));">
+                <div id="wavesurferContainerContainer" style="display: flex;justify-content: center;height: 100px; max-height: 100px; width: 100%;overflow: hidden;">
+                    <div id="wavesurferContainer" style="height: 200px; width: calc(100% - 20px);cursor: text;filter: drop-shadow(1px 0px 0px rgba(0, 0, 0, 1));">
                     </div>
                 </div>
                 <div id="buttonContainer">
@@ -186,7 +186,7 @@
                     </div>
                 </div>
                 <div id="voiceSamples"></div>
-                <div style="display: flex;align-items: center;margin-left: 2.5vw;margin-right: 2.5vw;margin-top: 10px;height: 35px;">
+                <div style="display: flex;align-items: center;margin-left: 10px;margin-right: 6px;margin-top: 10px;height: 35px;">
                     <div style="flex-grow: 1;">
                         <input id="voiceSamplesSearch" placeholder="Search output file names..." style="height: 30px;font-size: 14pt;">
                     </div>
@@ -372,7 +372,7 @@
 
                     <div>
                         <div id="i18n_setting_external_edit">External program for editing audio</div>
-                        <div style="flex-direction: row;">
+                        <div style="flex-direction: row">
                             <input id="setting_external_audio_editor" name="" placeholder="C:/Program Files (x86)/Audacity/audacity.exe" style="width: 80%">
                             <button id="setting_externalEditorButton" class="svgButton"></button>
                         </div>
@@ -731,7 +731,7 @@
             <div class="modal">
                 <h2 id="i18n_support">Support</h2>
 
-                <span id="i18n_support_link">You can support 'xVASynth' development on patreon</span>
+                <!-- <span id="i18n_support_link">You can support 'xVASynth' development on patreon</span> -->
 
                 <!-- <span id="patreonButton" href="https://www.patreon.com/bePatron?u=48461563" data-patreon-widget-type="become-patron-button">
                     <svg style="height: 1rem;width: 1rem;" viewBox="0 0 569 546" xmlns="http://www.w3.org/2000/svg"><g><circle cx="362.589996" fill="#ffffff" cy="204.589996" data-fill="1" id="Oval" r="204.589996"></circle><rect fill="#ffffff" data-fill="2" height="545.799988" id="Rectangle" width="100" x="0" y="0"></rect></g></svg>
@@ -740,7 +740,8 @@
                 </span> -->
                 <!-- <br> -->
                 <!-- <div>Search: xVASynth patreon</div> -->
-                <br><hr><br><span id="i18n_support_thanks">Special thanks:</span>
+                <!-- <br><hr><br> -->
+                <span id="i18n_support_thanks">Special thanks:</span>
 
                 <span id="creditsList" style="overflow-y: auto;width: 100%;"></span>
             </div>
