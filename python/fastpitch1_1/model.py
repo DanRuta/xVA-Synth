@@ -135,7 +135,9 @@ class FastPitch1_1(object):
                 sentence = re.sub("(?<!\{)\s"+dict_word.strip().replace(".", "\.").replace("(", "\(").replace(")", "\)")+"\s(?![\w\s\(\)]*[\}])", " {"+arpabet_string+"} ", sentence, flags=re.IGNORECASE)
 
             # Undo the punctuation padding, to retain the original sentence structure
-            sentence = sentence.replace(" ,", ",").replace(" .", ".").replace(" !", "!").replace(" ?", "?").strip()
+            sentence = sentence.replace(" ,", ",").replace(" .", ".").replace(" !", "!").replace(" ?", "?")
+            sentence = re.sub("^\s+", " ", sentence) if sentence.startswith("  ") else re.sub("^\s*", "", sentence)
+            sentence = re.sub("\s+$", " ", sentence) if sentence.endswith("  ") else re.sub("\s*$", "", sentence)
 
         return sentence
 
