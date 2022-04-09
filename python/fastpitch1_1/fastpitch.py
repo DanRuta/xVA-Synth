@@ -535,11 +535,15 @@ class FastPitch(nn.Module):
         spk_emb = 0
         max_duration = 75
         enc_out, enc_mask = models_manager.models(modelType).model.encoder(inputs, conditioning=spk_emb)
-        mel_out, dec_lens, dur_pred, pitch_pred, energy_pred, start_index, end_index = models_manager.models(modelType).model.infer_using_vals(logger, None, cleaned_text, 1, enc_out, max_duration, enc_mask, None, None, None, None, None)
+        if modelType=="fastpitch":
+            mel_out, dec_lens, dur_pred, pitch_pred, start_index, end_index = models_manager.models(modelType).model.infer_using_vals(logger, None, cleaned_text, 1, enc_out, max_duration, enc_mask, None, None, None, None)
+            energy_pred = None
+        else:
+            mel_out, dec_lens, dur_pred, pitch_pred, energy_pred, start_index, end_index = models_manager.models(modelType).model.infer_using_vals(logger, None, cleaned_text, 1, enc_out, max_duration, enc_mask, None, None, None, None, None)
+            energy_pred = energy_pred.cpu().detach().numpy()
 
         dur_pred = dur_pred.cpu().detach().numpy()[0]
         pitch_pred = pitch_pred.cpu().detach().numpy()
-        energy_pred = energy_pred.cpu().detach().numpy()
 
 
 
@@ -580,7 +584,9 @@ class FastPitch(nn.Module):
 
         pitch = estimate_pitch(audiopath, mel.size(-1), "praat", mean, std)
         # Average pitch over characters
+        pitch = pitch.to(torch.device(attn_hard_dur.device))
         pitch_tgt = average_pitch(pitch.unsqueeze(0), attn_hard_dur)
+        pitch_tgt = pitch_tgt.cpu()
 
 
         # Apply configured interpolation
@@ -607,7 +613,7 @@ class FastPitch(nn.Module):
             logger.info(traceback.format_exc())
 
         # Apply configured interpolation
-        if s2s_components["energy"]["enabled"]:
+        if energy_pred is not None and s2s_components["energy"]["enabled"]:
             energy_final = (energy_tgt*s2s_components["energy"]["strength"] + energy_pred*(1-s2s_components["energy"]["strength"]))
         else:
             energy_final = energy_pred
@@ -620,7 +626,7 @@ class FastPitch(nn.Module):
         # pitch_final = normalize_pitch_vectors(logger, pitch_final)
         # pitch_final = [max(-3, min(v, 3)) for v in pitch_final]
         durs_final = list(durations_final)
-        energy_final = list(energy_final[0])
+        energy_final = list(energy_final[0]) if energy_final is not None else []
 
         return [cleaned_text, pitch_final, durs_final, energy_final]
 

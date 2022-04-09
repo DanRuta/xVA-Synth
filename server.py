@@ -46,6 +46,8 @@ if __name__ == '__main__':
         torch.jit.script_method = script_method
         torch.jit.script = script
         import torch
+        import tqdm
+        import regex
     except:
         with open("./DEBUG_err_import_torch.txt", "w+") as f:
             f.write(traceback.format_exc())
@@ -54,7 +56,7 @@ if __name__ == '__main__':
     try:
         logger = logging.getLogger('serverLog')
         logger.setLevel(logging.DEBUG)
-        fh = RotatingFileHandler('{}\server.log'.format(os.path.dirname(os.path.realpath(__file__))), maxBytes=5*1024*1024, backupCount=2)
+        fh = RotatingFileHandler('{}\server.log'.format(os.path.dirname(os.path.realpath(__file__))), maxBytes=2*1024*1024, backupCount=5)
         fh.setLevel(logging.DEBUG)
         ch = logging.StreamHandler()
         ch.setLevel(logging.ERROR)

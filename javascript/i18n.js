@@ -148,7 +148,7 @@ window.i18n.setEnglish = () => {
 
     window.i18n.SUPPORT = "Support"
     window.i18n.SUPPORT_LINK = "You can support 'xVASynth' development on patreon"
-    window.i18n.SUPPORT_THANKS = "Special thanks:"
+    window.i18n.SUPPORT_THANKS = "Special thanks to the xVASynth Patreon supporters:"
 
     window.i18n.SUPPORT_GAMES = "Search games..."
 
@@ -417,6 +417,8 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_CLEAR_TEXT_AFTER_GENERATION = "Clear the text input after generation"
     window.i18n.SETTINGS_GROUP_VOICEID = "Group voices by voiceId and vocoder in preprocessing to minimize model switching"
     window.i18n.SETTINGS_GROUP_VOCODER = "Also do a secondary group by the vocoder - can take long to do with big files (100k+ lines)"
+    window.i18n.SETTING_HIGHLIGHT_ONLY_MODELS_V = "Highlight only models with at least this version"
+
 
     window.i18n.SEARCH_OUTPUT = "Search output file names..."
     window.i18n.DELETE = "Delete"
@@ -792,7 +794,7 @@ window.i18n.updateUI = () => {
     i18n_keyboard_ctrlshiftud_do.innerHTML = window.i18n.KEYBOARD_CTRLSHIFTUD_DO
 
     i18n_support.innerHTML = window.i18n.SUPPORT
-    i18n_support_link.innerHTML = window.i18n.SUPPORT_LINK
+    // i18n_support_link.innerHTML = window.i18n.SUPPORT_LINK
     i18n_support_thanks.innerHTML = window.i18n.SUPPORT_THANKS
 
     searchGameInput.placeholder = window.i18n.SEARCH_GAMES
@@ -846,6 +848,8 @@ window.i18n.updateUI = () => {
     i18n_s2s_components_pitch.innerHTML = window.i18n.PITCH
     i18n_s2s_components_duration.innerHTML = window.i18n.DURATIONS
     i18n_s2s_components_energy.innerHTML = window.i18n.ENERGY
+
+    i18n_settings_model_version_highlight.innerHTML = window.i18n.SETTING_HIGHLIGHT_ONLY_MODELS_V
 
 
     i18n_variant.innerHTML = window.i18n.VARIANT_IS

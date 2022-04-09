@@ -473,7 +473,7 @@ class PluginsManager {
     registerINIFile (pluginId, settingsKey, filePath) {
 
         if (!pluginId || !settingsKey || !filePath) {
-            return self.log(`You must provide the following to register an ini file: pluginId, settingsKey, filePath`)
+            return window.appLogger.log(`You must provide the following to register an ini file: pluginId, settingsKey, filePath`)
         }
 
         if (fs.existsSync(filePath)) {
@@ -582,7 +582,7 @@ class PluginsManager {
 
 
         } else {
-            this.log(`Ini file does not exists here: ${filePath}`)
+            window.appLogger.log(`Ini file does not exist here: ${filePath}`)
         }
 
     }

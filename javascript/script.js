@@ -1,5 +1,5 @@
 "use strict"
-window.appVersion = "v2.1.0"
+window.appVersion = "v2.1.1"
 
 window.PRODUCTION = module.filename.includes("resources")
 const path = window.PRODUCTION ? "./resources/app" : "."
@@ -353,6 +353,7 @@ variant_select.addEventListener("change", () => {
 })
 
 
+
 // Change game
 window.changeGame = (meta) => {
 
@@ -401,7 +402,7 @@ window.changeGame = (meta) => {
     voiceSamples.innerHTML = ""
 
     const buttons = []
-    const totalNumVoices = window.games[meta.gameId].models.reduce((p,c)=>p+c.variants.length, 0)
+    const totalNumVoices = (window.games[meta.gameId] ? window.games[meta.gameId].models : []).reduce((p,c)=>p+c.variants.length, 0)
     voiceSearchInput.placeholder = window.i18n.SEARCH_N_VOICES.replace("_", window.games[meta.gameId] ? totalNumVoices : "0")
     voiceSearchInput.value = ""
 
@@ -409,13 +410,18 @@ window.changeGame = (meta) => {
         return
     }
 
-    window.games[meta.gameId].models.forEach(({modelsPath, audioPreviewPath, gameId, variants, voiceName}) => {
+    (window.games[meta.gameId] ? window.games[meta.gameId].models : []).forEach(({modelsPath, audioPreviewPath, gameId, variants, voiceName}) => {
 
         const {voiceId, voiceDescription, hifi, model} = variants[0]
         const modelVersion = variants[0].version
 
         const button = createElem("div.voiceType", voiceName)
         button.style.background = `#${themeColour}`
+        if (window.userSettings.do_model_version_highlight && parseFloat(modelVersion)<window.userSettings.model_version_highlight) {
+            button.style.border =  `2px solid #${themeColour}`
+            button.style.padding =  "0"
+            button.style.background = "none"
+        }
         button.dataset.modelId = voiceId
         if (secondaryThemeColour) {
             button.style.color = `#${secondaryThemeColour}`

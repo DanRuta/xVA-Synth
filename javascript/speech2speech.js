@@ -270,20 +270,21 @@ window.populateS2SVoiceList = () => {
     const models = []
     Object.values(window.games).forEach(game => {
         game.models.forEach(model => {
-            if (model.modelType.toLowerCase()=="fastpitch1.1") {
 
-                model.model.games.forEach(modelGame => {
+            model.variants.forEach(variant => {
 
-                    if (!s2sVLFemale.checked && modelGame.gender && modelGame.gender.toLowerCase()=="female") return
-                    if (!s2sVLMale.checked && modelGame.gender && modelGame.gender.toLowerCase()=="male") return
-                    if (!s2sVLOther.checked && modelGame.gender && modelGame.gender.toLowerCase()=="other") return
+                if (variant.modelType.toLowerCase()=="fastpitch1.1") {
 
-                    const modelPath = window.userSettings[`modelspath_${modelGame.gameId}`] + `/${modelGame.voiceId}.pt`
+                    if (!s2sVLFemale.checked && variant.gender && variant.gender.toLowerCase()=="female") return
+                    if (!s2sVLMale.checked && variant.gender && variant.gender.toLowerCase()=="male") return
+                    if (!s2sVLOther.checked && variant.gender && variant.gender.toLowerCase()=="other") return
 
-                    const themeColour = window.games[modelGame.gameId].gameTheme.themeColourPrimary
-                    models.push([modelPath, model.num_speakers||0, model.audioPreviewPath, modelGame.voiceName, modelGame.voiceId, themeColour] )
-                })
-            }
+                    const modelPath = window.userSettings[`modelspath_${model.gameId}`] + `/${variant.voiceId}.pt`
+
+                    const themeColour = window.games[model.gameId].gameTheme.themeColourPrimary
+                    models.push([modelPath, model.num_speakers||0, model.audioPreviewPath, model.voiceName, variant.voiceId, themeColour] )
+                }
+            })
         })
     })
 

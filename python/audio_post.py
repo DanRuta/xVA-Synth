@@ -16,7 +16,7 @@ def mp_ffmpeg_output (PROD, logger, processes, input_paths, output_paths, option
     workers = processes if processes>0 else max(1, mp.cpu_count()-1)
     workers = min(len(workItems), workers)
 
-    logger.info("[mp ffmpeg] workers: "+str(workers))
+    # logger.info("[mp ffmpeg] workers: "+str(workers))
 
     pool = mp.Pool(workers)
     results = pool.map(processingTask, workItems)

@@ -101,8 +101,16 @@ let smiInterval = setInterval(() => {
     try {
         if (window.userSettings.useGPU) {
             smi((err, data) => {
-                const total = parseInt(data.nvidia_smi_log.gpu.fb_memory_usage.total.split(" ")[0])
-                const used = parseInt(data.nvidia_smi_log.gpu.fb_memory_usage.used.split(" ")[0])
+                let total
+                let used
+
+                if (data.nvidia_smi_log.gpu.length) {
+                    total = parseInt(data.nvidia_smi_log.gpu[0].fb_memory_usage.total.split(" ")[0])
+                    used = parseInt(data.nvidia_smi_log.gpu[0].fb_memory_usage.used.split(" ")[0])
+                } else {
+                    total = parseInt(data.nvidia_smi_log.gpu.fb_memory_usage.total.split(" ")[0])
+                    used = parseInt(data.nvidia_smi_log.gpu.fb_memory_usage.used.split(" ")[0])
+                }
                 const percent = used/total*100
 
                 vramUsage.innerHTML = `${(used/1000).toFixed(1)}/${(total/1000).toFixed(1)} GB (${percent.toFixed(2)}%)`

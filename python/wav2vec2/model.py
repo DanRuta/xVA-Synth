@@ -41,7 +41,7 @@ class Wav2Vec2(object):
         # Tokenize
         input_values = self.processor(audio_input, sample_rate=sample_rate, return_tensors="pt", padding="longest").input_values
         # Retrieve logits
-        logits = self.model(input_values).logits
+        logits = self.model(input_values.to(self.device)).logits
 
         predicted_ids = torch.argmax(logits, dim=-1)
         transcription = self.processor.decode(predicted_ids[0]).lower()

@@ -322,7 +322,7 @@ class FastPitch(nn.Module):
             dur_pred = torch.tensor(dur_pred_np).to(self.device).unsqueeze(0)
             pitch_pred = torch.tensor(pitch_pred_np).to(self.device).unsqueeze(0)
 
-        if len(plugin_manager.plugins["synth-line"]["mid"]):
+        if plugin_manager and len(plugin_manager.plugins["synth-line"]["mid"]):
             plugin_data = {
                 "duration": dur_pred.cpu().detach().numpy(),
                 "pitch": pitch_pred.cpu().detach().numpy(),
