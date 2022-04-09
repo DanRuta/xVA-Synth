@@ -1807,7 +1807,21 @@ chromeMax.addEventListener("click", () => {
     const w = remote.getCurrentWindow()
     w.isMaximized() ? w.unmaximize() : w.maximize()
 })
-chromeQuit.addEventListener("click", () => remote.getCurrentWindow().close())
+// chromeQuit.addEventListener("click", () => remote.getCurrentWindow().close())
+chromeQuit.addEventListener("click", () => doFetch(`http://localhost:8008/stopServer`, {
+    method: "Post",
+    body: JSON.stringify({})
+}).then(r=>r.text()).then(() => {
+    try {
+        window.pythonProcess.kill()
+    } catch (e) {}
+    remote.getCurrentWindow().close()
+}).catch(e => {
+    try {
+        window.pythonProcess.kill()
+    } catch (e) {}
+    remote.getCurrentWindow().close()
+}))
 </script>
 <style id="pluginsCSS" type="text/css"></style>
 <script src="lib/recorder.js"></script>
