@@ -842,13 +842,15 @@ generateVoiceButton.addEventListener("click", () => {
             window.speech2speechState.s2s_running = false
         }
 
-        if (speech2speechState.s2s_autogenerate || (editorContainer.innerHTML && editorContainer.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice))) {
+        // Check if editing an existing line (otherwise it's a fresh new line)
+        if (!window.arpabetMenuState.hasChangedARPAbet && (speech2speechState.s2s_autogenerate || (editorContainer.innerHTML && editorContainer.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice)))) {
             speech2speechState.s2s_autogenerate = false
             pitch = window.sequenceEditor.pitchNew.map(v=> v==undefined?0:v)
             duration = window.sequenceEditor.dursNew.map(v => v*pace_slid.value).map(v=> v==undefined?0:v)
             energy = window.sequenceEditor.energyNew ? window.sequenceEditor.energyNew.map(v => v==undefined?0:v).filter(v => !isNaN(v)) : []
             isFreshRegen = false
         }
+        window.arpabetMenuState.hasChangedARPAbet = false
         window.sequenceEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
 
         const speaker_i = window.currentModel.games[0].emb_i
