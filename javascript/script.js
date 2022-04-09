@@ -95,6 +95,7 @@ window.initWaveSurfer = (src) => {
     } else {
         window.wavesurfer = WaveSurfer.create({
             container: '#wavesurferContainer',
+            backend: 'MediaElement',
             waveColor: `#${window.currentGame.themeColourPrimary}`,
             height: 100,
             progressColor: 'white',
