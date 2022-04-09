@@ -267,7 +267,7 @@ window.arpabetRunSearch = () => {
     window.arpabetMenuState.paginationIndex = 0
     window.arpabetMenuState.totalPages = 0
 
-    const query = arpabet_word_search_input.value.trim().toLowerCase()
+    let query = arpabet_word_search_input.value.trim().toLowerCase()
 
     if (!query.length) {
         if (arpabet_search_only_enabled.checked) {
@@ -280,7 +280,16 @@ window.arpabetRunSearch = () => {
             window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].filteredData = window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data
         }
     } else {
-        const filteredKeys = Object.keys(window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data).filter(key => key.includes(query) && (arpabet_search_only_enabled.checked ? (window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data[key].enabled) : true))
+        const strictQuery = query.startsWith("\"")
+        const filteredKeys = Object.keys(window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data)
+        .filter(key => {
+            if (strictQuery) {
+                query = query.replaceAll("\"", "")
+                return key==query && (arpabet_search_only_enabled.checked ? (window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data[key].enabled) : true)
+            } else {
+                return key.includes(query) && (arpabet_search_only_enabled.checked ? (window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].data[key].enabled) : true)
+            }
+        })
 
         window.arpabetMenuState.dictionaries[window.arpabetMenuState.currentDict].filteredData = {}
         filteredKeys.forEach(key => {
