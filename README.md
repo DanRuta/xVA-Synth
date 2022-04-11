@@ -3,6 +3,9 @@
 xVASynth 2.0 is a machine learning based speech synthesis app, using voices from characters/voice sets from video games.
 
 Patreon: https://www.patreon.com/xvasynth
+Steam: https://store.steampowered.com/app/1765720/xVASynth_v2
+
+## New: xVATrainer, for training your own custom voices: https://github.com/DanRuta/xva-trainer
 
 ## See it in action (YouTube link)
 
@@ -22,7 +25,7 @@ Join chat on Discord here: https://discord.gg/nv7c6E2TzV
 
 ## Installation
 
-Where possible, make sure you download the app from the Nexus websites. There the compiled version will be the most up-to-date.
+Where possible, make sure you download the app from the Nexusmods websites (Files tab, "Main Files" section). There the compiled version will be the most up-to-date.
 
 The base application can be downloaded and placed anywhere. Aim to install it onto an SSD, if you have the space, to reduce voice set loading time. To install voice sets, you can drop the files into the respective game directory: `xVASynth/resources/app/models/<game>/`
 
@@ -31,7 +34,7 @@ The base application can be downloaded and placed anywhere. Aim to install it on
 
 Watch the above video for a summary of this section.
 
-To start, download the latest release (from here: https://github.com/DanRuta/xVA-Synth/releases), double click the xVASynth.exe file, and make sure to click Allow, if Windows asks for permission to run the python server script (this is used internally). Alternatively, check out the `Development` section, to see how to run the non-packaged dev code.
+To start, download the latest release, double click the xVASynth.exe file, and make sure to click Allow, if Windows asks for permission to run the python server script (this is used internally). Alternatively, check out the `Development` section, to see how to run the non-packaged dev code.
 
 Once the app is up and running, select the voice set category (the game) from the top left dropdown, then click a specific voice set.
 
