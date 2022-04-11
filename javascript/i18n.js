@@ -178,6 +178,7 @@ window.i18n.setEnglish = () => {
 
     window.i18n.BATCH_CLEAR_DIR = "Clear out the directory first"
     window.i18n.BATCH_SKIP = "Skip existing output"
+    window.i18n.BATCH_OUTPUTNUMERICALLY = "Output file names in numerical order only"
     window.i18n.BATCH_CURRENTLYDOING = "currently doing..."
     window.i18n.BATCH_SYNTHESIZE = "Synthesize Batch"
     window.i18n.BATCH_PAUSE = "Pause"
@@ -830,6 +831,7 @@ window.i18n.updateUI = () => {
 
     i18n_batch_cleardir.innerHTML = window.i18n.BATCH_CLEAR_DIR
     i18n_batch_skip.innerHTML = window.i18n.BATCH_SKIP
+    i18n_batch_outputNumerically.innerHTML = window.i18n.BATCH_OUTPUTNUMERICALLY
     batch_progressNotes.innerHTML = window.i18n.BATCH_CURRENTLYDOING
     batch_synthesizeBtn.innerHTML = window.i18n.BATCH_SYNTHESIZE
     batch_pauseBtn.innerHTML = window.i18n.BATCH_PAUSE

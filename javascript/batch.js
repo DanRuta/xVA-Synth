@@ -101,6 +101,9 @@ let smiInterval = setInterval(() => {
     try {
         if (window.userSettings.useGPU) {
             smi((err, data) => {
+                if (err) {
+                    console.log("smi error: ", err)
+                }
                 let total
                 let used
 
@@ -318,10 +321,10 @@ window.uploadBatchCSVs = async (eType, event) => {
             } else {
                 window.appLogger.log("Adding files to queue")
             }
-            records.forEach(item => {
+            records.forEach((item, ii) => {
+                let outPath
 
                 if (window.userSettings.batch_skipExisting) {
-                    let outPath
 
                     if (item.out_path && item.out_path.split("/").reverse()[0].includes(".")) {
                         outPath = item.out_path
@@ -344,6 +347,7 @@ window.uploadBatchCSVs = async (eType, event) => {
                 } else {
                     dataLines.push(item)
                 }
+                // }
             })
         }
 
@@ -520,6 +524,7 @@ window.refreshBatchRecordsList = (finalOrder) => {
         recordAndElem[1].children[0].innerHTML = (ri+1)//batchRecordsContainer.children.length.toString()
         batchRecordsContainer.appendChild(recordAndElem[1])
     }
+    window.toggleNumericalRecordsDisplay()
 }
 
 // Sort the lines by voice_id, and then by vocoder used
@@ -573,6 +578,7 @@ batch_clearBtn.addEventListener("click", () => {
     batch_outputFolderInput.style.display = "inline-block"
     batch_clearDirOpts.style.display = "flex"
     batch_skipExistingOpts.style.display = "flex"
+    batch_outputNumericallyOpts.style.display = "flex"
     batch_progressItems.style.display = "none"
     batch_progressBar.style.display = "none"
 
@@ -618,6 +624,7 @@ window.startBatch = () => {
     batch_outputFolderInput.style.display = "none"
     batch_clearDirOpts.style.display = "none"
     batch_skipExistingOpts.style.display = "none"
+    batch_outputNumericallyOpts.style.display = "none"
     batch_progressItems.style.display = "flex"
     batch_progressBar.style.display = "flex"
     batch_pauseBtn.style.display = "inline-block"
@@ -820,7 +827,11 @@ window.prepareLinesBatchForSynth = () => {
         }
         outFolder = outFolder.length ? outFolder : window.userSettings.batchOutFolder
 
-        outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
+        if (batch_outputNumerically.checked) {
+            outPath = `${window.userSettings.batchOutFolder}/${String(record[2]).padStart(10, '0')}.${outPath.split(".").reverse()[0]}`
+        } else {
+            outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
+        }
 
         linesBatch.push([sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder, pitch_amp])
         records.push(record)
@@ -1283,6 +1294,7 @@ window.stopBatch = (stoppedByUser) => {
     batch_outputFolderInput.style.display = "inline-block"
     batch_clearDirOpts.style.display = "flex"
     batch_skipExistingOpts.style.display = "flex"
+    batch_outputNumericallyOpts.style.display = "flex"
     batch_progressItems.style.display = "none"
     batch_progressBar.style.display = "none"
     batch_pauseBtn.style.display = "none"
@@ -1377,6 +1389,15 @@ setting_batch_paginationSize.addEventListener("change", () => {
     batch_total_pages.innerHTML = `of ${numPages}`
 
     window.refreshBatchRecordsList()
+})
+
+window.toggleNumericalRecordsDisplay = () => {
+    window.batch_state.lines.forEach(record => {
+        record[1].children[7].innerHTML = batch_outputNumerically.checked ? `${window.userSettings.batchOutFolder}/${String(record[2]).padStart(10, '0')}` : record[0].out_path
+    })
+}
+batch_outputNumerically.addEventListener("click", () => {
+    window.toggleNumericalRecordsDisplay()
 })
 
 
