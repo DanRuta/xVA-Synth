@@ -1,0 +1,8 @@
+{
+    "gameName": "Assassin's Creed",
+    "assetFile": "assassinscreed.jpg",
+    "themeColourPrimary": "b3030d",
+    "themeColourSecondary": null,
+    "gameCode": "AC",
+    "nexusGamePageIDs": [741, 1064, 1809, 2153, 2610, 2619, 2703, 2773, 2901, 2996, 3256, 3509, 3698, 3771, 3837, 4266]
+}

@@ -1,0 +1,8 @@
+{
+    "gameName": "Warcraft",
+    "assetFile": "warcraft.jpg",
+    "themeColourPrimary": "a5b8d2",
+    "themeColourSecondary": null,
+    "gameCode": "WC",
+    "nexusGamePageIDs": [200, 1416, 3271]
+}

@@ -1,0 +1,8 @@
+{
+    "gameName": "Dungeon Keeper",
+    "assetFile": "dungeonkeeper.png",
+    "themeColourPrimary": "846240",
+    "themeColourSecondary": null,
+    "gameCode": "DK",
+    "nexusGamePageIDs": [4003]
+}

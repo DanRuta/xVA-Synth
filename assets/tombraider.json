@@ -1,0 +1,8 @@
+{
+    "gameName": "Tomb Raider",
+    "assetFile": "tombraider.jpg",
+    "themeColourPrimary": "ebebeb",
+    "themeColourSecondary": null,
+    "gameCode": "TR",
+    "nexusGamePageIDs": [2178, 2588, 2824, 3047, 3188, 3234, 3516, 3682, 3979]
+}
