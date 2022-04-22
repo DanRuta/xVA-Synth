@@ -515,7 +515,7 @@ class FastPitch(nn.Module):
             return self.infer_using_vals(logger, plugin_manager, cleaned_text, pace, enc_out, max_duration, enc_mask, None, None, None, None, None, pitch_amp=pitch_amp)
 
 
-    def run_speech_to_speech (self, device, logger, models_manager, modelType, s2s_components, audiopath, in_text, text_to_sequence, sequence_to_text, model_instance):
+    def run_speech_to_speech (self, device, logger, models_manager, plugin_manager, modelType, s2s_components, audiopath, in_text, text_to_sequence, sequence_to_text, model_instance):
 
         self.device = device
         max_wav_value = 32768
@@ -533,7 +533,7 @@ class FastPitch(nn.Module):
 
         text = in_text
         text = re.sub(r'[^a-zA-ZäöüÄÖÜß\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)
-        text = model_instance.infer_arpabet_dict(text)
+        text = model_instance.infer_arpabet_dict(text, plugin_manager)
 
 
         sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])

@@ -30,7 +30,8 @@ window.refreshDictionariesList = () => {
     return new Promise(resolve => {
 
         // Don't spam with changes when the menu isn't open
-        if (arpabetModal.parentElement.style.display!="flex" && window.arpabetMenuState.hasInitialised) {
+        // if (arpabetModal.parentElement.style.display!="flex" && window.arpabetMenuState.hasInitialised) {
+        if (arpabetModal.parentElement.style.display!="flex") {
             return
         }
 

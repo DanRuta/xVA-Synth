@@ -218,7 +218,11 @@ window.readFile = (file) => {
                     if (line.trim().length) {
                         const parts = CSVToArray(line, window.userSettings.batch_delimiter)[0]
                         parts.forEach((val, vi) => {
-                            record[header[vi].replace(/^"/, "").replace(/"$/, "")] = (val||"").replace(/\\/g, "/")
+                            try {
+                                record[header[vi].replace(/^"/, "").replace(/"$/, "")] = (val||"").replace(/\\/g, "/")
+                            } catch (e) {
+                                window.errorModal(`Error parsing line: ${val}`)
+                            }
                         })
                         dataLines.push(record)
                     }
@@ -347,7 +351,6 @@ window.uploadBatchCSVs = async (eType, event) => {
                 } else {
                     dataLines.push(item)
                 }
-                // }
             })
         }
 

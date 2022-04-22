@@ -301,7 +301,7 @@ class FastPitch1_1(object):
         self.model.device = device
 
 
-    def run_speech_to_speech (self, audiopath, models_manager, modelType, s2s_components, text):
-        return self.model.run_speech_to_speech(self.device, self.logger, models_manager, modelType, s2s_components, audiopath, text, text_to_sequence, sequence_to_text, self)
+    def run_speech_to_speech (self, audiopath, models_manager, plugin_manager, modelType, s2s_components, text):
+        return self.model.run_speech_to_speech(self.device, self.logger, models_manager, plugin_manager, modelType, s2s_components, audiopath, text, text_to_sequence, sequence_to_text, self)
 
 

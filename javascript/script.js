@@ -1717,9 +1717,10 @@ window.updateGameList = () => {
                         loadAllModels().then(() => changeGame(metadata))
                     }
                 })
-            } catch (e) {}
+            } catch (e) {
+                // console.log(e)
+            }
         }
-
     })
 
 
