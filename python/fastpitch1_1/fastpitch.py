@@ -402,7 +402,12 @@ class FastPitch(nn.Module):
 
 
         if pitch_amp is not None:
-            pitch_pred = pitch_pred * pitch_amp
+            # pitch_pred = pitch_pred * pitch_amp.squeeze(dim=1).unsqueeze(dim=0).unsqueeze(dim=0)
+            # TEMP fix, do this properly
+            for i in range(pitch_pred.shape[0]):
+                pitch_pred[0] = pitch_pred[0] * pitch_amp.squeeze(dim=1)[i]
+
+
         if plugin_manager is not None and len(plugin_manager.plugins["synth-line"]["mid"]):
             pitch_pred = pitch_pred.cpu().detach().numpy()
             plugin_data = {
