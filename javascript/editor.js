@@ -101,20 +101,20 @@ class Editor {
             this.canvas.style.cursor = "default"
 
             // Check energy grabber hover
-            const isOnEGrabber = this.energyGrabbers.find(eGrabber => {
+            const isOnEGrabber = seq_edit_view_select.value.includes("energy") && this.energyGrabbers.find(eGrabber => {
                 const grabberX = eGrabber.getXLeft()+eGrabber.sliderBox.width/2-this.ENERGY_GRABBER_RADIUS
                 return (mouseX>grabberX && mouseX<grabberX+this.ENERGY_GRABBER_RADIUS*2+4) && (mouseY>eGrabber.topLeftY-this.ENERGY_GRABBER_RADIUS-2 && mouseY<eGrabber.topLeftY+this.ENERGY_GRABBER_RADIUS+2)
             })
-            if (isOnEGrabber!=undefined) {
+            if (isOnEGrabber && isOnEGrabber!=undefined) {
                 this.canvas.style.cursor = "row-resize"
                 return
             }
             // Check grabber hover
-            const isOnGrabber = this.grabbers.find(grabber => {
+            const isOnGrabber = seq_edit_view_select.value.includes("pitch") && this.grabbers.find(grabber => {
                 const grabberX = grabber.getXLeft()
                 return (mouseX>grabberX && mouseX<grabberX+grabber.width) && (mouseY>grabber.topLeftY && mouseY<grabber.topLeftY+grabber.height)
             })
-            if (isOnGrabber!=undefined) {
+            if (isOnGrabber && isOnGrabber!=undefined) {
                 this.canvas.style.cursor = "n-resize"
                 return
             }
@@ -146,7 +146,7 @@ class Editor {
             mouseDownStart.y = mouseY
 
             // Check up-down energy dragging
-            const isOnEGrabber = this.energyGrabbers.find(eGrabber => {
+            const isOnEGrabber = seq_edit_view_select.value.includes("energy") && this.energyGrabbers.find(eGrabber => {
                 const grabberX = eGrabber.getXLeft()+eGrabber.sliderBox.width/2-this.ENERGY_GRABBER_RADIUS
                 return (mouseX>grabberX && mouseX<grabberX+this.ENERGY_GRABBER_RADIUS*2+4) && (mouseY>eGrabber.topLeftY-this.ENERGY_GRABBER_RADIUS-2 && mouseY<eGrabber.topLeftY+this.ENERGY_GRABBER_RADIUS+2)
             })
@@ -164,7 +164,7 @@ class Editor {
                 return
             }
             // Check up-down pitch dragging
-            const isOnGrabber = this.grabbers.find(grabber => {
+            const isOnGrabber = seq_edit_view_select.value.includes("pitch") && this.grabbers.find(grabber => {
                 const grabberX = grabber.getXLeft()
                 return (mouseX>grabberX && mouseX<grabberX+grabber.width) && (mouseY>grabber.topLeftY && mouseY<grabber.topLeftY+grabber.height)
             })
