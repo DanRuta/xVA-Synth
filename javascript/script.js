@@ -1088,6 +1088,20 @@ window.refreshRecordsList = (directory) => {
             return
         }
 
+        if (voiceSamplesSearchPrompt.value.length) {
+            if (fs.existsSync(`${directory}/${file}.json`)) {
+                try {
+                    const lineMeta = fs.readFileSync(`${directory}/${file}.json`, "utf8")
+
+                    if (!JSON.parse(lineMeta).inputSequence.toLowerCase().includes(voiceSamplesSearchPrompt.value.toLowerCase().trim())) {
+                        return
+                    }
+                } catch (e) {
+                    // console.log(e)
+                }
+            }
+        }
+
         record.fileName = file
         record.lastChanged = fs.statSync(`${directory}/${file}`).mtime
         record.jsonPath = `${directory}/${file}`
@@ -1516,6 +1530,12 @@ voiceRecordsOrderByOrderButton.addEventListener("click", () => {
     }
 })
 voiceSamplesSearch.addEventListener("keyup", () => {
+    if (window.currentModel) {
+        const voiceRecordsList = window.userSettings[`outpath_${window.currentGame.gameId}`]+`/${window.currentModel.voiceId}`
+        refreshRecordsList(voiceRecordsList)
+    }
+})
+voiceSamplesSearchPrompt.addEventListener("keyup", () => {
     if (window.currentModel) {
         const voiceRecordsList = window.userSettings[`outpath_${window.currentGame.gameId}`]+`/${window.currentModel.voiceId}`
         refreshRecordsList(voiceRecordsList)

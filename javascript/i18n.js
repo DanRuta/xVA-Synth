@@ -424,6 +424,7 @@ window.i18n.setEnglish = () => {
 
 
     window.i18n.SEARCH_OUTPUT = "Search output file names..."
+    window.i18n.SEARCH_OUTPUT_PROMPT = "Search output file prompts..."
     window.i18n.DELETE = "Delete"
     window.i18n.DELETE_ALL = "Delete all"
     window.i18n.DELETE_ALL_FILES_CONFIRM = "Are you sure you'd like to delete all files for this voice? This will delete all _1 files in the following output directory:<br>_2"
@@ -637,6 +638,7 @@ window.i18n.updateUI = () => {
 
 
     voiceSamplesSearch.placeholder = window.i18n.SEARCH_OUTPUT
+    voiceSamplesSearchPrompt.placeholder = window.i18n.SEARCH_OUTPUT_PROMPT
     i18n_sortByOutput.innerHTML = window.i18n.SORT_BY
     voiceRecordsOrderByButton.innerHTML = window.i18n.NAME
     voiceRecordsOrderByOrderButton.innerHTML = window.i18n.ASCENDING

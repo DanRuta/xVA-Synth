@@ -130,7 +130,7 @@ a {
     justify-content: center;
     height: 20px;
 }
- #voiceSearchInput, #searchGameInput, #nexusSearchBar, #nexusReposSearchBar, #embeddingsSearchBar, #voiceSamplesSearch, #searchSettingsInput, #arpabet_word_search_input {
+ #voiceSearchInput, #searchGameInput, #nexusSearchBar, #nexusReposSearchBar, #embeddingsSearchBar, #voiceSamplesSearch, #voiceSamplesSearchPrompt, #searchSettingsInput, #arpabet_word_search_input {
     width: calc(100% - 25px);
     text-align: center;
     background: none;
@@ -151,10 +151,10 @@ a {
  #searchSettingsInput {
     font-size: 16pt;
  }
- #voiceSamplesSearch::placeholder {
+ #voiceSamplesSearch::placeholder, #voiceSamplesSearchPrompt::placeholder {
     color: rgba(200,200,200,0.7);
  }
- #voiceSearchInput:focus, #voiceSearchInput:active, #searchGameInput:focus, #searchGameInput:active, #nexusSearchBar:focus, #nexusSearchBar:active, #nexusReposSearchBar:focus, #nexusReposSearchBar:active, #embeddingsSearchBar:focus, #embeddingsSearchBar:active, #voiceSamplesSearch:focus, #voiceSamplesSearch:active, #searchSettingsInput:focus, #searchSettingsInput:active {
+ #voiceSearchInput:focus, #voiceSearchInput:active, #searchGameInput:focus, #searchGameInput:active, #nexusSearchBar:focus, #nexusSearchBar:active, #nexusReposSearchBar:focus, #nexusReposSearchBar:active, #embeddingsSearchBar:focus, #embeddingsSearchBar:active, #voiceSamplesSearch:focus, #voiceSamplesSearch:active, #voiceSamplesSearchPrompt:focus, #voiceSamplesSearchPrompt:active, #searchSettingsInput:focus, #searchSettingsInput:active {
     outline: none;
  }
  .content {
