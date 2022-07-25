@@ -84,6 +84,8 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_RESET_PATHS = "Reset Paths"
     window.i18n.RESET_WHAT_PROMPT = "What would you like to reset?"
     window.i18n.RESET_WHAT_TIP = "Shift+click the Reset button to reset all 3."
+    window.i18n.BATCH_METADATA_CONFIRM = "Please confirm the voice details"
+    window.i18n.BATCH_METADATA_TIP = "Select the voice in the main app, to pre-fill these"
 
     window.i18n.UPDATES_VERSION = "This app version: 1.0.0"
     window.i18n.THIS_APP_VERSION = "This app version"
@@ -492,6 +494,9 @@ window.i18n.setEnglish = () => {
     window.i18n.ENDORSEMENTS = "Endorsements"
     window.i18n.DOWNLOADS = "Downloads"
 
+    window.i18n.CONFIRM = "Confirm"
+    window.i18n.GAME_ID = "Game ID"
+    window.i18n.VOICE_ID = "Voice ID"
     window.i18n.VOICE_ID_IS = "Voice ID:"
     window.i18n.APP_VERSION_IS = "App version:"
     window.i18n.MODEL_VERSION_IS = "Model version:"
@@ -866,6 +871,11 @@ window.i18n.updateUI = () => {
     i18n_reset_what_prompt.innerHTML = window.i18n.RESET_WHAT_PROMPT
     i18n_reset_what_tip.innerHTML = window.i18n.RESET_WHAT_TIP
     reset_what_confirm_btn.innerHTML = window.i18n.RESET
+    i18n_batch_metadata_confirm.innerHTML = window.i18n.BATCH_METADATA_CONFIRM
+    i18n_batch_metadata_tip.innerHTML = window.i18n.BATCH_METADATA_TIP
+    i18n_batch_metadata_voiceID.innerHTML = window.i18n.VOICE_ID
+    i18n_batch_metadata_gameID.innerHTML = window.i18n.GAME_ID
+    i18n_batch_metadata_confirm_btn.innerHTML = window.i18n.CONFIRM
 
     arpabetIcon.title = "ARPAbet"
     embeddingsIcon.title = "Embeddings visualiser"

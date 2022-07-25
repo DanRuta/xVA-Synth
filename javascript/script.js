@@ -1845,6 +1845,7 @@ window.setupModal(s2s_settingsRecNoiseBtn, s2sSelectContainer, () => window.popu
 // Other
 // =====
 window.setupModal(reset_what_open_btn, resetContainer)
+window.setupModal(i18n_batch_metadata_open_btn, batchMetadataCSVContainer)
 
 voiceSearchInput.addEventListener("keyup", () => {
 

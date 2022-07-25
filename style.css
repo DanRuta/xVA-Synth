@@ -417,7 +417,7 @@ a {
  }
 
 
- #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer, #EULAContainer, #patreonContainer, #pluginsContainer, #s2sSelectContainer, #nexusContainer, #nexusReposContainer, #embeddingsContainer, #totdContainer, #arpabetContainer, #resetContainer {
+ #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer, #EULAContainer, #patreonContainer, #pluginsContainer, #s2sSelectContainer, #nexusContainer, #nexusReposContainer, #embeddingsContainer, #totdContainer, #arpabetContainer, #resetContainer, .modelContainer {
      display: flex;
      justify-content: center;
      align-items: center;
@@ -472,13 +472,13 @@ a {
      width: 25vw;
      text-align: center;
  }
- #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal, #patreonContainer > .modal, #pluginsContainer > .modal, #s2sSelectContainer > .modal, #nexusContainer > .modal, #nexusReposContainer > .modal, #embeddingsContainer > .modal, #totdContainer > .modal, #arpabetContainer > .modal, #resetContainer > .modal {
+ #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal, #patreonContainer > .modal, #pluginsContainer > .modal, #s2sSelectContainer > .modal, #nexusContainer > .modal, #nexusReposContainer > .modal, #embeddingsContainer > .modal, #totdContainer > .modal, #arpabetContainer > .modal, #resetContainer > .modal, .modelContainer > .modal {
      height: 65vh;
      width: 50vw;
      min-height: 500px;
      min-width: 750px;
  }
- #gameSelectionContainer > .modal, #batchGenerationContainer > .modal, #EULAContainer > .modal, #nexusContainer > .modal, #embeddingsContainer > .modal, #arpabetContainer > .modal, #resetContainer > .modal {
+ #gameSelectionContainer > .modal, #batchGenerationContainer > .modal, #EULAContainer > .modal, #nexusContainer > .modal, #embeddingsContainer > .modal, #arpabetContainer > .modal, #resetContainer > .modal, .modelContainer > .modal {
     height: 75vh;
     width: 85vw;
     min-height: 500px;

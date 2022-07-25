@@ -251,6 +251,71 @@ window.readFile = (file) => {
     })
 }
 
+let handleMetadataCSVdrop_response = undefined
+const sleep = ms => {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve()
+        }, ms)
+    })
+}
+const handleMetadataCSVdrop = (file) => {
+    return new Promise(async resolve => {
+        i18n_batch_metadata_open_btn.click()
+
+        handleMetadataCSVdrop_response = undefined
+        batch_metadata_input_gameID.value = window.currentGame.gameId
+        if (window.currentModel) {
+            batch_metadata_input_voiceID.value = window.currentModel.voiceId
+
+        }
+
+        await sleep(1000)
+        while (handleMetadataCSVdrop_response === undefined) {
+            if (batchMetadataCSVContainer.style.opacity.length==0 || parseFloat(batchMetadataCSVContainer.style.opacity)==1) {
+                await sleep(1000)
+            } else {
+                handleMetadataCSVdrop_response = false
+            }
+        }
+
+        if (handleMetadataCSVdrop_response) {
+
+            const dataLines = []
+            const reader = new FileReader()
+            reader.readAsText(file)
+            reader.onloadend = () => {
+                const lines = reader.result.replace(/\r\n/g, "\n").split("\n")
+                lines.forEach(line => {
+                    if (line.trim().length) {
+
+                        const text = line.split("|")[1]
+                        const record = {}
+                        record.game_id = batch_metadata_input_gameID.value
+                        record.voice_id = batch_metadata_input_voiceID.value
+                        record.text = text
+                        if (!window.currentModel || window.currentModel.hifi) {
+                            record.vocoder = "hifi"
+                        }
+                        dataLines.push(record)
+                    }
+                })
+                resolve(dataLines)
+            }
+
+        } else {
+            resolve(false)
+        }
+
+
+    })
+}
+i18n_batch_metadata_confirm_btn.addEventListener("click", () => {
+    handleMetadataCSVdrop_response = true
+    batchMetadataCSVContainer.click()
+    batchIcon.click()
+})
+
 window.uploadBatchCSVs = async (eType, event) => {
 
     if (["dragenter", "dragover"].includes(eType)) {
@@ -276,43 +341,62 @@ window.uploadBatchCSVs = async (eType, event) => {
         const files = Array.from(dataTransfer.files)
         for (let fi=0; fi<files.length; fi++) {
             const file = files[fi]
-            if (!file.name.toLowerCase().endsWith(".csv")) {
-                if (file.name.toLowerCase().endsWith(".txt")) {
-                    if (window.currentModel) {
-                        window.appLogger.log(`Reading file: ${file.name}`)
-                        const records = await window.readFileTxt(file)
-                        if (window.userSettings.batch_skipExisting) {
-                            window.appLogger.log("Checking existing files before adding to queue")
-                        } else {
-                            window.appLogger.log("Adding files to queue")
-                        }
-                        records.forEach(item => {
-                            if (window.userSettings.batch_skipExisting) {
-                                let outPath
 
-                                if (item.out_path && item.out_path.split("/").reverse()[0].includes(".")) {
-                                    outPath = item.out_path
-                                } else {
-                                    if (item.out_path) {
+            if (!file.name.toLowerCase().endsWith(".csv") || file.name.toLowerCase()=="metadata.csv") {
+                if ( file.name.toLowerCase().endsWith(".txt") || file.name.toLowerCase()=="metadata.csv" ) {
+                    if (window.currentModel || file.name.toLowerCase()=="metadata.csv") {
+                        window.appLogger.log(`Reading file: ${file.name}`)
+
+                        let records
+
+                        if (file.name.toLowerCase()=="metadata.csv") {
+
+                            records = await handleMetadataCSVdrop(file)
+                            if (records===false) {
+                                continue
+                            }
+
+                        } else {
+                            if (window.currentModel) {
+                                records = await window.readFileTxt(file)
+                            }
+                        }
+
+                        if (window.currentModel || file.name.toLowerCase()=="metadata.csv") {
+                            if (window.userSettings.batch_skipExisting) {
+                                window.appLogger.log("Checking existing files before adding to queue")
+                            } else {
+                                window.appLogger.log("Adding files to queue")
+                            }
+                            records.forEach(item => {
+                                if (window.userSettings.batch_skipExisting) {
+                                    let outPath
+
+                                    if (item.out_path && item.out_path.split("/").reverse()[0].includes(".")) {
                                         outPath = item.out_path
                                     } else {
-                                        outPath = window.userSettings.batchOutFolder
+                                        if (item.out_path) {
+                                            outPath = item.out_path
+                                        } else {
+                                            outPath = window.userSettings.batchOutFolder
+                                        }
+                                        outPath = `${outPath}/${item.voice_id}_${item.vocoder}_${item.text.replace(/[\/\\:\*?<>"|]*/g, "").slice(0, window.userSettings.max_filename_chars-10).replace(/\.$/, "")}.${window.userSettings.audio.format}`
                                     }
-                                    outPath = `${outPath}/${item.voice_id}_${item.vocoder}_${item.text.replace(/[\/\\:\*?<>"|]*/g, "").slice(0, window.userSettings.max_filename_chars-10).replace(/\.$/, "")}.${window.userSettings.audio.format}`
-                                }
 
-                                outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
+                                    outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
 
-                                if (!fs.existsSync(outPath)) {
-                                    dataLines.push(item)
+                                    if (!fs.existsSync(outPath)) {
+                                        dataLines.push(item)
+                                    } else {
+                                        window.batch_state.skippedExisting++
+                                    }
+
                                 } else {
-                                    window.batch_state.skippedExisting++
+                                    dataLines.push(item)
                                 }
+                            })
+                        }
 
-                            } else {
-                                dataLines.push(item)
-                            }
-                        })
                     }
                     continue
                 } else {

@@ -1754,6 +1754,27 @@
             </div>
         </div>
 
+        <div id="batchMetadataCSVContainer" class="modelContainer" style="display: none;">
+            <div class="modal" style="height: 10vh;min-width: 500px;width: 30vw;min-height: 300px;">
+                <h2><span id="i18n_batch_metadata_confirm">Please confirm the voice details</span> <span id="totd_counter"></span></h2>
+                <div id="i18n_batch_metadata_tip">Select the voice in the main app, to pre-fill these</div>
+
+                <div class="flexTable" style="overflow-y: auto;">
+                    <div>
+                        <div id="i18n_batch_metadata_voiceID">Voice ID</div>
+                        <div><input id="batch_metadata_input_voiceID" checked></div>
+                    </div>
+                    <div>
+                        <div id="i18n_batch_metadata_gameID">Game ID</div>
+                        <div><input id="batch_metadata_input_gameID" checked></div>
+                    </div>
+                </div>
+
+                <button id="i18n_batch_metadata_confirm_btn">Confirm</button>
+                <div id="i18n_batch_metadata_open_btn"></div>
+            </div>
+        </div>
+
         <div id="modalContainer" style="display:none"></div>
     </div>
 </div>
