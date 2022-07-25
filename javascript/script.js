@@ -820,7 +820,7 @@ generateVoiceButton.addEventListener("click", () => {
         toggleSpinnerButtons()
 
         const voiceType = title.dataset.modelId
-        const outputFileName = dialogueInput.value.slice(0, 260).replace(/\n/g, " ").replace(/[\/\\:\*?<>"|]*/g, "")
+        const outputFileName = dialogueInput.value.slice(0, 260).replace(/\n/g, " ").replace(/[\/\\:\*?<>"|]*/g, "").replace(/^[\.\s]+/, "")
 
         try {fs.unlinkSync(localStorage.getItem("tempFileLocation"))} catch (e) {/*Do nothing*/}
 
