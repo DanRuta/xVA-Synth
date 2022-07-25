@@ -711,6 +711,12 @@ right.addEventListener("click", event => {
     letterLengthNumb.value = ""
 })
 
+energyNumb.addEventListener("click", () => {
+    const lpnValue = parseFloat(energyNumb.value) || 0
+    if (window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
+        window.sequenceEditor.hasChanged = true
+    }
+})
 energyNumb.addEventListener("input", () => {
     const lpnValue = parseFloat(energyNumb.value) || 0
     if (window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
@@ -728,6 +734,12 @@ energyNumb.addEventListener("change", () => {
     window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]] = lpnValue
     window.sequenceEditor.energyGrabbers[window.sequenceEditor.letterFocus[0]].setValueFromValue(lpnValue)
     kickOffAutoInferTimer()
+})
+letterPitchNumb.addEventListener("click", () => {
+    const lpnValue = parseFloat(letterPitchNumb.value) || 0
+    if (window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
+        window.sequenceEditor.hasChanged = true
+    }
 })
 letterPitchNumb.addEventListener("input", () => {
     const lpnValue = parseFloat(letterPitchNumb.value) || 0
@@ -779,6 +791,7 @@ const updateLetterLengthFromInput = () => {
     window.sequenceEditor.letterFocus.forEach(l => {
         window.sequenceEditor.sliderBoxes[l].setValueFromValue(window.sequenceEditor.dursNew[l])
     })
+    kickOffAutoInferTimer()
 }
 letterLengthNumb.addEventListener("input", () => {
     updateLetterLengthFromInput()
