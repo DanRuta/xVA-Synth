@@ -831,6 +831,7 @@ reset_btn.addEventListener("click", () => {
             energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]])
         }
         pace_slid.value = 1
+        paceNumbInput.value = 1
     }
 })
 amplify_btn.addEventListener("click", () => {
