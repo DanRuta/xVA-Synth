@@ -1488,6 +1488,27 @@ window.toggleNumericalRecordsDisplay = () => {
 batch_outputNumerically.addEventListener("click", () => {
     window.toggleNumericalRecordsDisplay()
 })
+batch_saveToCSV.addEventListener("click", () => {
+
+    try {
+        const csv_file = [`game_id|voice_id|text`]
+        window.batch_state.lines.forEach(line => {
+            csv_file.push(`${line[0].game_id}|${line[0].voice_id}|${line[0].text}`)
+        })
+
+        const outFileName = JSON.stringify(new Date()).replace("\"","").replaceAll(":","_").split(".")[0]+"_batch.csv"
+
+        fs.writeFileSync(`${window.userSettings.batchOutFolder}/${outFileName}`, csv_file.join("\n"), "utf8")
+
+        window.createModal("error", `${window.i18n.BATCH_TOCSV_DONE}<br><br>${window.userSettings.batchOutFolder}/${outFileName}`)
+
+    } catch(e) {
+        console.log(e)
+        window.appLogger.log(e.stack)
+        window.errorModal(e.stack)
+    }
+
+})
 
 
 batch_main.addEventListener("dragenter", event => window.uploadBatchCSVs("dragenter", event), false)

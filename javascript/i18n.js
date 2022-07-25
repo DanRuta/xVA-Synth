@@ -86,6 +86,7 @@ window.i18n.setEnglish = () => {
     window.i18n.RESET_WHAT_TIP = "Shift+click the Reset button to reset all 3."
     window.i18n.BATCH_METADATA_CONFIRM = "Please confirm the voice details"
     window.i18n.BATCH_METADATA_TIP = "Select the voice in the main app, to pre-fill these"
+    window.i18n.SAVE_TO_CSV = "Save to CSV"
 
     window.i18n.UPDATES_VERSION = "This app version: 1.0.0"
     window.i18n.THIS_APP_VERSION = "This app version"
@@ -512,6 +513,7 @@ window.i18n.setEnglish = () => {
 
 
     window.i18n.BATCH_CHANGE_DELIMITER = "The .csv delimiter is not found in the data. The delimiter in the settings is '_1', but the one in the .csv file is potentially '_2'. Do you want to change the delimiter used, and try again using this?"
+    window.i18n.BATCH_TOCSV_DONE = "Saved all lines to csv file at:"
 
     // Useful during developing, to see if there are any strings left un-i18n-ed
     // Object.keys(window.i18n).forEach(key => {
@@ -876,6 +878,7 @@ window.i18n.updateUI = () => {
     i18n_batch_metadata_voiceID.innerHTML = window.i18n.VOICE_ID
     i18n_batch_metadata_gameID.innerHTML = window.i18n.GAME_ID
     i18n_batch_metadata_confirm_btn.innerHTML = window.i18n.CONFIRM
+    batch_saveToCSV.innerHTML = window.i18n.SAVE_TO_CSV
 
     arpabetIcon.title = "ARPAbet"
     embeddingsIcon.title = "Embeddings visualiser"
