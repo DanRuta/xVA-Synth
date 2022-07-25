@@ -273,6 +273,9 @@ window.loadAllModels = (forceUpdate=false) => {
                         })
                     } catch (e) {
                         console.log(e)
+                        setTimeout(() => {
+                            window.errorModal(`${fileName}<br><br>${e.stack}`)
+                        }, 1000)
                         window.appLogger.log(`${window.i18n.ERR_LOADING_MODELS_FOR_GAME_WITH_FILENAME.replace("_1", gameFolder)} `+fileName)
                         window.appLogger.log(e)
                         window.appLogger.log(e.stack)
