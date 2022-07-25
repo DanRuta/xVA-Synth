@@ -801,39 +801,74 @@ letterLengthNumb.addEventListener("change", () => {
 })
 
 // Reset button
+const resetEnergy = () => {
+    window.sequenceEditor.energyNew = window.sequenceEditor.resetEnergy.map(v => v)
+    window.sequenceEditor.energyGrabbers.forEach((slider, l) => {
+        slider.setValueFromValue(window.sequenceEditor.energyNew[l])
+    })
+    if (window.sequenceEditor.letterFocus.length==1) {
+        energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
+    }
+    if (window.sequenceEditor.letterFocus.length==1) {
+        energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]])
+    }
+}
+const resetPitch = () => {
+    window.sequenceEditor.pitchNew = window.sequenceEditor.resetPitch.map(p=>p)
+    // Update the editor pitch values
+    window.sequenceEditor.grabbers.forEach((slider, i) => {
+        slider.setValueFromValue(window.sequenceEditor.pitchNew[i])
+    })
+    if (window.sequenceEditor.letterFocus.length==1) {
+        letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
+    }
+}
+const resetDursPace = () => {
+
+    pace_slid.value = 1
+    paceNumbInput.value = 1
+    window.sequenceEditor.pacing = parseFloat(pace_slid.value)
+
+    window.sequenceEditor.dursNew = window.sequenceEditor.resetDurs.map(v => v)
+    // Update the editor lengths
+    window.sequenceEditor.sliderBoxes.forEach((box,i) => {
+        box.setValueFromValue(window.sequenceEditor.dursNew[i])
+    })
+    if (window.sequenceEditor.letterFocus.length==1) {
+        letterLengthNumb.value = parseFloat(window.sequenceEditor.dursNew[window.sequenceEditor.letterFocus[0]])
+    }
+
+}
 reset_btn.addEventListener("click", () => {
-    if (seq_edit_edit_select.value=="energy") {
-        window.sequenceEditor.energyNew = window.sequenceEditor.resetEnergy.map(v => v)
-        window.sequenceEditor.energyGrabbers.forEach((slider, l) => {
-            slider.setValueFromValue(window.sequenceEditor.energyNew[l])
-        })
-        if (window.sequenceEditor.letterFocus.length==1) {
-            energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
+
+    if (window.shiftKeyIsPressed) {
+        if (seq_edit_edit_select.value=="energy") {
+            resetEnergy()
+            resetDursPace()
+
+        } else if (seq_edit_edit_select.value=="pitch") {
+            resetPitch()
+            resetDursPace()
         }
-
-    } else if (seq_edit_edit_select.value=="pitch") {
-        window.sequenceEditor.dursNew = window.sequenceEditor.resetDurs.map(v => v)
-        window.sequenceEditor.pitchNew = window.sequenceEditor.resetPitch.map(p=>p)
-
-        // Update the editor pitch values
-        window.sequenceEditor.grabbers.forEach((slider, i) => {
-            slider.setValueFromValue(window.sequenceEditor.pitchNew[i])
-        })
-
-        // Update the editor lengths
-        window.sequenceEditor.sliderBoxes.forEach((box,i) => {
-            box.setValueFromValue(window.sequenceEditor.dursNew[i])
-        })
-
-        if (window.sequenceEditor.letterFocus.length==1) {
-            letterLengthNumb.value = parseFloat(window.sequenceEditor.dursNew[window.sequenceEditor.letterFocus[0]])
-            letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
-            energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]])
-        }
-        pace_slid.value = 1
-        paceNumbInput.value = 1
+        window.sequenceEditor.init()
+    } else {
+        reset_what_open_btn.click()
     }
 })
+reset_what_confirm_btn.addEventListener("click", () => {
+    resetContainer.click()
+    if (reset_what_pitch.checked) {
+        resetPitch()
+    }
+    if (reset_what_energy.checked) {
+        resetEnergy()
+    }
+    if (reset_what_duration.checked) {
+        resetDursPace()
+    }
+    window.sequenceEditor.init()
+})
+
 amplify_btn.addEventListener("click", () => {
     if (seq_edit_edit_select.value=="pitch") {
         window.sequenceEditor.pitchNew = window.sequenceEditor.pitchNew.map((p, pi) => {

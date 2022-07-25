@@ -82,6 +82,8 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_OUTPUT_PATH = "output path"
     window.i18n.SETTINGS_RESET_SETTINGS = "Reset Settings"
     window.i18n.SETTINGS_RESET_PATHS = "Reset Paths"
+    window.i18n.RESET_WHAT_PROMPT = "What would you like to reset?"
+    window.i18n.RESET_WHAT_TIP = "Shift+click the Reset button to reset all 3."
 
     window.i18n.UPDATES_VERSION = "This app version: 1.0.0"
     window.i18n.THIS_APP_VERSION = "This app version"
@@ -861,6 +863,9 @@ window.i18n.updateUI = () => {
 
 
     i18n_variant.innerHTML = window.i18n.VARIANT_IS
+    i18n_reset_what_prompt.innerHTML = window.i18n.RESET_WHAT_PROMPT
+    i18n_reset_what_tip.innerHTML = window.i18n.RESET_WHAT_TIP
+    reset_what_confirm_btn.innerHTML = window.i18n.RESET
 
     arpabetIcon.title = "ARPAbet"
     embeddingsIcon.title = "Embeddings visualiser"

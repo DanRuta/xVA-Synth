@@ -1729,6 +1729,31 @@
 
 
 
+        <div id="resetContainer" style="display: none;">
+            <div class="modal" style="height: 10vh;min-width: 500px;width: 30vw;min-height: 300px;">
+                <h2><span id="i18n_reset_what_prompt">What would you like to reset?</span> <span id="totd_counter"></span></h2>
+                <div id="i18n_reset_what_tip">Shift+click the Reset button to reset all 3.</div>
+
+                <div class="flexTable" style="overflow-y: auto;">
+                    <div>
+                        <div id="i18n_pitch">Pitch</div>
+                        <div><input type="checkbox" id="reset_what_pitch" checked></div>
+                    </div>
+                    <div>
+                        <div id="i18n_energy">Energy</div>
+                        <div><input type="checkbox" id="reset_what_energy" checked></div>
+                    </div>
+                    <div>
+                        <div id="i18n_duration">Duration</div>
+                        <div><input type="checkbox" id="reset_what_duration" checked></div>
+                    </div>
+                </div>
+
+                <button id="reset_what_confirm_btn">Reset</button>
+                <div id="reset_what_open_btn"></div>
+            </div>
+        </div>
+
         <div id="modalContainer" style="display:none"></div>
     </div>
 </div>

@@ -1844,6 +1844,8 @@ window.setupModal(s2s_settingsRecNoiseBtn, s2sSelectContainer, () => window.popu
 
 // Other
 // =====
+window.setupModal(reset_what_open_btn, resetContainer)
+
 voiceSearchInput.addEventListener("keyup", () => {
 
     if (event.key=="Enter") {

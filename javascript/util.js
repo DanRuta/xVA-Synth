@@ -253,9 +253,19 @@ window.addEventListener("keyup", event => {
     if (!event.ctrlKey) {
         window.ctrlKeyIsPressed = false
     }
+    if (!event.shiftKey) {
+        window.shiftKeyIsPressed = false
+    }
 })
 
 window.addEventListener("keydown", event => {
+
+    if (event.ctrlKey) {
+        window.ctrlKeyIsPressed = true
+    }
+    if (event.shiftKey) {
+        window.shiftKeyIsPressed = true
+    }
 
     if (event.ctrlKey && event.key.toLowerCase()=="r") {
         location.reload()
