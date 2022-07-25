@@ -45,6 +45,10 @@ class ModelsManager(object):
                 from python.fastpitch1_1.model import FastPitch1_1
                 self.models_bank[model_key] = FastPitch1_1(self.logger, self.PROD, self.device, self)
 
+            elif model_key=="xvapitch":
+                from python.xvapitch.model import xVAPitch
+                self.models_bank[model_key] = xVAPitch(self.logger, self.PROD, self.device, self)
+
             elif model_key=="s2s_fastpitch1_1":
                 from python.fastpitch1_1.model import FastPitch1_1 as S2S_FastPitch1_1
                 self.models_bank[model_key] = S2S_FastPitch1_1(self.logger, self.PROD, self.device, self)

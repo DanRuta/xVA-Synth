@@ -338,6 +338,7 @@ variant_select.addEventListener("change", () => {
         modelType: variant.modelType,
         version: variant.version,
         model_speakers: model.num_speakers,
+        base_lang: model.lang || "en"
     })
     oldVariantSelection = variant_select.value
 
@@ -513,7 +514,8 @@ window.changeGame = (meta) => {
                     modelType: model.modelType,
                     version: model.version,
                     model_speakers: model.emb_size,
-                    cmudict: model.cmudict
+                    cmudict: model.cmudict,
+                    base_lang: model.lang || "en"
                 })
                 generateVoiceButton.dataset.modelIDToLoad = voiceId
             }
@@ -769,7 +771,7 @@ generateVoiceButton.addEventListener("click", () => {
             generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
 
             // Set the editor pitch/energy dropdowns to pitch, and freeze them, if energy is not supported by the model
-            if (window.currentModel.modelType.toLowerCase()!="fastpitch1.1") {
+            if (window.currentModel.modelType.toLowerCase()!="fastpitch1.1" && window.currentModel.modelType.toLowerCase()!="xvapitch") {
                 seq_edit_view_select.value = "pitch"
                 seq_edit_edit_select.value = "pitch"
                 seq_edit_view_select.disabled = true

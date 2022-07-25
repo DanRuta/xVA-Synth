@@ -40,7 +40,7 @@ class FastPitch(object):
         self.model.eval()
         self.model.device = self.device
 
-    def load_state_dict (self, ckpt_path, ckpt, n_speakers):
+    def load_state_dict (self, ckpt_path, ckpt, n_speakers, base_lang=None):
 
         self.ckpt_path = ckpt_path
 

@@ -217,10 +217,11 @@ if __name__ == '__main__':
                     modelType = modelType.lower().replace(".", "_").replace(" ", "")
                     post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])
                     n_speakers = post_data["model_speakers"] if "model_speakers" in post_data else None
+                    base_lang = post_data["base_lang"] if "base_lang" in post_data else None
 
 
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["pre"], event="pre load-model", data=post_data)
-                    models_manager.load_model(modelType, ckpt+".pt", n_speakers=n_speakers)
+                    models_manager.load_model(modelType, ckpt+".pt", n_speakers=n_speakers, base_lang=base_lang)
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["post"], event="post load-model", data=post_data)
 
                     if modelType=="fastpitch1_1":
