@@ -274,7 +274,7 @@ window.uploadBatchCSVs = async (eType, event) => {
         const files = Array.from(dataTransfer.files)
         for (let fi=0; fi<files.length; fi++) {
             const file = files[fi]
-            if (!file.name.endsWith(".csv")) {
+            if (!file.name.toLowerCase().endsWith(".csv")) {
                 if (file.name.toLowerCase().endsWith(".txt")) {
                     if (window.currentModel) {
                         window.appLogger.log(`Reading file: ${file.name}`)
@@ -610,7 +610,7 @@ window.startBatch = () => {
         const filesAndFolders = fs.readdirSync(window.userSettings.batchOutFolder)
         filesAndFolders.forEach(faf => {
             // Ignore .csv and .txt files
-            if (faf.endsWith(".csv") || faf.endsWith(".txt")) {
+            if (faf.toLowerCase().endsWith(".csv") || faf.toLowerCase().endsWith(".txt")) {
                 return
             }
             if (fs.lstatSync(`${window.userSettings.batchOutFolder}/${faf}`).isDirectory()) {
