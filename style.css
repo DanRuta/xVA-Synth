@@ -310,18 +310,35 @@ a {
     background: none;
     margin-top: 3px;
 }
- .sample > div:first-child {
-     display: -webkit-box;
-     -webkit-box-orient: vertical;
-     -webkit-line-clamp: 3;
-     width: calc(100% - 295px);
+.sample > div:first-child {
+    flex-grow: 1;
+    font-size: 10pt;
+}
+.sample > div:first-child > div {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    display: flex;
+    align-items: center;
+    width: calc(100% - 295px);
+}
+ .samplePromptText {
+    font-style: italic;
+    color: gray;
+    text-overflow: ellipsis;
+    /*white-space: nowrap;*/
+    overflow: hidden;
  }
  .sample > div {
      display: flex;
      overflow: hidden;
      text-overflow: ellipsis;
  }
- .sample > div > div {
+.sampleAudioControls {
+    min-width: 330px;
+
+}
+ .sampleAudioControls > div {
      display: flex;
      align-items: center;
      font-size: 18pt;

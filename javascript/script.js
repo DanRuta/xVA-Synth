@@ -574,8 +574,22 @@ samplePlayPause.addEventListener("click", window.samplePlayPauseHandler)
 window.makeSample = (src, newSample) => {
     const fileName = src.split("/").reverse()[0].split("%20").join(" ")
     const fileFormat = fileName.split(".").reverse()[0]
-    const sample = createElem("div.sample", createElem("div", fileName))
-    const audioControls = createElem("div")
+    const fileNameElem = createElem("div", fileName)
+    const promptText = createElem("div.samplePromptText")
+
+    if (fs.existsSync(src+".json")) {
+        try {
+            const lineMeta = fs.readFileSync(src+".json", "utf8")
+            promptText.innerHTML = JSON.parse(lineMeta).inputSequence
+            if (promptText.innerHTML.length > 130) {
+                promptText.innerHTML = promptText.innerHTML.slice(0, 130)+"..."
+            }
+        } catch (e) {
+            // console.log(e)
+        }
+    }
+    const sample = createElem("div.sample", createElem("div", fileNameElem, promptText))
+    const audioControls = createElem("div.sampleAudioControls")
     const audio = createElem("audio", {controls: true}, createElem("source", {
         src: src,
         type: `audio/${fileFormat}`
