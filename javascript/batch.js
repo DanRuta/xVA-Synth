@@ -458,7 +458,7 @@ window.uploadBatchCSVs = async (eType, event) => {
             window.refreshBatchRecordsList(finalOrder)
             window.batch_state.lines = finalOrder
         } else {
-            batch_clearBtn.click()
+            // batch_clearBtn.click()
         }
         window.appLogger.log("batch import done")
 
@@ -498,7 +498,7 @@ window.preProcessCSVData = data => {
 
             // Check that the game_id exists
             if (!availableGames.includes(record.game_id)) {
-                window.errorModal(`[${window.i18n.LINE}: ${di+2}] ${window.i18n.ERROR}: game_id "${record.game_id}" ${window.i18n.BATCH_ERR_GAMEID} (${availableGames.join(',')})`)
+                window.errorModal(`[${window.i18n.LINE}: ${di+2}] ${window.i18n.ERROR}: game_id "${record.game_id}" ${window.i18n.BATCH_ERR_GAMEID} <br><br>(${availableGames.join(', ')})`)
                 return []
             }
             // Check that the voice_id exists
