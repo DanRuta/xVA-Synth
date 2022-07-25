@@ -1,0 +1,8 @@
+{
+    "gameName": "Vampire The Masquerade",
+    "assetFile": "vampiremasquerade.jpg",
+    "themeColourPrimary": "910909",
+    "themeColourSecondary": null,
+    "gameCode": "VamMas",
+    "nexusGamePageIDs": [741, 1064, 1809, 2153, 2610, 2619, 2703, 2773, 2901, 2996, 3256, 3509, 3698, 3771, 3837, 4266]
+}
