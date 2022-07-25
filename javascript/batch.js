@@ -104,19 +104,21 @@ let smiInterval = setInterval(() => {
                 if (err) {
                     console.log("smi error: ", err)
                 }
-                let total
-                let used
+                if (data && data.nvidia_smi_log.cuda_version) {
+                    let total
+                    let used
 
-                if (data.nvidia_smi_log.gpu.length) {
-                    total = parseInt(data.nvidia_smi_log.gpu[0].fb_memory_usage.total.split(" ")[0])
-                    used = parseInt(data.nvidia_smi_log.gpu[0].fb_memory_usage.used.split(" ")[0])
-                } else {
-                    total = parseInt(data.nvidia_smi_log.gpu.fb_memory_usage.total.split(" ")[0])
-                    used = parseInt(data.nvidia_smi_log.gpu.fb_memory_usage.used.split(" ")[0])
+                    if (data.nvidia_smi_log.gpu.length) {
+                        total = parseInt(data.nvidia_smi_log.gpu[0].fb_memory_usage.total.split(" ")[0])
+                        used = parseInt(data.nvidia_smi_log.gpu[0].fb_memory_usage.used.split(" ")[0])
+                    } else {
+                        total = parseInt(data.nvidia_smi_log.gpu.fb_memory_usage.total.split(" ")[0])
+                        used = parseInt(data.nvidia_smi_log.gpu.fb_memory_usage.used.split(" ")[0])
+                    }
+                    const percent = used/total*100
+
+                    vramUsage.innerHTML = `${(used/1000).toFixed(1)}/${(total/1000).toFixed(1)} GB (${percent.toFixed(2)}%)`
                 }
-                const percent = used/total*100
-
-                vramUsage.innerHTML = `${(used/1000).toFixed(1)}/${(total/1000).toFixed(1)} GB (${percent.toFixed(2)}%)`
             })
         } else {
             vramUsage.innerHTML = window.i18n.NOT_USING_GPU
