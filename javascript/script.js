@@ -546,7 +546,7 @@ window.changeGame = (meta) => {
         buttons.push(button)
     })
 
-    buttons.sort((a,b) => a.innerHTML<b.innerHTML?-1:1)
+    buttons.sort((a,b) => a.innerHTML.toLowerCase()<b.innerHTML.toLowerCase()?-1:1)
         .forEach(button => voiceTypeContainer.appendChild(button))
 
 }
