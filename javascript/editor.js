@@ -154,8 +154,9 @@ class Editor {
             if (isOnEGrabber) {
 
                 const eGrabber = isOnEGrabber
-
-                this.setLetterFocus(this.energyGrabbers.indexOf(eGrabber), event.ctrlKey, event.shiftKey, event.altKey)
+                if (this.letterFocus.length <= 1 || (!this.letterFocus.includes(eGrabber.index))) {
+                    this.setLetterFocus(this.energyGrabbers.indexOf(eGrabber), event.ctrlKey, event.shiftKey, event.altKey)
+                }
                 this.multiLetterEnergyDelta = eGrabber.topLeftY
                 this.multiLetterStartEnergyVals = this.energyGrabbers.map(eGrabber => eGrabber.topLeftY)
 
@@ -170,8 +171,9 @@ class Editor {
             if (isOnGrabber) {
 
                 const slider = isOnGrabber
-
-                this.setLetterFocus(this.grabbers.indexOf(slider), event.ctrlKey, event.shiftKey, event.altKey)
+                if (this.letterFocus.length <= 1 || (!this.letterFocus.includes(slider.index))) {
+                    this.setLetterFocus(this.grabbers.indexOf(slider), event.ctrlKey, event.shiftKey, event.altKey)
+                }
                 this.multiLetterPitchDelta = slider.topLeftY
                 this.multiLetterStartPitchVals = this.grabbers.map(slider => slider.topLeftY)
 
@@ -385,7 +387,7 @@ class Editor {
         // Ctrl + Shift = (See Shift)
         // Alt = Clear selection and select word surrounding l (space delimited)
         // Ctrl + Alt = Add word surrounding l to existing selection
-        // Shift + Alt = Same as shift, then select word (space delimited) around l
+        // Shift + Alt = Same as shift, then afterwards add word (space delimited) around l to selection
         // Ctrl + Shift + Alt = (See Shift + Alt)
 
         // If nothing is selected and we hold shift, we assume we start from the first letter: at position 0
