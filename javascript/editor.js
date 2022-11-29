@@ -385,7 +385,7 @@ class Editor {
         // Ctrl + Shift = (See Shift)
         // Alt = Clear selection and select word surrounding l (space delimited)
         // Ctrl + Alt = Add word surrounding l to existing selection
-        // Shift + Alt = Add all words (including spaces) from last selected letter to l, then select word (space delimited) around l
+        // Shift + Alt = Same as shift, then select word (space delimited) around l
         // Ctrl + Shift + Alt = (See Shift + Alt)
 
         // If nothing is selected and we hold shift, we assume we start from the first letter: at position 0
