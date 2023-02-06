@@ -56,7 +56,8 @@ if __name__ == '__main__':
     try:
         logger = logging.getLogger('serverLog')
         logger.setLevel(logging.DEBUG)
-        fh = RotatingFileHandler('{}\server.log'.format(os.path.dirname(os.path.realpath(__file__))), maxBytes=2*1024*1024, backupCount=5)
+        server_log_path = f'{os.path.dirname(os.path.realpath(__file__))}/{"../../../" if PROD else ""}/server.log'
+        fh = RotatingFileHandler(server_log_path, maxBytes=2*1024*1024, backupCount=5)
         fh.setLevel(logging.DEBUG)
         ch = logging.StreamHandler()
         ch.setLevel(logging.ERROR)
@@ -65,7 +66,7 @@ if __name__ == '__main__':
         ch.setFormatter(formatter)
         logger.addHandler(fh)
         logger.addHandler(ch)
-        logger.info(f'New session. Version: {APP_VERSION}. Installation: {"CPU" if CPU_ONLY else "CPU+GPU"}')
+        logger.info(f'New session. Version: {APP_VERSION}. Installation: {"CPU" if CPU_ONLY else "CPU+GPU"} | Log path: {server_log_path}')
 
         logger.orig_info = logger.info
 
