@@ -215,6 +215,7 @@ if __name__ == '__main__':
                     logger.info(post_data)
                     ckpt = post_data["model"]
                     modelType = post_data["modelType"]
+                    instance_index = post_data["instance_index"] if "instance_index" in post_data else 0
                     modelType = modelType.lower().replace(".", "_").replace(" ", "")
                     post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])
                     n_speakers = post_data["model_speakers"] if "model_speakers" in post_data else None
@@ -222,7 +223,7 @@ if __name__ == '__main__':
 
 
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["pre"], event="pre load-model", data=post_data)
-                    models_manager.load_model(modelType, ckpt+".pt", n_speakers=n_speakers, base_lang=base_lang)
+                    models_manager.load_model(modelType, ckpt+".pt", instance_index=instance_index, n_speakers=n_speakers, base_lang=base_lang)
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["post"], event="post load-model", data=post_data)
 
                     if modelType=="fastpitch1_1":
@@ -231,16 +232,17 @@ if __name__ == '__main__':
                 if self.path == "/synthesize":
                     logger.info("POST {}".format(self.path))
                     post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])
+                    instance_index = post_data["instance_index"] if "instance_index" in post_data else 0
 
                     # Handle the case where the vocoder remains selected on app start-up, with auto-HiFi turned off, but no setVocoder call is made before synth
                     continue_synth = True
                     if "waveglow" in post_data["vocoder"]:
                         waveglowPath = post_data["waveglowPath"]
-                        req_response = models_manager.load_model(post_data["vocoder"], waveglowPath)
+                        req_response = models_manager.load_model(post_data["vocoder"], waveglowPath, instance_index=instance_index)
                         if req_response=="ENOENT":
                             continue_synth = False
 
-                    models_manager.set_device(models_manager.device_label)
+                    models_manager.set_device(models_manager.device_label, instance_index=instance_index)
 
                     if continue_synth:
                         plugin_manager.set_context(post_data["pluginsContext"])
@@ -260,7 +262,7 @@ if __name__ == '__main__':
                         pitch_data = [pitch, duration, energy]
                         old_sequence = post_data["old_sequence"] if "old_sequence" in post_data else None
 
-                        req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", "")).infer(plugin_manager, text, out_path, vocoder=vocoder, \
+                        req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", ""), instance_index=instance_index).infer(plugin_manager, text, out_path, vocoder=vocoder, \
                             speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence, globalAmplitudeModifier=globalAmplitudeModifier, base_lang=base_lang)
                         plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["post"], event="post synth-line", data=post_data)
 
