@@ -4,9 +4,9 @@ block_cipher = None
 excluded_modules = ['torch.distributions']
 
 a = Analysis(['server.py'],
-             pathex=['xVAEnv\\lib\\site-packages', 'F:\\Speech\\xVA-Synth'],
+             pathex=['envXVAS_P39\\lib\\site-packages', 'F:\\Speech\\xVA-Synth'],
              binaries=[],
-             datas=[],
+             datas=[('envXVAS_P39\\lib\\site-packages\\torchaudio','envXVAS_P39\\lib\\site-packages\\torchaudio')],
              hiddenimports=['numpy','librosa', 'sklearn', 'numpy.core', 'scipy', 'scipy.linalg.blas',  'numpy.core.multiarray', 'numpy.random.common', 'numpy.random', 'numpy.random.bounded_integers', 'numpy.core.dtype_ctypes', 'pkg_resources.py2_warn' 'numpy.random.entropy', 'tqdm', 'transformers', "regex"],
              hookspath=[],
              runtime_hooks=[],

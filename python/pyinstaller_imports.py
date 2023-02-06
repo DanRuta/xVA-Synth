@@ -14,6 +14,7 @@ try:
     import scipy.special
     import scipy.optimize
     # import scipy.optimize.line_search
+    import sklearn
     import sklearn.utils._cython_blas
     import sklearn.neighbors.typedefs
     import sklearn.neighbors.quad_tree
@@ -22,6 +23,9 @@ try:
 except:
     print("==== scipy")
     print(traceback.format_exc())
+
+from PyInstaller.utils.hooks import collect_data_files
+datas = collect_data_files('sklearn')
 
 try:
     import librosa
