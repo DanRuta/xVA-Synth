@@ -35,21 +35,25 @@ window.getAllNexusGameIDs = (gameName) => {
 window.mod_search_nexus = (game_id, query) => {
     return new Promise(resolve => {
         doFetch(`https://search.nexusmods.com/mods/?game_id=${game_id}&terms=${encodeURI(query.split(' ').toString())}&include_adult=true`)
-        .then(r => r.json())
+        .then(r=>r.text())
         .then(r => {
+            try {
+                const data = JSON.parse(r).results.map(res => {
+                    return {
+                        downloads: res.downloads,
+                        endorsements: res.endorsements,
+                        game_id: res.game_id,
+                        name: res.name,
+                        author: res.username,
+                        url: `https://www.nexusmods.com/${res.game_name}/mods/${res.mod_id}`
+                    }
+                })
 
-            const data = r.results.map(res => {
-                return {
-                    downloads: res.downloads,
-                    endorsements: res.endorsements,
-                    game_id: res.game_id,
-                    name: res.name,
-                    author: res.username,
-                    url: `https://www.nexusmods.com/${res.game_name}/mods/${res.mod_id}`
-                }
-            })
-
-            resolve([r.total, data])
+                resolve([r.total, data])
+            } catch (e) {
+                window.appLogger.log(window.i18n.ERROR_FROM_NEXUS.replace("_1", r))
+                window.errorModal(window.i18n.ERROR_FROM_NEXUS.replace("_1", r))
+            }
         })
     })
 }
@@ -308,16 +312,20 @@ window.showUserName = async () => {
 
 const getuserData = (url, data) => {
     return new Promise(resolve => {
-
         doFetch(`https://api.nexusmods.com/v1/users/${url}`, {
             method: "GET",
             headers: {
                 apikey: window.nexusState.key
             }
         })
-        .then(r=>r.json())
-        .then(data => {
-            resolve(data)
+        .then(r=>r.text())
+        .then(r => {
+            try {
+                resolve(JSON.parse(r))
+            } catch (e) {
+                window.appLogger.log(window.i18n.ERROR_FROM_NEXUS.replace("_1", r))
+                window.errorModal(window.i18n.ERROR_FROM_NEXUS.replace("_1", r))
+            }
         })
         .catch(err => {
             console.log("err", err)
@@ -342,9 +350,14 @@ const getData = (url, data, type="GET") => {
         }
 
         doFetch(`https://api.nexusmods.com/v1/games/${url}`, payload)
-        .then(r=>r.json())
-        .then(data => {
-            resolve(data)
+        .then(r=>r.text())
+        .then(r => {
+            try {
+                resolve(JSON.parse(r))
+            } catch (e) {
+                window.appLogger.log(window.i18n.ERROR_FROM_NEXUS.replace("_1", r))
+                window.errorModal(window.i18n.ERROR_FROM_NEXUS.replace("_1", r))
+            }
         })
         .catch(err => {
             console.log("err", err)

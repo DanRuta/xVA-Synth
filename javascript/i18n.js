@@ -452,6 +452,7 @@ window.i18n.setEnglish = () => {
     window.i18n.YOURS = "Yours"
     window.i18n.NEXUS_ENTER_LINK = "Enter the nexusmods.com link to use as a repository"
     window.i18n.NEXUS_LINK_EXISTS = "This link already exists."
+    window.i18n.ERROR_FROM_NEXUS = "<h3>Error using Nexus API. Their response:</h3> <br>_1"
 
     window.i18n.VEMB_VOICE_NOT_ENABLED = "This voice is not enabled"
     window.i18n.VEMB_NO_PREVIEW = "No preview audio file available"
