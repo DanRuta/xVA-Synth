@@ -71,16 +71,19 @@ try {fs.mkdirSync(`${path}/output`)} catch (e) {/*Do nothing*/}
 try {fs.mkdirSync(`${path}/assets`)} catch (e) {/*Do nothing*/}
 
 // Clean up temp files
-fs.readdir(`${__dirname.replace("/javascript", "")}/output`, (err, files) => {
-    if (err) {
-        window.appLogger.log(`Error cleaning up temp files: ${err}`)
-    }
-    if (files && files.length) {
-        files.filter(f => f.startsWith("temp-")).forEach(file => {
-            fs.unlink(`${__dirname.replace("/javascript", "")}/output/${file}`, err => err&&console.log(err))
-        })
-    }
-})
+const clearOldTempFiles = () => {
+    fs.readdir(`${__dirname.replace("/javascript", "")}/output`, (err, files) => {
+        if (err) {
+            window.appLogger.log(`Error cleaning up temp files: ${err}`)
+        }
+        if (files && files.length) {
+            files.filter(f => f.startsWith("temp-")).forEach(file => {
+                fs.unlink(`${__dirname.replace("/javascript", "")}/output/${file}`, err => err&&console.log(err))
+            })
+        }
+    })
+}
+clearOldTempFiles()
 
 let fileRenameCounter = 0
 let fileChangeCounter = 0
@@ -820,6 +823,7 @@ generateVoiceButton.addEventListener("click", () => {
         if (isGenerating) {
             return
         }
+        clearOldTempFiles()
 
         let sequence = dialogueInput.value.replace("…", "...").replace("’", "'")
         if (sequence.length==0) {
