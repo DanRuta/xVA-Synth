@@ -1,0 +1,7897 @@
+a|AE
+a|AE
+a-ba-giua|AE B AE Y UW0 AX0
+a-ba-toa|AE B AE T W AE
+a-dong|AE Y AO0 NG M
+a-dốt|AE Y OW0 K P
+a-đa|AE D AE
+a-đam|AE D AE M
+a-đi-xơn|AE D IY0 S UH NG
+a-ga|AE G AE
+a-giăng|AE Y AA NG
+a-giăng-đa|AE Y AA NG D AE
+a-gon|AE G AO0 NG M
+a-la|AE L AE
+a-la-hán|AE L AE HH AE NG
+a-la-mốt|AE L AE M OW0 K P
+a-la-văng|AE L AE Y AA NG
+a-léc|AE L EH0 K
+a-len|AE L EH0 NG
+a-lê|AE L EH0
+a-lô|AE L OW0
+a-lu-min|AE L UW0 M IY0 N
+a-ma-tơ|AE M AE T UH
+a-mam|AE M AE M
+a-măng|AE M AA NG
+a-me-ri-xi|AE M EH0 JH IY0 S IY0
+a-men|AE M EH0 NG
+a-mi|AE M IY0
+a-mi-ăng|AE M IY0 AA NG
+a-mi-đan|AE M IY0 D AE NG
+a-min|AE M IY0 N
+a-míp|AE M IY0 P
+a-mô-ni-ác|AE M OW0 N IY0 AE K
+a-mô-ni-ắc|AE M OW0 N IY0 AA K
+a-nan-gin|AE N AE NG Z IY0 N
+a-ni-lin|AE N IY0 L IY0 N
+a-ni-ôn|AE N IY0 OW0 NG M
+a-ni-ông|AE N IY0 OW0 NG M
+a-nô-phen|AE N OW0 F EH0 NG
+a-nốt|AE N OW0 K P
+a-pa-tít|AE P AE T IY0 T
+a-pác-thai|AE P AE K T AE Y
+a-pê-ri-típ|AE P EH0 JH IY0 T IY0 P
+a-sen|AE SH EH0 NG
+a-ta-tin|AE T AE T IY0 N
+a-ti-sô|AE T IY0 SH OW0
+a-trô-pin|AE T OW0 P IY0 N
+a-tu-la|AE T UW0 L AE
+a-tua-đờ-rôn|AE T UW0 AX0 D UH JH OW0 NG M
+a-văng|AE Y AA NG
+a-văng-ta|AE Y AA NG T AE
+a-văng-xê|AE Y AA NG S EH0
+a-vi|AE Y IY0
+a-vô-ca|AE Y OW0 K AE
+a-xen|AE S EH0 NG
+a-xê-ti-len|AE S EH0 T IY0 L EH0 NG
+a-xê-ton|AE S EH0 T AO0 NG M
+a-xê-tôn|AE S EH0 T OW0 NG M
+a-xit|AE S IY0 T
+a-xít|AE S IY0 T
+à|AE
+ả|AE
+á|AE
+ạ|AE
+ác|AE K
+ác-bít|AE K B IY0 T
+ác-coóc|AE K K AO0 K P
+ác-coóc-đê-ông|AE K K AO0 K P D EH0 OW0 NG M
+ác-mô-ni-ca|AE K M OW0 N IY0 K AE
+ác-quy|AE K W IY0
+ác-ten|AE K T EH0 NG
+ác-ti-sô|AE K T IY0 SH OW0
+ách|AE T
+ạch|AE T
+ai|AE Y
+ải|AE Y
+ái|AE Y
+am|AE M
+am|AE M
+am-mô-ni-ắc|AE M M OW0 N IY0 AA K
+am-pe|AE M P EH0
+am-pun|AE M P UW0 NG M
+ám|AE M
+an|AE NG
+an-bom|AE NG B AO0 M
+an-bu-min|AE NG B UW0 M IY0 N
+an-ca-lo-ít|AE NG K AE L AO0 IY0 T
+an-ca-lô-ít|AE NG K AE L OW0 IY0 T
+an-côn|AE NG K OW0 NG M
+an-đe-hít|AE NG D EH0 HH IY0 T
+an-đê-hít|AE NG D EH0 HH IY0 T
+an-gin|AE NG Z IY0 N
+an-go-rít|AE NG G AO0 JH IY0 T
+an-gô-rít|AE NG G OW0 JH IY0 T
+an-két|AE NG K EH0 T
+an-ma-nác|AE NG M AE N AE K
+an-pha|AE NG F AE
+an-pha-bê|AE NG F AE B EH0
+an-te|AE NG T EH0
+an-ten|AE NG T EH0 NG
+an-ti-mon|AE NG T IY0 M AO0 NG M
+an-ti-pi-rin|AE NG T IY0 P IY0 JH IY0 N
+an-tô|AE NG T OW0
+an-tơ-ra-xít|AE NG T UH JH AE S IY0 T
+an-tra-xít|AE NG T AE S IY0 T
+án|AE NG
+ang|AE NG
+ảng|AE NG
+áng|AE NG
+anh|AE N
+anh-te|AE N T EH0
+anh-te-phôn|AE N T EH0 F OW0 NG M
+anh-te-ruýp-tơ|AE N T EH0 JH W IY0 P T UH
+ảnh|AE N
+ánh|AE N
+ao|AE W
+ao-xơ|AE W S UH
+ào|AE W
+ảo|AE W
+áo|AE W
+áp|AE P
+áp-ga-ni|AE P G AE N IY0
+áp-phe|AE P F EH0
+áp-phích|AE P F IY0 T
+áp-xe|AE P S EH0
+át|AE T
+át-lát|AE T L AE T
+át-mốt-phe|AE T M OW0 K P F EH0
+át-phan|AE T F AE NG
+át-pi-rin|AE T P IY0 JH IY0 N
+át-xít|AE T S IY0 T
+au|AA W
+au|AA W
+au-xơ|AA W S UH
+áy|AA Y
+ă|AA
+ắc|AA K
+ắc-coóc|AA K K AO0 K P
+ắc-coóc-đê-ông|AA K K AO0 K P D EH0 OW0 NG M
+ắc-ê|AA K EH0
+ắc-qui|AA K W IY0
+ắc-quy|AA K W IY0
+ắc|AA K
+ắc-xi-đăng|AA K S IY0 D AA NG
+ặc|AA K
+ăm-bờ-ra-da|AA M B UH JH AE Y AE
+ăm-pe|AA M P EH0
+ăm-pun|AA M P UW0 NG M
+ẵm|AA M
+ăn|AA NG
+ăng-ga|AA NG G AE
+ăng-ten|AA NG T EH0 NG
+ăng-ti-gôn|AA NG T IY0 G OW0 NG M
+ăng-ti-moan|AA NG T IY0 M W AE NG
+ăng-tơ-ra-xit|AA NG T UH JH AE S IY0 T
+ẳng|AA NG
+ắng|AA NG
+ắp|AA P
+ặp|AA P
+ắt|AA K
+â|UH
+ậc|UH K
+âm|UH M
+ầm|UH M
+ẩm|UH M
+ấm|UH M
+ân|UH NG
+ẩn|UH NG
+ấn|UH NG
+ầng|UH NG
+ấp|UH P
+ập|UH P
+ất|UH K
+âu|UH W
+âu-tây|UH W T UH Y
+ẩu|UH W
+ấu|UH W
+ậu|UH W
+ầy|UH Y
+ẩy|UH Y
+ấy|UH Y
+ba|B AE
+ba|B AE
+ba-dan|B AE Y AE NG
+ba-dô-ca|B AE Y OW0 K AE
+ba-dơ|B AE Y UH
+ba-đờ-xuy|B AE D UH S W IY0
+ba-ga|B AE G AE
+ba-hi|B AE HH IY0
+ba-ke-lit|B AE K EH0 L IY0 T
+ba-ke-lít|B AE K EH0 L IY0 T
+ba-lát|B AE L AE T
+ba-lê|B AE L EH0
+ba-lô|B AE L OW0
+ba-lông|B AE L OW0 NG M
+ba-ren|B AE JH EH0 NG
+ba-ri|B AE JH IY0
+ba-ri-e|B AE JH IY0 EH0
+ba-ta|B AE T AE
+ba-tanh|B AE T AE N
+ba-tăng|B AE T AA NG
+ba-tê|B AE T EH0
+ba-tê-sô|B AE T EH0 SH OW0
+ba-ti-nê|B AE T IY0 N EH0
+ba-toong|B AE T AO0 NG M
+ba-tui|B AE T UW0 Y
+bà|B AE
+bà-la-môn|B AE L AE M OW0 NG M
+bả|B AE
+bã|B AE
+bá|B AE
+bạ|B AE
+bác|B AE K
+bạc|B AE K
+bách|B AE T
+bạch|B AE T
+bai|B AE Y
+bài|B AE Y
+bải|B AE Y
+bãi|B AE Y
+bái|B AE Y
+bại|B AE Y
+bám|B AE M
+bạm|B AE M
+ban|B AE NG
+ban-công|B AE NG K OW0 NG M
+ban-giô|B AE NG Y OW0
+ban-me|B AE NG M EH0
+bàn|B AE NG
+bản|B AE NG
+bán|B AE NG
+bạn|B AE NG
+bang|B AE NG
+bàng|B AE NG
+bảng|B AE NG
+báng|B AE NG
+banh|B AE N
+bành|B AE N
+bành-tô|B AE N T OW0
+bảnh|B AE N
+bánh|B AE N
+bạnh|B AE N
+bao|B AE W
+bào|B AE W
+bảo|B AE W
+bão|B AE W
+báo|B AE W
+bạo|B AE W
+bát|B AE T
+bát-két|B AE T K EH0 T
+bát-kết|B AE T K EH0 T
+bạt|B AE T
+bàu|B AA W
+báu|B AA W
+bay|B AA Y
+bay-on-nét|B AA Y AO0 NG M N EH0 T
+bày|B AA Y
+bảy|B AA Y
+bắc|B AA K
+băm|B AA M
+bằm|B AA M
+bặm|B AA M
+bẳn|B AA NG
+bắn|B AA NG
+băng|B AA NG
+băng-ca|B AA NG K AE
+băng-giô|B AA NG Y OW0
+băng-rôn|B AA NG JH OW0 NG M
+băng-túp|B AA NG T UW0 P
+bằng|B AA NG
+bẵng|B AA NG
+bắp|B AA P
+bặp|B AA P
+bắt|B AA K
+bắt-tê|B AA K T EH0
+bặt|B AA K
+bấc|B UH K
+bậc|B UH K
+bầm|B UH M
+bẩm|B UH M
+bẫm|B UH M
+bấm|B UH M
+bậm|B UH M
+bần|B UH NG
+bẩn|B UH NG
+bấn|B UH NG
+bận|B UH NG
+bầng|B UH NG
+bấng|B UH NG
+bậng|B UH NG
+bập|B UH P
+bất|B UH K
+bật|B UH K
+bâu|B UH W
+bầu|B UH W
+bấu|B UH W
+bậu|B UH W
+bây|B UH Y
+bầy|B UH Y
+bẩy|B UH Y
+bẫy|B UH Y
+bấy|B UH Y
+bậy|B UH Y
+be|B EH0
+be-ri-li|B EH0 JH IY0 L IY0
+bè|B EH0
+bẻ|B EH0
+bẽ|B EH0
+bé|B EH0
+bẹ|B EH0
+béc-giê|B EH0 K Y EH0
+bem|B EH0 M
+bẻm|B EH0 M
+ben|B EH0 NG
+ben-den|B EH0 NG Y EH0 NG
+ben-tô-nít|B EH0 NG T OW0 N IY0 T
+bèn|B EH0 NG
+bẽn|B EH0 NG
+bén|B EH0 NG
+bẹn|B EH0 NG
+beng|B EH0 NG
+béng|B EH0 NG
+beo|B EH0 OW0
+bèo|B EH0 OW0
+bẻo|B EH0 OW0
+béo|B EH0 OW0
+bẹo|B EH0 OW0
+bép|B EH0 P
+bẹp|B EH0 P
+bét|B EH0 T
+bẹt|B EH0 T
+bê|B EH0
+bê-rê|B EH0 JH EH0
+bê-ta|B EH0 T AE
+bê-tông|B EH0 T OW0 NG M
+bề|B EH0
+bể|B EH0
+bễ|B EH0
+bế|B EH0
+bệ|B EH0
+bệch|B EH0 T
+bên|B EH0 N
+bền|B EH0 N
+bển|B EH0 N
+bến|B EH0 N
+bện|B EH0 N
+bênh|B EH0 N
+bềnh|B EH0 N
+bệnh|B EH0 N
+bếp|B EH0 P
+bết|B EH0 T
+bệt|B EH0 T
+bêu|B EH0 UW0
+bệu|B EH0 UW0
+bi|B IY0
+bi|B IY0
+bi-a|B IY0 AE
+bi-ăng-tin|B IY0 AA NG T IY0 N
+bi-da|B IY0 Y AE
+bi-da-ma|B IY0 Y AE M AE
+bi-dăng-tin|B IY0 Y AA NG T IY0 N
+bi-đông|B IY0 D OW0 NG M
+bi-ki-ni|B IY0 K IY0 N IY0
+bi-tum|B IY0 T UW0 M
+bì|B IY0
+bỉ|B IY0
+bĩ|B IY0
+bí|B IY0
+bị|B IY0
+bia|B IY0 AX0
+bìa|B IY0 AX0
+bịa|B IY0 AX0
+bích|B IY0 T
+bích-cốt|B IY0 T K OW0 K P
+bích-qui|B IY0 T W IY0
+bích-quy|B IY0 T W IY0
+bích-toong|B IY0 T T AO0 NG M
+bịch|B IY0 T
+biếc|B IY0 AX0 K
+biếm|B IY0 M
+biên|B IY0 AX0 NG
+biền|B IY0 AX0 NG
+biển|B IY0 AX0 NG
+biến|B IY0 AX0 NG
+biện|B IY0 AX0 NG
+biếng|B IY0 AX0 NG
+biêt|B IY0 AX0 K
+biết|B IY0 AX0 K
+biệt|B IY0 AX0 K
+biểu|B IY0 AX0 W
+biếu|B IY0 AX0 W
+bìm|B IY0 M
+bỉm|B IY0 M
+bím|B IY0 M
+bin|B IY0 N
+bin-đinh|B IY0 N D IY0 N
+bín|B IY0 N
+bịn|B IY0 N
+binh|B IY0 N
+bình|B IY0 N
+bình-toong|B IY0 N T AO0 NG M
+bĩnh|B IY0 N
+bính|B IY0 N
+bịnh|B IY0 N
+bíp|B IY0 P
+bíp-tết|B IY0 P T EH0 T
+bịp|B IY0 P
+bít|B IY0 T
+bít-cốt|B IY0 T K OW0 K P
+bít-mút|B IY0 T M UW0 K P
+bít-quy|B IY0 T W IY0
+bít-tết|B IY0 T T EH0 T
+bít-tông|B IY0 T T OW0 NG M
+bịt|B IY0 T
+bìu|B IY0 W
+bĩu|B IY0 W
+bíu|B IY0 W
+bịu|B IY0 W
+bo|B AO0
+bo|B AO0
+bo-nê|B AO0 N EH0
+bò|B AO0
+bỏ|B AO0
+bõ|B AO0
+bó|B AO0
+bọ|B AO0
+boa|B W AE
+bóc|B AO0 K P
+bọc|B AO0 K P
+bòi|B AO0 Y
+bỏi|B AO0 Y
+bói|B AO0 Y
+bom|B AO0 M
+bom-bê|B AO0 M B EH0
+bòm|B AO0 M
+bõm|B AO0 M
+bon|B AO0 NG M
+bon-nê|B AO0 NG M N EH0
+bon-sê-vích|B AO0 NG M SH EH0 Y IY0 T
+bòn|B AO0 NG M
+bón|B AO0 NG M
+bọn|B AO0 NG M
+bong|B AO0 NG M
+bòng|B AO0 NG M
+bỏng|B AO0 NG M
+bóng|B AO0 NG M
+bọng|B AO0 NG M
+boóc-đô|B AO0 K P D OW0
+boóc-tê|B AO0 K P T EH0
+boong|B AO0 NG M
+boong-ke|B AO0 NG M K EH0
+boóng|B AO0 NG M
+bóp|B AO0 P
+bọp|B AO0 P
+bót|B AO0 K P
+bọt|B AO0 K P
+bô|B OW0
+bô-bin|B OW0 B IY0 N
+bô-đê|B OW0 D EH0
+bô-xít|B OW0 S IY0 T
+bồ|B OW0
+bồ-tạt|B OW0 T AE T
+bổ|B OW0
+bố|B OW0
+bộ|B OW0
+bốc|B OW0 K P
+bốc-can|B OW0 K P K AE NG
+bốc-xít|B OW0 K P S IY0 T
+bốc-xơ|B OW0 K P S UH
+bôi|B OW0 Y
+bồi|B OW0 Y
+bổi|B OW0 Y
+bối|B OW0 Y
+bội|B OW0 Y
+bôm|B OW0 M
+bôm-bay|B OW0 M B AA Y
+bồm|B OW0 M
+bôn|B OW0 NG M
+bôn-sê-vích|B OW0 NG M SH EH0 Y IY0 T
+bồn|B OW0 NG M
+bổn|B OW0 NG M
+bốn|B OW0 NG M
+bộn|B OW0 NG M
+bông|B OW0 NG M
+bông-bay|B OW0 NG M B AA Y
+bông-xoa|B OW0 NG M S W AE
+bồng|B OW0 NG M
+bổng|B OW0 NG M
+bỗng|B OW0 NG M
+bống|B OW0 NG M
+bộng|B OW0 NG M
+bốp|B OW0 P
+bộp|B OW0 P
+bốt|B OW0 K P
+bốt-can|B OW0 K P K AE NG
+bốt-sét|B OW0 K P SH EH0 T
+bốt-tin|B OW0 K P T IY0 N
+bột|B OW0 K P
+bơ|B UH
+bơ-lu-dông|B UH L UW0 Y OW0 NG M
+bơ-mấm|B UH M UH M
+bơ-noong|B UH N AO0 NG M
+bơ-rơ-vê|B UH JH UH Y EH0
+bờ|B UH
+bờ-lăng-tông|B UH L AA NG T OW0 NG M
+bờ-lu|B UH L UW0
+bờ-lu-dông|B UH L UW0 Y OW0 NG M
+bờ-rát-xa|B UH JH AE T S AE
+bở|B UH
+bớ|B UH
+bợ|B UH
+bơi|B UH Y
+bời|B UH Y
+bởi|B UH Y
+bới|B UH Y
+bơm|B UH M
+bờm|B UH M
+bợm|B UH M
+bơn|B UH NG
+bỡn|B UH NG
+bớn|B UH NG
+bợn|B UH NG
+bớp|B UH P
+bợp|B UH P
+bớt|B UH K
+bợt|B UH K
+bu|B UW0
+bu-đâng|B UW0 D UH NG
+bu-gi|B UW0 Y IY0
+bu-lông|B UW0 L OW0 NG M
+bù|B UW0
+bù-ét|B UW0 EH0 T
+bù-loong|B UW0 L AO0 NG M
+bủ|B UW0
+bú|B UW0
+bụ|B UW0
+bua|B UW0 AX0
+bùa|B UW0 AX0
+bủa|B UW0 AX0
+búa|B UW0 AX0
+bục|B UW0 K P
+bui|B UW0 Y
+bùi|B UW0 Y
+búi|B UW0 Y
+bụi|B UW0 Y
+bùm|B UW0 M
+bủm|B UW0 M
+bụm|B UW0 M
+bùn|B UW0 NG M
+bủn|B UW0 NG M
+bún|B UW0 NG M
+bung|B UW0 NG M
+bùng|B UW0 NG M
+bủng|B UW0 NG M
+búng|B UW0 NG M
+bụng|B UW0 NG M
+buộc|B UW0 AX0 K
+buồi|B UW0 AX0 Y
+buổi|B UW0 AX0 Y
+buồm|B UW0 M
+buôn|B UW0 AX0 NG
+buồn|B UW0 AX0 NG
+buông|B UW0 AX0 NG
+buồng|B UW0 AX0 NG
+buốt|B UW0 AX0 K
+buột|B UW0 AX0 K
+búp|B UW0 P
+búp-bê|B UW0 P B EH0
+búp-phê|B UW0 P F EH0
+bụp|B UW0 P
+bút|B UW0 K P
+bụt|B UW0 K P
+buy-rô|B W IY0 JH OW0
+buy-vét|B W IY0 Y EH0 T
+buýp-phê|B W IY0 P F EH0
+buýt|B W IY0 T
+bứ|B UW0
+bự|B UW0
+bưa|B UW0 AX0
+bừa|B UW0 AX0
+bửa|B UW0 AX0
+bữa|B UW0 AX0
+bứa|B UW0 AX0
+bựa|B UW0 AX0
+bức|B UW0 K
+bực|B UW0 K
+bưng|B UW0 NG
+bừng|B UW0 NG
+bửng|B UW0 NG
+bứng|B UW0 NG
+bựng|B UW0 NG
+bước|B UW0 AX0 K
+bươi|B UW0 AX0 Y
+bưởi|B UW0 AX0 Y
+bưởi|B UW0 AX0 Y
+bươm|B UW0 M
+bướm|B UW0 M
+bươn|B UW0 AX0 NG
+bương|B UW0 AX0 NG
+bướng|B UW0 AX0 NG
+bướp|B UW0 P
+bươu|B UW0 AX0 W
+bướu|B UW0 AX0 W
+bứt|B UW0 K
+bựt|B UW0 K
+ca|K AE
+ca|K AE
+ca|K AE
+ca-bi-nê|K AE B IY0 N EH0
+ca-bin|K AE B IY0 N
+ca-cao|K AE K AE W
+ca-chiu-sa|K AE KH IY0 W SH AE
+ca-dong|K AE Y AO0 NG M
+ca-đi-mi|K AE D IY0 M IY0
+ca-đô|K AE D OW0
+ca-ki|K AE K IY0
+ca-la-thầu|K AE L AE T UH W
+ca-li|K AE L IY0
+ca-li-cô|K AE L IY0 K OW0
+ca-li-tê|K AE L IY0 T EH0
+ca-líp|K AE L IY0 P
+ca-lo|K AE L AO0
+ca-lô|K AE L OW0
+ca-me-ra|K AE M EH0 JH AE
+ca-men|K AE M EH0 NG
+ca-mê-ra|K AE M EH0 JH AE
+ca-mi-nhông|K AE M IY0 N IY0 OW0 NG M
+ca-mi-ông|K AE M IY0 OW0 NG M
+ca-na-pê|K AE N AE P EH0
+ca-níp|K AE N IY0 P
+ca-nô|K AE N OW0
+ca-nông|K AE N OW0 NG M
+ca-phê-in|K AE F EH0 IY0 N
+ca-pô|K AE P OW0
+ca-pốt|K AE P OW0 K P
+ca-ra|K AE JH AE
+ca-ra-te|K AE JH AE T EH0
+ca-rê|K AE JH EH0
+ca-ri|K AE JH IY0
+ca-rô|K AE JH OW0
+ca-rô-ten|K AE JH OW0 T EH0 NG
+ca-sê|K AE SH EH0
+ca-sô|K AE SH OW0
+ca-ta-lô|K AE T AE L OW0
+ca-tang|K AE T AE NG
+ca-ti-on|K AE T IY0 AO0 NG M
+ca-ti-ôn|K AE T IY0 OW0 NG M
+ca-tốt|K AE T OW0 K P
+ca-vát|K AE Y AE T
+ca-vét|K AE Y EH0 T
+cà|K AE
+cà-mèn|K AE M EH0 NG
+cà-phê|K AE F EH0
+cà-phê|K AE F EH0
+cà-rem|K AE JH EH0 M
+cà-ri|K AE JH IY0
+cà-rốt|K AE JH OW0 K P
+cà-rốt|K AE JH OW0 K P
+cà-vạt|K AE Y AE T
+cả|K AE
+cá|K AE
+cạ|K AE
+các|K AE K
+các-bin|K AE K B IY0 N
+các-bo-nát|K AE K B AO0 N AE T
+các-bon|K AE K B AO0 NG M
+các-bon-nát|K AE K B AO0 NG M N AE T
+các-bon-ních|K AE K B AO0 NG M N IY0 T
+các-bua|K AE K B UW0 AX0
+các-táp|K AE K T AE P
+các-ten|K AE K T EH0 NG
+các-tông|K AE K T OW0 NG M
+các-tơ|K AE K T UH
+các-vi-dít|K AE K Y IY0 Y IY0 T
+cạc|K AE K
+cách|K AE T
+cạch|K AE T
+cai|K AE Y
+cài|K AE Y
+cải|K AE Y
+cãi|K AE Y
+cái|K AE Y
+cam|K AE M
+cam-nhông|K AE M N IY0 OW0 NG M
+càm|K AE M
+cảm|K AE M
+cám|K AE M
+cạm|K AE M
+can|K AE NG
+can-đê-la|K AE NG D EH0 L AE
+can-đơ-la|K AE NG D UH L AE
+can-ke|K AE NG K EH0
+can-kê|K AE NG K EH0
+can-tua|K AE NG T UW0 AX0
+can-xi|K AE NG S IY0
+càn|K AE NG
+cản|K AE NG
+cán|K AE NG
+cạn|K AE NG
+càng|K AE NG
+cảng|K AE NG
+cáng|K AE NG
+canh|K AE N
+canh-ki-na|K AE N K IY0 N AE
+cành|K AE N
+cảnh|K AE N
+cánh|K AE N
+cạnh|K AE N
+cao|K AE W
+cao|K AE W
+cao-bồi|K AE W B OW0 Y
+cao-đài|K AE W D AE Y
+cao-lanh|K AE W L AE N
+cao-su|K AE W SH UW0
+cào|K AE W
+cảo|K AE W
+cáo|K AE W
+cạo|K AE W
+cáp|K AE P
+cạp|K AE P
+cát|K AE T
+cát-két|K AE T K EH0 T
+cát-mi|K AE T M IY0
+cát-sê|K AE T SH EH0
+cát-xét|K AE T S EH0 T
+cau|K AA W
+cáu|K AA W
+cạu|K AA W
+cay|K AA Y
+cày|K AA Y
+cày|K AA Y
+cáy|K AA Y
+cạy|K AA Y
+cắc|K AA K
+cắc-tê|K AA K T EH0
+cặc|K AA K
+căm|K AA M
+cằm|K AA M
+cắm|K AA M
+cặm|K AA M
+căn|K AA NG
+căn-tin|K AA NG T IY0 N
+cằn|K AA NG
+cắn|K AA NG
+cặn|K AA NG
+căng|K AA NG
+căng-tin|K AA NG T IY0 N
+cẳng|K AA NG
+cẵng|K AA NG
+cắng|K AA NG
+cắp|K AA P
+cặp|K AA P
+cắt|K AA K
+cấc|K UH K
+câm|K UH M
+cầm|K UH M
+cẩm|K UH M
+cấm|K UH M
+cân|K UH NG
+cần|K UH NG
+cẩn|K UH NG
+cấn|K UH NG
+cận|K UH NG
+câng|K UH NG
+cẫng|K UH NG
+cấp|K UH P
+cập|K UH P
+cất|K UH K
+cật|K UH K
+câu|K UH W
+câu-rút|K UH W JH UW0 K P
+cầu|K UH W
+cẩu|K UH W
+cấu|K UH W
+cậu|K UH W
+cây|K UH Y
+cầy|K UH Y
+cấy|K UH Y
+cậy|K UH Y
+cen-ti-mét|K EH0 NG T IY0 M EH0 T
+cha|KH AE
+cha-cú|KH AE K UW0
+chà|KH AE
+chả|KH AE
+chạ|KH AE
+chác|KH AE K
+chạc|KH AE K
+chách|KH AE T
+chạch|KH AE T
+chai|KH AE Y
+chài|KH AE Y
+chải|KH AE Y
+chái|KH AE Y
+chàm|KH AE M
+chàm|KH AE M
+chạm|KH AE M
+chan|KH AE NG
+chán|KH AE NG
+chạn|KH AE NG
+chang|KH AE NG
+chàng|KH AE NG
+chạng|KH AE NG
+chanh|KH AE N
+chành|KH AE N
+chánh|KH AE N
+chạnh|KH AE N
+chao|KH AE W
+chào|KH AE W
+chảo|KH AE W
+chão|KH AE W
+cháo|KH AE W
+chạo|KH AE W
+chạp|KH AE P
+chát|KH AE T
+chạt|KH AE T
+chau|KH AA W
+chảu|KH AA W
+cháu|KH AA W
+chay|KH AA Y
+chày|KH AA Y
+chảy|KH AA Y
+cháy|KH AA Y
+chạy|KH AA Y
+chắc|KH AA K
+chặc|KH AA K
+chăm|KH AA M
+chăm|KH AA M
+chăm-rê|KH AA M JH EH0
+chằm|KH AA M
+chắm|KH AA M
+chặm|KH AA M
+chăn|KH AA NG
+chằn|KH AA NG
+chẵn|KH AA NG
+chắn|KH AA NG
+chặn|KH AA NG
+chăng|KH AA NG
+chằng|KH AA NG
+chẳng|KH AA NG
+chặng|KH AA NG
+chắp|KH AA P
+chặp|KH AA P
+chắt|KH AA K
+chặt|KH AA K
+chậc|KH UH K
+châm|KH UH M
+chầm|KH UH M
+chẩm|KH UH M
+chấm|KH UH M
+chậm|KH UH M
+chân|KH UH NG
+chần|KH UH NG
+chẩn|KH UH NG
+chấn|KH UH NG
+chận|KH UH NG
+chấp|KH UH P
+chập|KH UH P
+chất|KH UH K
+chật|KH UH K
+châu|KH UH W
+châu|KH UH W
+châu-ro|KH UH W JH AO0
+chầu|KH UH W
+chẩu|KH UH W
+chấu|KH UH W
+chậu|KH UH W
+chây|KH UH Y
+chầy|KH UH Y
+chấy|KH UH Y
+chậy|KH UH Y
+che|KH EH0
+chè|KH EH0
+chẻ|KH EH0
+chẽ|KH EH0
+ché|KH EH0
+chém|KH EH0 M
+chen|KH EH0 NG
+chèn|KH EH0 NG
+chẽn|KH EH0 NG
+chén|KH EH0 NG
+chẹn|KH EH0 NG
+cheo|KH EH0 OW0
+chèo|KH EH0 OW0
+chẻo|KH EH0 OW0
+chéo|KH EH0 OW0
+chép|KH EH0 P
+chét|KH EH0 T
+chẹt|KH EH0 T
+chê|KH EH0
+chế|KH EH0
+chếch|KH EH0 T
+chệch|KH EH0 T
+chêm|KH EH0 M
+chênh|KH EH0 N
+chếp|KH EH0 P
+chết|KH EH0 T
+chệt|KH EH0 T
+chi|KH IY0
+chi-hua-hua|KH IY0 HH UW0 AX0 HH UW0 AX0
+chì|KH IY0
+chỉ|KH IY0
+chí|KH IY0
+chí-phèo|KH IY0 F EH0 OW0
+chị|KH IY0
+chia|KH IY0 AX0
+chìa|KH IY0 AX0
+chĩa|KH IY0 AX0
+chía|KH IY0 AX0
+chích|KH IY0 T
+chiếc|KH IY0 AX0 K
+chiệc|KH IY0 AX0 K
+chiêm|KH IY0 M
+chiếm|KH IY0 M
+chiên|KH IY0 AX0 NG
+chiền|KH IY0 AX0 NG
+chiến|KH IY0 AX0 NG
+chiêng|KH IY0 AX0 NG
+chiềng|KH IY0 AX0 NG
+chiếng|KH IY0 AX0 NG
+chiếp|KH IY0 P
+chiết|KH IY0 AX0 K
+chiêu|KH IY0 AX0 W
+chiều|KH IY0 AX0 W
+chiểu|KH IY0 AX0 W
+chiếu|KH IY0 AX0 W
+chim|KH IY0 M
+chìm|KH IY0 M
+chỉn|KH IY0 N
+chín|KH IY0 N
+chịn|KH IY0 N
+chình|KH IY0 N
+chỉnh|KH IY0 N
+chĩnh|KH IY0 N
+chính|KH IY0 N
+chíp|KH IY0 P
+chít|KH IY0 T
+chịt|KH IY0 T
+chíu|KH IY0 W
+chịu|KH IY0 W
+cho|KH AO0
+chò|KH AO0
+chỏ|KH AO0
+chỏ|KH AO0
+chõ|KH AO0
+chó|KH AO0
+chọ|KH AO0
+choa|KH W AE
+choá|KH W AE
+choác|KH W AE K
+choạc|KH W AE K
+choai|KH W AE Y
+choài|KH W AE Y
+choãi|KH W AE Y
+choái|KH W AE Y
+choại|KH W AE Y
+choán|KH W AE NG
+choang|KH W AE NG
+choàng|KH W AE NG
+choảng|KH W AE NG
+choáng|KH W AE NG
+choạng|KH W AE NG
+choắt|KH W AA K
+chóc|KH AO0 K P
+chọc|KH AO0 K P
+choé|KH W EH0
+choẹ|KH W EH0
+choèn|KH W EH0 N
+choẹt|KH W EH0 T
+chòi|KH AO0 Y
+chỏi|KH AO0 Y
+chói|KH AO0 Y
+chọi|KH AO0 Y
+chom|KH AO0 M
+chòm|KH AO0 M
+chỏm|KH AO0 M
+chõm|KH AO0 M
+chọn|KH AO0 NG M
+chong|KH AO0 NG M
+chòng|KH AO0 NG M
+chỏng|KH AO0 NG M
+chõng|KH AO0 NG M
+chóng|KH AO0 NG M
+choòng|KH AO0 NG M
+chóp|KH AO0 P
+chót|KH AO0 K P
+chồ|KH OW0
+chỗ|KH OW0
+chộ|KH OW0
+chốc|KH OW0 K P
+chồi|KH OW0 Y
+chổi|KH OW0 Y
+chỗi|KH OW0 Y
+chối|KH OW0 Y
+chôm|KH OW0 M
+chồm|KH OW0 M
+chôn|KH OW0 NG M
+chồn|KH OW0 NG M
+chốn|KH OW0 NG M
+chông|KH OW0 NG M
+chồng|KH OW0 NG M
+chổng|KH OW0 NG M
+chống|KH OW0 NG M
+chốp|KH OW0 P
+chộp|KH OW0 P
+chốt|KH OW0 K P
+chột|KH OW0 K P
+chơ-rai|KH UH JH AE Y
+chơ-ro|KH UH JH AO0
+chơ-ru|KH UH JH UW0
+chờ|KH UH
+chờ|KH UH
+chở|KH UH
+chớ|KH UH
+chợ|KH UH
+chơi|KH UH Y
+chờm|KH UH M
+chớm|KH UH M
+chơn|KH UH NG
+chờn|KH UH NG
+chớn|KH UH NG
+chợn|KH UH NG
+chớp|KH UH P
+chợp|KH UH P
+chợt|KH UH K
+chu|KH UW0
+chu-ru|KH UW0 JH UW0
+chù|KH UW0
+chù|KH UW0
+chủ|KH UW0
+chú|KH UW0
+chua|KH UW0 AX0
+chùa|KH UW0 AX0
+chúa|KH UW0 AX0
+chuẩn|KH W UH NG
+chúc|KH UW0 K P
+chục|KH UW0 K P
+chui|KH UW0 Y
+chùi|KH UW0 Y
+chũi|KH UW0 Y
+chúi|KH UW0 Y
+chum|KH UW0 M
+chùm|KH UW0 M
+chủm|KH UW0 M
+chũm|KH UW0 M
+chúm|KH UW0 M
+chụm|KH UW0 M
+chun|KH UW0 NG M
+chùn|KH UW0 NG M
+chủn|KH UW0 NG M
+chung|KH UW0 NG M
+chùng|KH UW0 NG M
+chủng|KH UW0 NG M
+chúng|KH UW0 NG M
+chuốc|KH UW0 AX0 K
+chuộc|KH UW0 AX0 K
+chuôi|KH UW0 AX0 Y
+chuồi|KH UW0 AX0 Y
+chuỗi|KH UW0 AX0 Y
+chuối|KH UW0 AX0 Y
+chuội|KH UW0 AX0 Y
+chuôm|KH UW0 M
+chuồn|KH UW0 AX0 NG
+chuông|KH UW0 AX0 NG
+chuồng|KH UW0 AX0 NG
+chuộng|KH UW0 AX0 NG
+chuốt|KH UW0 AX0 K
+chuột|KH UW0 AX0 K
+chụp|KH UW0 P
+chút|KH UW0 K P
+chụt|KH UW0 K P
+chùy|KH UW0 Y
+chuỳ|KH W IY0
+chuyên|KH W IY0 AX0 NG
+chuyền|KH W IY0 AX0 NG
+chuyển|KH W IY0 AX0 NG
+chuyến|KH W IY0 AX0 NG
+chuyện|KH W IY0 AX0 NG
+chư|KH UW0
+chừ|KH UW0
+chữ|KH UW0
+chứ|KH UW0
+chưa|KH UW0 AX0
+chừa|KH UW0 AX0
+chửa|KH UW0 AX0
+chữa|KH UW0 AX0
+chứa|KH UW0 AX0
+chức|KH UW0 K
+chực|KH UW0 K
+chửi|KH UW0 Y
+chưn|KH UW0 NG
+chưng|KH UW0 NG
+chừng|KH UW0 NG
+chửng|KH UW0 NG
+chững|KH UW0 NG
+chứng|KH UW0 NG
+chựng|KH UW0 NG
+chước|KH UW0 AX0 K
+chưởi|KH UW0 AX0 Y
+chườm|KH UW0 M
+chương|KH UW0 AX0 NG
+chương-đài|KH UW0 AX0 NG D AE Y
+chường|KH UW0 AX0 NG
+chưởng|KH UW0 AX0 NG
+chướng|KH UW0 AX0 NG
+chượp|KH UW0 P
+chứt|KH UW0 K
+co|K AO0
+co|K AO0
+co-ban|K AO0 B AE NG
+co-lo-phan|K AO0 L AO0 F AE NG
+co-sin|K AO0 SH IY0 N
+co-tang|K AO0 T AE NG
+cò|K AO0
+cò-mi|K AO0 M IY0
+cỏ|K AO0
+cỏ-vê|K AO0 Y EH0
+có|K AO0
+cọ|K AO0
+cóc|K AO0 K P
+cọc|K AO0 K P
+coi|K AO0 Y
+còi|K AO0 Y
+cõi|K AO0 Y
+cói|K AO0 Y
+com-bi-ne-dông|K AO0 M B IY0 N EH0 Y OW0 NG M
+com-bin|K AO0 M B IY0 N
+com-bờ-lê|K AO0 M B UH L EH0
+com-lê|K AO0 M L EH0
+com-măng|K AO0 M M AA NG
+com-măng-ca|K AO0 M M AA NG K AE
+com-măng-đô|K AO0 M M AA NG D OW0
+com-mi|K AO0 M M IY0
+com-mít-xi-ông|K AO0 M M IY0 T S IY0 OW0 NG M
+com-mốt|K AO0 M M OW0 K P
+com-pa|K AO0 M P AE
+com-pa-nhi|K AO0 M P AE N IY0 IY0
+com-pắc|K AO0 M P AA K
+com-pô|K AO0 M P OW0
+com-pô-dít|K AO0 M P OW0 Y IY0 T
+com-pu-tơ|K AO0 M P UW0 T UH
+còm|K AO0 M
+còm-mi|K AO0 M M IY0
+con|K AO0 NG M
+con-léc-xi-ông|K AO0 NG M L EH0 K S IY0 OW0 NG M
+còn|K AO0 NG M
+cỏn|K AO0 NG M
+cọn|K AO0 NG M
+cong|K AO0 NG M
+cong-tờ-gút|K AO0 NG M T UH G UW0 K P
+còng|K AO0 NG M
+cỏng|K AO0 NG M
+cõng|K AO0 NG M
+cóng|K AO0 NG M
+cọng|K AO0 NG M
+coóc-nê|K AO0 K P N EH0
+coóc-ti-don|K AO0 K P T IY0 Y AO0 NG M
+coóc-ti-dôn|K AO0 K P T IY0 Y OW0 NG M
+coóc-xê|K AO0 K P S EH0
+cóp|K AO0 P
+cọp|K AO0 P
+cọp-dê|K AO0 P Y EH0
+cot|K AO0 K P
+cót|K AO0 K P
+cọt|K AO0 K P
+cô|K OW0
+cô-ban|K OW0 B AE NG
+cô-ca|K OW0 K AE
+cô-ca-in|K OW0 K AE IY0 N
+cô-đê-in|K OW0 D EH0 IY0 N
+cô-le|K OW0 L EH0
+cô-li|K OW0 L IY0
+cô-lô-nhần|K OW0 L OW0 N IY0 UH NG
+cô-lô-phan|K OW0 L OW0 F AE NG
+cô-lôn|K OW0 L OW0 NG M
+cô-nhắc|K OW0 N IY0 AA K
+cô-pếch|K OW0 P EH0 T
+cô-sin|K OW0 SH IY0 N
+cô-sông|K OW0 SH OW0 NG M
+cô-ta|K OW0 T AE
+cô-tang|K OW0 T AE NG
+cô-ti-dê|K OW0 T IY0 Y EH0
+cô-tông|K OW0 T OW0 NG M
+cô-ve|K OW0 Y EH0
+cồ|K OW0
+cổ|K OW0
+cổ-dề|K OW0 Y EH0
+cỗ|K OW0
+cố|K OW0
+cộ|K OW0
+cốc|K OW0 K P
+cốc-tai|K OW0 K P T AE Y
+cốc-tay|K OW0 K P T AA Y
+cộc|K OW0 K P
+côi|K OW0 Y
+cổi|K OW0 Y
+cỗi|K OW0 Y
+cối|K OW0 Y
+cội|K OW0 Y
+côm|K OW0 M
+cốm|K OW0 M
+cộm|K OW0 M
+côn|K OW0 NG M
+cồn|K OW0 NG M
+cồn|K OW0 NG M
+cốn|K OW0 NG M
+cộn|K OW0 NG M
+công|K OW0 NG M
+công-bát|K OW0 NG M B AE T
+công-bạt|K OW0 NG M B AE T
+công-cua|K OW0 NG M K UW0 AX0
+công-phét-ti|K OW0 NG M F EH0 T T IY0
+công-pho|K OW0 NG M F AO0
+công-quy-răng|K OW0 NG M W IY0 JH AA NG
+công-ta|K OW0 NG M T AE
+công-tắc|K OW0 NG M T AA K
+công-te-nơ|K OW0 NG M T EH0 N UH
+công-toa|K OW0 NG M T W AE
+công-tôn|K OW0 NG M T OW0 NG M
+công-tơ|K OW0 NG M T UH
+công-tơ-rơ-bát|K OW0 NG M T UH JH UH B AE T
+công-voa|K OW0 NG M Y W AE
+công-xây|K OW0 NG M S UH Y
+công-xéc-tô|K OW0 NG M S EH0 K T OW0
+công-xi|K OW0 NG M S IY0
+công-xinh|K OW0 NG M S IY0 N
+công-xon|K OW0 NG M S AO0 NG M
+công-xoóc-xi-om|K OW0 NG M S AO0 K P S IY0 AO0 M
+công-xôn|K OW0 NG M S OW0 NG M
+cồng|K OW0 NG M
+cổng|K OW0 NG M
+cống|K OW0 NG M
+cống|K OW0 NG M
+cộng|K OW0 NG M
+cốp|K OW0 P
+cốp-pha|K OW0 P F AE
+cộp|K OW0 P
+cốt|K OW0 K P
+cốt-lét|K OW0 K P L EH0 T
+cốt-nhát|K OW0 K P N IY0 AE T
+cốt-nhắc|K OW0 K P N IY0 AA K
+cốt-pha|K OW0 K P F AE
+cốt-phát|K OW0 K P F AE T
+cột|K OW0 K P
+cơ|K UH
+cơ-don|K UH Y AO0 NG M
+cơ-ho|K UH HH AO0
+cơ-lanh-ke|K UH L AE N K EH0
+cơ-lê|K UH L EH0
+cơ-tu|K UH T UW0
+cờ|K UH
+cờ-lê|K UH L EH0
+cờ-lếp|K UH L EH0 P
+cờ-ra-vát|K UH JH AE Y AE T
+cờ-rếp|K UH JH EH0 P
+cỡ|K UH
+cớ|K UH
+cơi|K UH Y
+cời|K UH Y
+cởi|K UH Y
+cỡi|K UH Y
+cơm|K UH M
+cớm|K UH M
+cơn|K UH NG
+cỡn|K UH NG
+cớn|K UH NG
+cợn|K UH NG
+cợp|K UH P
+cợt|K UH K
+cu|K UW0
+cu|K UW0
+cu-li|K UW0 L IY0
+cu-lit|K UW0 L IY0 T
+cu-lít|K UW0 L IY0 T
+cu-lông|K UW0 L OW0 NG M
+cu-pông|K UW0 P OW0 NG M
+cu-roa|K UW0 JH W AE
+cu-ron|K UW0 JH AO0 NG M
+cu-soong|K UW0 SH AO0 NG M
+cù|K UW0
+củ|K UW0
+cũ|K UW0
+cú|K UW0
+cụ|K UW0
+cua|K UW0 AX0
+cua-roa|K UW0 AX0 JH W AE
+cua-ron|K UW0 AX0 JH AO0 NG M
+cua-rơ|K UW0 AX0 JH UH
+cùa|K UW0 AX0
+của|K UW0 AX0
+cúa|K UW0 AX0
+cúc|K UW0 K P
+cục|K UW0 K P
+cùi|K UW0 Y
+cùi-dìa|K UW0 Y Y IY0 AX0
+củi|K UW0 Y
+cũi|K UW0 Y
+cúi|K UW0 Y
+cum|K UW0 M
+cùm|K UW0 M
+cúm|K UW0 M
+cụm|K UW0 M
+cun|K UW0 NG M
+cùn|K UW0 NG M
+củn|K UW0 NG M
+cún|K UW0 NG M
+cung|K UW0 NG M
+cùng|K UW0 NG M
+củng|K UW0 NG M
+cũng|K UW0 NG M
+cúng|K UW0 NG M
+cụng|K UW0 NG M
+cuốc|K UW0 AX0 K
+cuộc|K UW0 AX0 K
+cuối|K UW0 AX0 Y
+cuối|K UW0 AX0 Y
+cuội|K UW0 AX0 Y
+cuội|K UW0 AX0 Y
+cuỗm|K UW0 M
+cuồn|K UW0 AX0 NG
+cuốn|K UW0 AX0 NG
+cuộn|K UW0 AX0 NG
+cuông|K UW0 AX0 NG
+cuồng|K UW0 AX0 NG
+cuống|K UW0 AX0 NG
+cuộng|K UW0 AX0 NG
+cúp|K UW0 P
+cụp|K UW0 P
+cút|K UW0 K P
+cút-lít|K UW0 K P L IY0 T
+cụt|K UW0 K P
+cư|K UW0
+cừ|K UW0
+cử|K UW0
+cữ|K UW0
+cứ|K UW0
+cự|K UW0
+cưa|K UW0 AX0
+cửa|K UW0 AX0
+cứa|K UW0 AX0
+cựa|K UW0 AX0
+cực|K UW0 K
+cửi|K UW0 Y
+cưng|K UW0 NG
+cửng|K UW0 NG
+cứng|K UW0 NG
+cước|K UW0 AX0 K
+cược|K UW0 AX0 K
+cười|K UW0 AX0 Y
+cưỡi|K UW0 AX0 Y
+cưới|K UW0 AX0 Y
+cườm|K UW0 M
+cương|K UW0 AX0 NG
+cường|K UW0 AX0 NG
+cưỡng|K UW0 AX0 NG
+cướp|K UW0 P
+cứt|K UW0 K
+cưu|K UW0 W
+cừu|K UW0 W
+cửu|K UW0 W
+cữu|K UW0 W
+cứu|K UW0 W
+cựu|K UW0 W
+cy|K IY0
+da|Y AE
+dà|Y AE
+dã|Y AE
+dá|Y AE
+dạ|Y AE
+dạ|Y AE
+dác|Y AE K
+dạc|Y AE K
+dai|Y AE Y
+dài|Y AE Y
+dải|Y AE Y
+dãi|Y AE Y
+dái|Y AE Y
+dại|Y AE Y
+dam|Y AE M
+dàm|Y AE M
+dám|Y AE M
+dạm|Y AE M
+dan|Y AE NG
+dàn|Y AE NG
+dãn|Y AE NG
+dán|Y AE NG
+dạn|Y AE NG
+dang|Y AE NG
+dàng|Y AE NG
+dáng|Y AE NG
+dạng|Y AE NG
+danh|Y AE N
+dành|Y AE N
+dảnh|Y AE N
+dao|Y AE W
+dào|Y AE W
+dạo|Y AE W
+dát|Y AE T
+dạt|Y AE T
+dàu|Y AA W
+day|Y AA Y
+dày|Y AA Y
+dảy|Y AA Y
+dãy|Y AA Y
+dáy|Y AA Y
+dạy|Y AA Y
+dăm|Y AA M
+dằm|Y AA M
+dắm|Y AA M
+dặm|Y AA M
+dăn|Y AA NG
+dằn|Y AA NG
+dặn|Y AA NG
+dăng|Y AA NG
+dẳng|Y AA NG
+dẳng|Y AA NG
+dặng|Y AA NG
+dắt|Y AA K
+dặt|Y AA K
+dâm|Y UH M
+dầm|Y UH M
+dẫm|Y UH M
+dấm|Y UH M
+dậm|Y UH M
+dân|Y UH NG
+dần|Y UH NG
+dẫn|Y UH NG
+dấn|Y UH NG
+dận|Y UH NG
+dâng|Y UH NG
+dấp|Y UH P
+dập|Y UH P
+dâu|Y UH W
+dầu|Y UH W
+dẩu|Y UH W
+dẫu|Y UH W
+dấu|Y UH W
+dậu|Y UH W
+dây|Y UH Y
+dầy|Y UH Y
+dẫy|Y UH Y
+dấy|Y UH Y
+dậy|Y UH Y
+de|Y EH0
+de|Y EH0
+dè|Y EH0
+dẻ|Y EH0
+dẽ|Y EH0
+dé|Y EH0
+dém|Y EH0 M
+den|Y EH0 NG
+deo|Y EH0 OW0
+dẻo|Y EH0 OW0
+dép|Y EH0 P
+dẹp|Y EH0 P
+dẹt|Y EH0 T
+dê|Y EH0
+dê-rô|Y EH0 JH OW0
+dể|Y EH0
+dễ|Y EH0
+dế|Y EH0
+dệ|Y EH0
+dếch|Y EH0 T
+dệch|Y EH0 T
+dên|Y EH0 N
+dền|Y EH0 N
+dện|Y EH0 N
+dềnh|Y EH0 N
+dết|Y EH0 T
+dệt|Y EH0 T
+di|Y IY0
+di|Y IY0
+di-đà|Y IY0 D AE
+dì|Y IY0
+dỉ|Y IY0
+dị|Y IY0
+dĩa|Y IY0 AX0
+dích|Y IY0 T
+dích-dắc|Y IY0 T Y AA K
+dích-lơ|Y IY0 T L UH
+dịch|Y IY0 T
+diếc|Y IY0 AX0 K
+diệc|Y IY0 AX0 K
+diêm|Y IY0 M
+diềm|Y IY0 M
+diễn|Y IY0 AX0 NG
+diện|Y IY0 AX0 NG
+diếp|Y IY0 P
+diệp|Y IY0 P
+diệt|Y IY0 AX0 K
+diều|Y IY0 AX0 W
+diễu|Y IY0 AX0 W
+diệu|Y IY0 AX0 W
+dim|Y IY0 M
+dìm|Y IY0 M
+dím|Y IY0 M
+din|Y IY0 N
+dĩn|Y IY0 N
+dinh|Y IY0 N
+dinh-tê|Y IY0 N T EH0
+dính|Y IY0 N
+díp|Y IY0 P
+dịp|Y IY0 P
+dịt|Y IY0 T
+dìu|Y IY0 W
+díu|Y IY0 W
+dịu|Y IY0 W
+do|Y AO0
+dò|Y AO0
+dó|Y AO0
+dọ|Y AO0
+doa|Y W AE
+dóa|Y W AE
+doá|Y W AE
+dọa|Y W AE
+doạ|Y W AE
+doãi|Y W AE Y
+doan|Y W AE NG
+doãn|Y W AE NG
+doàng|Y W AE NG
+doãng|Y W AE NG
+doạng|Y W AE NG
+doanh|Y W AE N
+doành|Y W AE N
+dóc|Y AO0 K P
+dọc|Y AO0 K P
+doi|Y AO0 Y
+dòi|Y AO0 Y
+dõi|Y AO0 Y
+dọi|Y AO0 Y
+dom|Y AO0 M
+dòm|Y AO0 M
+dỏm|Y AO0 M
+dóm|Y AO0 M
+don|Y AO0 NG M
+dón|Y AO0 NG M
+dọn|Y AO0 NG M
+dong|Y AO0 NG M
+dòng|Y AO0 NG M
+dỏng|Y AO0 NG M
+dõng|Y AO0 NG M
+dóng|Y AO0 NG M
+dọng|Y AO0 NG M
+dọp|Y AO0 P
+dót|Y AO0 K P
+dô|Y OW0
+dô-kề|Y OW0 K EH0
+dồ|Y OW0
+dỗ|Y OW0
+dốc|Y OW0 K P
+dôi|Y OW0 Y
+dồi|Y OW0 Y
+dỗi|Y OW0 Y
+dối|Y OW0 Y
+dội|Y OW0 Y
+dổm|Y OW0 M
+dồn|Y OW0 NG M
+dông|Y OW0 NG M
+dộng|Y OW0 NG M
+dộp|Y OW0 P
+dốt|Y OW0 K P
+dột|Y OW0 K P
+dơ|Y UH
+dở|Y UH
+dỡ|Y UH
+dơi|Y UH Y
+dời|Y UH Y
+dởm|Y UH M
+dợm|Y UH M
+dơn|Y UH NG
+dớn|Y UH NG
+dợn|Y UH NG
+dớp|Y UH P
+du|Y UW0
+dù|Y UW0
+dụ|Y UW0
+dùa|Y UW0 AX0
+dũa|Y UW0 AX0
+dục|Y UW0 K P
+duềnh|Y W EH0 N
+dùi|Y UW0 Y
+dũi|Y UW0 Y
+dúi|Y UW0 Y
+dụi|Y UW0 Y
+dúm|Y UW0 M
+dụm|Y UW0 M
+dun|Y UW0 NG M
+dùn|Y UW0 NG M
+dún|Y UW0 NG M
+dung|Y UW0 NG M
+dùng|Y UW0 NG M
+dũng|Y UW0 NG M
+dúng|Y UW0 NG M
+dụng|Y UW0 NG M
+duốc|Y UW0 AX0 K
+duộc|Y UW0 AX0 K
+duỗi|Y UW0 AX0 Y
+duối|Y UW0 AX0 Y
+duồn|Y UW0 AX0 NG
+dụt|Y UW0 K P
+duy|Y W IY0
+duyên|Y W IY0 AX0 NG
+duyệt|Y W IY0 AX0 K
+dư|Y UW0
+dừ|Y UW0
+dử|Y UW0
+dữ|Y UW0
+dứ|Y UW0
+dự|Y UW0
+dưa|Y UW0 AX0
+dừa|Y UW0 AX0
+dứa|Y UW0 AX0
+dựa|Y UW0 AX0
+dức|Y UW0 K
+dưng|Y UW0 NG
+dừng|Y UW0 NG
+dửng|Y UW0 NG
+dứng|Y UW0 NG
+dựng|Y UW0 NG
+dược|Y UW0 AX0 K
+dưới|Y UW0 AX0 Y
+dướn|Y UW0 AX0 NG
+dương|Y UW0 AX0 NG
+dường|Y UW0 AX0 NG
+dưỡng|Y UW0 AX0 NG
+dướng|Y UW0 AX0 NG
+dượng|Y UW0 AX0 NG
+dượt|Y UW0 AX0 K
+dứt|Y UW0 K
+dyn|Y IY0 N
+đa|D AE
+đà|D AE
+đả|D AE
+đã|D AE
+đá|D AE
+đạc|D AE K
+đách|D AE T
+đai|D AE Y
+đài|D AE Y
+đãi|D AE Y
+đái|D AE Y
+đại|D AE Y
+đại-dương-châu|D AE Y Y UW0 AX0 NG KH UH W
+đam|D AE M
+đàm|D AE M
+đảm|D AE M
+đám|D AE M
+đạm|D AE M
+đan|D AE NG
+đàn|D AE NG
+đản|D AE NG
+đạn|D AE NG
+đang|D AE NG
+đàng|D AE NG
+đảng|D AE NG
+đáng|D AE NG
+đanh|D AE N
+đành|D AE N
+đánh|D AE N
+đao|D AE W
+đào|D AE W
+đảo|D AE W
+đáo|D AE W
+đạo|D AE W
+đáp|D AE P
+đạp|D AE P
+đát|D AE T
+đạt|D AE T
+đau|D AA W
+đay|D AA Y
+đày|D AA Y
+đãy|D AA Y
+đáy|D AA Y
+đặc|D AA K
+đăm|D AA M
+đằm|D AA M
+đẵm|D AA M
+đắm|D AA M
+đặm|D AA M
+đằn|D AA NG
+đẵn|D AA NG
+đặn|D AA NG
+đăng|D AA NG
+đăng-ten|D AA NG T EH0 NG
+đằng|D AA NG
+đẳng|D AA NG
+đẵng|D AA NG
+đắng|D AA NG
+đặng|D AA NG
+đắp|D AA P
+đắt|D AA K
+đặt|D AA K
+đâm|D UH M
+đầm|D UH M
+đẫm|D UH M
+đấm|D UH M
+đậm|D UH M
+đần|D UH NG
+đẫn|D UH NG
+đận|D UH NG
+đấng|D UH NG
+đập|D UH P
+đất|D UH K
+đâu|D UH W
+đầu|D UH W
+đẩu|D UH W
+đấu|D UH W
+đậu|D UH W
+đây|D UH Y
+đầy|D UH Y
+đẩy|D UH Y
+đẫy|D UH Y
+đấy|D UH Y
+đậy|D UH Y
+đe|D EH0
+đè|D EH0
+đẻ|D EH0
+đé|D EH0
+đem|D EH0 M
+đen|D EH0 NG
+đen-ta|D EH0 NG T AE
+đèn|D EH0 NG
+đẹn|D EH0 NG
+đeo|D EH0 OW0
+đèo|D EH0 OW0
+đẽo|D EH0 OW0
+đéo|D EH0 OW0
+đẹp|D EH0 P
+đét|D EH0 T
+đét-xe|D EH0 T S EH0
+đẹt|D EH0 T
+đê|D EH0
+đê-ca|D EH0 K AE
+đê-xi|D EH0 S IY0
+đê-xi-ben|D EH0 S IY0 B EH0 NG
+đề|D EH0
+đề-bô|D EH0 B OW0
+đề-ca|D EH0 K AE
+đề-can|D EH0 K AE NG
+đề-ma-rơ|D EH0 M AE JH UH
+đề-mác|D EH0 M AE K
+đề-mốt-đê|D EH0 M OW0 K P D EH0
+đề-pa|D EH0 P AE
+đề-pô|D EH0 P OW0
+đề-sạc|D EH0 SH AE K
+đề-xi-ben|D EH0 S IY0 B EH0 NG
+đề-xi-la|D EH0 S IY0 L AE
+đề-xi-mét|D EH0 S IY0 M EH0 T
+để|D EH0
+đễ|D EH0
+đế|D EH0
+đệ|D EH0
+đếch|D EH0 T
+đêm|D EH0 M
+đếm|D EH0 M
+đệm|D EH0 M
+đền|D EH0 N
+đến|D EH0 N
+đệp|D EH0 P
+đều|D EH0 UW0
+đểu|D EH0 UW0
+đi|D IY0
+đi-ê-den|D IY0 EH0 Y EH0 NG
+đi-na|D IY0 N AE
+đi-na-mít|D IY0 N AE M IY0 T
+đi-na-mô|D IY0 N AE M OW0
+đi-ốp|D IY0 OW0 P
+đi-ốt|D IY0 OW0 K P
+đi-văng|D IY0 Y AA NG
+đì|D IY0
+đĩ|D IY0
+đìa|D IY0 AX0
+đỉa|D IY0 AX0
+đĩa|D IY0 AX0
+đía|D IY0 AX0
+địa|D IY0 AX0
+đích|D IY0 T
+địch|D IY0 T
+điếc|D IY0 AX0 K
+điềm|D IY0 M
+điểm|D IY0 M
+điếm|D IY0 M
+điên|D IY0 AX0 NG
+điền|D IY0 AX0 NG
+điển|D IY0 AX0 NG
+điện|D IY0 AX0 NG
+điếng|D IY0 AX0 NG
+điệp|D IY0 P
+điêu|D IY0 AX0 W
+điều|D IY0 AX0 W
+điếu|D IY0 AX0 W
+điệu|D IY0 AX0 W
+đin|D IY0 N
+đin|D IY0 N
+đinh|D IY0 N
+đình|D IY0 N
+đỉnh|D IY0 N
+đĩnh|D IY0 N
+đính|D IY0 N
+định|D IY0 N
+đip|D IY0 P
+đíp-lôm|D IY0 P L OW0 M
+đít|D IY0 T
+đít-cua|D IY0 T K UW0 AX0
+địt|D IY0 T
+đìu|D IY0 W
+địu|D IY0 W
+đo|D AO0
+đò|D AO0
+đỏ|D AO0
+đõ|D AO0
+đó|D AO0
+đọ|D AO0
+đoá|D W AE
+đóa|D W AE
+đọa|D W AE
+đoạ|D W AE
+đoác|D W AE K
+đoài|D W AE Y
+đoái|D W AE Y
+đoan|D W AE NG
+đoàn|D W AE NG
+đoản|D W AE NG
+đoán|D W AE NG
+đoạn|D W AE NG
+đoàng|D W AE NG
+đoảng|D W AE NG
+đoành|D W AE N
+đoạt|D W AE T
+đóc|D AO0 K P
+đọc|D AO0 K P
+đoi|D AO0 Y
+đòi|D AO0 Y
+đỏi|D AO0 Y
+đói|D AO0 Y
+đọi|D AO0 Y
+đom|D AO0 M
+đòm|D AO0 M
+đỏm|D AO0 M
+đóm|D AO0 M
+đon|D AO0 NG M
+đòn|D AO0 NG M
+đón|D AO0 NG M
+đọn|D AO0 NG M
+đong|D AO0 NG M
+đòng|D AO0 NG M
+đỏng|D AO0 NG M
+đóng|D AO0 NG M
+đọng|D AO0 NG M
+đót|D AO0 K P
+đọt|D AO0 K P
+đô|D OW0
+đô-la|D OW0 L AE
+đô-mi-nô|D OW0 M IY0 N OW0
+đô-ping|D OW0 P IY0 N
+đồ|D OW0
+đổ|D OW0
+đỗ|D OW0
+đố|D OW0
+độ|D OW0
+đốc|D OW0 K P
+đốc-tờ|D OW0 K P T UH
+độc|D OW0 K P
+đôi|D OW0 Y
+đồi|D OW0 Y
+đổi|D OW0 Y
+đỗi|D OW0 Y
+đối|D OW0 Y
+đội|D OW0 Y
+đốm|D OW0 M
+đôn|D OW0 NG M
+đồn|D OW0 NG M
+đốn|D OW0 NG M
+độn|D OW0 NG M
+đông|D OW0 NG M
+đông-bắc|D OW0 NG M B AA K
+đông-dương|D OW0 NG M Y UW0 AX0 NG
+đông-nam|D OW0 NG M N AE M
+đông-phương|D OW0 NG M F UW0 AX0 NG
+đồng|D OW0 NG M
+đổng|D OW0 NG M
+đống|D OW0 NG M
+động|D OW0 NG M
+đốp|D OW0 P
+độp|D OW0 P
+đốt|D OW0 K P
+đốt-xi-ê|D OW0 K P S IY0 EH0
+đột|D OW0 K P
+đơ|D UH
+đơ-ro|D UH JH AO0
+đờ|D UH
+đờ-măng|D UH M AA NG
+đờ-mi|D UH M IY0
+đờ-o|D UH AO0
+đỡ|D UH
+đớ|D UH
+đợ|D UH
+đời|D UH Y
+đới|D UH Y
+đợi|D UH Y
+đơm|D UH M
+đờm|D UH M
+đởm|D UH M
+đơn|D UH NG
+đờn|D UH NG
+đớn|D UH NG
+đớp|D UH P
+đợp|D UH P
+đớt|D UH K
+đợt|D UH K
+đu|D UW0
+đu-ra|D UW0 JH AE
+đù|D UW0
+đủ|D UW0
+đú|D UW0
+đụ|D UW0
+đua|D UW0 AX0
+đùa|D UW0 AX0
+đũa|D UW0 AX0
+đúc|D UW0 K P
+đục|D UW0 K P
+đuềnh|D W EH0 N
+đui|D UW0 Y
+đùi|D UW0 Y
+đũi|D UW0 Y
+đụi|D UW0 Y
+đum-đum|D UW0 M D UW0 M
+đùm|D UW0 M
+đúm|D UW0 M
+đun|D UW0 NG M
+đùn|D UW0 NG M
+đụn|D UW0 NG M
+đùng|D UW0 NG M
+đũng|D UW0 NG M
+đúng|D UW0 NG M
+đụng|D UW0 NG M
+đuốc|D UW0 AX0 K
+đuôi|D UW0 AX0 Y
+đuổi|D UW0 AX0 Y
+đuối|D UW0 AX0 Y
+đuỗn|D UW0 AX0 NG
+đuông|D UW0 AX0 NG
+đuống|D UW0 AX0 NG
+đúp|D UW0 P
+đúp-lê|D UW0 P L EH0
+đụp|D UW0 P
+đút|D UW0 K P
+đụt|D UW0 K P
+đuy-ra|D W IY0 JH AE
+đuya-ra|D W IY0 AX0 JH AE
+đừ|D UW0
+đứ|D UW0
+đưa|D UW0 AX0
+đừa|D UW0 AX0
+đứa|D UW0 AX0
+đức|D UW0 K
+đực|D UW0 K
+đưng|D UW0 NG
+đừng|D UW0 NG
+đứng|D UW0 NG
+đựng|D UW0 NG
+đước|D UW0 AX0 K
+được|D UW0 AX0 K
+đượm|D UW0 M
+đườn|D UW0 AX0 NG
+đưỡn|D UW0 AX0 NG
+đương|D UW0 AX0 NG
+đường|D UW0 AX0 NG
+đứt|D UW0 K
+e|EH0
+e-bo-nít|EH0 B AO0 N IY0 T
+e-léc-tron|EH0 L EH0 K T AO0 NG M
+e-lêc-tơ-ron|EH0 L EH0 T T UH JH AO0 NG M
+e-líp|EH0 L IY0 P
+e-me-tin|EH0 M EH0 T IY0 N
+e-mê-tin|EH0 M EH0 T IY0 N
+e-ti-len|EH0 T IY0 L EH0 NG
+e-xen-đô|EH0 S EH0 NG D OW0
+è|EH0
+é|EH0
+ẹ|EH0
+éc|EH0 K
+em|EH0 M
+em-mê|EH0 M M EH0
+ém|EH0 M
+en|EH0 NG
+en-dim|EH0 NG Y IY0 M
+en-líp|EH0 NG L IY0 P
+en-tơ-ro-pi|EH0 NG T UH JH AO0 P IY0
+en-tro-pi|EH0 NG T AO0 P IY0
+én|EH0 NG
+eng|EH0 NG
+eo|EH0 OW0
+ẻo|EH0 OW0
+ẹo|EH0 OW0
+ép|EH0 P
+ép-phê|EH0 P F EH0
+ép-xi-lon|EH0 P S IY0 L AO0 NG M
+ẹp|EH0 P
+ét|EH0 T
+ét-coóc|EH0 T K AO0 K P
+ét-xăng|EH0 T S AA NG
+ét-xe|EH0 T S EH0
+ẹt|EH0 T
+ê|EH0
+ê-bô-nit|EH0 B OW0 N IY0 T
+ê-bô-nít|EH0 B OW0 N IY0 T
+ê-cu|EH0 K UW0
+ê-đê|EH0 D EH0
+ê-ke|EH0 K EH0
+ê-kíp|EH0 K IY0 P
+ê-léc-tron|EH0 L EH0 K T AO0 NG M
+ê-lếch-tơ-rôn|EH0 L EH0 T T UH JH OW0 NG M
+ê-líp|EH0 L IY0 P
+ê-mê-tin|EH0 M EH0 T IY0 N
+ê-mơ-rốt|EH0 M UH JH OW0 K P
+ê-mun-xi|EH0 M UW0 NG M S IY0
+ê-pông|EH0 P OW0 NG M
+ê-ri-tơ-rô-mi-xin|EH0 JH IY0 T UH JH OW0 M IY0 S IY0 N
+ê-rô-mi-xin|EH0 JH OW0 M IY0 S IY0 N
+ê-săng-chi-ông|EH0 SH AA NG KH IY0 OW0 NG M
+ê-ta|EH0 T AE
+ê-te|EH0 T EH0
+ê-ti-két|EH0 T IY0 K EH0 T
+ê-ti-len|EH0 T IY0 L EH0 NG
+ê-tô|EH0 T OW0
+ê-tuýt|EH0 T W IY0 T
+ề|EH0
+ế|EH0
+ếch|EH0 T
+êm|EH0 M
+ếm|EH0 M
+ềnh|EH0 N
+ễnh|EH0 N
+ệnh|EH0 N
+ếp|EH0 P
+ệp|EH0 P
+êu|EH0 UW0
+ga|G AE
+ga-ba-đin|G AE B AE D IY0 N
+ga-bác-đin|G AE B AE K D IY0 N
+ga-la|G AE L AE
+ga-lăng|G AE L AA NG
+ga-len|G AE L EH0 NG
+ga-li|G AE L IY0
+ga-lon|G AE L AO0 NG M
+ga-lông|G AE L OW0 NG M
+ga-lơ-ri|G AE L UH JH IY0
+ga-ma|G AE M AE
+ga-men|G AE M EH0 NG
+ga-ra|G AE JH AE
+ga-răng-ti|G AE JH AA NG T IY0
+ga-rô|G AE JH OW0
+ga-tô|G AE T OW0
+ga-tuýt|G AE T W IY0 T
+gà|G AE
+gà-mèn|G AE M EH0 NG
+gả|G AE
+gã|G AE
+gá|G AE
+gạ|G AE
+gác|G AE K
+gác-dan|G AE K Y AE NG
+gác-dang|G AE K Y AE NG
+gác-đa-vu|G AE K D AE Y UW0
+gác-đê-nan|G AE K D EH0 N AE NG
+gác-điêng|G AE K D IY0 AX0 NG
+gác-đờ-bu|G AE K D UH B UW0
+gác-đờ-co|G AE K D UH K AO0
+gác-đờ-sen|G AE K D UH SH EH0 NG
+gác-măng-dê|G AE K M AA NG Y EH0
+gác-xon-nê|G AE K S AO0 NG M N EH0
+gạc|G AE K
+gạch|G AE T
+gai|G AE Y
+gài|G AE Y
+gãi|G AE Y
+gái|G AE Y
+gại|G AE Y
+gam|G AE M
+gam-ma|G AE M M AE
+gan|G AE NG
+gàn|G AE NG
+gán|G AE NG
+gạn|G AE NG
+gang|G AE NG
+gàng|G AE NG
+ganh|G AE N
+gành|G AE N
+gảnh|G AE N
+gánh|G AE N
+gạnh|G AE N
+gào|G AE W
+gáo|G AE W
+gạo|G AE W
+gạt|G AE T
+gàu|G AA W
+gay|G AA Y
+gày|G AA Y
+gảy|G AA Y
+gãy|G AA Y
+gáy|G AA Y
+gạy|G AA Y
+gặc|G AA K
+găm|G AA M
+gằm|G AA M
+gắm|G AA M
+gặm|G AA M
+gằn|G AA NG
+gắn|G AA NG
+găng|G AA NG
+găng-tơ|G AA NG T UH
+gắng|G AA NG
+gặng|G AA NG
+gắp|G AA P
+gặp|G AA P
+gắt|G AA K
+gặt|G AA K
+gấc|G UH K
+gầm|G UH M
+gẫm|G UH M
+gấm|G UH M
+gậm|G UH M
+gân|G UH NG
+gần|G UH NG
+gấp|G UH P
+gập|G UH P
+gật|G UH K
+gâu|G UH W
+gầu|G UH W
+gẫu|G UH W
+gấu|G UH W
+gây|G UH Y
+gầy|G UH Y
+gẩy|G UH Y
+gẫy|G UH Y
+gấy|G UH Y
+gậy|G UH Y
+ge|G EH0
+ge-la-tin|G EH0 L AE T IY0 N
+ge-ma-ni|G EH0 M AE N IY0
+gen|G EH0 NG
+ghe|G EH0
+ghè|G EH0
+ghẻ|G EH0
+ghẽ|G EH0
+ghé|G EH0
+ghẹ|G EH0
+ghém|G EH0 M
+ghen|G EH0 NG
+ghèn|G EH0 NG
+ghẹo|G EH0 OW0
+ghép|G EH0 P
+ghét|G EH0 T
+ghê|G EH0
+ghế|G EH0
+ghếch|G EH0 T
+ghệch|G EH0 T
+ghềnh|G EH0 N
+ghểnh|G EH0 N
+ghễnh|G EH0 N
+ghệt|G EH0 T
+ghi|G IY0
+ghi-đông|G IY0 D OW0 NG M
+ghi-sê|G IY0 SH EH0
+ghi-ta|G IY0 T AE
+ghì|G IY0
+ghiền|G IY0 AX0 NG
+ghim|G IY0 M
+ghìm|G IY0 M
+ghin-de|G IY0 N Y EH0
+ghín|G IY0 N
+ghính|G IY0 N
+ghít|G IY0 T
+ghịt|G IY0 T
+gi-lê|Y IY0 L EH0
+gì|G IY0
+gỉ|G IY0
+gí|G IY0
+gia|Y AE
+gia-két|Y AE K EH0 T
+gia-rai|Y AE JH AE Y
+gia-ven|Y AE Y EH0 NG
+già|Y AE
+giả|Y AE
+giã|Y AE
+giá|Y AE
+giạ|Y AE
+giác|Y AE K
+giai|Y AE Y
+giải|Y AE Y
+giãi|Y AE Y
+giại|Y AE Y
+giam|Y AE M
+giảm|Y AE M
+giám|Y AE M
+giạm|Y AE M
+gian|Y AE NG
+giàn|Y AE NG
+giản|Y AE NG
+giãn|Y AE NG
+gián|Y AE NG
+giang|Y AE NG
+giàng|Y AE NG
+giảng|Y AE NG
+giáng|Y AE NG
+giạng|Y AE NG
+gianh|Y AE N
+giành|Y AE N
+giảnh|Y AE N
+giao|Y AE W
+giào|Y AE W
+giảo|Y AE W
+giáo|Y AE W
+giáp|Y AE P
+giát|Y AE T
+giạt|Y AE T
+giàu|Y AA W
+giảu|Y AA W
+giày|Y AA Y
+giãy|Y AA Y
+giáy|Y AA Y
+giắc|Y AA K
+giặc|Y AA K
+giăm|Y AA M
+giăm-bông|Y AA M B OW0 NG M
+giằm|Y AA M
+giẵm|Y AA M
+giặm|Y AA M
+giằn|Y AA NG
+giăng|Y AA NG
+giằng|Y AA NG
+giắt|Y AA K
+giặt|Y AA K
+giấc|Y UH K
+giâm|Y UH M
+giầm|Y UH M
+giẫm|Y UH M
+giấm|Y UH M
+giậm|Y UH M
+giần|Y UH NG
+giấn|Y UH NG
+giận|Y UH NG
+giấp|Y UH P
+giập|Y UH P
+giật|Y UH K
+giầu|Y UH W
+giấu|Y UH W
+giậu|Y UH W
+giây|Y UH Y
+giầy|Y UH Y
+giẫy|Y UH Y
+giấy|Y UH Y
+gic-lơ|Z IY0 T L UH
+gie|Y EH0
+giẻ|Y EH0
+giẻ-triêng|Y EH0 T IY0 AX0 NG
+gié|Y EH0
+gié|Y EH0
+gièm|Y EH0 M
+gien|Y EH0 NG
+gieo|Y EH0 OW0
+giẹo|Y EH0 OW0
+giẹp|Y EH0 P
+giếc|Y EH0 T
+giền|Y EH0 N
+giêng|Y EH0 N
+giềng|Y EH0 N
+giếng|Y EH0 N
+giết|Y EH0 T
+giễu|Y EH0 UW0
+gìm|Z IY0 M
+gin|Z IY0 N
+gìn|Z IY0 N
+gio|Y AO0
+giò|Y AO0
+giỏ|Y AO0
+gió|Y AO0
+gioàng|Y W AE NG
+gioăng|Y W AA NG
+gióc|Y AO0 K P
+gioi|Y AO0 Y
+giòi|Y AO0 Y
+giỏi|Y AO0 Y
+giọi|Y AO0 Y
+giòn|Y AO0 NG M
+gión|Y AO0 NG M
+giong|Y AO0 NG M
+giỏng|Y AO0 NG M
+gióng|Y AO0 NG M
+giọng|Y AO0 NG M
+gioong|Y AO0 NG M
+giọt|Y AO0 K P
+giô|Y OW0
+giồ|Y OW0
+giỗ|Y OW0
+giộ|Y OW0
+giốc|Y OW0 K P
+giồi|Y OW0 Y
+giổi|Y OW0 Y
+giỗi|Y OW0 Y
+giối|Y OW0 Y
+giội|Y OW0 Y
+giôn|Y OW0 NG M
+giông|Y OW0 NG M
+giồng|Y OW0 NG M
+giống|Y OW0 NG M
+giộp|Y OW0 P
+giơ|Y UH
+giơ-lâng|Y UH L UH NG
+giơ-lơng|Y UH L UH NG
+giơ-tông|Y UH T OW0 NG M
+giờ|Y UH
+giở|Y UH
+giời|Y UH Y
+giới|Y UH Y
+giờn|Y UH NG
+giỡn|Y UH NG
+gip|Z IY0 P
+gíp|Z IY0 P
+giu|Y UW0
+giu-đô|Y UW0 D OW0
+giũ|Y UW0
+giú|Y UW0
+giua|Y UW0 AX0
+giũa|Y UW0 AX0
+giục|Y UW0 K P
+giùi|Y UW0 Y
+giủi|Y UW0 Y
+giúi|Y UW0 Y
+giụi|Y UW0 Y
+giùm|Y UW0 M
+giun|Y UW0 NG M
+giuộc|Y UW0 AX0 K
+giúp|Y UW0 P
+giừ|Y UW0
+giữ|Y UW0
+giữa|Y UW0 AX0
+giương|Y UW0 AX0 NG
+giường|Y UW0 AX0 NG
+giượng|Y UW0 AX0 NG
+giựt|Y UW0 K
+go|G AO0
+go-tích|G AO0 T IY0 T
+gò|G AO0
+gõ|G AO0
+gọ|G AO0
+goá|G W AE
+góa|G W AE
+góc|G AO0 K P
+gỏi|G AO0 Y
+gói|G AO0 Y
+gọi|G AO0 Y
+gom|G AO0 M
+gon|G AO0 NG M
+gòn|G AO0 NG M
+gọn|G AO0 NG M
+gọng|G AO0 NG M
+goong|G AO0 NG M
+goòng|G AO0 NG M
+góp|G AO0 P
+gót|G AO0 K P
+gọt|G AO0 K P
+gô|G OW0
+gô-đê|G OW0 D EH0
+gô-ri|G OW0 JH IY0
+gô-ri-la|G OW0 JH IY0 L AE
+gô-tích|G OW0 T IY0 T
+gồ|G OW0
+gỗ|G OW0
+gộ|G OW0
+gốc|G OW0 K P
+gộc|G OW0 K P
+gồi|G OW0 Y
+gối|G OW0 Y
+gội|G OW0 Y
+gôm|G OW0 M
+gồm|G OW0 M
+gốm|G OW0 M
+gôn|G OW0 NG M
+gông|G OW0 NG M
+gồng|G OW0 NG M
+gộp|G OW0 P
+gột|G OW0 K P
+gơ|G UH
+gơ-lu-xit|G UH L UW0 S IY0 T
+gờ|G UH
+gờ-ram|G UH JH AE M
+gở|G UH
+gỡ|G UH
+gởi|G UH Y
+gợi|G UH Y
+gờm|G UH M
+gớm|G UH M
+gơn-đờ-lu|G UH NG D UH L UW0
+gợn|G UH NG
+gợt|G UH K
+gu|G UW0
+gu-giông|G UW0 Y OW0 NG M
+gù|G UW0
+gụ|G UW0
+gục|G UW0 K P
+gùi|G UW0 Y
+gùn|G UW0 NG M
+guốc|G UW0 AX0 K
+guồi|G UW0 AX0 Y
+guộn|G UW0 AX0 NG
+guồng|G UW0 AX0 NG
+guột|G UW0 AX0 K
+gút|G UW0 K P
+gụt|G UW0 K P
+gừ|G UW0
+gửi|G UW0 Y
+gừng|G UW0 NG
+gươm|G UW0 M
+gườm|G UW0 M
+gượm|G UW0 M
+gương|G UW0 AX0 NG
+gượng|G UW0 AX0 NG
+ha|HH AE
+ha-lô-gien|HH AE L OW0 Y EH0 NG
+hà|HH AE
+hà-lăng|HH AE L AA NG
+hả|HH AE
+há|HH AE
+hạ|HH AE
+hạ|HH AE
+hác-pơ|HH AE K P UH
+hạc|HH AE K
+hách|HH AE T
+hạch|HH AE T
+hai|HH AE Y
+hài|HH AE Y
+hãi|HH AE Y
+hái|HH AE Y
+hại|HH AE Y
+ham|HH AE M
+hàm|HH AE M
+hãm|HH AE M
+hám|HH AE M
+hạm|HH AE M
+han|HH AE NG
+hàn|HH AE NG
+hán|HH AE NG
+hán|HH AE NG
+hạn|HH AE NG
+hang|HH AE NG
+hàng|HH AE NG
+hãng|HH AE NG
+háng|HH AE NG
+hạng|HH AE NG
+hanh|HH AE N
+hành|HH AE N
+hảnh|HH AE N
+hạnh|HH AE N
+hao|HH AE W
+hào|HH AE W
+hảo|HH AE W
+hão|HH AE W
+háo|HH AE W
+háp|HH AE P
+háp-trắc|HH AE P T AA K
+hạp|HH AE P
+hát|HH AE T
+hạt|HH AE T
+hàu|HH AA W
+háu|HH AA W
+hay|HH AA Y
+hảy|HH AA Y
+hãy|HH AA Y
+háy|HH AA Y
+hắc|HH AA K
+hặc|HH AA K
+hăm|HH AA M
+hẳm|HH AA M
+hằn|HH AA NG
+hẳn|HH AA NG
+hắn|HH AA NG
+hăng|HH AA NG
+hằng|HH AA NG
+hẵng|HH AA NG
+hắt|HH AA K
+hâm|HH UH M
+hầm|HH UH M
+hẩm|HH UH M
+hấn|HH UH NG
+hận|HH UH NG
+hẩng|HH UH NG
+hẫng|HH UH NG
+hấng|HH UH NG
+hấp|HH UH P
+hập|HH UH P
+hất|HH UH K
+hầu|HH UH W
+hẩu|HH UH W
+hấu|HH UH W
+hậu|HH UH W
+hây|HH UH Y
+hẩy|HH UH Y
+hấy|HH UH Y
+he|HH EH0
+he|HH EH0
+he-li|HH EH0 L IY0
+he-ma-tít|HH EH0 M AE T IY0 T
+he-rô-in|HH EH0 JH OW0 IY0 N
+hè|HH EH0
+hé|HH EH0
+hẹ|HH EH0
+hẹ|HH EH0
+hec|HH EH0 K
+héc|HH EH0 K
+héc-ta|HH EH0 K T AE
+héc-to|HH EH0 K T AO0
+héc-tô-gam|HH EH0 K T OW0 G AE M
+héc-tô-lít|HH EH0 K T OW0 L IY0 T
+héc-tô-mét|HH EH0 K T OW0 M EH0 T
+hèm|HH EH0 M
+hẻm|HH EH0 M
+hẽm|HH EH0 M
+hẹm|HH EH0 M
+hen|HH EH0 NG
+hèn|HH EH0 NG
+hén|HH EH0 NG
+hẹn|HH EH0 NG
+heo|HH EH0 OW0
+hèo|HH EH0 OW0
+hẻo|HH EH0 OW0
+héo|HH EH0 OW0
+hẹp|HH EH0 P
+hét|HH EH0 T
+hê|HH EH0
+hê-li|HH EH0 L IY0
+hê-ma-tit|HH EH0 M AE T IY0 T
+hê-ma-tít|HH EH0 M AE T IY0 T
+hê-mô-giô-bin|HH EH0 M OW0 Y OW0 B IY0 N
+hê-rô-in|HH EH0 JH OW0 IY0 N
+hề|HH EH0
+hể|HH EH0
+hễ|HH EH0
+hệ|HH EH0
+hếch|HH EH0 T
+hệch|HH EH0 T
+hên|HH EH0 N
+hến|HH EH0 N
+hểnh|HH EH0 N
+hết|HH EH0 T
+hệt|HH EH0 T
+hếu|HH EH0 UW0
+hi-la|HH IY0 L AE
+hi-pe-bon|HH IY0 P EH0 B AO0 NG M
+hi-pe-bôn|HH IY0 P EH0 B OW0 NG M
+hì|HH IY0
+hỉ|HH IY0
+hí|HH IY0
+hia|HH IY0 AX0
+hích|HH IY0 T
+hịch|HH IY0 T
+hiềm|HH IY0 M
+hiểm|HH IY0 M
+hiếm|HH IY0 M
+hiên|HH IY0 AX0 NG
+hiền|HH IY0 AX0 NG
+hiến|HH IY0 AX0 NG
+hiện|HH IY0 AX0 NG
+hiếng|HH IY0 AX0 NG
+hiếp|HH IY0 P
+hiệp|HH IY0 P
+hiểu|HH IY0 AX0 W
+hiếu|HH IY0 AX0 W
+hiệu|HH IY0 AX0 W
+him|HH IY0 M
+hĩm|HH IY0 M
+hin|HH IY0 N
+hình|HH IY0 N
+hỉnh|HH IY0 N
+híp|HH IY0 P
+híp-pi|HH IY0 P P IY0
+hít|HH IY0 T
+hiu|HH IY0 W
+ho|HH AO0
+ho-bo|HH AO0 B AO0
+hò|HH AO0
+họ|HH AO0
+họ|HH AO0
+hoa|HH W AE
+hoa|HH W AE
+hoà|HH W AE
+hoả|HH W AE
+hoá|HH W AE
+hoạ|HH W AE
+hoác|HH W AE K
+hoai|HH W AE Y
+hoài|HH W AE Y
+hoại|HH W AE Y
+hoàn|HH W AE NG
+hoãn|HH W AE NG
+hoán|HH W AE NG
+hoạn|HH W AE NG
+hoang|HH W AE NG
+hoàng|HH W AE NG
+hoảng|HH W AE NG
+hoãng|HH W AE NG
+hoáng|HH W AE NG
+hoành|HH W AE N
+hoạnh|HH W AE N
+hoạt|HH W AE T
+hoáy|HH W AA Y
+hoắc|HH W AA K
+hoặc|HH W AA K
+hoắm|HH W AA M
+hoăng|HH W AA NG
+hoẵng|HH W AA NG
+hoắt|HH W AA K
+hóc|HH AO0 K P
+học|HH AO0 K P
+hoe|HH W EH0
+hòe|HH W EH0
+hoè|HH W EH0
+hoen|HH W EH0 N
+hoẻn|HH W EH0 N
+hoét|HH W EH0 T
+hoẹt|HH W EH0 T
+hoi|HH AO0 Y
+hỏi|HH AO0 Y
+hói|HH AO0 Y
+hom|HH AO0 M
+hòm|HH AO0 M
+hỏm|HH AO0 M
+hõm|HH AO0 M
+hóm|HH AO0 M
+hòn|HH AO0 NG M
+hỏn|HH AO0 NG M
+hong|HH AO0 NG M
+hòng|HH AO0 NG M
+hỏng|HH AO0 NG M
+hóng|HH AO0 NG M
+họng|HH AO0 NG M
+hoóc-mon|HH AO0 K P M AO0 NG M
+hoóc-môn|HH AO0 K P M OW0 NG M
+hóp|HH AO0 P
+họp|HH AO0 P
+hót|HH AO0 K P
+hô|HH OW0
+hồ|HH OW0
+hổ|HH OW0
+hố|HH OW0
+hộ|HH OW0
+hốc|HH OW0 K P
+hộc|HH OW0 K P
+hôi|HH OW0 Y
+hồi|HH OW0 Y
+hổi|HH OW0 Y
+hối|HH OW0 Y
+hội|HH OW0 Y
+hôm|HH OW0 M
+hổm|HH OW0 M
+hôn|HH OW0 NG M
+hồn|HH OW0 NG M
+hỗn|HH OW0 NG M
+hộn|HH OW0 NG M
+hông|HH OW0 NG M
+hồng|HH OW0 NG M
+hổng|HH OW0 NG M
+hỗng|HH OW0 NG M
+hộp|HH OW0 P
+hốt|HH OW0 K P
+hột|HH OW0 K P
+hơ|HH UH
+hờ|HH UH
+hở|HH UH
+hớ|HH UH
+hơi|HH UH Y
+hời|HH UH Y
+hởi|HH UH Y
+hỡi|HH UH Y
+hợi|HH UH Y
+hờm|HH UH M
+hỡm|HH UH M
+hợm|HH UH M
+hơn|HH UH NG
+hờn|HH UH NG
+hơng|HH UH NG
+hớp|HH UH P
+hợp|HH UH P
+hớt|HH UH K
+hù|HH UW0
+hủ|HH UW0
+hũ|HH UW0
+hú|HH UW0
+hụ|HH UW0
+hua|HH UW0 AX0
+hùa|HH UW0 AX0
+huấn|HH W UH NG
+húc|HH UW0 K P
+hục|HH UW0 K P
+huê|HH W EH0
+huề|HH W EH0
+huệ|HH W EH0
+huếch|HH W EH0 T
+hùi|HH UW0 Y
+hủi|HH UW0 Y
+húi|HH UW0 Y
+hụi|HH UW0 Y
+hùm|HH UW0 M
+hũm|HH UW0 M
+hụm|HH UW0 M
+hun|HH UW0 NG M
+hùn|HH UW0 NG M
+hung|HH UW0 NG M
+hùng|HH UW0 NG M
+húng|HH UW0 NG M
+huống|HH UW0 AX0 NG
+huốt|HH UW0 AX0 K
+huơ|HH UW0 AX0
+húp|HH UW0 P
+hụp|HH UW0 P
+hút|HH UW0 K P
+hụt|HH UW0 K P
+huỷ|HH W IY0
+hủy|HH UW0 Y
+huý|HH W IY0
+húy|HH UW0 Y
+huých|HH W IY0 T
+huỵch|HH W IY0 T
+huyên|HH W IY0 AX0 NG
+huyền|HH W IY0 AX0 NG
+huyễn|HH W IY0 AX0 NG
+huyện|HH W IY0 AX0 NG
+huyết|HH W IY0 AX0 K
+huyệt|HH W IY0 AX0 K
+huynh|HH W IY0 N
+huỳnh|HH W IY0 N
+huýt|HH W IY0 T
+hừ!|HH UW0
+hứ!|HH UW0
+hư|HH UW0
+hừ|HH UW0
+hử|HH UW0
+hứ|HH UW0
+hự|HH UW0
+hứa|HH UW0 AX0
+hực|HH UW0 K
+hừm|HH UW0 M
+hưng|HH UW0 NG
+hừng|HH UW0 NG
+hửng|HH UW0 NG
+hứng|HH UW0 NG
+hườm|HH UW0 M
+hượm|HH UW0 M
+hương|HH UW0 AX0 NG
+hường|HH UW0 AX0 NG
+hưởng|HH UW0 AX0 NG
+hướng|HH UW0 AX0 NG
+hươu|HH UW0 AX0 W
+hưu|HH UW0 W
+hữu|HH UW0 W
+hỷ|HH IY0
+hý|HH IY0
+i|IY0
+i|IY0
+i-nốc|IY0 N OW0 K P
+i-on|IY0 AO0 NG M
+i-ô-ga|IY0 OW0 G AE
+i-ôn|IY0 OW0 NG M
+i-ốt|IY0 OW0 K P
+i-tan|IY0 T AE NG
+i-tờ|IY0 T UH
+ì|IY0
+ỉ|IY0
+í|IY0
+ị|IY0
+ỉa|IY0 AX0
+ích|IY0 T
+ích-xì|IY0 T S IY0
+ịch|IY0 T
+im|IY0 M
+ỉm|IY0 M
+in|IY0 N
+in-đi|IY0 N D IY0
+in-mê-nhít|IY0 N M EH0 N IY0 IY0 T
+in-su-lin|IY0 N SH UW0 L IY0 N
+in-tơ-nét|IY0 N T UH N EH0 T
+in-va|IY0 N Y AE
+in-xu-lin|IY0 N S UW0 L IY0 N
+ỉn|IY0 N
+ịn|IY0 N
+inh|IY0 N
+ình|IY0 N
+ĩnh|IY0 N
+ít|IY0 T
+ịt|IY0 T
+ỉu|IY0 W
+ka-ki|K AE K IY0
+ka-li|K AE L IY0
+ka-ra-ô-kê|K AE JH AE OW0 K EH0
+ka-ra-tê|K AE JH AE T EH0
+ka-ra-tê-đô|K AE JH AE T EH0 D OW0
+kan-tua|K AE NG T UW0 AX0
+káp-pa|K AE P P AE
+ke|K EH0
+kè|K EH0
+kẻ|K EH0
+kẽ|K EH0
+ké|K EH0
+kẹ|K EH0
+kéc|K EH0 K
+kem|K EH0 M
+kèm|K EH0 M
+kẽm|K EH0 M
+kém|K EH0 M
+ken|K EH0 NG
+ken-vin|K EH0 NG Y IY0 N
+kèn|K EH0 NG
+kén|K EH0 NG
+kẹn|K EH0 NG
+keng|K EH0 NG
+kẻng|K EH0 NG
+keo|K EH0 OW0
+kèo|K EH0 OW0
+kẻo|K EH0 OW0
+kéo|K EH0 OW0
+kẹo|K EH0 OW0
+kép|K EH0 P
+kẹp|K EH0 P
+két|K EH0 T
+két-xông|K EH0 T S OW0 NG M
+kẹt|K EH0 T
+kê|K EH0
+kê-môn|K EH0 M OW0 NG M
+kê-pi|K EH0 P IY0
+kề|K EH0
+kể|K EH0
+kế|K EH0
+kệ|K EH0
+kếch|K EH0 T
+kệch|K EH0 T
+kềm|K EH0 M
+kên|K EH0 N
+kền|K EH0 N
+kênh|K EH0 N
+kềnh|K EH0 N
+kễnh|K EH0 N
+kệnh|K EH0 N
+kếp|K EH0 P
+kết|K EH0 T
+kêu|K EH0 UW0
+kều|K EH0 UW0
+khà|K AE
+khá|K AE
+khác|K AE K
+khạc|K AE K
+khách|K AE T
+khai|K AE Y
+khái|K AE Y
+kham|K AE M
+khảm|K AE M
+khám|K AE M
+khan|K AE NG
+khàn|K AE NG
+khản|K AE NG
+khán|K AE NG
+kháng|K AE NG
+khanh|K AE N
+khảnh|K AE N
+khánh|K AE N
+khao|K AE W
+khảo|K AE W
+kháo|K AE W
+kháp|K AE P
+khạp|K AE P
+khát|K AE T
+khau|K AA W
+kháu|K AA W
+khay|K AA Y
+khảy|K AA Y
+kháy|K AA Y
+khắc|K AA K
+khăm|K AA M
+khẳm|K AA M
+khắm|K AA M
+khăn|K AA NG
+khẳn|K AA NG
+khắn|K AA NG
+khăng|K AA NG
+khằng|K AA NG
+khẳng|K AA NG
+khắp|K AA P
+khấc|K UH K
+khậc|K UH K
+khâm|K UH M
+khẩn|K UH NG
+khấn|K UH NG
+khất|K UH K
+khâu|K UH W
+khẩu|K UH W
+khấu|K UH W
+khẩy|K UH Y
+khe|K EH0
+khè|K EH0
+khẻ|K EH0
+khẽ|K EH0
+khé|K EH0
+khẹc|K EH0 K
+khem|K EH0 M
+khen|K EH0 NG
+khèn|K EH0 NG
+khén|K EH0 NG
+kheo|K EH0 OW0
+khèo|K EH0 OW0
+khéo|K EH0 OW0
+khép|K EH0 P
+khét|K EH0 T
+khê|K EH0
+khế|K EH0
+khênh|K EH0 N
+khềnh|K EH0 N
+khểnh|K EH0 N
+khêu|K EH0 UW0
+khều|K EH0 UW0
+khi|K IY0
+khì|K IY0
+khỉ|K IY0
+khí|K IY0
+khía|K IY0 AX0
+khịa|K IY0 AX0
+khích|K IY0 T
+khiêm|K IY0 M
+khiên|K IY0 AX0 NG
+khiền|K IY0 AX0 NG
+khiển|K IY0 AX0 NG
+khiến|K IY0 AX0 NG
+khiêng|K IY0 AX0 NG
+khiễng|K IY0 AX0 NG
+khiếp|K IY0 P
+khiếu|K IY0 AX0 W
+khín|K IY0 N
+khinh|K IY0 N
+khít|K IY0 T
+khịt|K IY0 T
+khíu|K IY0 W
+khịu|K IY0 W
+kho|K AO0
+khò|K AO0
+khỏ|K AO0
+khó|K AO0
+khoa|K W AE
+khoả|K W AE
+khỏa|K W AE
+khoá|K W AE
+khóa|K W AE
+khoác|K W AE K
+khoai|K W AE Y
+khoái|K W AE Y
+khoan|K W AE NG
+khoản|K W AE NG
+khoán|K W AE NG
+khoang|K W AE NG
+khoảng|K W AE NG
+khoáng|K W AE NG
+khoanh|K W AE N
+khoảnh|K W AE N
+khoát|K W AE T
+khoáy|K W AA Y
+khoăm|K W AA M
+khoằm|K W AA M
+khoắm|K W AA M
+khoặm|K W AA M
+khoắng|K W AA NG
+khóc|K AO0 K P
+khoe|K W EH0
+khòe|K W EH0
+khỏe|K W EH0
+khoẻ|K W EH0
+khóe|K W EH0
+khoé|K W EH0
+khoen|K W EH0 N
+khoeo|K W EH0 W
+khoèo|K W EH0 W
+khoét|K W EH0 T
+khoi|K AO0 Y
+khỏi|K AO0 Y
+khói|K AO0 Y
+khom|K AO0 M
+khòm|K AO0 M
+khóm|K AO0 M
+khọm|K AO0 M
+khòn|K AO0 NG M
+khòng|K AO0 NG M
+khô|K OW0
+khổ|K OW0
+khố|K OW0
+khốc|K OW0 K P
+khôi|K OW0 Y
+khối|K OW0 Y
+khôn|K OW0 NG M
+khốn|K OW0 NG M
+không|K OW0 NG M
+khống|K OW0 NG M
+khờ|K UH
+khớ|K UH
+khơi|K UH Y
+khởi|K UH Y
+khới|K UH Y
+khớp|K UH P
+khu|K UW0
+khù-sung|K UW0 SH UW0 NG M
+khú|K UW0
+khụ|K UW0
+khua|K UW0 AX0
+khùa|K UW0 AX0
+khuân|K W UH NG
+khuẩn|K W UH NG
+khuất|K W UH K
+khuây|K W UH Y
+khuấy|K W UH Y
+khúc|K UW0 K P
+khục|K UW0 K P
+khuê|K W EH0
+khuếch|K W EH0 T
+khui|K UW0 Y
+khum|K UW0 M
+khung|K UW0 NG M
+khùng|K UW0 NG M
+khuôn|K UW0 AX0 NG
+khuông|K UW0 AX0 NG
+khuơ|K UW0 AX0
+khuy|K W IY0
+khuỵ|K W IY0
+khụy|K UW0 Y
+khuya|K W IY0 AX0
+khuyên|K W IY0 AX0 NG
+khuyển|K W IY0 AX0 NG
+khuyết|K W IY0 AX0 K
+khuynh|K W IY0 N
+khuỳnh|K W IY0 N
+khuỷnh|K W IY0 N
+khuýp|K W IY0 P
+khuỷu|K W IY0 UW0
+khuỵu|K W IY0 UW0
+khử|K UW0
+khứa|K UW0 AX0
+khứng|K UW0 NG
+khựng|K UW0 NG
+khước|K UW0 AX0 K
+khươi|K UW0 AX0 Y
+khướt|K UW0 AX0 K
+khượt|K UW0 AX0 K
+khướu|K UW0 AX0 W
+ki|K IY0
+ki-lô|K IY0 L OW0
+ki-lô-gam|K IY0 L OW0 G AE M
+ki-lô-mét|K IY0 L OW0 M EH0 T
+ki-lô-oát|K IY0 L OW0 W AE T
+ki-lô-vôn|K IY0 L OW0 Y OW0 NG M
+ki-mô-nô|K IY0 M OW0 N OW0
+ki-nin|K IY0 N IY0 N
+ki-ốt|K IY0 OW0 K P
+kì|K IY0
+kỉ|K IY0
+kĩ|K IY0
+kí|K IY0
+kí-lô|K IY0 L OW0
+kí-ninh|K IY0 N IY0 N
+kị|K IY0
+kia|K IY0 AX0
+kìa|K IY0 AX0
+kích|K IY0 T
+kịch|K IY0 T
+kiêm|K IY0 M
+kiềm|K IY0 M
+kiểm|K IY0 M
+kiếm|K IY0 M
+kiệm|K IY0 M
+kiên|K IY0 AX0 NG
+kiền|K IY0 AX0 NG
+kiến|K IY0 AX0 NG
+kiện|K IY0 AX0 NG
+kiêng|K IY0 AX0 NG
+kiềng|K IY0 AX0 NG
+kiểng|K IY0 AX0 NG
+kiễng|K IY0 AX0 NG
+kiếng|K IY0 AX0 NG
+kiếp|K IY0 P
+kiết|K IY0 AX0 K
+kiệt|K IY0 AX0 K
+kiêu|K IY0 AX0 W
+kiều|K IY0 AX0 W
+kiểu|K IY0 AX0 W
+kiếu|K IY0 AX0 W
+kiệu|K IY0 AX0 W
+kim|K IY0 M
+kìm|K IY0 M
+kín|K IY0 N
+kinh|K IY0 N
+kình|K IY0 N
+kính|K IY0 N
+kip|K IY0 P
+kíp|K IY0 P
+kíp-lê|K IY0 P L EH0
+kịp|K IY0 P
+kịt|K IY0 T
+kốc|K OW0 K P
+kuênh|K W EH0 N
+kuýp|K W IY0 P
+ky|K IY0
+kỳ|K IY0
+kỷ|K IY0
+kỹ|K IY0
+ký|K IY0
+ký-ninh|K IY0 N IY0 N
+kỵ|K IY0
+la|L AE
+la-bô|L AE B OW0
+la-coóc|L AE K AO0 K P
+la-de|L AE Y EH0
+la-dơn|L AE Y UH NG
+la-đơn|L AE D UH NG
+la-ga|L AE G AE
+la-ghe|L AE G EH0
+la-ghim|L AE G IY0 M
+la-mát|L AE M AE T
+la-oang|L AE W AE NG
+la-phông|L AE F OW0 NG M
+la-tê-rít|L AE T EH0 JH IY0 T
+la-tinh|L AE T IY0 N
+la-va-bô|L AE Y AE B OW0
+la-vầy|L AE Y UH Y
+la-xiết|L AE S IY0 AX0 K
+là|L AE
+lả|L AE
+lã|L AE
+lá|L AE
+lạ|L AE
+lác|L AE K
+lạc|L AE K
+lạc-dang|L AE K Y AE NG
+lách|L AE T
+lách|L AE T
+lạch|L AE T
+lai|L AE Y
+lài|L AE Y
+lãi|L AE Y
+lái|L AE Y
+lại|L AE Y
+lam|L AE M
+lam-đa|L AE M D AE
+làm|L AE M
+lạm|L AE M
+lan|L AE NG
+làn|L AE NG
+lán|L AE NG
+lang|L AE NG
+làng|L AE NG
+lảng|L AE NG
+lãng|L AE NG
+láng|L AE NG
+lạng|L AE NG
+lanh|L AE N
+lanh-tô|L AE N T OW0
+lành|L AE N
+lảnh|L AE N
+lãnh|L AE N
+lánh|L AE N
+lạnh|L AE N
+lao|L AE W
+lào|L AE W
+lào|L AE W
+lão|L AE W
+láo|L AE W
+lat|L AE T
+lát|L AE T
+lát-ti|L AE T T IY0
+lát-xê|L AE T S EH0
+lạt|L AE T
+lau|L AA W
+làu|L AA W
+láu|L AA W
+lay|L AA Y
+lay-dơn|L AA Y Y UH NG
+lay-ơn|L AA Y UH NG
+lảy|L AA Y
+láy|L AA Y
+lạy|L AA Y
+lắc|L AA K
+lắc-lê|L AA K L EH0
+lăm|L AA M
+lắm|L AA M
+lặm|L AA M
+lăn|L AA NG
+lằn|L AA NG
+lẳn|L AA NG
+lặn|L AA NG
+lăng|L AA NG
+lăng-xê|L AA NG S EH0
+lằng|L AA NG
+lẳng|L AA NG
+lẵng|L AA NG
+lắng|L AA NG
+lặng|L AA NG
+lắp|L AA P
+lặp|L AA P
+lặt|L AA K
+lâm|L UH M
+lầm|L UH M
+lẩm|L UH M
+lẫm|L UH M
+lấm|L UH M
+lân|L UH NG
+lần|L UH NG
+lẩn|L UH NG
+lẫn|L UH NG
+lấn|L UH NG
+lận|L UH NG
+lâng|L UH NG
+lấp|L UH P
+lập|L UH P
+lập-bô|L UH P B OW0
+lập-gioòng|L UH P Y AO0 NG M
+lập-lắc|L UH P L AA K
+lập-lòn|L UH P L AO0 NG M
+lập-loòng|L UH P L AO0 NG M
+lật|L UH K
+lâu|L UH W
+lầu|L UH W
+lẩu|L UH W
+lấu|L UH W
+lậu|L UH W
+lây|L UH Y
+lầy|L UH Y
+lẩy|L UH Y
+lẫy|L UH Y
+lấy|L UH Y
+lậy|L UH Y
+le|L EH0
+le|L EH0
+le-va|L EH0 Y AE
+lè|L EH0
+lẻ|L EH0
+lẽ|L EH0
+lé|L EH0
+lẹ|L EH0
+léc|L EH0 K
+lem|L EH0 M
+lẻm|L EH0 M
+lém|L EH0 M
+lẹm|L EH0 M
+len|L EH0 NG
+lèn|L EH0 NG
+lẻn|L EH0 NG
+lén|L EH0 NG
+lẹn|L EH0 NG
+leo|L EH0 OW0
+lèo|L EH0 OW0
+lẻo|L EH0 OW0
+lẽo|L EH0 OW0
+léo|L EH0 OW0
+lẹo|L EH0 OW0
+lép|L EH0 P
+lét|L EH0 T
+lẹt|L EH0 T
+lê|L EH0
+lê|L EH0
+lê-dương|L EH0 Y UW0 AX0 NG
+lê-nin-nít|L EH0 N IY0 N N IY0 T
+lề|L EH0
+lể|L EH0
+lễ|L EH0
+lệ|L EH0
+lệch|L EH0 T
+lên|L EH0 N
+lềnh|L EH0 N
+lệnh|L EH0 N
+lết|L EH0 T
+lêu|L EH0 UW0
+lều|L EH0 UW0
+lếu|L EH0 UW0
+li|L IY0
+li|L IY0
+li-e|L IY0 EH0
+li-mô-din|L IY0 M OW0 Y IY0 N
+li-mô-nát|L IY0 M OW0 N AE T
+li-pít|L IY0 P IY0 T
+li-thi|L IY0 T IY0
+li-vê|L IY0 Y EH0
+li-xăng|L IY0 S AA NG
+li-xê|L IY0 S EH0
+lì|L IY0
+lí|L IY0
+lị|L IY0
+lia|L IY0 AX0
+lìa|L IY0 AX0
+lía|L IY0 AX0
+lịa|L IY0 AX0
+lích|L IY0 T
+lịch|L IY0 T
+liếc|L IY0 AX0 K
+liệc|L IY0 AX0 K
+liêm|L IY0 M
+liềm|L IY0 M
+liếm|L IY0 M
+liệm|L IY0 M
+liên|L IY0 AX0 NG
+liền|L IY0 AX0 NG
+liễn|L IY0 AX0 NG
+liến|L IY0 AX0 NG
+liệng|L IY0 AX0 NG
+liếp|L IY0 P
+liệt|L IY0 AX0 K
+liều|L IY0 AX0 W
+liễu|L IY0 AX0 W
+liệu|L IY0 AX0 W
+lim|L IY0 M
+lịm|L IY0 M
+linh|L IY0 N
+lình|L IY0 N
+lỉnh|L IY0 N
+lĩnh|L IY0 N
+lính|L IY0 N
+lịnh|L IY0 N
+líp|L IY0 P
+líp-phăng-xe|L IY0 P F AA NG S EH0
+lít|L IY0 T
+lít-xăng|L IY0 T S AA NG
+lít-xê|L IY0 T S EH0
+liu|L IY0 W
+líu|L IY0 W
+lịu|L IY0 W
+lo|L AO0
+lo-ga|L AO0 G AE
+lo-ga-rit|L AO0 G AE JH IY0 T
+lò|L AO0
+lò-xo|L AO0 S AO0
+lõ|L AO0
+ló|L AO0
+lọ|L AO0
+loa|L W AE
+loà|L W AE
+lòa|L W AE
+loã|L W AE
+lõa|L W AE
+loá|L W AE
+loài|L W AE Y
+loại|L W AE Y
+loan|L W AE NG
+loàn|L W AE NG
+loán|L W AE NG
+loạn|L W AE NG
+loang|L W AE NG
+loãng|L W AE NG
+loáng|L W AE NG
+loạt|L W AE T
+lóc|L AO0 K P
+lọc|L AO0 K P
+loe|L W EH0
+loè|L W EH0
+loé|L W EH0
+loét|L W EH0 T
+loẹt|L W EH0 T
+loi|L AO0 Y
+lòi|L AO0 Y
+lỏi|L AO0 Y
+lõi|L AO0 Y
+lói|L AO0 Y
+lọi|L AO0 Y
+lòm|L AO0 M
+lỏm|L AO0 M
+lõm|L AO0 M
+lóm|L AO0 M
+lon|L AO0 NG M
+lòn|L AO0 NG M
+lỏn|L AO0 NG M
+lọn|L AO0 NG M
+long|L AO0 NG M
+lòng|L AO0 NG M
+lỏng|L AO0 NG M
+lõng|L AO0 NG M
+lóng|L AO0 NG M
+lọng|L AO0 NG M
+loong-toong|L AO0 NG M T AO0 NG M
+lóp|L AO0 P
+lọp|L AO0 P
+lót|L AO0 K P
+lọt|L AO0 K P
+lô|L OW0
+lô-ca-xông|L OW0 K AE S OW0 NG M
+lô-can|L OW0 K AE NG
+lô-cốt|L OW0 K OW0 K P
+lô-ga|L OW0 G AE
+lô-ga-rít|L OW0 G AE JH IY0 T
+lô-gích|L OW0 G IY0 T
+lô-tô|L OW0 T OW0
+lồ|L OW0
+lổ|L OW0
+lỗ|L OW0
+lố|L OW0
+lộ|L OW0
+lốc|L OW0 K P
+lốc-kê|L OW0 K P K EH0
+lốc-nốt|L OW0 K P N OW0 K P
+lộc|L OW0 K P
+lôi|L OW0 Y
+lồi|L OW0 Y
+lỗi|L OW0 Y
+lối|L OW0 Y
+lội|L OW0 Y
+lồm|L OW0 M
+lồn|L OW0 NG M
+lộn|L OW0 NG M
+lông|L OW0 NG M
+lông-tông|L OW0 NG M T OW0 NG M
+lồng|L OW0 NG M
+lộng|L OW0 NG M
+lốp|L OW0 P
+lốt|L OW0 K P
+lột|L OW0 K P
+lơ|L UH
+lơ-go|L UH G AO0
+lờ|L UH
+lở|L UH
+lỡ|L UH
+lớ|L UH
+lợ|L UH
+lơi|L UH Y
+lời|L UH Y
+lỡi|L UH Y
+lợi|L UH Y
+lờm|L UH M
+lỡm|L UH M
+lợm|L UH M
+lơn|L UH NG
+lờn|L UH NG
+lớn|L UH NG
+lợn|L UH NG
+lớp|L UH P
+lợp|L UH P
+lợt|L UH K
+lu|L UW0
+lù|L UW0
+lũ|L UW0
+lú|L UW0
+lua|L UW0 AX0
+lùa|L UW0 AX0
+lũa|L UW0 AX0
+lúa|L UW0 AX0
+lụa|L UW0 AX0
+luận|L W UH NG
+luật|L W UH K
+lúc|L UW0 K P
+lục|L UW0 K P
+lui|L UW0 Y
+lùi|L UW0 Y
+lủi|L UW0 Y
+lụi|L UW0 Y
+lùm|L UW0 M
+lủm|L UW0 M
+lũm|L UW0 M
+lúm|L UW0 M
+lùn|L UW0 NG M
+lủn|L UW0 NG M
+lũn|L UW0 NG M
+lún|L UW0 NG M
+lụn|L UW0 NG M
+lung|L UW0 NG M
+lùng|L UW0 NG M
+lủng|L UW0 NG M
+lũng|L UW0 NG M
+luốc|L UW0 AX0 K
+luộc|L UW0 AX0 K
+luôn|L UW0 AX0 NG
+luồn|L UW0 AX0 NG
+luồng|L UW0 AX0 NG
+luỗng|L UW0 AX0 NG
+luống|L UW0 AX0 NG
+luốt|L UW0 AX0 K
+luột|L UW0 AX0 K
+lúp|L UW0 P
+lút|L UW0 K P
+lụt|L UW0 K P
+luỹ|L W IY0
+lũy|L UW0 Y
+luý|L W IY0
+luỵ|L W IY0
+lụy|L UW0 Y
+luých|L W IY0 T
+luyến|L W IY0 AX0 NG
+luyện|L W IY0 AX0 NG
+luýt|L W IY0 T
+lư|L UW0
+lừ|L UW0
+lử|L UW0
+lữ|L UW0
+lữ|L UW0
+lự|L UW0
+lự|L UW0
+lưa|L UW0 AX0
+lừa|L UW0 AX0
+lửa|L UW0 AX0
+lữa|L UW0 AX0
+lứa|L UW0 AX0
+lựa|L UW0 AX0
+lức|L UW0 K
+lực|L UW0 K
+lưng|L UW0 NG
+lừng|L UW0 NG
+lửng|L UW0 NG
+lựng|L UW0 NG
+lược|L UW0 AX0 K
+lười|L UW0 AX0 Y
+lưỡi|L UW0 AX0 Y
+lưới|L UW0 AX0 Y
+lườm|L UW0 M
+lượm|L UW0 M
+lươn|L UW0 AX0 NG
+lườn|L UW0 AX0 NG
+lượn|L UW0 AX0 NG
+lương|L UW0 AX0 NG
+lường|L UW0 AX0 NG
+lưỡng|L UW0 AX0 NG
+lượng|L UW0 AX0 NG
+lướt|L UW0 AX0 K
+lượt|L UW0 AX0 K
+lứt|L UW0 K
+lưu|L UW0 W
+lựu|L UW0 W
+ly|L IY0
+lý|L IY0
+lý|L IY0
+lỵ|L IY0
+ma|M AE
+ma-bùn|M AE B UW0 NG M
+ma-cà-bông|M AE K AE B OW0 NG M
+ma-cà-rồng|M AE K AE JH OW0 NG M
+ma-coong|M AE K AO0 NG M
+ma-cô|M AE K OW0
+ma-de|M AE Y EH0
+ma-dê|M AE Y EH0
+ma-dút|M AE Y UW0 K P
+ma-ga-din|M AE G AE Y IY0 N
+ma-gi|M AE Y IY0
+ma-gie|M AE Y EH0
+ma-giê|M AE Y EH0
+ma-ke-tinh|M AE K EH0 T IY0 N
+ma-két|M AE K EH0 T
+ma-két-tinh|M AE K EH0 T T IY0 N
+ma-kết-tinh|M AE K EH0 T T IY0 N
+ma-ki-ê|M AE K IY0 EH0
+ma-lách|M AE L AE T
+ma-lát|M AE L AE T
+ma-măng|M AE M AA NG
+ma-men|M AE M EH0 NG
+ma-mút|M AE M UW0 K P
+ma-nhe-tít|M AE N IY0 EH0 T IY0 T
+ma-nhe-tô|M AE N IY0 EH0 T OW0
+ma-nhê-tô|M AE N IY0 EH0 T OW0
+ma-nhê-tô-phôn|M AE N IY0 EH0 T OW0 F OW0 NG M
+ma-nhi|M AE N IY0 IY0
+ma-ni-ven|M AE N IY0 Y EH0 NG
+ma-níp|M AE N IY0 P
+ma-nơ-canh|M AE N UH K AE N
+ma-nớp|M AE N UH P
+ma-phăm|M AE F AA M
+ma-phi-a|M AE F IY0 AE
+ma-ra-tông|M AE JH AE T OW0 NG M
+ma-rông|M AE JH OW0 NG M
+mà|M AE
+mả|M AE
+mã|M AE
+má|M AE
+mạ|M AE
+mạ|M AE
+mác|M AE K
+mác-ca|M AE K K AE
+mác-ke-tinh|M AE K K EH0 T IY0 N
+mác-két-tinh|M AE K K EH0 T T IY0 N
+mác-kết-tinh|M AE K K EH0 T T IY0 N
+mác-ma|M AE K M AE
+mác-xít|M AE K S IY0 T
+mạc|M AE K
+mạc|M AE K
+mạc-cờ-rô|M AE K K UH JH OW0
+mạc-ga-rít|M AE K G AE JH IY0 T
+mách|M AE T
+mạch|M AE T
+mạch-lô|M AE T L OW0
+mai|M AE Y
+mài|M AE Y
+mải|M AE Y
+mãi|M AE Y
+mái|M AE Y
+mại|M AE Y
+mám|M AE M
+man|M AE NG
+man-gan|M AE NG G AE NG
+man-nớp|M AE NG N UH P
+man-tô|M AE NG T OW0
+man-tô-da|M AE NG T OW0 Y AE
+màn|M AE NG
+mãn|M AE NG
+mán|M AE NG
+mạn|M AE NG
+mang|M AE NG
+màng|M AE NG
+mảng|M AE NG
+mảng|M AE NG
+mãng|M AE NG
+máng|M AE NG
+mạng|M AE NG
+manh|M AE N
+mành|M AE N
+mảnh|M AE N
+mãnh|M AE N
+mánh|M AE N
+mạnh|M AE N
+mao|M AE W
+mào|M AE W
+mão|M AE W
+mạo|M AE W
+mát|M AE T
+mát-tít|M AE T T IY0 T
+mát-xa|M AE T S AE
+mạt|M AE T
+mạt-chược|M AE T KH UW0 AX0 K
+mau|M AA W
+màu|M AA W
+máu|M AA W
+may|M AA Y
+may-on-ne|M AA Y AO0 NG M N EH0
+may-ô|M AA Y OW0
+may-ơ|M AA Y UH
+may-so|M AA Y SH AO0
+mày|M AA Y
+mày|M AA Y
+mảy|M AA Y
+máy|M AA Y
+mạy|M AA Y
+mắc|M AA K
+mắc-coọc|M AA K K AO0 K P
+mặc|M AA K
+măm|M AA M
+măm-den|M AA M Y EH0 NG
+mắm|M AA M
+mằn|M AA NG
+mẳn|M AA NG
+mắn|M AA NG
+mặn|M AA NG
+măng|M AA NG
+măng-ca|M AA NG K AE
+măng-cụt|M AA NG K UW0 K P
+măng-đa|M AA NG D AE
+măng-đô-lin|M AA NG D OW0 L IY0 N
+măng-sét|M AA NG SH EH0 T
+măng-sông|M AA NG SH OW0 NG M
+măng-tô|M AA NG T OW0
+măng-tôn|M AA NG T OW0 NG M
+mắng|M AA NG
+mắt|M AA K
+mặt|M AA K
+mâm|M UH M
+mầm|M UH M
+mẩm|M UH M
+mẫm|M UH M
+mậm|M UH M
+mân|M UH NG
+mần|M UH NG
+mẩn|M UH NG
+mẫn|M UH NG
+mấn|M UH NG
+mận|M UH NG
+mâng|M UH NG
+mầng|M UH NG
+mập|M UH P
+mất|M UH K
+mật|M UH K
+mâu|M UH W
+mầu|M UH W
+mẩu|M UH W
+mẫu|M UH W
+mấu|M UH W
+mậu|M UH W
+mây|M UH Y
+mầy|M UH Y
+mẩy|M UH Y
+mấy|M UH Y
+mậy|M UH Y
+me|M EH0
+me-don|M EH0 Y AO0 NG M
+me-dông|M EH0 Y OW0 NG M
+me-ga|M EH0 G AE
+me-tan|M EH0 T AE NG
+me-xừ|M EH0 S UW0
+mè|M EH0
+mẻ|M EH0
+mẽ|M EH0
+mé|M EH0
+mẹ|M EH0
+méc|M EH0 K
+méc-xì|M EH0 K S IY0
+mẹc|M EH0 K
+mem|M EH0 M
+mèm|M EH0 M
+men|M EH0 NG
+men-ton|M EH0 NG T AO0 NG M
+mèn|M EH0 NG
+mén|M EH0 NG
+mèng|M EH0 NG
+meo|M EH0 OW0
+mèo|M EH0 OW0
+mèo|M EH0 OW0
+mẻo|M EH0 OW0
+méo|M EH0 OW0
+mẹo|M EH0 OW0
+mẹo|M EH0 OW0
+mép|M EH0 P
+mẹp|M EH0 P
+mét|M EH0 T
+mét-tinh|M EH0 T T IY0 N
+mét-tra|M EH0 T T AE
+mét-xì|M EH0 T S IY0
+mét-xì-a-văng|M EH0 T S IY0 AE Y AA NG
+mẹt|M EH0 T
+mê|M EH0
+mê-đi-a|M EH0 D IY0 AE
+mê-ga|M EH0 G AE
+mê-ga-mét|M EH0 G AE M EH0 T
+mê-ga-oát|M EH0 G AE W AE T
+mê-lô|M EH0 L OW0
+mê-măng-tô|M EH0 M AA NG T OW0
+mê-tan|M EH0 T AE NG
+mê-tờ-rô|M EH0 T UH JH OW0
+mề|M EH0
+mề-đay|M EH0 D AA Y
+mề-đay-dông|M EH0 D AA Y Y OW0 NG M
+mễ|M EH0
+mế|M EH0
+mệ|M EH0
+mềm|M EH0 M
+mền|M EH0 N
+mền-đay|M EH0 N D AA Y
+mến|M EH0 N
+mệnh|M EH0 N
+mết|M EH0 T
+mệt|M EH0 T
+mếu|M EH0 UW0
+mi|M IY0
+mi-ca|M IY0 K AE
+mi-cơ-rô|M IY0 K UH JH OW0
+mi-li|M IY0 L IY0
+mi-li-gam|M IY0 L IY0 G AE M
+mi-li-mét|M IY0 L IY0 M EH0 T
+mi-mô-da|M IY0 M OW0 Y AE
+mi-ni|M IY0 N IY0
+mi-nơ|M IY0 N UH
+mì|M IY0
+mĩ|M IY0
+mí|M IY0
+mị|M IY0
+mia|M IY0 AX0
+mỉa|M IY0 AX0
+mía|M IY0 AX0
+miên|M IY0 AX0 NG
+miền|M IY0 AX0 NG
+miền-đay|M IY0 AX0 NG D AA Y
+miễn|M IY0 AX0 NG
+miến|M IY0 AX0 NG
+miện|M IY0 AX0 NG
+miểng|M IY0 AX0 NG
+miếng|M IY0 AX0 NG
+miệng|M IY0 AX0 NG
+miết|M IY0 AX0 K
+miệt|M IY0 AX0 K
+miêu|M IY0 AX0 W
+miêu|M IY0 AX0 W
+miễu|M IY0 AX0 W
+miếu|M IY0 AX0 W
+mỉm|M IY0 M
+mím|M IY0 M
+min|M IY0 N
+mìn|M IY0 N
+mịn|M IY0 N
+minh|M IY0 N
+minh-hương|M IY0 N HH UW0 AX0 NG
+mình|M IY0 N
+mịnh|M IY0 N
+mít|M IY0 T
+mít-tinh|M IY0 T T IY0 N
+mịt|M IY0 T
+miu|M IY0 W
+mỉu|M IY0 W
+mo|M AO0
+mo-no-me|M AO0 N AO0 M EH0
+mo-ran|M AO0 JH AE NG
+mo-rát|M AO0 JH AE T
+mò|M AO0
+mỏ|M AO0
+mỏ-lết|M AO0 L EH0 T
+mõ|M AO0
+mó|M AO0
+moa|M W AE
+moay-ơ|M W AA Y UH
+móc|M AO0 K P
+mọc|M AO0 K P
+moi|M AO0 Y
+moi|M AO0 Y
+mòi|M AO0 Y
+mỏi|M AO0 Y
+mọi|M AO0 Y
+mọi|M AO0 Y
+mom|M AO0 M
+mòm|M AO0 M
+mỏm|M AO0 M
+mõm|M AO0 M
+móm|M AO0 M
+mòn|M AO0 NG M
+món|M AO0 NG M
+mọn|M AO0 NG M
+mọn|M AO0 NG M
+mong|M AO0 NG M
+mòng|M AO0 NG M
+mỏng|M AO0 NG M
+móng|M AO0 NG M
+mọng|M AO0 NG M
+moóc|M AO0 K P
+moóc-chê|M AO0 K P KH EH0
+moóc-chi-ê|M AO0 K P KH IY0 EH0
+moóc-phin|M AO0 K P F IY0 N
+moong|M AO0 NG M
+móp|M AO0 P
+mọp|M AO0 P
+mót|M AO0 K P
+mọt|M AO0 K P
+mô|M OW0
+mô-bi-lét|M OW0 B IY0 L EH0 T
+mô-đéc|M OW0 D EH0 K
+mô-đen|M OW0 D EH0 NG
+mô-men|M OW0 M EH0 NG
+mô-nô|M OW0 N OW0
+mô-nô-me|M OW0 N OW0 M EH0
+mô-rát|M OW0 JH AE T
+mô-típ|M OW0 T IY0 P
+mô-tô|M OW0 T OW0
+mô-tơ|M OW0 T UH
+mồ|M OW0
+mổ|M OW0
+mỗ|M OW0
+mố|M OW0
+mộ|M OW0
+mốc|M OW0 K P
+mộc|M OW0 K P
+môi|M OW0 Y
+môi-răng|M OW0 Y JH AA NG
+môi-vòm|M OW0 Y Y AO0 M
+mồi|M OW0 Y
+mỗi|M OW0 Y
+mối|M OW0 Y
+mội|M OW0 Y
+môm|M OW0 M
+mồm|M OW0 M
+môn|M OW0 NG M
+mông|M OW0 NG M
+mông|M OW0 NG M
+mông-dao|M OW0 NG M Y AE W
+mông-ta|M OW0 NG M T AE
+mông-ta-giơ|M OW0 NG M T AE Y UH
+mồng|M OW0 NG M
+mổng|M OW0 NG M
+mống|M OW0 NG M
+mộng|M OW0 NG M
+mốt|M OW0 K P
+một|M OW0 K P
+mơ|M UH
+mơ-lông|M UH L OW0 NG M
+mơ-nâm|M UH N UH M
+mơ-nê|M UH N EH0
+mơ-nơ|M UH N UH
+mơ-nuy|M UH N W IY0
+mờ|M UH
+mở|M UH
+mỡ|M UH
+mớ|M UH
+mợ|M UH
+mơi|M UH Y
+mời|M UH Y
+mới|M UH Y
+mờm|M UH M
+mớm|M UH M
+mơn|M UH NG
+mởn|M UH NG
+mớn|M UH NG
+mu|M UW0
+mu-dích|M UW0 Y IY0 T
+mù|M UW0
+mù-soa|M UW0 SH W AE
+mù-tạt|M UW0 T AE T
+mủ|M UW0
+mũ|M UW0
+mú|M UW0
+mụ|M UW0
+mua|M UW0 AX0
+mùa|M UW0 AX0
+múa|M UW0 AX0
+múc|M UW0 K P
+mục|M UW0 K P
+mui|M UW0 Y
+mùi|M UW0 Y
+mùi-soa|M UW0 Y SH W AE
+mùi-xoa|M UW0 Y S W AE
+mủi|M UW0 Y
+mũi|M UW0 Y
+múi|M UW0 Y
+mụi|M UW0 Y
+mum|M UW0 M
+múm|M UW0 M
+mun|M UW0 NG M
+mùn|M UW0 NG M
+mủn|M UW0 NG M
+mụn|M UW0 NG M
+mùng|M UW0 NG M
+mủng|M UW0 NG M
+muôi|M UW0 AX0 Y
+muồi|M UW0 AX0 Y
+muỗi|M UW0 AX0 Y
+muối|M UW0 AX0 Y
+muội|M UW0 AX0 Y
+muỗm|M UW0 M
+muôn|M UW0 AX0 NG
+muốn|M UW0 AX0 NG
+muộn|M UW0 AX0 NG
+muông|M UW0 AX0 NG
+muồng|M UW0 AX0 NG
+muỗng|M UW0 AX0 NG
+muống|M UW0 AX0 NG
+muốt|M UW0 AX0 K
+múp|M UW0 P
+mụp|M UW0 P
+mút|M UW0 K P
+mút-cơ-tông|M UW0 K P K UH T OW0 NG M
+mút-xơ-lin|M UW0 K P S UH L IY0 N
+mụt|M UW0 K P
+muy|M W IY0
+mự|M UW0
+mưa|M UW0 AX0
+mửa|M UW0 AX0
+mứa|M UW0 AX0
+mựa|M UW0 AX0
+mức|M UW0 K
+mực|M UW0 K
+mưng|M UW0 NG
+mừng|M UW0 NG
+mửng|M UW0 NG
+mược|M UW0 AX0 K
+mươi|M UW0 AX0 Y
+mười|M UW0 AX0 Y
+mướn|M UW0 AX0 NG
+mượn|M UW0 AX0 NG
+mương|M UW0 AX0 NG
+mường|M UW0 AX0 NG
+mường|M UW0 AX0 NG
+mướp|M UW0 P
+mướt|M UW0 AX0 K
+mượt|M UW0 AX0 K
+mứt|M UW0 K
+mưu|M UW0 W
+mỹ|M IY0
+na|N AE
+na|N AE
+na-bi-ca|N AE B IY0 K AE
+na-di|N AE Y IY0
+na-pan|N AE P AE NG
+na-tri|N AE T IY0
+nà|N AE
+nả|N AE
+nã|N AE
+ná|N AE
+nạ|N AE
+nác|N AE K
+nạc|N AE K
+nách|N AE T
+nai|N AE Y
+nài|N AE Y
+nải|N AE Y
+nái|N AE Y
+nại|N AE Y
+nam|N AE M
+nam-kì|N AE M K IY0
+nám|N AE M
+nạm|N AE M
+nan|N AE NG
+nàn|N AE NG
+nản|N AE NG
+nán|N AE NG
+nạn|N AE NG
+nang|N AE NG
+nàng|N AE NG
+náng|N AE NG
+nạng|N AE NG
+nanh|N AE N
+nành|N AE N
+nánh|N AE N
+nạnh|N AE N
+nao|N AE W
+nào|N AE W
+nảo|N AE W
+não|N AE W
+náo|N AE W
+nạo|N AE W
+náp-ta-len|N AE P T AE L EH0 NG
+nạp|N AE P
+nát|N AE T
+nát-ri|N AE T JH IY0
+nạt|N AE T
+nau|N AA W
+náu|N AA W
+nay|N AA Y
+này|N AA Y
+nảy|N AA Y
+nãy|N AA Y
+nạy|N AA Y
+nặc|N AA K
+năm|N AA M
+nằm|N AA M
+nắm|N AA M
+năn|N AA NG
+nắn|N AA NG
+nặn|N AA NG
+năng|N AA NG
+nắng|N AA NG
+nặng|N AA NG
+nắp|N AA P
+nấc|N UH K
+nầm|N UH M
+nấm|N UH M
+nậm|N UH M
+nân|N UH NG
+nẫn|N UH NG
+nấn|N UH NG
+nâng|N UH NG
+nẫng|N UH NG
+nậng|N UH NG
+nấp|N UH P
+nâu|N UH W
+nẫu|N UH W
+nấu|N UH W
+nậu|N UH W
+nây|N UH Y
+nầy|N UH Y
+nẩy|N UH Y
+nẫy|N UH Y
+nấy|N UH Y
+nậy|N UH Y
+ne|N EH0
+ne|N EH0
+nè|N EH0
+nẻ|N EH0
+né|N EH0
+nem|N EH0 M
+ném|N EH0 M
+nen|N EH0 NG
+nén|N EH0 NG
+neo|N EH0 OW0
+nèo|N EH0 OW0
+nẻo|N EH0 OW0
+néo|N EH0 OW0
+neon|N EH0 OW0 NG
+nép|N EH0 P
+nẹp|N EH0 P
+nét|N EH0 T
+nẹt|N EH0 T
+nê|N EH0
+nê-ông|N EH0 OW0 NG M
+nề|N EH0
+nể|N EH0
+nệ|N EH0
+nêm|N EH0 M
+nếm|N EH0 M
+nệm|N EH0 M
+nên|N EH0 N
+nền|N EH0 N
+nến|N EH0 N
+nện|N EH0 N
+nếp|N EH0 P
+nệp|N EH0 P
+nết|N EH0 T
+nêu|N EH0 UW0
+nếu|N EH0 UW0
+nga|NG AE
+ngà|NG AE
+ngả|NG AE
+ngã|NG AE
+ngạc|NG AE K
+ngách|NG AE T
+ngạch|NG AE T
+ngai|NG AE Y
+ngài|NG AE Y
+ngải|NG AE Y
+ngãi|NG AE Y
+ngái|NG AE Y
+ngái|NG AE Y
+ngại|NG AE Y
+ngàm|NG AE M
+ngám|NG AE M
+ngan|NG AE NG
+ngàn|NG AE NG
+ngán|NG AE NG
+ngạn|NG AE NG
+ngang|NG AE NG
+ngảng|NG AE NG
+ngãng|NG AE NG
+ngáng|NG AE NG
+ngành|NG AE N
+ngảnh|NG AE N
+ngánh|NG AE N
+ngạnh|NG AE N
+ngao|NG AE W
+ngào|NG AE W
+ngão|NG AE W
+ngáo|NG AE W
+ngạo|NG AE W
+ngáp|NG AE P
+ngát|NG AE T
+ngạt|NG AE T
+ngàu|NG AA W
+ngay|NG AA Y
+ngày|NG AA Y
+ngáy|NG AA Y
+ngắc|NG AA K
+ngăm|NG AA M
+ngắm|NG AA M
+ngăn|NG AA NG
+ngắn|NG AA NG
+ngẳng|NG AA NG
+ngẵng|NG AA NG
+ngắt|NG AA K
+ngặt|NG AA K
+ngấc|NG UH K
+ngâm|NG UH M
+ngầm|NG UH M
+ngẫm|NG UH M
+ngấm|NG UH M
+ngậm|NG UH M
+ngân|NG UH NG
+ngần|NG UH NG
+ngẩn|NG UH NG
+ngấn|NG UH NG
+ngẩng|NG UH NG
+ngập|NG UH P
+ngất|NG UH K
+ngật|NG UH K
+ngâu|NG UH W
+ngầu|NG UH W
+ngẫu|NG UH W
+ngấu|NG UH W
+ngậu|NG UH W
+ngây|NG UH Y
+ngầy|NG UH Y
+ngấy|NG UH Y
+ngậy|NG UH Y
+ngẹt|NG EH0 T
+nghe|NG EH0
+nghè|NG EH0
+nghé|NG EH0
+nghen|NG EH0 NG
+nghèn|NG EH0 NG
+nghẽn|NG EH0 NG
+nghén|NG EH0 NG
+nghẹn|NG EH0 NG
+nghèo|NG EH0 OW0
+nghẻo|NG EH0 OW0
+nghẽo|NG EH0 OW0
+nghẹo|NG EH0 OW0
+nghét|NG EH0 T
+nghẹt|NG EH0 T
+nghê|NG EH0
+nghề|NG EH0
+nghể|NG EH0
+nghệ|NG EH0
+nghếch|NG EH0 T
+nghệch|NG EH0 T
+nghển|NG EH0 N
+nghênh|NG EH0 N
+nghểnh|NG EH0 N
+nghệt|NG EH0 T
+nghêu|NG EH0 UW0
+nghều|NG EH0 UW0
+nghễu|NG EH0 UW0
+nghi|NG IY0
+nghì|NG IY0
+nghỉ|NG IY0
+nghĩ|NG IY0
+nghị|NG IY0
+nghĩa|NG IY0 AX0
+nghịch|NG IY0 T
+nghiêm|NG IY0 M
+nghiệm|NG IY0 M
+nghiên|NG IY0 AX0 NG
+nghiền|NG IY0 AX0 NG
+nghiến|NG IY0 AX0 NG
+nghiện|NG IY0 AX0 NG
+nghiêng|NG IY0 AX0 NG
+nghiệp|NG IY0 P
+nghiệt|NG IY0 AX0 K
+nghỉm|NG IY0 M
+nghìn|NG IY0 N
+nghỉn|NG IY0 N
+nghinh|NG IY0 N
+nghỉnh|NG IY0 N
+nghít|NG IY0 T
+nghịt|NG IY0 T
+ngò|NG AO0
+ngỏ|NG AO0
+ngõ|NG AO0
+ngó|NG AO0
+ngọ|NG AO0
+ngoa|NG W AE
+ngoã|NG W AE
+ngoác|NG W AE K
+ngoạc|NG W AE K
+ngoách|NG W AE T
+ngoạch|NG W AE T
+ngoài|NG W AE Y
+ngoải|NG W AE Y
+ngoái|NG W AE Y
+ngoại|NG W AE Y
+ngoàm|NG W AE M
+ngoạm|NG W AE M
+ngoan|NG W AE NG
+ngoảnh|NG W AE N
+ngoao|NG W AE W
+ngoáo|NG W AE W
+ngoáp|NG W AE P
+ngoạp|NG W AE P
+ngoảy|NG W AA Y
+ngoáy|NG W AA Y
+ngoắc|NG W AA K
+ngoặc|NG W AA K
+ngoằn|NG W AA NG
+ngoằng|NG W AA NG
+ngoẵng|NG W AA NG
+ngoắt|NG W AA K
+ngoặt|NG W AA K
+ngóc|NG AO0 K P
+ngọc|NG AO0 K P
+ngoe|NG W EH0
+ngoé|NG W EH0
+ngoẻm|NG W EH0 M
+ngoém|NG W EH0 M
+ngoẻo|NG W EH0 W
+ngoéo|NG W EH0 W
+ngoẹo|NG W EH0 W
+ngoi|NG AO0 Y
+ngòi|NG AO0 Y
+ngõi|NG AO0 Y
+ngói|NG AO0 Y
+ngòm|NG AO0 M
+ngỏm|NG AO0 M
+ngóm|NG AO0 M
+ngon|NG AO0 NG M
+ngòn|NG AO0 NG M
+ngón|NG AO0 NG M
+ngọn|NG AO0 NG M
+ngòng|NG AO0 NG M
+ngỏng|NG AO0 NG M
+ngõng|NG AO0 NG M
+ngóng|NG AO0 NG M
+ngọng|NG AO0 NG M
+ngóp|NG AO0 P
+ngót|NG AO0 K P
+ngọt|NG AO0 K P
+ngô|NG OW0
+ngổ|NG OW0
+ngố|NG OW0
+ngộ|NG OW0
+ngốc|NG OW0 K P
+ngôi|NG OW0 Y
+ngồi|NG OW0 Y
+ngôn|NG OW0 NG M
+ngốn|NG OW0 NG M
+ngộn|NG OW0 NG M
+ngông|NG OW0 NG M
+ngồng|NG OW0 NG M
+ngỗng|NG OW0 NG M
+ngộp|NG OW0 P
+ngốt|NG OW0 K P
+ngột|NG OW0 K P
+ngơ|NG UH
+ngờ|NG UH
+ngỡ|NG UH
+ngớ|NG UH
+ngợ|NG UH
+ngơi|NG UH Y
+ngời|NG UH Y
+ngỡi|NG UH Y
+ngợi|NG UH Y
+ngợm|NG UH M
+ngớp|NG UH P
+ngợp|NG UH P
+ngớt|NG UH K
+ngu|NG UW0
+ngù|NG UW0
+ngủ|NG UW0
+ngũ|NG UW0
+ngụ|NG UW0
+nguẩy|NG W UH Y
+ngúc|NG UW0 K P
+ngục|NG UW0 K P
+ngùi|NG UW0 Y
+ngủm|NG UW0 M
+ngụm|NG UW0 M
+ngủn|NG UW0 NG M
+ngún|NG UW0 NG M
+nguôi|NG UW0 AX0 Y
+nguội|NG UW0 AX0 Y
+nguồn|NG UW0 AX0 NG
+ngụp|NG UW0 P
+ngút|NG UW0 K P
+nguy|NG W IY0
+ngụy|NG UW0 Y
+nguỵ|NG W IY0
+nguyên|NG W IY0 AX0 NG
+nguyền|NG W IY0 AX0 NG
+nguyện|NG W IY0 AX0 NG
+nguyệt|NG W IY0 AX0 K
+nguýt|NG W IY0 T
+ngừ|NG UW0
+ngữ|NG UW0
+ngự|NG UW0
+ngừa|NG UW0 AX0
+ngửa|NG UW0 AX0
+ngứa|NG UW0 AX0
+ngựa|NG UW0 AX0
+ngực|NG UW0 K
+ngửi|NG UW0 Y
+ngưng|NG UW0 NG
+ngừng|NG UW0 NG
+ngửng|NG UW0 NG
+ngước|NG UW0 AX0 K
+ngược|NG UW0 AX0 K
+ngươi|NG UW0 AX0 Y
+người|NG UW0 AX0 Y
+ngưỡng|NG UW0 AX0 NG
+ngượng|NG UW0 AX0 NG
+ngứt|NG UW0 K
+ngưu|NG UW0 W
+nha|N IY0 AE
+nhà|N IY0 AE
+nhả|N IY0 AE
+nhã|N IY0 AE
+nhá|N IY0 AE
+nhác|N IY0 AE K
+nhạc|N IY0 AE K
+nhách|N IY0 AE T
+nhai|N IY0 AE Y
+nhài|N IY0 AE Y
+nhãi|N IY0 AE Y
+nhái|N IY0 AE Y
+nhại|N IY0 AE Y
+nham|N IY0 AE M
+nhàm|N IY0 AE M
+nhảm|N IY0 AE M
+nhám|N IY0 AE M
+nhàn|N IY0 AE NG
+nhãn|N IY0 AE NG
+nhạn|N IY0 AE NG
+nhang|N IY0 AE NG
+nhãng|N IY0 AE NG
+nháng|N IY0 AE NG
+nhanh|N IY0 AE N
+nhành|N IY0 AE N
+nhảnh|N IY0 AE N
+nhánh|N IY0 AE N
+nhao|N IY0 AE W
+nhào|N IY0 AE W
+nhảo|N IY0 AE W
+nhão|N IY0 AE W
+nháo|N IY0 AE W
+nhạo|N IY0 AE W
+nháp|N IY0 AE P
+nhát|N IY0 AE T
+nhạt|N IY0 AE T
+nhau|N IY0 AA W
+nhàu|N IY0 AA W
+nhay|N IY0 AA Y
+nhày|N IY0 AA Y
+nhảy|N IY0 AA Y
+nháy|N IY0 AA Y
+nhạy|N IY0 AA Y
+nhắc|N IY0 AA K
+nhăm|N IY0 AA M
+nhằm|N IY0 AA M
+nhắm|N IY0 AA M
+nhặm|N IY0 AA M
+nhăn|N IY0 AA NG
+nhằn|N IY0 AA NG
+nhẳn|N IY0 AA NG
+nhẵn|N IY0 AA NG
+nhắn|N IY0 AA NG
+nhăng|N IY0 AA NG
+nhằng|N IY0 AA NG
+nhẳng|N IY0 AA NG
+nhắng|N IY0 AA NG
+nhắng|N IY0 AA NG
+nhặng|N IY0 AA NG
+nhắp|N IY0 AA P
+nhắt|N IY0 AA K
+nhặt|N IY0 AA K
+nhấc|N IY0 UH K
+nhâm|N IY0 UH M
+nhầm|N IY0 UH M
+nhẩm|N IY0 UH M
+nhấm|N IY0 UH M
+nhậm|N IY0 UH M
+nhân|N IY0 UH NG
+nhẫn|N IY0 UH NG
+nhấn|N IY0 UH NG
+nhận|N IY0 UH NG
+nhấp|N IY0 UH P
+nhập|N IY0 UH P
+nhất|N IY0 UH K
+nhật|N IY0 UH K
+nhâu|N IY0 UH W
+nhầu|N IY0 UH W
+nhậu|N IY0 UH W
+nhây|N IY0 UH Y
+nhầy|N IY0 UH Y
+nhẩy|N IY0 UH Y
+nhẫy|N IY0 UH Y
+nhậy|N IY0 UH Y
+nhe|N IY0 EH0
+nhè|N IY0 EH0
+nhẻ|N IY0 EH0
+nhẽ|N IY0 EH0
+nhé|N IY0 EH0
+nhẹ|N IY0 EH0
+nhem|N IY0 EH0 M
+nhèm|N IY0 EH0 M
+nhẻm|N IY0 EH0 M
+nhẹm|N IY0 EH0 M
+nhen|N IY0 EH0 NG
+nhẹn|N IY0 EH0 NG
+nheo|N IY0 EH0 OW0
+nhèo|N IY0 EH0 OW0
+nhẽo|N IY0 EH0 OW0
+nhéo|N IY0 EH0 OW0
+nhép|N IY0 EH0 P
+nhét|N IY0 EH0 T
+nhể|N IY0 EH0
+nhếch|N IY0 EH0 T
+nhệch|N IY0 EH0 T
+nhện|N IY0 EH0 N
+nhểu|N IY0 EH0 UW0
+nhi|N IY0 IY0
+nhì|N IY0 IY0
+nhỉ|N IY0 IY0
+nhĩ|N IY0 IY0
+nhí|N IY0 IY0
+nhị|N IY0 IY0
+nhích|N IY0 IY0 T
+nhiếc|N IY0 IY0 AX0 K
+nhiễm|N IY0 IY0 M
+nhiệm|N IY0 IY0 M
+nhiễn|N IY0 IY0 AX0 NG
+nhiệt|N IY0 IY0 AX0 K
+nhiêu|N IY0 IY0 AX0 W
+nhiều|N IY0 IY0 AX0 W
+nhiễu|N IY0 IY0 AX0 W
+nhím|N IY0 IY0 M
+nhìn|N IY0 IY0 N
+nhín|N IY0 IY0 N
+nhịn|N IY0 IY0 N
+nhỉnh|N IY0 IY0 N
+nhíp|N IY0 IY0 P
+nhịp|N IY0 IY0 P
+nhíu|N IY0 IY0 W
+nhịu|N IY0 IY0 W
+nho|N IY0 AO0
+nhỏ|N IY0 AO0
+nhọ|N IY0 AO0
+nhòa|N IY0 W AE
+nhoà|N IY0 W AE
+nhoai|N IY0 W AE Y
+nhoài|N IY0 W AE Y
+nhoáng|N IY0 W AE NG
+nhoáy|N IY0 W AA Y
+nhóc|N IY0 AO0 K P
+nhọc|N IY0 AO0 K P
+nhòe|N IY0 W EH0
+nhoè|N IY0 W EH0
+nhoé|N IY0 W EH0
+nhóe|N IY0 W EH0
+nhoèn|N IY0 W EH0 N
+nhoẻn|N IY0 W EH0 N
+nhoét|N IY0 W EH0 T
+nhoẹt|N IY0 W EH0 T
+nhoi|N IY0 AO0 Y
+nhói|N IY0 AO0 Y
+nhom|N IY0 AO0 M
+nhòm|N IY0 AO0 M
+nhỏm|N IY0 AO0 M
+nhóm|N IY0 AO0 M
+nhõn|N IY0 AO0 NG M
+nhón|N IY0 AO0 NG M
+nhọn|N IY0 AO0 NG M
+nhòng|N IY0 AO0 NG M
+nhỏng|N IY0 AO0 NG M
+nhóng|N IY0 AO0 NG M
+nhót|N IY0 AO0 K P
+nhọt|N IY0 AO0 K P
+nhô|N IY0 OW0
+nhổ|N IY0 OW0
+nhốc|N IY0 OW0 K P
+nhôi|N IY0 OW0 Y
+nhồi|N IY0 OW0 Y
+nhội|N IY0 OW0 Y
+nhôm|N IY0 OW0 M
+nhổm|N IY0 OW0 M
+nhộn|N IY0 OW0 NG M
+nhông|N IY0 OW0 NG M
+nhồng|N IY0 OW0 NG M
+nhổng|N IY0 OW0 NG M
+nhộng|N IY0 OW0 NG M
+nhốp|N IY0 OW0 P
+nhốt|N IY0 OW0 K P
+nhột|N IY0 OW0 K P
+nhơ|N IY0 UH
+nhờ|N IY0 UH
+nhỡ|N IY0 UH
+nhớ|N IY0 UH
+nhợ|N IY0 UH
+nhơi|N IY0 UH Y
+nhời|N IY0 UH Y
+nhởi|N IY0 UH Y
+nhờm|N IY0 UH M
+nhớm|N IY0 UH M
+nhơn|N IY0 UH NG
+nhờn|N IY0 UH NG
+nhởn|N IY0 UH NG
+nhỡn|N IY0 UH NG
+nhớn|N IY0 UH NG
+nhớp|N IY0 UH P
+nhớt|N IY0 UH K
+nhợt|N IY0 UH K
+nhu|N IY0 UW0
+nhủ|N IY0 UW0
+nhũ|N IY0 UW0
+nhú|N IY0 UW0
+nhụ|N IY0 UW0
+nhuần|N IY0 W UH NG
+nhuận|N IY0 W UH NG
+nhục|N IY0 UW0 K P
+nhui|N IY0 UW0 Y
+nhủi|N IY0 UW0 Y
+nhúi|N IY0 UW0 Y
+nhúm|N IY0 UW0 M
+nhủn|N IY0 UW0 NG M
+nhũn|N IY0 UW0 NG M
+nhún|N IY0 UW0 NG M
+nhung|N IY0 UW0 NG M
+nhũng|N IY0 UW0 NG M
+nhúng|N IY0 UW0 NG M
+nhuốc|N IY0 UW0 AX0 K
+nhuôm|N IY0 UW0 M
+nhuốm|N IY0 UW0 M
+nhuộm|N IY0 UW0 M
+nhuồn|N IY0 UW0 AX0 NG
+nhút|N IY0 UW0 K P
+nhụt|N IY0 UW0 K P
+nhụy|N IY0 UW0 Y
+nhuỵ|N IY0 W IY0
+nhuyễn|N IY0 W IY0 AX0 NG
+như|N IY0 UW0
+nhừ|N IY0 UW0
+nhử|N IY0 UW0
+nhứ|N IY0 UW0
+nhựa|N IY0 UW0 AX0
+nhức|N IY0 UW0 K
+nhưng|N IY0 UW0 NG
+những|N IY0 UW0 NG
+nhược|N IY0 UW0 AX0 K
+nhướn|N IY0 UW0 AX0 NG
+nhường|N IY0 UW0 AX0 NG
+nhướng|N IY0 UW0 AX0 NG
+nhượng|N IY0 UW0 AX0 NG
+nhứt|N IY0 UW0 K
+nhựt|N IY0 UW0 K
+ni|N IY0
+ni|N IY0
+ni-cô-tin|N IY0 K OW0 T IY0 N
+ni-ken|N IY0 K EH0 NG
+ni-lon|N IY0 L AO0 NG M
+ni-lông|N IY0 L OW0 NG M
+ni-tơ|N IY0 T UH
+ni-tơ-rat|N IY0 T UH JH AE T
+ni-tơ-rát|N IY0 T UH JH AE T
+ni-trat|N IY0 T AE T
+ni-vô|N IY0 Y OW0
+nì|N IY0
+nỉ|N IY0
+nia|N IY0 AX0
+nĩa|N IY0 AX0
+ních|N IY0 T
+nịch|N IY0 T
+niêm|N IY0 M
+niềm|N IY0 M
+niệm|N IY0 M
+niên|N IY0 AX0 NG
+niền|N IY0 AX0 NG
+niễng|N IY0 AX0 NG
+niết|N IY0 AX0 K
+niệt|N IY0 AX0 K
+niêu|N IY0 AX0 W
+niệu|N IY0 AX0 W
+nín|N IY0 N
+ninh|N IY0 N
+nịnh|N IY0 N
+níp|N IY0 P
+nít|N IY0 T
+nịt|N IY0 T
+niu-cát-xơn|N IY0 W K AE T S UH NG
+niu-tơn|N IY0 W T UH NG
+níu|N IY0 W
+no|N AO0
+nò|N AO0
+nỏ|N AO0
+nõ|N AO0
+nó|N AO0
+nọ|N AO0
+noãn|N W AE NG
+nóc|N AO0 K P
+nọc|N AO0 K P
+noi|N AO0 Y
+nòi|N AO0 Y
+nỏi|N AO0 Y
+nói|N AO0 Y
+nom|N AO0 M
+nom-mê|N AO0 M M EH0
+nòm|N AO0 M
+non|N AO0 NG M
+nõn|N AO0 NG M
+nón|N AO0 NG M
+nọn|N AO0 NG M
+nong|N AO0 NG M
+nòng|N AO0 NG M
+nóng|N AO0 NG M
+nọng|N AO0 NG M
+noong|N AO0 NG M
+nóp|N AO0 P
+nô|N OW0
+nô-en|N OW0 EH0 NG
+nô-en|N OW0 EH0 NG
+nô-vô-ca-in|N OW0 Y OW0 K AE IY0 N
+nồ|N OW0
+nổ|N OW0
+nỗ|N OW0
+nố|N OW0
+nộ|N OW0
+nốc|N OW0 K P
+nốc-ao|N OW0 K P AE W
+nôi|N OW0 Y
+nồi|N OW0 Y
+nổi|N OW0 Y
+nỗi|N OW0 Y
+nối|N OW0 Y
+nội|N OW0 Y
+nôm|N OW0 M
+nồm|N OW0 M
+nộm|N OW0 M
+nôn|N OW0 NG M
+nông|N OW0 NG M
+nông|N OW0 NG M
+nồng|N OW0 NG M
+nổng|N OW0 NG M
+nống|N OW0 NG M
+nốp|N OW0 P
+nốp|N OW0 P
+nộp|N OW0 P
+nốt|N OW0 K P
+nốt-xê|N OW0 K P S EH0
+nột|N OW0 K P
+nơ|N UH
+nơ-ron|N UH JH AO0 NG M
+nơ-tơ-rôn|N UH T UH JH OW0 NG M
+nơ-tờ-ron|N UH T UH JH AO0 NG M
+nơ-tron|N UH T AO0 NG M
+nờ|N UH
+nở|N UH
+nỡ|N UH
+nớ|N UH
+nợ|N UH
+nơi|N UH Y
+nới|N UH Y
+nơm|N UH M
+nỡm|N UH M
+nu|N UW0
+nụ|N UW0
+nủa|N UW0 AX0
+núc|N UW0 K P
+nục|N UW0 K P
+nui|N UW0 Y
+nùi|N UW0 Y
+núi|N UW0 Y
+núm|N UW0 M
+nùn|N UW0 NG M
+nung|N UW0 NG M
+nùng|N UW0 NG M
+nũng|N UW0 NG M
+núng|N UW0 NG M
+nuốc|N UW0 AX0 K
+nuộc|N UW0 AX0 K
+nuôi|N UW0 AX0 Y
+nuối|N UW0 AX0 Y
+nuốm|N UW0 M
+nuông|N UW0 AX0 NG
+nuốt|N UW0 AX0 K
+nuột|N UW0 AX0 K
+núp|N UW0 P
+nút|N UW0 K P
+nuy|N W IY0
+nư|N UW0
+nữ|N UW0
+nưa|N UW0 AX0
+nửa|N UW0 AX0
+nữa|N UW0 AX0
+nứa|N UW0 AX0
+nức|N UW0 K
+nực|N UW0 K
+nưng|N UW0 NG
+nừng|N UW0 NG
+nứng|N UW0 NG
+nựng|N UW0 NG
+nước|N UW0 AX0 K
+nược|N UW0 AX0 K
+nương|N UW0 AX0 NG
+nường|N UW0 AX0 NG
+nướng|N UW0 AX0 NG
+nứt|N UW0 K
+o|AO0
+o|AO0
+o-bo|AO0 B AO0
+o-don|AO0 Y AO0 NG M
+o-xi|AO0 S IY0
+o-xi-hoá|AO0 S IY0 HH W AE
+o-xít|AO0 S IY0 T
+o-xy|AO0 S IY0
+o-xýt|AO0 S IY0 T
+ó|AO0
+oa-lít|W AE L IY0 T
+òa|W AE
+oà|W AE
+oách|W AE T
+oạch|W AE T
+oai|W AE Y
+oải|W AE Y
+oái|W AE Y
+oan|W AE NG
+oản|W AE NG
+oán|W AE NG
+oang|W AE NG
+oanh|W AE N
+oáp|W AE P
+oát|W AE T
+oát-kế|W AE T K EH0
+oằn|W AA NG
+oắt|W AA K
+oặt|W AA K
+óc|AO0 K P
+ọc|AO0 K P
+oe|W EH0
+oẻ|W EH0
+oé|W EH0
+oẹ|W EH0
+oeo|W EH0 W
+oi|AO0 Y
+òi|AO0 Y
+ỏi|AO0 Y
+ói|AO0 Y
+ọi|AO0 Y
+om|AO0 M
+òm|AO0 M
+ỏm|AO0 M
+òn|AO0 NG M
+ong|AO0 NG M
+ỏng|AO0 NG M
+óng|AO0 NG M
+oóc|AO0 K P
+oóc-gan|AO0 K P G AE NG
+oóc-giơ|AO0 K P Y UH
+óp|AO0 P
+ót|AO0 K P
+ô|OW0
+ô|OW0
+ô-boa|OW0 B W AE
+ô-dôn|OW0 Y OW0 NG M
+ô-kê|OW0 K EH0
+ô-lim-pích|OW0 L IY0 M P IY0 T
+ô-liu|OW0 L IY0 W
+ô-mê-ga|OW0 M EH0 G AE
+ô-pê-ra|OW0 P EH0 JH AE
+ô-rê-ô-mi-xin|OW0 JH EH0 OW0 M IY0 S IY0 N
+ô-ten|OW0 T EH0 NG
+ô-tô|OW0 T OW0
+ô-tô-buýt|OW0 T OW0 B W IY0 T
+ô-tô-ca|OW0 T OW0 K AE
+ô-tô-ma-tích|OW0 T OW0 M AE T IY0 T
+ô-tô-mát|OW0 T OW0 M AE T
+ô-tô-ray|OW0 T OW0 JH AA Y
+ô-văng|OW0 Y AA NG
+ô-xi|OW0 S IY0
+ô-xít|OW0 S IY0 T
+ồ|OW0
+ổ|OW0
+ổ-líp|OW0 L IY0 P
+ố|OW0
+ốc|OW0 K P
+ộc|OW0 K P
+ôi|OW0 Y
+ổi|OW0 Y
+ối|OW0 Y
+ôm|OW0 M
+ôm-kế|OW0 M K EH0
+ôm-lét|OW0 M L EH0 T
+ốm|OW0 M
+ôn|OW0 NG M
+ồn|OW0 NG M
+ổn|OW0 NG M
+ộn|OW0 NG M
+ông|OW0 NG M
+ổng|OW0 NG M
+ống|OW0 NG M
+ốp|OW0 P
+ốp-lét|OW0 P L EH0 T
+ốp-lết|OW0 P L EH0 T
+ốp-sét|OW0 P SH EH0 T
+ốp-ti-man|OW0 P T IY0 M AE NG
+ốp-xét|OW0 P S EH0 T
+ơ|UH
+ơ-đu|UH D UW0
+ơ-rô|UH JH OW0
+ờ|UH
+ở|UH
+ớ|UH
+ợ|UH
+ơi|UH Y
+ơi-ê|UH Y EH0
+ới|UH Y
+ỡm|UH M
+ớm|UH M
+ơn|UH NG
+ớn|UH NG
+ớt|UH K
+ợt|UH K
+pa|P AE
+pa-cô|P AE K OW0
+pa-dí|P AE Y IY0
+pa-đờ-xuy|P AE D UH S W IY0
+pa-lăng|P AE L AA NG
+pa-leng|P AE L EH0 NG
+pa-lét|P AE L EH0 T
+pa-lơ-tô|P AE L UH T OW0
+pa-nen|P AE N EH0 NG
+pa-noong|P AE N AO0 NG M
+pa-nô|P AE N OW0
+pa-pi-ê|P AE P IY0 EH0
+pa-ra-bon|P AE JH AE B AO0 NG M
+pa-ra-bôn|P AE JH AE B OW0 NG M
+pa-ra-phin|P AE JH AE F IY0 N
+pa-tanh|P AE T AE N
+pa-tăng|P AE T AA NG
+pa-tê|P AE T EH0
+pa-ti-nê|P AE T IY0 N EH0
+pác-panh|P AE K P AE N
+pác-séc|P AE K SH EH0 K
+pan|P AE NG
+pan-ca|P AE NG K AE
+pan-me|P AE NG M EH0
+pan-tô|P AE NG T OW0
+panh|P AE N
+panh-xô|P AE N S OW0
+pao|P AE W
+pát-xơ-po|P AE T S UH P AO0
+păng!|P AA NG
+păng-túp|P AA NG T UW0 P
+păng-xê|P AA NG S EH0
+pe-sê-ta|P EH0 SH EH0 T AE
+péc-lông|P EH0 K L OW0 NG M
+péc-măng-ga-nát|P EH0 K M AA NG G AE N AE T
+péc-mi|P EH0 K M IY0
+pẹc|P EH0 K
+pẹc-xin|P EH0 K S IY0 N
+pen-cát-xi-lát|P EH0 NG K AE T S IY0 L AE T
+pen-xơ|P EH0 NG S UH
+pê-đa-lét|P EH0 D AE L EH0 T
+pê-đa-lô|P EH0 D AE L OW0
+pê-đan|P EH0 D AE NG
+pê-nan-ti|P EH0 N AE NG T IY0
+pê-ni-xi-lin|P EH0 N IY0 S IY0 L IY0 N
+pê-ri-xoa|P EH0 JH IY0 S W AE
+pê-rít-xoa|P EH0 JH IY0 T S W AE
+pê-sô|P EH0 SH OW0
+pha|F AE
+pha-đinh|F AE D IY0 N
+pha-lê|F AE L EH0
+phà|F AE
+phả|F AE
+phá|F AE
+phác|F AE K
+phách|F AE T
+phạch|F AE T
+phai|F AE Y
+phải|F AE Y
+phái|F AE Y
+phàm|F AE M
+phạm|F AE M
+phạm-nhe|F AE M N IY0 EH0
+phản|F AE NG
+phán|F AE NG
+phán|F AE NG
+phạn|F AE NG
+phang|F AE NG
+phảng|F AE NG
+phạng|F AE NG
+phanh|F AE N
+phao|F AE W
+phào|F AE W
+pháo|F AE W
+pháp|F AE P
+phát|F AE T
+phát-xít|F AE T S IY0 T
+phạt|F AE T
+phau|F AA W
+phay|F AA Y
+phảy|F AA Y
+phắc|F AA K
+phắc-tuya|F AA K T W IY0 AX0
+phắc-xi-min|F AA K S IY0 M IY0 N
+phăn|F AA NG
+phăng|F AA NG
+phẳng|F AA NG
+phắt|F AA K
+phẩm|F UH M
+phân|F UH NG
+phần|F UH NG
+phẩn|F UH NG
+phẫn|F UH NG
+phấn|F UH NG
+phận|F UH NG
+phập|F UH P
+phất|F UH K
+phật|F UH K
+phật|F UH K
+phẫu|F UH W
+phây|F UH Y
+phẩy|F UH Y
+phe|F EH0
+phe-pa|F EH0 P AE
+phè|F EH0
+phé|F EH0
+phéc-mơ-tuya|F EH0 K M UH T W IY0 AX0
+phẹc-mơ-tuya|F EH0 K M UH T W IY0 AX0
+phen|F EH0 NG
+phèn|F EH0 NG
+phèng|F EH0 NG
+phèo|F EH0 OW0
+phép|F EH0 P
+phét|F EH0 T
+phẹt|F EH0 T
+phê|F EH0
+phê-non|F EH0 N AO0 NG M
+phê-nô-men|F EH0 N OW0 M EH0 NG
+phế|F EH0
+phệ|F EH0
+phếch|F EH0 T
+phên|F EH0 N
+phễn|F EH0 N
+phềnh|F EH0 N
+phệnh|F EH0 N
+phết|F EH0 T
+phệt|F EH0 T
+phều|F EH0 UW0
+phễu|F EH0 UW0
+phi|F IY0
+phi-dê|F IY0 Y EH0
+phi-di-đe|F IY0 Y IY0 D EH0
+phi-la-tốp|F IY0 L AE T OW0 P
+phi-lao|F IY0 L AE W
+phi-lê|F IY0 L EH0
+phi-lô-dốp|F IY0 L OW0 Y OW0 P
+phi-lu|F IY0 L UW0
+phi-nan|F IY0 N AE NG
+phi-năng|F IY0 N AA NG
+phì|F IY0
+phỉ|F IY0
+phí|F IY0
+phị|F IY0
+phìa|F IY0 AX0
+phía|F IY0 AX0
+phịa|F IY0 AX0
+phích|F IY0 T
+phịch|F IY0 T
+phiếm|F IY0 M
+phiên|F IY0 AX0 NG
+phiền|F IY0 AX0 NG
+phiến|F IY0 AX0 NG
+phiện|F IY0 AX0 NG
+phiết|F IY0 AX0 K
+phiếu|F IY0 AX0 W
+phim|F IY0 M
+phím|F IY0 M
+phin|F IY0 N
+phình|F IY0 N
+phỉnh|F IY0 N
+phĩnh|F IY0 N
+phính|F IY0 N
+phít|F IY0 T
+phịt|F IY0 T
+phịu|F IY0 W
+pho|F AO0
+pho-mát|F AO0 M AE T
+pho-ton|F AO0 T AO0 NG M
+pho-xép|F AO0 S EH0 P
+phò|F AO0
+phó|F AO0
+phó-mát|F AO0 M AE T
+phóc|F AO0 K P
+phoi|F AO0 Y
+phòi|F AO0 Y
+phom|F AO0 M
+phong|F AO0 NG M
+phong-tên|F AO0 NG M T EH0 N
+phòng|F AO0 NG M
+phỏng|F AO0 NG M
+phóng|F AO0 NG M
+phoóc|F AO0 K P
+phoóc-môn|F AO0 K P M OW0 NG M
+phoóc-xép|F AO0 K P S EH0 P
+phoóc-xếp|F AO0 K P S EH0 P
+phót|F AO0 K P
+phọt|F AO0 K P
+phô|F OW0
+phô-mai|F OW0 M AE Y
+phô-nô|F OW0 N OW0
+phô-tô|F OW0 T OW0
+phô-tô-co-pi|F OW0 T OW0 K AO0 P IY0
+phô-tô-cóp-pi|F OW0 T OW0 K AO0 P P IY0
+phô-tô-cô-pi|F OW0 T OW0 K OW0 P IY0
+phô-tơi|F OW0 T UH Y
+phồ|F OW0
+phổ|F OW0
+phố|F OW0
+phốc|F OW0 K P
+phôi|F OW0 Y
+phổi|F OW0 Y
+phối|F OW0 Y
+phôn|F OW0 NG M
+phông|F OW0 NG M
+phông-đa-tơ|F OW0 NG M D AE T UH
+phông-xon-ne|F OW0 NG M S AO0 NG M N EH0
+phồng|F OW0 NG M
+phổng|F OW0 NG M
+phỗng|F OW0 NG M
+phộng|F OW0 NG M
+phốp|F OW0 P
+phốt|F OW0 K P
+phốt-phát|F OW0 K P F AE T
+phốt-pho|F OW0 K P F AO0
+phốt-pho-rít|F OW0 K P F AO0 JH IY0 T
+phơ|F UH
+phờ|F UH
+phờ-răng|F UH JH AA NG
+phở|F UH
+phơi|F UH Y
+phới|F UH Y
+phởn|F UH NG
+phớt|F UH K
+phu|F UW0
+phu-la|F UW0 L AE
+phu-lít|F UW0 L IY0 T
+phù|F UW0
+phủ|F UW0
+phũ|F UW0
+phú|F UW0
+phụ|F UW0
+phùa|F UW0 AX0
+phúc|F UW0 K P
+phục|F UW0 K P
+phủi|F UW0 Y
+phun|F UW0 NG M
+phùn|F UW0 NG M
+phún|F UW0 NG M
+phung|F UW0 NG M
+phùng|F UW0 NG M
+phủng|F UW0 NG M
+phúng|F UW0 NG M
+phụng|F UW0 NG M
+phụp|F UW0 P
+phút|F UW0 K P
+phụt|F UW0 K P
+phuy|F W IY0
+phứa|F UW0 AX0
+phức|F UW0 K
+phừng|F UW0 NG
+phước|F UW0 AX0 K
+phưỡn|F UW0 AX0 NG
+phướn|F UW0 AX0 NG
+phương|F UW0 AX0 NG
+phương|F UW0 AX0 NG
+phường|F UW0 AX0 NG
+phướng|F UW0 AX0 NG
+phượng|F UW0 AX0 NG
+phượu|F UW0 AX0 W
+phứt|F UW0 K
+phựt|F UW0 K
+pi|P IY0
+pi-a-nô|P IY0 AE N OW0
+pi-gia-ma|P IY0 Y AE M AE
+pi-lốt|P IY0 L OW0 K P
+pi-nhê|P IY0 N IY0 EH0
+pi-ni-xi-lin|P IY0 N IY0 S IY0 L IY0 N
+pi-pét|P IY0 P EH0 T
+pi-ra-mi-đông|P IY0 JH AE M IY0 D OW0 NG M
+pi-rít|P IY0 JH IY0 T
+píc-níc|P IY0 T N IY0 T
+pích|P IY0 T
+pích-kê|P IY0 T K EH0
+pích-ních|P IY0 T N IY0 T
+pin|P IY0 N
+ping-pong|P IY0 N P AO0 NG M
+ping-pông|P IY0 N P OW0 NG M
+pinh-pông|P IY0 N P OW0 NG M
+píp|P IY0 P
+pít|P IY0 T
+pít-tông|P IY0 T T OW0 NG M
+po-si-tron|P AO0 SH IY0 T AO0 NG M
+poa-nha|P W AE N IY0 AE
+poa-nhê|P W AE N IY0 EH0
+pom-mát|P AO0 M M AE T
+pop|P AO0 P
+pô|P OW0
+pô-dơ-mét|P OW0 Y UH M EH0 T
+pô-li-ê-ti-len|P OW0 L IY0 EH0 T IY0 L EH0 NG
+pô-li-me|P OW0 L IY0 M EH0
+pô-li-vi-ta-min|P OW0 L IY0 Y IY0 T AE M IY0 N
+pô-pe-lin|P OW0 P EH0 L IY0 N
+pô-pơ-lin|P OW0 P UH L IY0 N
+pô-rơ-tít|P OW0 JH UH T IY0 T
+pô-sét|P OW0 SH EH0 T
+pô-tát|P OW0 T AE T
+pô-xi-ông|P OW0 S IY0 OW0 NG M
+pơ-luya|P UH L W IY0 AX0
+pơ-mu|P UH M UW0
+pờ-rô-gờ-ram|P UH JH OW0 G UH JH AE M
+pu-li|P UW0 L IY0
+pua|P UW0 AX0
+pụa|P UW0 AX0
+pụa|P UW0 AX0
+puốc-boa|P UW0 AX0 K B W AE
+puốc-xăng|P UW0 AX0 K S AA NG
+puộc|P UW0 AX0 K
+puy-lơ-ve|P W IY0 L UH Y EH0
+qua|W AE
+quà|W AE
+quả|W AE
+quá|W AE
+quạ|W AE
+quác|W AE K
+quạc|W AE K
+quách|W AE T
+quạch|W AE T
+quai|W AE Y
+quài|W AE Y
+quải|W AE Y
+quái|W AE Y
+quại|W AE Y
+quan|W AE NG
+quàn|W AE NG
+quản|W AE NG
+quán|W AE NG
+quang|W AE NG
+quàng|W AE NG
+quãng|W AE NG
+quáng|W AE NG
+quạng|W AE NG
+quanh|W AE N
+quành|W AE N
+quánh|W AE N
+quạnh|W AE N
+quao|W AE W
+quào|W AE W
+quát|W AE T
+quạt|W AE T
+quáu|W AA W
+quạu|W AA W
+quay|W AA Y
+quày|W AA Y
+quảy|W AA Y
+quắc|W AA K
+quặc|W AA K
+quăm|W AA M
+quắm|W AA M
+quặm|W AA M
+quăn|W AA NG
+quằn|W AA NG
+quắn|W AA NG
+quặn|W AA NG
+quăng|W AA NG
+quẳng|W AA NG
+quặng|W AA NG
+quắp|W AA P
+quặp|W AA P
+quắt|W AA K
+quặt|W AA K
+quấc|W UH K
+quân|W UH NG
+quần|W UH NG
+quẩn|W UH NG
+quẫn|W UH NG
+quấn|W UH NG
+quận|W UH NG
+quầng|W UH NG
+quẩng|W UH NG
+quất|W UH K
+quật|W UH K
+quây|W UH Y
+quầy|W UH Y
+quẩy|W UH Y
+quẫy|W UH Y
+quấy|W UH Y
+quậy|W UH Y
+que|W EH0
+què|W EH0
+quẻ|W EH0
+qué|W EH0
+quen|W EH0 NG
+quèn|W EH0 NG
+queo|W EH0 OW0
+quèo|W EH0 OW0
+quéo|W EH0 OW0
+quẹo|W EH0 OW0
+quét|W EH0 T
+quẹt|W EH0 T
+quê|W EH0
+quế|W EH0
+quế|W EH0
+quên|W EH0 N
+quến|W EH0 N
+quện|W EH0 N
+quết|W EH0 T
+quệt|W EH0 T
+quều|W EH0 UW0
+qui|W IY0
+qui-lát|W IY0 L AE T
+quì|W IY0
+quỉ|W IY0
+quĩ|W IY0
+quí|W IY0
+quị|W IY0
+quích|W IY0 T
+quít|W IY0 T
+quịt|W IY0 T
+quốc|W OW0 K P
+quơ|W UH
+quờ|W UH
+quở|W UH
+quớ|W UH
+quới|W UH Y
+quờn|W UH NG
+quy|W IY0
+quy-lát|W IY0 L AE T
+quy-nin|W IY0 N IY0 N
+quỳ|W IY0
+quỷ|W IY0
+quỹ|W IY0
+quý|W IY0
+quỵ|W IY0
+quých|W IY0 T
+quyên|W IY0 EH0 NG
+quyền|W IY0 EH0 NG
+quyển|W IY0 EH0 NG
+quyến|W IY0 EH0 NG
+quyện|W IY0 EH0 NG
+quyết|W IY0 EH0 T
+quyệt|W IY0 EH0 T
+quỳnh|W IY0 N
+quỷnh|W IY0 N
+quýnh|W IY0 N
+quỵp|W IY0 P
+quýt|W IY0 T
+quỵt|W IY0 T
+ra|JH AE
+ra|JH AE
+ra-đa|JH AE D AE
+ra-đê|JH AE D EH0
+ra-đi|JH AE D IY0
+ra-đi-an|JH AE D IY0 AE NG
+ra-đi-om|JH AE D IY0 AO0 M
+ra-đi-ô|JH AE D IY0 OW0
+ra-đi-um|JH AE D IY0 UW0 M
+ra-đô|JH AE D OW0
+ra-gu|JH AE G UW0
+ra-két|JH AE K EH0 T
+ra-lăng-ti|JH AE L AA NG T IY0
+rà|JH AE
+rã|JH AE
+rá|JH AE
+rạ|JH AE
+rác|JH AE K
+rác|JH AE K
+rạc|JH AE K
+rách|JH AE T
+rạch|JH AE T
+rai|JH AE Y
+rải|JH AE Y
+rái|JH AE Y
+ram|JH AE M
+ram|JH AE M
+rám|JH AE M
+rạm|JH AE M
+ran|JH AE NG
+ran-đơ|JH AE NG D UH
+ràn|JH AE NG
+rán|JH AE NG
+rạn|JH AE NG
+rang|JH AE NG
+ràng|JH AE NG
+ráng|JH AE NG
+rạng|JH AE NG
+ranh|JH AE N
+rành|JH AE N
+rảnh|JH AE N
+rãnh|JH AE N
+rao|JH AE W
+rào|JH AE W
+rảo|JH AE W
+rão|JH AE W
+ráo|JH AE W
+rạo|JH AE W
+ráp|JH AE P
+rạp|JH AE P
+rát|JH AE T
+rát-tê|JH AE T T EH0
+rạt|JH AE T
+rau|JH AA W
+ray|JH AA Y
+ray|JH AA Y
+ray-ông|JH AA Y OW0 NG M
+rày|JH AA Y
+rảy|JH AA Y
+rãy|JH AA Y
+ráy|JH AA Y
+rắc|JH AA K
+rắc-co|JH AA K K AO0
+rặc|JH AA K
+răm|JH AA M
+rằm|JH AA M
+rắm|JH AA M
+rặm|JH AA M
+răn|JH AA NG
+rằn|JH AA NG
+rắn|JH AA NG
+rặn|JH AA NG
+răng|JH AA NG
+rằng|JH AA NG
+rặng|JH AA NG
+rắp|JH AA P
+rặt|JH AA K
+râm|JH UH M
+rầm|JH UH M
+rấm|JH UH M
+rậm|JH UH M
+rân|JH UH NG
+rần|JH UH NG
+rấn|JH UH NG
+rận|JH UH NG
+rấp|JH UH P
+rập|JH UH P
+rất|JH UH K
+râu|JH UH W
+rầu|JH UH W
+rây|JH UH Y
+rầy|JH UH Y
+rẩy|JH UH Y
+rẫy|JH UH Y
+re|JH EH0
+rè|JH EH0
+rẻ|JH EH0
+rẽ|JH EH0
+ré|JH EH0
+rèm|JH EH0 M
+ren|JH EH0 NG
+rèn|JH EH0 NG
+rén|JH EH0 NG
+reo|JH EH0 OW0
+rẻo|JH EH0 OW0
+réo|JH EH0 OW0
+rét|JH EH0 T
+rẹt|JH EH0 T
+rê|JH EH0
+rê-vây|JH EH0 Y UH Y
+rề-gát|JH EH0 G AE T
+rể|JH EH0
+rễ|JH EH0
+rế|JH EH0
+rệ|JH EH0
+rếch|JH EH0 T
+rêm|JH EH0 M
+rên|JH EH0 N
+rền|JH EH0 N
+rệp|JH EH0 P
+rết|JH EH0 T
+rêu|JH EH0 UW0
+rều|JH EH0 UW0
+rệu|JH EH0 UW0
+ri|JH IY0
+ri-an|JH IY0 AE NG
+ri-đô|JH IY0 D OW0
+ri-vê|JH IY0 Y EH0
+rì|JH IY0
+rỉ|JH IY0
+rí|JH IY0
+rị|JH IY0
+ria|JH IY0 AX0
+rìa|JH IY0 AX0
+rỉa|JH IY0 AX0
+rịa|JH IY0 AX0
+rích|JH IY0 T
+rích-te|JH IY0 T T EH0
+riềm|JH IY0 M
+riên|JH IY0 AX0 NG
+riêng|JH IY0 AX0 NG
+riềng|JH IY0 AX0 NG
+riết|JH IY0 AX0 K
+riệt|JH IY0 AX0 K
+riêu|JH IY0 AX0 W
+riễu|JH IY0 AX0 W
+rim|JH IY0 M
+rím|JH IY0 M
+rỉn|JH IY0 N
+rĩn|JH IY0 N
+rịn|JH IY0 N
+rinh|JH IY0 N
+rinh-ghít|JH IY0 N G IY0 T
+rinh-tê|JH IY0 N T EH0
+rình|JH IY0 N
+ríp-pê|JH IY0 P P EH0
+rít|JH IY0 T
+rịt|JH IY0 T
+riu|JH IY0 W
+rìu|JH IY0 W
+ríu|JH IY0 W
+rò|JH AO0
+rỏ|JH AO0
+rõ|JH AO0
+ró|JH AO0
+rọ|JH AO0
+róc|JH AO0 K P
+rọc|JH AO0 K P
+roi|JH AO0 Y
+ròi|JH AO0 Y
+rõi|JH AO0 Y
+rói|JH AO0 Y
+rọi|JH AO0 Y
+rom|JH AO0 M
+rom|JH AO0 M
+ròm|JH AO0 M
+róm|JH AO0 M
+ron|JH AO0 NG M
+ròn|JH AO0 NG M
+rỏn|JH AO0 NG M
+rón|JH AO0 NG M
+rọn|JH AO0 NG M
+rong|JH AO0 NG M
+ròng|JH AO0 NG M
+rỏng|JH AO0 NG M
+róng|JH AO0 NG M
+rót|JH AO0 K P
+rô|JH OW0
+rô-bi-nê|JH OW0 B IY0 N EH0
+rô-bô-tích|JH OW0 B OW0 T IY0 T
+rô-bốt|JH OW0 B OW0 K P
+rô-đa|JH OW0 D AE
+rô-đê|JH OW0 D EH0
+rô-nê-ô|JH OW0 N EH0 OW0
+rô-ti|JH OW0 T IY0
+rô-to|JH OW0 T AO0
+rồ|JH OW0
+rổ|JH OW0
+rỗ|JH OW0
+rộ|JH OW0
+rốc|JH OW0 K P
+rốc-két|JH OW0 K P K EH0 T
+rốc-kết|JH OW0 K P K EH0 T
+rộc|JH OW0 K P
+rồi|JH OW0 Y
+rổi|JH OW0 Y
+rỗi|JH OW0 Y
+rối|JH OW0 Y
+rôm|JH OW0 M
+rộm|JH OW0 M
+rổn|JH OW0 NG M
+rốn|JH OW0 NG M
+rộn|JH OW0 NG M
+rông|JH OW0 NG M
+rông-đanh|JH OW0 NG M D AE N
+rông-đen|JH OW0 NG M D EH0 NG
+rông-đền|JH OW0 NG M D EH0 N
+rông-đô|JH OW0 NG M D OW0
+rồng|JH OW0 NG M
+rỗng|JH OW0 NG M
+rống|JH OW0 NG M
+rộng|JH OW0 NG M
+rốp|JH OW0 P
+rộp|JH OW0 P
+rốt|JH OW0 K P
+rơ|JH UH
+rơ-le|JH UH L EH0
+rơ-măm|JH UH M AA M
+rơ-moóc|JH UH M AO0 K P
+rơ-mông-toa|JH UH M OW0 NG M T W AE
+rơ-tua|JH UH T UW0 AX0
+rờ|JH UH
+rờ-com-măng-đê|JH UH K AO0 M M AA NG D EH0
+rờ-moọc|JH UH M AO0 K P
+rờ-sạc|JH UH SH AE K
+rờ-séc|JH UH SH EH0 K
+rờ-sét|JH UH SH EH0 T
+rờ-tờ-rét|JH UH T UH JH EH0 T
+rờ-tua|JH UH T UW0 AX0
+rờ-ve|JH UH Y EH0
+rở|JH UH
+rỡ|JH UH
+rớ|JH UH
+rợ|JH UH
+rơi|JH UH Y
+rời|JH UH Y
+rợi|JH UH Y
+rơm|JH UH M
+rờm|JH UH M
+rởm|JH UH M
+rớm|JH UH M
+rợm|JH UH M
+rơn|JH UH NG
+rơn-ghen|JH UH NG G EH0 NG
+rờn|JH UH NG
+rởn|JH UH NG
+rỡn|JH UH NG
+rợn|JH UH NG
+rớp|JH UH P
+rợp|JH UH P
+rớt|JH UH K
+rớt-xo|JH UH K S AO0
+rợt|JH UH K
+ru|JH UW0
+ru|JH UW0
+ru-bi|JH UW0 B IY0
+ru-lét|JH UW0 L EH0 T
+ru-lô|JH UW0 L OW0
+ru-pi|JH UW0 P IY0
+ru-pi-a|JH UW0 P IY0 AE
+rù|JH UW0
+rủ|JH UW0
+rũ|JH UW0
+rú|JH UW0
+rua|JH UW0 AX0
+rùa|JH UW0 AX0
+rủa|JH UW0 AX0
+rũa|JH UW0 AX0
+rúc|JH UW0 K P
+rục|JH UW0 K P
+rục|JH UW0 K P
+ruê|JH W EH0
+rui|JH UW0 Y
+rủi|JH UW0 Y
+rụi|JH UW0 Y
+rum|JH UW0 M
+rum-ba|JH UW0 M B AE
+rùm|JH UW0 M
+rúm|JH UW0 M
+rụm|JH UW0 M
+run|JH UW0 NG M
+rùn|JH UW0 NG M
+rủn|JH UW0 NG M
+rún|JH UW0 NG M
+rung|JH UW0 NG M
+rùng|JH UW0 NG M
+rúng|JH UW0 NG M
+rụng|JH UW0 NG M
+ruốc|JH UW0 AX0 K
+ruồi|JH UW0 AX0 Y
+ruổi|JH UW0 AX0 Y
+ruối|JH UW0 AX0 Y
+ruộm|JH UW0 M
+ruồng|JH UW0 AX0 NG
+ruỗng|JH UW0 AX0 NG
+ruộng|JH UW0 AX0 NG
+ruột|JH UW0 AX0 K
+rúp|JH UW0 P
+rụp|JH UW0 P
+rút|JH UW0 K P
+rụt|JH UW0 K P
+ruy-băng|JH W IY0 B AA NG
+ruy-bờ-rích|JH W IY0 B UH JH IY0 T
+rư|JH UW0
+rửa|JH UW0 AX0
+rữa|JH UW0 AX0
+rứa|JH UW0 AX0
+rựa|JH UW0 AX0
+rức|JH UW0 K
+rực|JH UW0 K
+rưng|JH UW0 NG
+rừng|JH UW0 NG
+rựng|JH UW0 NG
+rước|JH UW0 AX0 K
+rươi|JH UW0 AX0 Y
+rưởi|JH UW0 AX0 Y
+rưỡi|JH UW0 AX0 Y
+rưới|JH UW0 AX0 Y
+rượi|JH UW0 AX0 Y
+rườm|JH UW0 M
+rướm|JH UW0 M
+rướn|JH UW0 AX0 NG
+rượn|JH UW0 AX0 NG
+rương|JH UW0 AX0 NG
+rường|JH UW0 AX0 NG
+rượng|JH UW0 AX0 NG
+rượt|JH UW0 AX0 K
+rượu|JH UW0 AX0 W
+rứt|JH UW0 K
+sa|SH AE
+sa-bô|SH AE B OW0
+sa-bô-chê|SH AE B OW0 KH EH0
+sa-ca-rin|SH AE K AE JH IY0 N
+sa-ca-rô-da|SH AE K AE JH OW0 Y AE
+sa-lát|SH AE L AE T
+sa-lông|SH AE L OW0 NG M
+sa-tanh|SH AE T AE N
+sa-ten|SH AE T EH0 NG
+sa-van|SH AE Y AE NG
+sà|SH AE
+sà-lan|SH AE L AE NG
+sà-lúp|SH AE L UW0 P
+sả|SH AE
+sã|SH AE
+sá|SH AE
+sạ|SH AE
+sác|SH AE K
+sác-giơ|SH AE K Y UH
+sạc|SH AE K
+sách|SH AE T
+sách|SH AE T
+sạch|SH AE T
+sai|SH AE Y
+sai|SH AE Y
+sài|SH AE Y
+sải|SH AE Y
+sãi|SH AE Y
+sái|SH AE Y
+sam|SH AE M
+sam-pô|SH AE M P OW0
+sàm|SH AE M
+sạm|SH AE M
+san|SH AE NG
+san-pết|SH AE NG P EH0 T
+sàn|SH AE NG
+sản|SH AE NG
+sán|SH AE NG
+sạn|SH AE NG
+sang|SH AE NG
+sàng|SH AE NG
+sảng|SH AE NG
+sáng|SH AE NG
+sanh|SH AE N
+sành|SH AE N
+sảnh|SH AE N
+sánh|SH AE N
+sao|SH AE W
+sào|SH AE W
+sảo|SH AE W
+sáo|SH AE W
+sạo|SH AE W
+sáp|SH AE P
+sạp|SH AE P
+sát|SH AE T
+sạt|SH AE T
+sau|SH AA W
+sáu|SH AA W
+say|SH AA Y
+sảy|SH AA Y
+sắc|SH AA K
+sắc-xô|SH AA K S OW0
+sắc-xô-phôn|SH AA K S OW0 F OW0 NG M
+sặc|SH AA K
+săm|SH AA M
+săm-banh|SH AA M B AE N
+săm-pa-nhơ|SH AA M P AE N IY0 UH
+săm-pan|SH AA M P AE NG
+sắm|SH AA M
+sặm|SH AA M
+săn|SH AA NG
+sẵn|SH AA NG
+sắn|SH AA NG
+săng|SH AA NG
+săng-chi-ê|SH AA NG KH IY0 EH0
+săng-đay|SH AA NG D AA Y
+săng-ta|SH AA NG T AE
+săng-tan|SH AA NG T AE NG
+sắng|SH AA NG
+sắp|SH AA P
+sắt|SH AA K
+sặt|SH AA K
+sâm|SH UH M
+sâm-banh|SH UH M B AE N
+sầm|SH UH M
+sẩm|SH UH M
+sẫm|SH UH M
+sấm|SH UH M
+sậm|SH UH M
+sân|SH UH NG
+sần|SH UH NG
+sẩn|SH UH NG
+sấn|SH UH NG
+sâng|SH UH NG
+sấp|SH UH P
+sập|SH UH P
+sất|SH UH K
+sật|SH UH K
+sâu|SH UH W
+sầu|SH UH W
+sấu|SH UH W
+sây|SH UH Y
+sầy|SH UH Y
+sẩy|SH UH Y
+sấy|SH UH Y
+sậy|SH UH Y
+se|SH EH0
+se-ken|SH EH0 K EH0 NG
+sè|SH EH0
+sẻ|SH EH0
+sẽ|SH EH0
+sẹ|SH EH0
+séc|SH EH0 K
+sém|SH EH0 M
+sen|SH EH0 NG
+sen|SH EH0 NG
+sẻn|SH EH0 NG
+seo|SH EH0 OW0
+sẹo|SH EH0 OW0
+sẹp|SH EH0 P
+sét|SH EH0 T
+sét-ti|SH EH0 T T IY0
+sê-đa|SH EH0 D AE
+sê-ri|SH EH0 JH IY0
+sề|SH EH0
+sể|SH EH0
+sễ|SH EH0
+sệ|SH EH0
+sên|SH EH0 N
+sến|SH EH0 N
+sênh|SH EH0 N
+sểnh|SH EH0 N
+sếp|SH EH0 P
+sệp|SH EH0 P
+sệt|SH EH0 T
+sêu|SH EH0 UW0
+sều|SH EH0 UW0
+sếu|SH EH0 UW0
+si|SH IY0
+si|SH IY0
+si-đa|SH IY0 D AE
+si-li-cát|SH IY0 L IY0 K AE T
+si-lic|SH IY0 L IY0 T
+si-líc|SH IY0 L IY0 T
+si-lích|SH IY0 L IY0 T
+si-linh|SH IY0 L IY0 N
+si-mi-li|SH IY0 M IY0 L IY0
+sì|SH IY0
+sì-cút|SH IY0 K UW0 K P
+sỉ|SH IY0
+sĩ|SH IY0
+sị|SH IY0
+sia|SH IY0 AX0
+sỉa|SH IY0 AX0
+sịa|SH IY0 AX0
+sịa|SH IY0 AX0
+sic|SH IY0 T
+síc|SH IY0 T
+sích-ma|SH IY0 T M AE
+sịch|SH IY0 T
+siếc|SH IY0 AX0 K
+siễn|SH IY0 AX0 NG
+siêng|SH IY0 AX0 NG
+siểng|SH IY0 AX0 NG
+siết|SH IY0 AX0 K
+siêu|SH IY0 AX0 W
+sim|SH IY0 M
+sin|SH IY0 N
+sinh|SH IY0 N
+sình|SH IY0 N
+sỉnh|SH IY0 N
+sính|SH IY0 N
+sít|SH IY0 T
+sịt|SH IY0 T
+siu|SH IY0 W
+so|SH AO0
+sò|SH AO0
+sỏ|SH AO0
+sọ|SH AO0
+soái|SH W AE Y
+soạn|SH W AE NG
+soát|SH W AE T
+soạt|SH W AE T
+sóc|SH AO0 K P
+sóc-cảnh|SH AO0 K P K AE N
+sọc|SH AO0 K P
+soi|SH AO0 Y
+sòi|SH AO0 Y
+sòi|SH AO0 Y
+sỏi|SH AO0 Y
+sỏi|SH AO0 Y
+sõi|SH AO0 Y
+sói|SH AO0 Y
+som|SH AO0 M
+sọm|SH AO0 M
+son|SH AO0 NG M
+son-nê|SH AO0 NG M N EH0
+són|SH AO0 NG M
+song|SH AO0 NG M
+sòng|SH AO0 NG M
+sõng|SH AO0 NG M
+sóng|SH AO0 NG M
+sóoc|SH AO0 K P
+soóc|SH AO0 K P
+soóc-ti|SH AO0 K P T IY0
+soong|SH AO0 NG M
+sót|SH AO0 K P
+sọt|SH AO0 K P
+sô|SH OW0
+sô-cô-la|SH OW0 K OW0 L AE
+sô-de|SH OW0 Y EH0
+sô-đa|SH OW0 D AE
+sô-lít|SH OW0 L IY0 T
+sô-lô|SH OW0 L OW0
+sô-nát|SH OW0 N AE T
+sô-pha|SH OW0 F AE
+sô-vanh|SH OW0 Y AE N
+sồ|SH OW0
+sổ|SH OW0
+sỗ|SH OW0
+số|SH OW0
+sốc|SH OW0 K P
+sộc|SH OW0 K P
+sôi|SH OW0 Y
+sồi|SH OW0 Y
+sổi|SH OW0 Y
+sông|SH OW0 NG M
+sồng|SH OW0 NG M
+sổng|SH OW0 NG M
+sống|SH OW0 NG M
+sốp-phơ|SH OW0 P F UH
+sộp|SH OW0 P
+sốt|SH OW0 K P
+sột|SH OW0 K P
+sơ|SH UH
+sơ-mi|SH UH M IY0
+sơ-mi-dét|SH UH M IY0 Y EH0 T
+sơ-va-lê|SH UH Y AE L EH0
+sơ-vi-ốt|SH UH Y IY0 OW0 K P
+sơ-vơ|SH UH Y UH
+sờ|SH UH
+sở|SH UH
+sớ|SH UH
+sợ|SH UH
+sởi|SH UH Y
+sới|SH UH Y
+sợi|SH UH Y
+sớm|SH UH M
+sơn|SH UH NG
+sờn|SH UH NG
+sởn|SH UH NG
+sớt|SH UH K
+su|SH UW0
+su-le|SH UW0 L EH0
+su-lơ|SH UW0 L UH
+su-su|SH UW0 SH UW0
+sù|SH UW0
+sủ|SH UW0
+sú|SH UW0
+sú-ba-giăng|SH UW0 B AE Y AA NG
+sụ|SH UW0
+sủa|SH UW0 AX0
+suất|SH W UH K
+súc|SH UW0 K P
+súc-cù-la|SH UW0 K P K UW0 L AE
+sục|SH UW0 K P
+sui|SH UW0 Y
+sùi|SH UW0 Y
+sủi|SH UW0 Y
+sụm|SH UW0 M
+sun|SH UW0 NG M
+sun-pha-mít|SH UW0 NG M F AE M IY0 T
+sun-phát|SH UW0 NG M F AE T
+sun-phu-rích|SH UW0 NG M F UW0 JH IY0 T
+sun-phua|SH UW0 NG M F UW0 AX0
+sún|SH UW0 NG M
+sụn|SH UW0 NG M
+sung|SH UW0 NG M
+sùng|SH UW0 NG M
+sũng|SH UW0 NG M
+súng|SH UW0 NG M
+suối|SH UW0 AX0 Y
+suôn|SH UW0 AX0 NG
+suông|SH UW0 AX0 NG
+suốt|SH UW0 AX0 K
+súp|SH UW0 P
+súp-de|SH UW0 P Y EH0
+súp-lơ|SH UW0 P L UH
+sụp|SH UW0 P
+sút|SH UW0 K P
+sụt|SH UW0 K P
+suy|SH W IY0
+súy|SH UW0 Y
+suý|SH W IY0
+suyễn|SH W IY0 AX0 NG
+suýt|SH W IY0 T
+suỵt|SH W IY0 T
+sư|SH UW0
+sử|SH UW0
+sứ|SH UW0
+sự|SH UW0
+sưa|SH UW0 AX0
+sửa|SH UW0 AX0
+sữa|SH UW0 AX0
+sứa|SH UW0 AX0
+sức|SH UW0 K
+sực|SH UW0 K
+sưng|SH UW0 NG
+sừng|SH UW0 NG
+sửng|SH UW0 NG
+sững|SH UW0 NG
+sựng|SH UW0 NG
+sươi|SH UW0 AX0 Y
+sưởi|SH UW0 AX0 Y
+sườn|SH UW0 AX0 NG
+sương|SH UW0 AX0 NG
+sướng|SH UW0 AX0 NG
+sượng|SH UW0 AX0 NG
+sướt|SH UW0 AX0 K
+sượt|SH UW0 AX0 K
+sứt|SH UW0 K
+sựt|SH UW0 K
+sưu|SH UW0 W
+sửu|SH UW0 W
+ta|T AE
+ta-bu|T AE B UW0
+ta-ca|T AE K AE
+ta-lông|T AE L OW0 NG M
+ta-luy|T AE L W IY0
+ta-lư|T AE L UW0
+ta-nanh|T AE N AE N
+ta-nin|T AE N IY0 N
+ta-pi|T AE P IY0
+ta-rô|T AE JH OW0
+ta-tăng|T AE T AA NG
+ta-tu|T AE T UW0
+tà|T AE
+tà-ôi|T AE OW0 Y
+tả|T AE
+tã|T AE
+tá|T AE
+tạ|T AE
+tác|T AE K
+tác-tuýp|T AE K T W IY0 P
+tạc|T AE K
+tách|T AE T
+tạch|T AE T
+tai|T AE Y
+tai-ga|T AE Y G AE
+tài|T AE Y
+tải|T AE Y
+tãi|T AE Y
+tái|T AE Y
+tại|T AE Y
+tam|T AE M
+tám|T AE M
+tạm|T AE M
+tan|T AE NG
+tàn|T AE NG
+tản|T AE NG
+tán|T AE NG
+tang|T AE NG
+tàng|T AE NG
+tảng|T AE NG
+táng|T AE NG
+tạng|T AE NG
+tạng-miến|T AE NG M IY0 AX0 NG
+tanh|T AE N
+tanh-ban|T AE N B AE NG
+tánh|T AE N
+tạnh|T AE N
+tao|T AE W
+tảo|T AE W
+táo|T AE W
+tạo|T AE W
+táp|T AE P
+táp-lô|T AE P L OW0
+tạp|T AE P
+tạp-dề|T AE P Y EH0
+tát|T AE T
+tạt|T AE T
+tau|T AA W
+tàu|T AA W
+táu|T AA W
+tay|T AA Y
+tay-ơ|T AA Y UH
+tày|T AA Y
+tày|T AA Y
+tày-nùng|T AA Y N UW0 NG M
+tày-thái|T AA Y T AE Y
+táy|T AA Y
+tắc|T AA K
+tắc-te|T AA K T EH0
+tắc-tích|T AA K T IY0 T
+tắc-xê|T AA K S EH0
+tắc-xi|T AA K S IY0
+tăm|T AA M
+tăm-bông|T AA M B OW0 NG M
+tăm-pông|T AA M P OW0 NG M
+tằm|T AA M
+tắm|T AA M
+tăng|T AA NG
+tăng-bo|T AA NG B AO0
+tăng-đơ|T AA NG D UH
+tăng-gô|T AA NG G OW0
+tăng-mo|T AA NG M AO0
+tăng-phô|T AA NG F OW0
+tăng-phú|T AA NG F UW0
+tăng-sê|T AA NG SH EH0
+tăng-sông|T AA NG SH OW0 NG M
+tăng-xê|T AA NG S EH0
+tăng-xông|T AA NG S OW0 NG M
+tăng-xương|T AA NG S UW0 AX0 NG
+tằng|T AA NG
+tặng|T AA NG
+tắp|T AA P
+tắt|T AA K
+tấc|T UH K
+tâm|T UH M
+tầm|T UH M
+tẩm|T UH M
+tấm|T UH M
+tân|T UH NG
+tần|T UH NG
+tẩn|T UH NG
+tấn|T UH NG
+tận|T UH NG
+tâng|T UH NG
+tầng|T UH NG
+tấp|T UH P
+tập|T UH P
+tất|T UH K
+tật|T UH K
+tâu|T UH W
+tầu|T UH W
+tẩu|T UH W
+tấu|T UH W
+tậu|T UH W
+tây|T UH Y
+tây-nam|T UH Y N AE M
+tầy|T UH Y
+tẩy|T UH Y
+tấy|T UH Y
+te|T EH0
+tè|T EH0
+tẻ|T EH0
+tẽ|T EH0
+té|T EH0
+téc|T EH0 K
+téc-gan|T EH0 K G AE NG
+téc-mốt|T EH0 K M OW0 K P
+tẹc|T EH0 K
+tem|T EH0 M
+tém|T EH0 M
+ten|T EH0 NG
+ten-nít|T EH0 NG N IY0 T
+tẽn|T EH0 NG
+teo|T EH0 OW0
+tèo|T EH0 OW0
+tẻo|T EH0 OW0
+téo|T EH0 OW0
+tẹo|T EH0 OW0
+tép|T EH0 P
+tét|T EH0 T
+tẹt|T EH0 T
+tê|T EH0
+tê-lê|T EH0 L EH0
+tê-lê-gam|T EH0 L EH0 G AE M
+tê-lê-phon|T EH0 L EH0 F AO0 NG M
+tê-lê-phôn|T EH0 L EH0 F OW0 NG M
+tê-lê-típ|T EH0 L EH0 T IY0 P
+tê-lếc|T EH0 L EH0 T
+tê-lếch|T EH0 L EH0 T
+tê-ta-nốt|T EH0 T AE N OW0 K P
+tê-ta-xi-lin|T EH0 T AE S IY0 L IY0 N
+tê-tơ-ra-xi-lin|T EH0 T UH JH AE S IY0 L IY0 N
+tề|T EH0
+tễ|T EH0
+tế|T EH0
+tệ|T EH0
+tếch|T EH0 T
+têm|T EH0 M
+tên|T EH0 N
+tênh|T EH0 N
+tềnh|T EH0 N
+tệp|T EH0 P
+têt|T EH0 T
+tết|T EH0 T
+tếu|T EH0 UW0
+tha|T AE
+thà|T AE
+thả|T AE
+thá|T AE
+thác|T AE K
+thách|T AE T
+thạch|T AE T
+thai|T AE Y
+thải|T AE Y
+thái|T AE Y
+thái|T AE Y
+tham|T AE M
+thàm|T AE M
+thảm|T AE M
+thám|T AE M
+than|T AE NG
+thang|T AE NG
+thảng|T AE NG
+tháng|T AE NG
+tháng|T AE NG
+thanh|T AE N
+thanh|T AE N
+thành|T AE N
+thánh|T AE N
+thạnh|T AE N
+thao|T AE W
+thào|T AE W
+thảo|T AE W
+tháo|T AE W
+thạo|T AE W
+tháp|T AE P
+thạp|T AE P
+thau|T AA W
+tháu|T AA W
+thay|T AA Y
+thày|T AA Y
+thảy|T AA Y
+thăm|T AA M
+thẳm|T AA M
+thắm|T AA M
+thăn|T AA NG
+thăng|T AA NG
+thằng|T AA NG
+thẳng|T AA NG
+thắng|T AA NG
+thắng|T AA NG
+thặng|T AA NG
+thắp|T AA P
+thắt|T AA K
+thâm|T UH M
+thầm|T UH M
+thẩm|T UH M
+thẫm|T UH M
+thấm|T UH M
+thậm|T UH M
+thân|T UH NG
+thần|T UH NG
+thận|T UH NG
+thấp|T UH P
+thập|T UH P
+thất|T UH K
+thật|T UH K
+thâu|T UH W
+thầu|T UH W
+thẩu|T UH W
+thấu|T UH W
+thây|T UH Y
+thầy|T UH Y
+thẩy|T UH Y
+thấy|T UH Y
+the|T EH0
+thè|T EH0
+thẻ|T EH0
+thé|T EH0
+thèm|T EH0 M
+then|T EH0 NG
+thẹn|T EH0 NG
+theo|T EH0 OW0
+thẻo|T EH0 OW0
+thẹo|T EH0 OW0
+thép|T EH0 P
+thẹp|T EH0 P
+thét|T EH0 T
+thê|T EH0
+thê-ta|T EH0 T AE
+thề|T EH0
+thể|T EH0
+thế|T EH0
+thếch|T EH0 T
+thêm|T EH0 M
+thềm|T EH0 M
+thếp|T EH0 P
+thết|T EH0 T
+thêu|T EH0 UW0
+thi|T IY0
+thì|T IY0
+thí|T IY0
+thị|T IY0
+thia|T IY0 AX0
+thìa|T IY0 AX0
+thích|T IY0 T
+thịch|T IY0 T
+thiếc|T IY0 AX0 K
+thiềm|T IY0 M
+thiểm|T IY0 M
+thiên|T IY0 AX0 NG
+thiền|T IY0 AX0 NG
+thiển|T IY0 AX0 NG
+thiến|T IY0 AX0 NG
+thiện|T IY0 AX0 NG
+thiêng|T IY0 AX0 NG
+thiếp|T IY0 P
+thiệp|T IY0 P
+thiết|T IY0 AX0 K
+thiệt|T IY0 AX0 K
+thiêu|T IY0 AX0 W
+thiều|T IY0 AX0 W
+thiểu|T IY0 AX0 W
+thiếu|T IY0 AX0 W
+thím|T IY0 M
+thìn|T IY0 N
+thinh|T IY0 N
+thình|T IY0 N
+thỉnh|T IY0 N
+thính|T IY0 N
+thịnh|T IY0 N
+thíp|T IY0 P
+thít|T IY0 T
+thịt|T IY0 T
+thiu|T IY0 W
+thìu|T IY0 W
+thỉu|T IY0 W
+tho|T AO0
+thò|T AO0
+thỏ|T AO0
+thó|T AO0
+thọ|T AO0
+thoa|T W AE
+thòa|T W AE
+thoà|T W AE
+thoả|T W AE
+thỏa|T W AE
+thoải|T W AE Y
+thoái|T W AE Y
+thoại|T W AE Y
+thoàn|T W AE NG
+thoảng|T W AE NG
+thoáng|T W AE NG
+thoát|T W AE T
+thoạt|T W AE T
+thoắng|T W AA NG
+thoắt|T W AA K
+thóc|T AO0 K P
+thọc|T AO0 K P
+thoi|T AO0 Y
+thòi|T AO0 Y
+thỏi|T AO0 Y
+thói|T AO0 Y
+thòm|T AO0 M
+thỏm|T AO0 M
+thon|T AO0 NG M
+thòng|T AO0 NG M
+thõng|T AO0 NG M
+thóp|T AO0 P
+thót|T AO0 K P
+thọt|T AO0 K P
+thô|T OW0
+thồ|T OW0
+thổ|T OW0
+thổ|T OW0
+thố|T OW0
+thốc|T OW0 K P
+thộc|T OW0 K P
+thôi|T OW0 Y
+thồi|T OW0 Y
+thổi|T OW0 Y
+thối|T OW0 Y
+thôn|T OW0 NG M
+thồn|T OW0 NG M
+thốn|T OW0 NG M
+thộn|T OW0 NG M
+thông|T OW0 NG M
+thống|T OW0 NG M
+thộp|T OW0 P
+thốt|T OW0 K P
+thơ|T UH
+thờ|T UH
+thở|T UH
+thớ|T UH
+thợ|T UH
+thơi|T UH Y
+thời|T UH Y
+thơm|T UH M
+thớt|T UH K
+thu|T UW0
+thu-lao|T UW0 L AE W
+thù|T UW0
+thủ|T UW0
+thú|T UW0
+thụ|T UW0
+thua|T UW0 AX0
+thùa|T UW0 AX0
+thủa|T UW0 AX0
+thuần|T W UH NG
+thuẫn|T W UH NG
+thuận|T W UH NG
+thuật|T W UH K
+thúc|T UW0 K P
+thục|T UW0 K P
+thuê|T W EH0
+thuế|T W EH0
+thui|T UW0 Y
+thúi|T UW0 Y
+thụi|T UW0 Y
+thum|T UW0 M
+thủm|T UW0 M
+thun|T UW0 NG M
+thung|T UW0 NG M
+thùng|T UW0 NG M
+thủng|T UW0 NG M
+thũng|T UW0 NG M
+thúng|T UW0 NG M
+thụng|T UW0 NG M
+thuốc|T UW0 AX0 K
+thuộc|T UW0 AX0 K
+thuội|T UW0 AX0 Y
+thuôn|T UW0 AX0 NG
+thuồn|T UW0 AX0 NG
+thuỗn|T UW0 AX0 NG
+thuốn|T UW0 AX0 NG
+thuổng|T UW0 AX0 NG
+thuở|T UW0 AX0
+thụp|T UW0 P
+thút|T UW0 K P
+thụt|T UW0 K P
+thuỳ|T W IY0
+thùy|T UW0 Y
+thuỷ|T W IY0
+thủy|T UW0 Y
+thuý|T W IY0
+thuỵ|T W IY0
+thuyên|T W IY0 AX0 NG
+thuyền|T W IY0 AX0 NG
+thuyết|T W IY0 AX0 K
+thư|T UW0
+thừ|T UW0
+thử|T UW0
+thứ|T UW0
+thưa|T UW0 AX0
+thừa|T UW0 AX0
+thửa|T UW0 AX0
+thức|T UW0 K
+thực|T UW0 K
+thưng|T UW0 NG
+thừng|T UW0 NG
+thửng|T UW0 NG
+thước|T UW0 AX0 K
+thười|T UW0 AX0 Y
+thưỡi|T UW0 AX0 Y
+thưỡn|T UW0 AX0 NG
+thương|T UW0 AX0 NG
+thương|T UW0 AX0 NG
+thường|T UW0 AX0 NG
+thưởng|T UW0 AX0 NG
+thướng|T UW0 AX0 NG
+thượng|T UW0 AX0 NG
+thượt|T UW0 AX0 K
+ti|T IY0
+ti|T IY0
+ti-cô|T IY0 K OW0
+ti-gôn|T IY0 G OW0 NG M
+ti-pô|T IY0 P OW0
+ti-ra|T IY0 JH AE
+ti-tan|T IY0 T AE NG
+ti-vi|T IY0 Y IY0
+tì|T IY0
+tỉ|T IY0
+tĩ|T IY0
+tí|T IY0
+tị|T IY0
+tia|T IY0 AX0
+tia-bu-sông|T IY0 AX0 B UW0 SH OW0 NG M
+tia-ra|T IY0 AX0 JH AE
+tỉa|T IY0 AX0
+tía|T IY0 AX0
+tích|T IY0 T
+tích|T IY0 T
+tích-kê|T IY0 T K EH0
+tích-tắc|T IY0 T T AA K
+tịch|T IY0 T
+tiếc|T IY0 AX0 K
+tiệc|T IY0 AX0 K
+tiêm|T IY0 M
+tiêm|T IY0 M
+tiềm|T IY0 M
+tiếm|T IY0 M
+tiệm|T IY0 M
+tiên|T IY0 AX0 NG
+tiền|T IY0 AX0 NG
+tiễn|T IY0 AX0 NG
+tiến|T IY0 AX0 NG
+tiện|T IY0 AX0 NG
+tiếng|T IY0 AX0 NG
+tiếp|T IY0 P
+tiệp|T IY0 P
+tiết|T IY0 AX0 K
+tiệt|T IY0 AX0 K
+tiêu|T IY0 AX0 W
+tiều|T IY0 AX0 W
+tiểu|T IY0 AX0 W
+tiễu|T IY0 AX0 W
+tim|T IY0 M
+tìm|T IY0 M
+tím|T IY0 M
+tin|T IY0 N
+tĩn|T IY0 N
+tín|T IY0 N
+tinh|T IY0 N
+tình|T IY0 N
+tỉnh|T IY0 N
+tĩnh|T IY0 N
+tính|T IY0 N
+tịnh|T IY0 N
+típ|T IY0 P
+tít|T IY0 T
+tít-xuy|T IY0 T S W IY0
+tịt|T IY0 T
+tiu|T IY0 W
+tíu|T IY0 W
+to|T AO0
+to-nô|T AO0 N OW0
+tò-he|T AO0 HH EH0
+tỏ|T AO0
+tó|T AO0
+toa|T W AE
+toa-lét|T W AE L EH0 T
+toà|T W AE
+tòa|T W AE
+toả|T W AE
+tỏa|T W AE
+toá|T W AE
+toác|T W AE K
+toạc|T W AE K
+toài|T W AE Y
+toại|T W AE Y
+toan|T W AE NG
+toàn|T W AE NG
+toán|T W AE NG
+toang|T W AE NG
+toáng|T W AE NG
+toát|T W AE T
+toáy|T W AA Y
+tóc|T AO0 K P
+toe|T W EH0
+tòe|T W EH0
+toè|T W EH0
+tỏe|T W EH0
+toẻ|T W EH0
+toẽ|T W EH0
+toé|T W EH0
+tóe|T W EH0
+toét|T W EH0 T
+toẹt|T W EH0 T
+toi|T AO0 Y
+tòi|T AO0 Y
+tỏi|T AO0 Y
+tói|T AO0 Y
+tom|T AO0 M
+tòm|T AO0 M
+tõm|T AO0 M
+tóm|T AO0 M
+ton-nô|T AO0 NG M N OW0
+tong|T AO0 NG M
+tòng|T AO0 NG M
+tỏng|T AO0 NG M
+tọng|T AO0 NG M
+toóc|T AO0 K P
+toóc-si|T AO0 K P SH IY0
+top|T AO0 P
+tóp|T AO0 P
+tọp|T AO0 P
+tót|T AO0 K P
+tọt|T AO0 K P
+tô|T OW0
+tô-giơ|T OW0 Y UH
+tô-mát|T OW0 M AE T
+tô-nô|T OW0 N OW0
+tô-pô|T OW0 P OW0
+tô-pô-học|T OW0 P OW0 HH AO0 K P
+tô-tem|T OW0 T EH0 M
+tồ|T OW0
+tổ|T OW0
+tố|T OW0
+tộ|T OW0
+tốc|T OW0 K P
+tốc-kê|T OW0 K P K EH0
+tộc|T OW0 K P
+tôi|T OW0 Y
+tồi|T OW0 Y
+tối|T OW0 Y
+tội|T OW0 Y
+tôm|T OW0 M
+tôm-bô-la|T OW0 M B OW0 L AE
+tôn|T OW0 NG M
+tồn|T OW0 NG M
+tổn|T OW0 NG M
+tốn|T OW0 NG M
+tông|T OW0 NG M
+tông-đơ|T OW0 NG M D UH
+tổng|T OW0 NG M
+tống|T OW0 NG M
+tống|T OW0 NG M
+tốp|T OW0 P
+tốt|T OW0 K P
+tột|T OW0 K P
+tơ|T UH
+tơ-hung|T UH HH UW0 NG M
+tơ-lô|T UH L OW0
+tơ-năng|T UH N AA NG
+tơ-riêng|T UH JH IY0 AX0 NG
+tơ-ring|T UH JH IY0 N
+tơ-rớt|T UH JH UH K
+tơ-rưng|T UH JH UW0 NG
+tờ|T UH
+tờ-ra-côm|T UH JH AE K OW0 M
+tờ-ram|T UH JH AE M
+tờ-rắc|T UH JH AA K
+tờ-răng-xi-to|T UH JH AA NG S IY0 T AO0
+tờ-ren-cốt|T UH JH EH0 NG K OW0 K P
+tờ-rô|T UH JH OW0
+tờ-rớt|T UH JH UH K
+tở|T UH
+tớ|T UH
+tợ|T UH
+tơi|T UH Y
+tời|T UH Y
+tới|T UH Y
+tởm|T UH M
+tởn|T UH NG
+tớn|T UH NG
+tợn|T UH NG
+tớp|T UH P
+tợp|T UH P
+tớt|T UH K
+tra|T AE
+tra-côm|T AE K OW0 M
+trà|T AE
+trả|T AE
+trã|T AE
+trá|T AE
+trác|T AE K
+trạc|T AE K
+trách|T AE T
+trai|T AE Y
+trài|T AE Y
+trải|T AE Y
+trãi|T AE Y
+trái|T AE Y
+trại|T AE Y
+trại|T AE Y
+tram|T AE M
+tràm|T AE M
+trảm|T AE M
+trám|T AE M
+trạm|T AE M
+tran|T AE NG
+tran-di-to|T AE NG Y IY0 T AO0
+tràn|T AE NG
+trán|T AE NG
+trạn|T AE NG
+trang|T AE NG
+trang|T AE NG
+tràng|T AE NG
+trảng|T AE NG
+tráng|T AE NG
+trạng|T AE NG
+tranh|T AE N
+trành|T AE N
+tránh|T AE N
+trạnh|T AE N
+trao|T AE W
+trào|T AE W
+tráo|T AE W
+tráp|T AE P
+trát|T AE T
+trạt|T AE T
+trau|T AA W
+tràu|T AA W
+trảu|T AA W
+trảy|T AA Y
+trạy|T AA Y
+trắc|T AA K
+trặc|T AA K
+trăm|T AA M
+trằm|T AA M
+trắm|T AA M
+trăn|T AA NG
+trằn|T AA NG
+trăng|T AA NG
+trăng-dít|T AA NG Y IY0 T
+trắng|T AA NG
+trắt|T AA K
+trâm|T UH M
+trầm|T UH M
+trẩm|T UH M
+trẫm|T UH M
+trân|T UH NG
+trần|T UH NG
+trẩn|T UH NG
+trấn|T UH NG
+trận|T UH NG
+trập|T UH P
+trật|T UH K
+trâu|T UH W
+trâu|T UH W
+trầu|T UH W
+trầu|T UH W
+trẩu|T UH W
+trấu|T UH W
+trây|T UH Y
+trầy|T UH Y
+trẩy|T UH Y
+tre|T EH0
+trè|T EH0
+trẻ|T EH0
+trẽ|T EH0
+trèm|T EH0 M
+trém|T EH0 M
+trẽn|T EH0 NG
+treng|T EH0 NG
+treo|T EH0 OW0
+trèo|T EH0 OW0
+tréo|T EH0 OW0
+trẹo|T EH0 OW0
+trét|T EH0 T
+trẹt|T EH0 T
+trê|T EH0
+trề|T EH0
+trễ|T EH0
+trệ|T EH0
+trệch|T EH0 T
+trên|T EH0 N
+trển|T EH0 N
+trết|T EH0 T
+trệt|T EH0 T
+trêu|T EH0 UW0
+trệu|T EH0 UW0
+tri-ốt|T IY0 OW0 K P
+trì|T IY0
+trì|T IY0
+trĩ|T IY0
+trí|T IY0
+trị|T IY0
+trỉa|T IY0 AX0
+trích|T IY0 T
+trịch|T IY0 T
+triền|T IY0 AX0 NG
+triển|T IY0 AX0 NG
+triến|T IY0 AX0 NG
+triện|T IY0 AX0 NG
+triêng|T IY0 AX0 NG
+triêng|T IY0 AX0 NG
+triềng|T IY0 AX0 NG
+triệng|T IY0 AX0 NG
+triết|T IY0 AX0 K
+triệt|T IY0 AX0 K
+triêu|T IY0 AX0 W
+triều|T IY0 AX0 W
+triệu|T IY0 AX0 W
+trinh|T IY0 N
+trình|T IY0 N
+trính|T IY0 N
+trít|T IY0 T
+trịt|T IY0 T
+trĩu|T IY0 W
+tríu|T IY0 W
+tro|T AO0
+trò|T AO0
+trỏ|T AO0
+trọ|T AO0
+tróc|T AO0 K P
+trọc|T AO0 K P
+troi|T AO0 Y
+tròi|T AO0 Y
+trỏi|T AO0 Y
+trói|T AO0 Y
+trọi|T AO0 Y
+trom-pét|T AO0 M P EH0 T
+trõm|T AO0 M
+tron|T AO0 NG M
+tròn|T AO0 NG M
+trọn|T AO0 NG M
+trong|T AO0 NG M
+tròng|T AO0 NG M
+trỏng|T AO0 NG M
+tróng|T AO0 NG M
+trọng|T AO0 NG M
+trót|T AO0 K P
+trô-lây-buýt|T OW0 L UH Y B W IY0 T
+trô-pi-can|T OW0 P IY0 K AE NG
+trổ|T OW0
+trỗ|T OW0
+trố|T OW0
+trộ|T OW0
+trốc|T OW0 K P
+trốc|T OW0 K P
+trôi|T OW0 Y
+trồi|T OW0 Y
+trổi|T OW0 Y
+trỗi|T OW0 Y
+trối|T OW0 Y
+trội|T OW0 Y
+trôm|T OW0 M
+trôm-bôn|T OW0 M B OW0 NG M
+trôm-pét|T OW0 M P EH0 T
+trộm|T OW0 M
+trôn|T OW0 NG M
+trốn|T OW0 NG M
+trộn|T OW0 NG M
+trông|T OW0 NG M
+trồng|T OW0 NG M
+trổng|T OW0 NG M
+trống|T OW0 NG M
+trộng|T OW0 NG M
+trốt|T OW0 K P
+trơ|T UH
+trờ|T UH
+trở|T UH
+trớ|T UH
+trợ|T UH
+trơi|T UH Y
+trời|T UH Y
+trới|T UH Y
+trờm|T UH M
+trơn|T UH NG
+trờn|T UH NG
+trớn|T UH NG
+trợn|T UH NG
+trớp|T UH P
+trớt|T UH K
+trợt|T UH K
+tru|T UW0
+trù|T UW0
+trủ|T UW0
+trú|T UW0
+trụ|T UW0
+truất|T W UH K
+truật|T W UH K
+trúc|T UW0 K P
+trục|T UW0 K P
+trui|T UW0 Y
+trũi|T UW0 Y
+trụi|T UW0 Y
+trùm|T UW0 M
+trúm|T UW0 M
+trụm|T UW0 M
+trun|T UW0 NG M
+trùn|T UW0 NG M
+trụn|T UW0 NG M
+trung|T UW0 NG M
+trung|T UW0 NG M
+trùng|T UW0 NG M
+trũng|T UW0 NG M
+trúng|T UW0 NG M
+trụng|T UW0 NG M
+truồi|T UW0 AX0 Y
+truông|T UW0 AX0 NG
+truồng|T UW0 AX0 NG
+truột|T UW0 AX0 K
+trụp|T UW0 P
+trút|T UW0 K P
+trụt|T UW0 K P
+truy|T W IY0
+truỵ|T W IY0
+trụy|T UW0 Y
+truyền|T W IY0 AX0 NG
+truyện|T W IY0 AX0 NG
+trừ|T UW0
+trữ|T UW0
+trự|T UW0
+trưa|T UW0 AX0
+trừa|T UW0 AX0
+trực|T UW0 K
+trưng|T UW0 NG
+trừng|T UW0 NG
+trửng|T UW0 NG
+trứng|T UW0 NG
+trước|T UW0 AX0 K
+trườn|T UW0 AX0 NG
+trương|T UW0 AX0 NG
+trương|T UW0 AX0 NG
+trường|T UW0 AX0 NG
+trưởng|T UW0 AX0 NG
+trướng|T UW0 AX0 NG
+trượng|T UW0 AX0 NG
+trượt|T UW0 AX0 K
+trừu|T UW0 W
+tu|T UW0
+tu-bin|T UW0 B IY0 N
+tu-lơ-khơ|T UW0 L UH K UH
+tu-vang|T UW0 Y AE NG
+tù|T UW0
+tủ|T UW0
+tú|T UW0
+tú-xơn|T UW0 S UH NG
+tụ|T UW0
+tua|T UW0 AX0
+tua-bin|T UW0 AX0 B IY0 N
+tua-ma-lin|T UW0 AX0 M AE L IY0 N
+tua-vít|T UW0 AX0 Y IY0 T
+tủa|T UW0 AX0
+túa|T UW0 AX0
+tuân|T W UH NG
+tuần|T W UH NG
+tuấn|T W UH NG
+tuất|T W UH K
+túc|T UW0 K P
+tục|T UW0 K P
+tuế|T W EH0
+tuệ|T W EH0
+tuếch|T W EH0 T
+tui|T UW0 Y
+tủi|T UW0 Y
+túi|T UW0 Y
+tụi|T UW0 Y
+tum|T UW0 M
+tùm|T UW0 M
+tủm|T UW0 M
+tũm|T UW0 M
+túm|T UW0 M
+tụm|T UW0 M
+tung|T UW0 NG M
+tùng|T UW0 NG M
+tùng-bê|T UW0 NG M B EH0
+túng|T UW0 NG M
+tụng|T UW0 NG M
+tuốc-bin|T UW0 AX0 K B IY0 N
+tuốc-năng|T UW0 AX0 K N AA NG
+tuốc-nơ-vít|T UW0 AX0 K N UH Y IY0 T
+tuộc|T UW0 AX0 K
+tuồi|T UW0 AX0 Y
+tuổi|T UW0 AX0 Y
+tuôn|T UW0 AX0 NG
+tuồn|T UW0 AX0 NG
+tuốn|T UW0 AX0 NG
+tuông|T UW0 AX0 NG
+tuồng|T UW0 AX0 NG
+tuốt|T UW0 AX0 K
+tuột|T UW0 AX0 K
+túp|T UW0 P
+tút|T UW0 K P
+tút-xuỵt|T UW0 K P S W IY0 T
+tụt|T UW0 K P
+tuy|T W IY0
+tuy-líp|T W IY0 L IY0 P
+tuy-ô|T W IY0 OW0
+tuỳ|T W IY0
+tuỷ|T W IY0
+tủy|T UW0 Y
+tuỵ|T W IY0
+tụy|T UW0 Y
+tuyếc-bin|T W IY0 AX0 K B IY0 N
+tuyên|T W IY0 AX0 NG
+tuyền|T W IY0 AX0 NG
+tuyển|T W IY0 AX0 NG
+tuyến|T W IY0 AX0 NG
+tuyết|T W IY0 AX0 K
+tuyệt|T W IY0 AX0 K
+tuyn|T W IY0 N
+tuýp|T W IY0 P
+tuýt-xo|T W IY0 T S AO0
+tư|T UW0
+tư|T UW0
+tư|T UW0
+từ|T UW0
+tử|T UW0
+tứ|T UW0
+tự|T UW0
+tưa|T UW0 AX0
+tửa|T UW0 AX0
+tứa|T UW0 AX0
+tựa|T UW0 AX0
+tức|T UW0 K
+tưng|T UW0 NG
+từng|T UW0 NG
+tước|T UW0 AX0 K
+tược|T UW0 AX0 K
+tươi|T UW0 AX0 Y
+tưới|T UW0 AX0 Y
+tươm|T UW0 M
+tướn|T UW0 AX0 NG
+tương|T UW0 AX0 NG
+tường|T UW0 AX0 NG
+tưởng|T UW0 AX0 NG
+tướng|T UW0 AX0 NG
+tượng|T UW0 AX0 NG
+tướp|T UW0 P
+tướt|T UW0 AX0 K
+tượt|T UW0 AX0 K
+tườu|T UW0 AX0 W
+tửu|T UW0 W
+ty|T IY0
+tỳ|T IY0
+tỷ|T IY0
+tý|T IY0
+tỵ|T IY0
+u|UW0
+u|UW0
+u|UW0
+u-mua|UW0 M UW0 AX0
+u-ra-ni|UW0 JH AE N IY0
+u-ra-ni-um|UW0 JH AE N IY0 UW0 M
+u-ran|UW0 JH AE NG
+u-rê|UW0 JH EH0
+u-su|UW0 SH UW0
+ù|UW0
+ù|UW0
+ủ|UW0
+ủ|UW0
+ủ-su|UW0 SH UW0
+ú|UW0
+ụ|UW0
+ùa|UW0 AX0
+ùa|UW0 AX0
+ủa|UW0 AX0
+ủa|UW0 AX0
+úa|UW0 AX0
+úa|UW0 AX0
+ụa|UW0 AX0
+uất|W UH K
+uầy|W UH Y
+uẩy|W UH Y
+úc|UW0 K P
+ục|UW0 K P
+ủi|UW0 Y
+ủi|UW0 Y
+úi|UW0 Y
+úi|UW0 Y
+um|UW0 M
+ùm|UW0 M
+ùm|UW0 M
+úm|UW0 M
+un|UW0 NG M
+ùn|UW0 NG M
+ung|UW0 NG M
+ung|UW0 NG M
+ùng|UW0 NG M
+ủng|UW0 NG M
+ủng|UW0 NG M
+úng|UW0 NG M
+úng|UW0 NG M
+uốn|UW0 AX0 NG
+uốn|UW0 AX0 NG
+uổng|UW0 AX0 NG
+uống|UW0 AX0 NG
+uống|UW0 AX0 NG
+uở|UW0 AX0
+úp|UW0 P
+úp|UW0 P
+ụp|UW0 P
+út|UW0 K P
+út|UW0 K P
+ụt|UW0 K P
+uy|W IY0
+uy-mua|W IY0 M UW0 AX0
+uỷ|W IY0
+uý|W IY0
+uỵch|W IY0 T
+uỵch|W IY0 T
+uyên|W IY0 AX0 NG
+ư|UW0
+ừ|UW0
+ứ|UW0
+ứ|UW0
+ưa|UW0 AX0
+ưa|UW0 AX0
+ứa|UW0 AX0
+ứa|UW0 AX0
+ựa|UW0 AX0
+ức|UW0 K
+ức|UW0 K
+ực|UW0 K
+ực|UW0 K
+ưng|UW0 NG
+ưng|UW0 NG
+ửng|UW0 NG
+ứng|UW0 NG
+ước|UW0 AX0 K
+ước|UW0 AX0 K
+ươm|UW0 M
+ướm|UW0 M
+ướm|UW0 M
+ươn|UW0 AX0 NG
+ươn|UW0 AX0 NG
+ườn|UW0 AX0 NG
+ưỡn|UW0 AX0 NG
+ương|UW0 AX0 NG
+ướp|UW0 P
+ướp|UW0 P
+ướt|UW0 AX0 K
+ướt|UW0 AX0 K
+ưu|UW0 W
+va|Y AE
+va|Y AE
+va-dơ-lin|Y AE Y UH L IY0 N
+va-gông|Y AE G OW0 NG M
+va-li|Y AE L IY0
+va-ni|Y AE N IY0
+va-rơ|Y AE JH UH
+va-rơi|Y AE JH UH Y
+và|Y AE
+và|Y AE
+vả|Y AE
+vả|Y AE
+vã|Y AE
+vá|Y AE
+vá|Y AE
+vạ|Y AE
+vạ|Y AE
+vac|Y AE K
+vác|Y AE K
+vác|Y AE K
+vác-xin|Y AE K S IY0 N
+vạc|Y AE K
+vạc|Y AE K
+vạc|Y AE K
+vách|Y AE T
+vách|Y AE T
+vạch|Y AE T
+vạch|Y AE T
+vai|Y AE Y
+vai|Y AE Y
+vài|Y AE Y
+vài|Y AE Y
+vải|Y AE Y
+vải|Y AE Y
+vãi|Y AE Y
+vái|Y AE Y
+vại|Y AE Y
+vại|Y AE Y
+vam|Y AE M
+vàm|Y AE M
+vàm|Y AE M
+van|Y AE NG
+van|Y AE NG
+vàn|Y AE NG
+vãn|Y AE NG
+vãn|Y AE NG
+ván|Y AE NG
+ván|Y AE NG
+vạn|Y AE NG
+vạn|Y AE NG
+vang|Y AE NG
+vang|Y AE NG
+vàng|Y AE NG
+vàng|Y AE NG
+vãng|Y AE NG
+váng|Y AE NG
+váng|Y AE NG
+vạng|Y AE NG
+vành|Y AE N
+vành|Y AE N
+vảnh|Y AE N
+vạnh|Y AE N
+vào|Y AE W
+vào|Y AE W
+vát|Y AE T
+vạt|Y AE T
+vạt|Y AE T
+vay|Y AA Y
+vay|Y AA Y
+vày|Y AA Y
+vảy|Y AA Y
+vảy|Y AA Y
+váy|Y AA Y
+váy|Y AA Y
+vạy|Y AA Y
+vắc-xanh|Y AA K S AE N
+vắc-xin|Y AA K S IY0 N
+vặc|Y AA K
+vằm|Y AA M
+vằm|Y AA M
+văn|Y AA NG
+vằn|Y AA NG
+vắn|Y AA NG
+vắn|Y AA NG
+vặn|Y AA NG
+vặn|Y AA NG
+văng|Y AA NG
+văng|Y AA NG
+văng-tê|Y AA NG T EH0
+vằng|Y AA NG
+vẳng|Y AA NG
+vẳng|Y AA NG
+vắng|Y AA NG
+vắng|Y AA NG
+vắt|Y AA K
+vắt|Y AA K
+vặt|Y AA K
+vặt|Y AA K
+vâm|Y UH M
+vân|Y UH NG
+vân|Y UH NG
+vần|Y UH NG
+vần|Y UH NG
+vẩn|Y UH NG
+vẫn|Y UH NG
+vẫn|Y UH NG
+vấn|Y UH NG
+vấn|Y UH NG
+vận|Y UH NG
+vận|Y UH NG
+vâng|Y UH NG
+vâng|Y UH NG
+vầng|Y UH NG
+vấp|Y UH P
+vấp|Y UH P
+vập|Y UH P
+vất|Y UH K
+vật|Y UH K
+vật|Y UH K
+vầu|Y UH W
+vẩu|Y UH W
+vẩu|Y UH W
+vấu|Y UH W
+vây|Y UH Y
+vây|Y UH Y
+vầy|Y UH Y
+vầy|Y UH Y
+vẩy|Y UH Y
+vẫy|Y UH Y
+vẫy|Y UH Y
+vấy|Y UH Y
+vấy|Y UH Y
+vậy|Y UH Y
+vậy|Y UH Y
+ve|Y EH0
+ve|Y EH0
+ve|Y EH0
+vè|Y EH0
+vè|Y EH0
+vẻ|Y EH0
+vẻ|Y EH0
+vẽ|Y EH0
+vẽ|Y EH0
+vé|Y EH0
+vé|Y EH0
+véc-ni|Y EH0 K N IY0
+véc-tơ|Y EH0 K T UH
+vẹc|Y EH0 K
+vẹc-ni|Y EH0 K N IY0
+vẹm|Y EH0 M
+ven|Y EH0 NG
+vén|Y EH0 NG
+vén|Y EH0 NG
+vẹn|Y EH0 NG
+veo|Y EH0 OW0
+vèo|Y EH0 OW0
+vèo|Y EH0 OW0
+vẻo|Y EH0 OW0
+véo|Y EH0 OW0
+véo|Y EH0 OW0
+vẹo|Y EH0 OW0
+vét|Y EH0 T
+vét|Y EH0 T
+vét-tông|Y EH0 T T OW0 NG M
+vét-xi|Y EH0 T S IY0
+vẹt|Y EH0 T
+vẹt|Y EH0 T
+vê|Y EH0
+vê|Y EH0
+về|Y EH0
+về|Y EH0
+vế|Y EH0
+vế|Y EH0
+vệ|Y EH0
+vệ|Y EH0
+vệ|Y EH0
+vếch|Y EH0 T
+vên|Y EH0 N
+vền|Y EH0 N
+vện|Y EH0 N
+vênh|Y EH0 N
+vênh|Y EH0 N
+vểnh|Y EH0 N
+vểnh|Y EH0 N
+vết|Y EH0 T
+vết|Y EH0 T
+vệt|Y EH0 T
+vệt|Y EH0 T
+vêu|Y EH0 UW0
+vều|Y EH0 UW0
+vếu|Y EH0 UW0
+vi|Y IY0
+vi-da|Y IY0 Y AE
+vi-đê-ô|Y IY0 D EH0 OW0
+vi-la|Y IY0 L AE
+vi-nhét|Y IY0 N IY0 EH0 T
+vi-ni-lông|Y IY0 N IY0 L OW0 NG M
+vi-ô-lét|Y IY0 OW0 L EH0 T
+vi-ô-lông|Y IY0 OW0 L OW0 NG M
+vi-ô-lông-xen|Y IY0 OW0 L OW0 NG M S EH0 NG
+vi-rút|Y IY0 JH UW0 K P
+vi-ta-min|Y IY0 T AE M IY0 N
+vì|Y IY0
+vì|Y IY0
+vỉ|Y IY0
+vỉ|Y IY0
+vĩ|Y IY0
+ví|Y IY0
+ví|Y IY0
+vị|Y IY0
+vị|Y IY0
+via|Y IY0 AX0
+via-rơ-măng|Y IY0 AX0 JH UH M AA NG
+vỉa|Y IY0 AX0
+vỉa|Y IY0 AX0
+vía|Y IY0 AX0
+vích|Y IY0 T
+việc|Y IY0 AX0 K
+việc|Y IY0 AX0 K
+viêm|Y IY0 M
+viêm|Y IY0 M
+viên|Y IY0 AX0 NG
+viền|Y IY0 AX0 NG
+viền|Y IY0 AX0 NG
+viễn|Y IY0 AX0 NG
+viện|Y IY0 AX0 NG
+viện|Y IY0 AX0 NG
+viếng|Y IY0 AX0 NG
+viết|Y IY0 AX0 K
+viết|Y IY0 AX0 K
+việt|Y IY0 AX0 K
+việt-mường|Y IY0 AX0 K M UW0 AX0 NG
+vịm|Y IY0 M
+vin|Y IY0 N
+vịn|Y IY0 N
+vịn|Y IY0 N
+vinh|Y IY0 N
+vinh|Y IY0 N
+vịnh|Y IY0 N
+vịnh|Y IY0 N
+vít|Y IY0 T
+vít|Y IY0 T
+vịt|Y IY0 T
+vịt|Y IY0 T
+víu|Y IY0 W
+vo|Y AO0
+vò|Y AO0
+vò|Y AO0
+vỏ|Y AO0
+vỏ|Y AO0
+võ|Y AO0
+võ|Y AO0
+vó|Y AO0
+vó|Y AO0
+vọ|Y AO0
+voan|Y W AE NG
+vóc|Y AO0 K P
+vọc|Y AO0 K P
+voi|Y AO0 Y
+voi|Y AO0 Y
+vòi|Y AO0 Y
+vòi|Y AO0 Y
+vói|Y AO0 Y
+vọi|Y AO0 Y
+vom|Y AO0 M
+vòm|Y AO0 M
+vòm|Y AO0 M
+von|Y AO0 NG M
+von-kế|Y AO0 NG M K EH0
+von-phơ-ram|Y AO0 NG M F UH JH AE M
+vòn|Y AO0 NG M
+vón|Y AO0 NG M
+vong|Y AO0 NG M
+vòng|Y AO0 NG M
+vòng|Y AO0 NG M
+vỏng|Y AO0 NG M
+võng|Y AO0 NG M
+võng|Y AO0 NG M
+vóng|Y AO0 NG M
+vọng|Y AO0 NG M
+vọng|Y AO0 NG M
+voọc|Y AO0 K P
+vọp|Y AO0 P
+vót|Y AO0 K P
+vót|Y AO0 K P
+vọt|Y AO0 K P
+vọt|Y AO0 K P
+vô|Y OW0
+vô-lăng|Y OW0 L AA NG
+vô-lê|Y OW0 L EH0
+vồ|Y OW0
+vổ|Y OW0
+vỗ|Y OW0
+vỗ|Y OW0
+vố|Y OW0
+vốc|Y OW0 K P
+vốc|Y OW0 K P
+vôi|Y OW0 Y
+vôi|Y OW0 Y
+vôi|Y OW0 Y
+vối|Y OW0 Y
+vội|Y OW0 Y
+vội|Y OW0 Y
+vôn|Y OW0 NG M
+vốn|Y OW0 NG M
+vốn|Y OW0 NG M
+vông|Y OW0 NG M
+vồng|Y OW0 NG M
+vổng|Y OW0 NG M
+vống|Y OW0 NG M
+vống|Y OW0 NG M
+vơ|Y UH
+vơ|Y UH
+vơ-đét|Y UH D EH0 T
+vờ|Y UH
+vờ|Y UH
+vở|Y UH
+vỡ|Y UH
+vỡ|Y UH
+vớ|Y UH
+vớ|Y UH
+vợ|Y UH
+vợ|Y UH
+vơi|Y UH Y
+vời|Y UH Y
+với|Y UH Y
+với|Y UH Y
+vợi|Y UH Y
+vờn|Y UH NG
+vờn|Y UH NG
+vớt|Y UH K
+vớt|Y UH K
+vợt|Y UH K
+vợt|Y UH K
+vu|Y UW0
+vù|Y UW0
+vù|Y UW0
+vũ|Y UW0
+vũ|Y UW0
+vú|Y UW0
+vú|Y UW0
+vụ|Y UW0
+vụ|Y UW0
+vua|Y UW0 AX0
+vua|Y UW0 AX0
+vùa|Y UW0 AX0
+vục|Y UW0 K P
+vui|Y UW0 Y
+vui|Y UW0 Y
+vùi|Y UW0 Y
+vùi|Y UW0 Y
+vũm|Y UW0 M
+vun|Y UW0 NG M
+vun|Y UW0 NG M
+vùn|Y UW0 NG M
+vụn|Y UW0 NG M
+vụn|Y UW0 NG M
+vung|Y UW0 NG M
+vung|Y UW0 NG M
+vùng|Y UW0 NG M
+vùng|Y UW0 NG M
+vũng|Y UW0 NG M
+vũng|Y UW0 NG M
+vụng|Y UW0 NG M
+vụng|Y UW0 NG M
+vuông|Y UW0 AX0 NG
+vuông|Y UW0 AX0 NG
+vuốt|Y UW0 AX0 K
+vuốt|Y UW0 AX0 K
+vuột|Y UW0 AX0 K
+vút|Y UW0 K P
+vụt|Y UW0 K P
+vụt|Y UW0 K P
+vừa|Y UW0 AX0
+vừa|Y UW0 AX0
+vữa|Y UW0 AX0
+vữa|Y UW0 AX0
+vựa|Y UW0 AX0
+vựa|Y UW0 AX0
+vực|Y UW0 K
+vực|Y UW0 K
+vưng|Y UW0 NG
+vừng|Y UW0 NG
+vừng|Y UW0 NG
+vững|Y UW0 NG
+vững|Y UW0 NG
+vựng|Y UW0 NG
+vược|Y UW0 AX0 K
+vươn|Y UW0 AX0 NG
+vươn|Y UW0 AX0 NG
+vườn|Y UW0 AX0 NG
+vườn|Y UW0 AX0 NG
+vượn|Y UW0 AX0 NG
+vượn|Y UW0 AX0 NG
+vương|Y UW0 AX0 NG
+vương|Y UW0 AX0 NG
+vương|Y UW0 AX0 NG
+vướng|Y UW0 AX0 NG
+vướng|Y UW0 AX0 NG
+vượng|Y UW0 AX0 NG
+vượng|Y UW0 AX0 NG
+vượt|Y UW0 AX0 K
+vượt|Y UW0 AX0 K
+vứt|Y UW0 K
+vứt|Y UW0 K
+xa|S AE
+xa|S AE
+xa|S AE
+xa-bô|S AE B OW0
+xa-bô-chê|S AE B OW0 KH EH0
+xa-ca-rin|S AE K AE JH IY0 N
+xa-ca-rô-da|S AE K AE JH OW0 Y AE
+xa-điêng|S AE D IY0 AX0 NG
+xa-lô|S AE L OW0
+xa-lông|S AE L OW0 NG M
+xa-mô-va|S AE M OW0 Y AE
+xa-phia|S AE F IY0 AX0
+xa-tanh|S AE T AE N
+xa-tăng|S AE T AA NG
+xa-ten|S AE T EH0 NG
+xà|S AE
+xà|S AE
+xà-beng|S AE B EH0 NG
+xà-bông|S AE B OW0 NG M
+xà-cột|S AE K OW0 K P
+xà-ích|S AE IY0 T
+xà-lách|S AE L AE T
+xà-lách-xon|S AE L AE T S AO0 NG M
+xà-lách-xoong|S AE L AE T S AO0 NG M
+xà-lan|S AE L AE NG
+xà-lim|S AE L IY0 M
+xà-lỏn|S AE L AO0 NG M
+xà-lù|S AE L UW0
+xà-phòng|S AE F AO0 NG M
+xả|S AE
+xả|S AE
+xã|S AE
+xã|S AE
+xá|S AE
+xá|S AE
+xạ|S AE
+xạ|S AE
+xác|S AE K
+xác|S AE K
+xác-ca-rin|S AE K K AE JH IY0 N
+xác-đin|S AE K D IY0 N
+xạc|S AE K
+xách|S AE T
+xách|S AE T
+xài|S AE Y
+xài|S AE Y
+xải|S AE Y
+xái|S AE Y
+xam|S AE M
+xàm|S AE M
+xảm|S AE M
+xám|S AE M
+xám|S AE M
+xạm|S AE M
+xan|S AE NG
+xan-tô-nin|S AE NG T OW0 N IY0 N
+xán|S AE NG
+xang|S AE NG
+xáng|S AE NG
+xanh|S AE N
+xanh|S AE N
+xanh-đi-ca|S AE N D IY0 K AE
+xao|S AE W
+xào|S AE W
+xào|S AE W
+xảo|S AE W
+xảo|S AE W
+xáo|S AE W
+xạo|S AE W
+xạo|S AE W
+xáp|S AE P
+xạp|S AE P
+xát|S AE T
+xát|S AE T
+xàu|S AA W
+xay|S AA Y
+xay|S AA Y
+xảy|S AA Y
+xáy|S AA Y
+xắc|S AA K
+xắc-cốt|S AA K K OW0 K P
+xăm|S AA M
+xăm|S AA M
+xăn|S AA NG
+xắn|S AA NG
+xắn|S AA NG
+xăng|S AA NG
+xăng|S AA NG
+xăng-đá|S AA NG D AE
+xăng-đan|S AA NG D AE NG
+xăng-tan|S AA NG T AE NG
+xăng-ti-mét|S AA NG T IY0 M EH0 T
+xăng-tô-nin|S AA NG T OW0 N IY0 N
+xằng|S AA NG
+xẵng|S AA NG
+xẵng|S AA NG
+xắp|S AA P
+xắt|S AA K
+xấc|S UH K
+xấc|S UH K
+xâm|S UH M
+xẩm|S UH M
+xấp|S UH P
+xâu|S UH W
+xâu|S UH W
+xầu|S UH W
+xẩu|S UH W
+xấu|S UH W
+xấu|S UH W
+xây|S UH Y
+xây|S UH Y
+xẩy|S UH Y
+xe|S EH0
+xe|S EH0
+xe-lu-lô|S EH0 L UW0 L OW0
+xe-mi-na|S EH0 M IY0 N AE
+xe-non|S EH0 N AO0 NG M
+xe-re-nát|S EH0 JH EH0 N AE T
+xẻ|S EH0
+xẻ|S EH0
+xé|S EH0
+xé|S EH0
+xéc|S EH0 K
+xéc|S EH0 K
+xéc-măng|S EH0 K M AA NG
+xéc-ti-phi-ca|S EH0 K T IY0 F IY0 K AE
+xẹc|S EH0 K
+xẹc-ti-phi-ca|S EH0 K T IY0 F IY0 K AE
+xem|S EH0 M
+xem|S EH0 M
+xém|S EH0 M
+xen|S EH0 NG
+xen|S EH0 NG
+xen-đầm|S EH0 NG D UH M
+xen-lô|S EH0 NG L OW0
+xen-lu-lô|S EH0 NG L UW0 L OW0
+xen-luy-lô|S EH0 NG L W IY0 L OW0
+xen-ti|S EH0 NG T IY0
+xen-tim|S EH0 NG T IY0 M
+xén|S EH0 NG
+xén|S EH0 NG
+xèng|S EH0 NG
+xẻng|S EH0 NG
+xeo|S EH0 OW0
+xèo|S EH0 OW0
+xẻo|S EH0 OW0
+xẽo|S EH0 OW0
+xéo|S EH0 OW0
+xéo|S EH0 OW0
+xẹo|S EH0 OW0
+xẹo|S EH0 OW0
+xép|S EH0 P
+xẹp|S EH0 P
+xẹp|S EH0 P
+xét|S EH0 T
+xẹt|S EH0 T
+xê|S EH0
+xê-mi-na|S EH0 M IY0 N AE
+xê-mi-ne|S EH0 M IY0 N EH0
+xê-rê-nát|S EH0 JH EH0 N AE T
+xê-ri|S EH0 JH IY0
+xể|S EH0
+xế|S EH0
+xế|S EH0
+xệ|S EH0
+xếch|S EH0 T
+xếch|S EH0 T
+xệch|S EH0 T
+xên|S EH0 N
+xếp|S EH0 P
+xếp|S EH0 P
+xệp|S EH0 P
+xêu|S EH0 UW0
+xều|S EH0 UW0
+xi|S IY0
+xi|S IY0
+xi-béc-nê-tích|S IY0 B EH0 K N EH0 T IY0 T
+xi-căng-đan|S IY0 K AA NG D AE NG
+xi-đa|S IY0 D AE
+xi-lanh|S IY0 L AE N
+xi-líp|S IY0 L IY0 P
+xi-lô|S IY0 L OW0
+xi-măng|S IY0 M AA NG
+xi-moong|S IY0 M AO0 NG M
+xi-mô-kinh|S IY0 M OW0 K IY0 N
+xi-nê|S IY0 N EH0
+xi-nhan|S IY0 N IY0 AE NG
+xi-nhê|S IY0 N IY0 EH0
+xi-phông|S IY0 F OW0 NG M
+xi-ren|S IY0 JH EH0 NG
+xi-rô|S IY0 JH OW0
+xi-ta|S IY0 T AE
+xi-téc|S IY0 T EH0 K
+xi-tẹc|S IY0 T EH0 K
+xi-vin|S IY0 Y IY0 N
+xì|S IY0
+xì|S IY0
+xì-căng-đan|S IY0 K AA NG D AE NG
+xì-cút|S IY0 K UW0 K P
+xì-gà|S IY0 G AE
+xỉ|S IY0
+xỉ|S IY0
+xí|S IY0
+xị|S IY0
+xia|S IY0 AX0
+xìa|S IY0 AX0
+xỉa|S IY0 AX0
+xỉa|S IY0 AX0
+xía|S IY0 AX0
+xích|S IY0 T
+xích|S IY0 T
+xích-đông|S IY0 T D OW0 NG M
+xích-lô|S IY0 T L OW0
+xịch|S IY0 T
+xiếc|S IY0 AX0 K
+xiếc|S IY0 AX0 K
+xiêm|S IY0 M
+xiên|S IY0 AX0 NG
+xiên|S IY0 AX0 NG
+xiềng|S IY0 AX0 NG
+xiềng|S IY0 AX0 NG
+xiết|S IY0 AX0 K
+xiết|S IY0 AX0 K
+xiêu|S IY0 AX0 W
+xiêu|S IY0 AX0 W
+xim|S IY0 M
+xim-pô-di-um|S IY0 M P OW0 Y IY0 UW0 M
+xin|S IY0 N
+xin|S IY0 N
+xỉn|S IY0 N
+xín|S IY0 N
+xịn|S IY0 N
+xinh|S IY0 N
+xinh|S IY0 N
+xinh-mun|S IY0 N M UW0 NG M
+xình|S IY0 N
+xít|S IY0 T
+xít-đờ-ca|S IY0 T D UH K AE
+xịt|S IY0 T
+xịt|S IY0 T
+xìu|S IY0 W
+xìu|S IY0 W
+xỉu|S IY0 W
+xỉu|S IY0 W
+xíu|S IY0 W
+xíu|S IY0 W
+xịu|S IY0 W
+xo|S AO0
+xo|S AO0
+xo-le-no-ít|S AO0 L EH0 N AO0 IY0 T
+xo-nat|S AO0 N AE T
+xo-nát|S AO0 N AE T
+xỏ|S AO0
+xỏ|S AO0
+xó|S AO0
+xó|S AO0
+xọ|S AO0
+xoa|S W AE
+xoa|S W AE
+xoà|S W AE
+xoã|S W AE
+xoã|S W AE
+xõa|S W AE
+xoá|S W AE
+xoá|S W AE
+xoác|S W AE K
+xoạc|S W AE K
+xoài|S W AE Y
+xoài|S W AE Y
+xoải|S W AE Y
+xoan|S W AE NG
+xoàn|S W AE NG
+xoàn|S W AE NG
+xoang|S W AE NG
+xoàng|S W AE NG
+xoảng|S W AE NG
+xoạng|S W AE NG
+xoạt|S W AE T
+xoay|S W AA Y
+xoay|S W AA Y
+xoáy|S W AA Y
+xoáy|S W AA Y
+xoăn|S W AA NG
+xoăn|S W AA NG
+xoẳn|S W AA NG
+xoắn|S W AA NG
+xóc|S AO0 K P
+xóc|S AO0 K P
+xọc|S AO0 K P
+xoe|S W EH0
+xòe|S W EH0
+xoè|S W EH0
+xoét|S W EH0 T
+xoẹt|S W EH0 T
+xoi|S AO0 Y
+xoi|S AO0 Y
+xói|S AO0 Y
+xom|S AO0 M
+xõm|S AO0 M
+xóm|S AO0 M
+xóm|S AO0 M
+xon|S AO0 NG M
+xon-nê|S AO0 NG M N EH0
+xong|S AO0 NG M
+xong|S AO0 NG M
+xõng|S AO0 NG M
+xoong|S AO0 NG M
+xóp|S AO0 P
+xọp|S AO0 P
+xót|S AO0 K P
+xót|S AO0 K P
+xô|S OW0
+xô|S OW0
+xô-đa|S OW0 D AE
+xô-lê-nô-ít|S OW0 L EH0 N OW0 IY0 T
+xô-lít|S OW0 L IY0 T
+xô-nát|S OW0 N AE T
+xô-viết|S OW0 Y IY0 AX0 K
+xồ|S OW0
+xổ|S OW0
+xổ|S OW0
+xốc|S OW0 K P
+xốc|S OW0 K P
+xộc|S OW0 K P
+xôi|S OW0 Y
+xổi|S OW0 Y
+xối|S OW0 Y
+xối|S OW0 Y
+xôm|S OW0 M
+xồm|S OW0 M
+xổm|S OW0 M
+xôn|S OW0 NG M
+xốn|S OW0 NG M
+xộn|S OW0 NG M
+xông|S OW0 NG M
+xông|S OW0 NG M
+xổng|S OW0 NG M
+xống|S OW0 NG M
+xốp|S OW0 P
+xốp|S OW0 P
+xốp-phơ|S OW0 P F UH
+xộp|S OW0 P
+xốt|S OW0 K P
+xơ|S UH
+xơ|S UH
+xơ-cua|S UH K UW0 AX0
+xơ-đăng|S UH D AA NG
+xơ-lang|S UH L AE NG
+xơ-ranh|S UH JH AE N
+xơ-teng|S UH T EH0 NG
+xờ|S UH
+xở|S UH
+xơi|S UH Y
+xởi|S UH Y
+xới|S UH Y
+xới|S UH Y
+xờm|S UH M
+xởn|S UH NG
+xớn|S UH NG
+xớp|S UH P
+xợp|S UH P
+xớt|S UH K
+xu|S UW0
+xu|S UW0
+xu-ba-dăng|S UW0 B AE Y AA NG
+xu-chiêng|S UW0 KH IY0 AX0 NG
+xu-páp|S UW0 P AE P
+xù|S UW0
+xù|S UW0
+xũ|S UW0
+xú-báp|S UW0 B AE P
+xú-páp|S UW0 P AE P
+xú-ve|S UW0 Y EH0
+xú-vơ-nia|S UW0 Y UH N IY0 AX0
+xụ|S UW0
+xua|S UW0 AX0
+xuân|S W UH NG
+xuân|S W UH NG
+xuẩn|S W UH NG
+xuất|S W UH K
+xuất|S W UH K
+xuây|S W UH Y
+xúc|S UW0 K P
+xúc|S UW0 K P
+xúc-xích|S UW0 K P S IY0 T
+xuê|S W EH0
+xuể|S W EH0
+xui|S UW0 Y
+xui|S UW0 Y
+xúi|S UW0 Y
+xụi|S UW0 Y
+xúm|S UW0 M
+xúm|S UW0 M
+xun-pha-mít|S UW0 NG M F AE M IY0 T
+xun-phát|S UW0 NG M F AE T
+xun-phua|S UW0 NG M F UW0 AX0
+xung|S UW0 NG M
+xuôi|S UW0 AX0 Y
+xuôi|S UW0 AX0 Y
+xuộm|S UW0 M
+xuồng|S UW0 AX0 NG
+xuồng|S UW0 AX0 NG
+xuổng|S UW0 AX0 NG
+xuổng|S UW0 AX0 NG
+xuống|S UW0 AX0 NG
+xuống|S UW0 AX0 NG
+xúp|S UW0 P
+xúp-de|S UW0 P Y EH0
+xút|S UW0 K P
+xuy|S W IY0
+xùy|S UW0 Y
+xuỳ|S W IY0
+xuya|S W IY0 AX0
+xuya-rơ-tê|S W IY0 AX0 JH UH T EH0
+xuyên|S W IY0 AX0 NG
+xuyên|S W IY0 AX0 NG
+xuyến|S W IY0 AX0 NG
+xuyến|S W IY0 AX0 NG
+xuynh|S W IY0 N
+xuýt|S W IY0 T
+xuỵt|S W IY0 T
+xừ|S UW0
+xử|S UW0
+xử|S UW0
+xứ|S UW0
+xứ|S UW0
+xự|S UW0
+xưa|S UW0 AX0
+xưa|S UW0 AX0
+xửa|S UW0 AX0
+xức|S UW0 K
+xực|S UW0 K
+xưng|S UW0 NG
+xừng|S UW0 NG
+xửng|S UW0 NG
+xứng|S UW0 NG
+xước|S UW0 AX0 K
+xước|S UW0 AX0 K
+xược|S UW0 AX0 K
+xười|S UW0 AX0 Y
+xương|S UW0 AX0 NG
+xương|S UW0 AX0 NG
+xưởng|S UW0 AX0 NG
+xưởng|S UW0 AX0 NG
+xướng|S UW0 AX0 NG
+xướng|S UW0 AX0 NG
+xượt|S UW0 AX0 K
+xy|S IY0
+y|IY0
+y|IY0
+y|IY0
+y-a|IY0 AE
+y-lơng|IY0 L UH NG
+ỳ|IY0
+ỷ|IY0
+ỷ|IY0
+ý|IY0
+ý|IY0
+yểm|IY0 EH0 M
+yểm|IY0 EH0 M
+yếm|IY0 EH0 M
+yếm|IY0 EH0 M
+yên|IY0 EH0 NG
+yên|IY0 EH0 NG
+yên|IY0 EH0 NG
+yến|IY0 EH0 NG
+yến|IY0 EH0 NG
+yêng|IY0 EH0 NG
+yểng|IY0 EH0 NG
+yết|IY0 EH0 T
+yết|IY0 EH0 T
+yêu|IY0 AX0 W
+yêu|IY0 AX0 W
+yểu|IY0 AX0 W
+yểu|IY0 AX0 W
+yếu|IY0 AX0 W
+yếu|IY0 AX0 W
