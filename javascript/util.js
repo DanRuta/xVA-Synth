@@ -110,7 +110,7 @@ window.closeModal = (container=undefined, notThisOne=undefined, skipIfErrorOpen=
             return resolve()
         }
         window.errorModalHasOpened = false
-        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, pluginsContainer, modalContainer, s2sSelectContainer, nexusContainer, embeddingsContainer, totdContainer, nexusReposContainer, EULAContainer, arpabetContainer]
+        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, pluginsContainer, modalContainer, nexusContainer, embeddingsContainer, totdContainer, nexusReposContainer, EULAContainer, arpabetContainer]
         const containers = container==undefined ? allContainers : (Array.isArray(container) ? container.filter(c=>c!=undefined) : [container])
 
         notThisOne = Array.isArray(notThisOne) ? notThisOne : (notThisOne==undefined ? [] : [notThisOne])

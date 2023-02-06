@@ -28,7 +28,7 @@ if __name__ == '__main__':
         import json
         from http.server import BaseHTTPRequestHandler, HTTPServer
         from socketserver     import ThreadingMixIn
-        from python.audio_post import run_audio_post, prepare_input_audio, mp_ffmpeg_output, normalize_audio
+        from python.audio_post import run_audio_post, prepare_input_audio, mp_ffmpeg_output, normalize_audio, start_microphone_recording, move_recorded_file
         import ffmpeg
     except:
         print(traceback.format_exc())
@@ -287,37 +287,24 @@ if __name__ == '__main__':
 
                 if self.path == "/runSpeechToSpeech":
                     logger.info("POST {}".format(self.path))
-                    logger.info("post_data")
-                    logger.info(post_data)
                     input_path = post_data["input_path"]
-                    modelPath = post_data["modelPath"]
+                    style_emb = post_data["style_emb"]
+                    audio_out_path = post_data["audio_out_path"]
                     modelType = post_data["modelType"]
                     s2s_components = post_data["s2s_components"]
-                    n_speakers = int(post_data["n_speakers"]) if "n_speakers" in post_data else 0
-                    text = post_data["text"]
 
                     removeNoise = post_data["removeNoise"]
                     removeNoiseStrength = post_data["removeNoiseStrength"]
 
                     final_path = prepare_input_audio(PROD, logger, input_path, removeNoise, removeNoiseStrength)
 
-                    # Infer ASR text from audio, if text is not provided
-                    if text=="":
-                        models_manager.init_model("wav2vec2")
-                        text = models_manager.models("wav2vec2").infer(PROD, final_path)
+                    models_manager.init_model("speaker_rep")
+                    models_manager.load_model("speaker_rep", f'{"./resources/app" if PROD else "."}/python/xvapitch/speaker_rep.pt')
 
-
-                    models_manager.init_model("s2s_fastpitch1_1")
-                    models_manager.load_model("s2s_fastpitch1_1", modelPath, n_speakers=n_speakers)
-                    models_manager.models_bank["s2s_fastpitch1_1"].init_arpabet_dicts()
                     try:
-                        text, pitch, durs, energy = models_manager.models("s2s_fastpitch1_1").run_speech_to_speech(final_path, models_manager, plugin_manager, modelType, s2s_components=s2s_components, text=text)
+                        models_manager.models("xvapitch").run_speech_to_speech(final_path, audio_out_path, style_emb, models_manager, plugin_manager, modelType, s2s_components=s2s_components)
 
                         data_out = ""
-                        data_out += ",".join([str(v) for v in pitch])+"\n"
-                        data_out += ",".join([str(v) for v in durs])+"\n"
-                        data_out += ",".join([str(v) for v in energy])+"\n"
-                        data_out += f'{text.lower()}'
                         req_response = data_out
 
                     except RuntimeError:
@@ -396,6 +383,15 @@ if __name__ == '__main__':
                     if "fastpitch1_1" in list(models_manager.models_bank.keys()):
                         models_manager.models_bank["fastpitch1_1"].refresh_arpabet_dicts()
 
+                if self.path == "/start_microphone_recording":
+                    start_microphone_recording(logger, f'{"./resources/app" if PROD else "."}')
+                    req_response = ""
+
+                if self.path == "/move_recorded_file":
+                    file_path = post_data["file_path"]
+                    logger.info("str(os.listdir(.))")
+                    logger.info(str(os.listdir(".")))
+                    move_recorded_file(logger, f'{"./resources/app" if PROD else "."}', file_path)
 
                 self._set_response()
                 self.wfile.write(req_response.encode("utf-8"))

@@ -417,7 +417,7 @@ a {
  }
 
 
- #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer, #EULAContainer, #patreonContainer, #pluginsContainer, #s2sSelectContainer, #nexusContainer, #nexusReposContainer, #embeddingsContainer, #totdContainer, #arpabetContainer, #resetContainer, .modelContainer {
+ #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer, #EULAContainer, #patreonContainer, #pluginsContainer, #nexusContainer, #nexusReposContainer, #embeddingsContainer, #totdContainer, #arpabetContainer, #resetContainer, .modelContainer {
      display: flex;
      justify-content: center;
      align-items: center;
@@ -472,7 +472,7 @@ a {
      width: 25vw;
      text-align: center;
  }
- #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal, #patreonContainer > .modal, #pluginsContainer > .modal, #s2sSelectContainer > .modal, #nexusContainer > .modal, #nexusReposContainer > .modal, #embeddingsContainer > .modal, #totdContainer > .modal, #arpabetContainer > .modal, #resetContainer > .modal, .modelContainer > .modal {
+ #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal, #patreonContainer > .modal, #pluginsContainer > .modal, #nexusContainer > .modal, #nexusReposContainer > .modal, #embeddingsContainer > .modal, #totdContainer > .modal, #arpabetContainer > .modal, #resetContainer > .modal, .modelContainer > .modal {
      height: 65vh;
      width: 50vw;
      min-height: 500px;

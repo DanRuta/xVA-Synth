@@ -1,4 +1,5 @@
 import os
+import shutil
 import ffmpeg
 import traceback
 import subprocess
@@ -193,3 +194,71 @@ def normalize_audio (input_path, output_path):
         return "stderr: "+ stderr
 
     return ""
+
+
+
+
+# Python based microphone recording (js libs are too buggy)
+# https://github.com/egorsmkv/microphone-recorder/blob/master/record.py
+import pyaudio
+import wave
+
+def start_microphone_recording (logger, root_folder):
+    logger.info(f'start_microphone_recording')
+
+    CHUNK = 1024
+    FORMAT = pyaudio.paInt16 #paInt8
+    CHANNELS = 2
+    RATE = 44100 #sample rate
+    RECORD_SECONDS = 4
+    WAVE_OUTPUT_FILENAME = f'{root_folder}/output/recorded_file.wav'
+
+    p = pyaudio.PyAudio()
+
+    stream = p.open(format=FORMAT,
+                    channels=CHANNELS,
+                    rate=RATE,
+                    input=True,
+                    frames_per_buffer=CHUNK) #buffer
+
+    frames = []
+
+    logger.info(f'Starting recording...')
+
+
+    if os.path.exists(f'{root_folder}/python/temp_stop_recording'):
+        os.remove(f'{root_folder}/python/temp_stop_recording')
+
+    for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+
+        if os.path.exists(f'{root_folder}/python/temp_stop_recording'):
+            logger.info(f'Detected stop request. Ending recording...')
+            os.remove(f'{root_folder}/python/temp_stop_recording')
+            break
+
+        data = stream.read(CHUNK)
+        frames.append(data) # 2 bytes(16 bits) per channel
+
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
+
+    logger.info(f'Dumping recording audio to file: {WAVE_OUTPUT_FILENAME}')
+    wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+    wf.setnchannels(CHANNELS)
+    wf.setsampwidth(p.get_sample_size(FORMAT))
+    wf.setframerate(RATE)
+    wf.writeframes(b''.join(frames))
+    wf.close()
+
+def move_recorded_file(logger, root_folder, file_path):
+    if not os.path.exists(f'{root_folder}/output/recorded_file.wav'):
+        logger.info("Not found audio file")
+        import time
+        time.sleep(5)
+    try:
+        shutil.copyfile(f'{root_folder}/output/recorded_file.wav', file_path)
+    except shutil.SameFileError:
+        pass
+    except:
+        logger.info(traceback.format_exc())

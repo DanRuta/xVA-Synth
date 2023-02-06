@@ -72,7 +72,7 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_BATCH_USEMULTIP = "Use multi-processing for batch mode ffmpeg output"
     window.i18n.SETTINGS_BATCH_MULTIPCOUNT = "Number of processes (0 for cpu threads count -1)"
     window.i18n.SETTINGS_MICROPHONE = "Microphone"
-    window.i18n.SETTINGS_S2S_VOICE = "Speech-to-Speech voice"
+    // window.i18n.SETTINGS_S2S_VOICE = "Speech-to-Speech voice"
     window.i18n.SETTINGS_AUTOGENERATEVOICE = "Automatically generate voice"
     window.i18n.SETTINGS_S2S_PREADJUST_PITCH = "Pre-adjust the input audio average pitch to match the xVASpeech model voice's"
     window.i18n.SETTINGS_S2S_BGNOISE = "Remove background noise from microphone. You need to record a background noise clip first. (requires sox >= v14.4.2) "
@@ -191,15 +191,11 @@ window.i18n.setEnglish = () => {
     window.i18n.BATCH_CLEAR = "Clear"
     window.i18n.BATCH_OPENOUT = "Open Output"
 
-    window.i18n.S2S_SELECTVOICE = "Select Speech-to-Speech voice"
-    window.i18n.S2S_RECORD_NOTE = "You can record a few seconds of silence to capture background noise to remove from your future recordings."
-    window.i18n.S2S_RECORD_NOISE = "Record noise"
-    window.i18n.S2S_INSTRUCTIONS = "Pick from the available FastPitch 1.1 models which voice sounds most like yours. If you have a model trained for your own voice, make sure you use that one. You can record a short sample here, for comparison (not used for s2s). For this to work well, your voice/microphone/volume should sound as similar as possible to the audio of the voice you select."
     window.i18n.S2S_RECORD_SAMPLE = "Record sample"
     window.i18n.FEMALE = "Female"
     window.i18n.MALE = "Male"
     window.i18n.S2S_OTHER = "Other"
-    window.i18n.S2S_COMPONENTS = "Select which aspects to clone from the reference voice, and with how much strength"
+    window.i18n.VC_ONLY_FOR_V3 = "Voice conversion only available for v3 models."
 
 
 
@@ -739,7 +735,7 @@ window.i18n.updateUI = () => {
     i18n_setting_batch_multip.innerHTML = window.i18n.SETTINGS_BATCH_USEMULTIP
     i18n_setting_batch_multip_count.innerHTML = window.i18n.SETTINGS_BATCH_MULTIPCOUNT
     i18n_setting_microphone.innerHTML = window.i18n.SETTINGS_MICROPHONE
-    i18n_setting_s2s_voice.innerHTML = window.i18n.SETTINGS_S2S_VOICE
+    // i18n_setting_s2s_voice.innerHTML = window.i18n.SETTINGS_S2S_VOICE
     i18n_setting_autogeneratevoice.innerHTML = window.i18n.SETTINGS_AUTOGENERATEVOICE
     // i18n_setting_s2s_preadjust_pitch.innerHTML = window.i18n.SETTINGS_S2S_PREADJUST_PITCH
     i18n_setting_s2s_bgnoise.innerHTML = window.i18n.SETTINGS_S2S_BGNOISE
@@ -747,7 +743,7 @@ window.i18n.updateUI = () => {
     i18n_setting_s2s_bgnoise_strength.innerHTML = window.i18n.SETTINGS_S2S_BGNOISE_STRENGTH
     reset_settings_btn.innerHTML = window.i18n.SETTINGS_RESET_SETTINGS
     reset_paths_btn.innerHTML = window.i18n.SETTINGS_RESET_PATHS
-    s2s_selectVoiceBtn.innerHTML = window.i18n.SELECT_VOICE
+    // s2s_selectVoiceBtn.innerHTML = window.i18n.SELECT_VOICE
 
     updatesVersions.innerHTML = window.i18n.UPDATES_VERSION
     i18n_updateslog.innerHTML = window.i18n.UPDATES_LOG
@@ -851,23 +847,11 @@ window.i18n.updateUI = () => {
     batch_clearBtn.innerHTML = window.i18n.BATCH_CLEAR
     batch_openDirBtn.innerHTML = window.i18n.BATCH_OPENOUT
 
-    i18n_s2s_selectvoice.innerHTML = window.i18n.S2S_SELECTVOICE
-    i18n_s2s_record_note.innerHTML = window.i18n.S2S_RECORD_NOTE
-    s2sNoiseRecordSampleBtn.innerHTML = window.i18n.S2S_RECORD_NOISE
-    i18n_s2s_instructions.innerHTML = window.i18n.S2S_INSTRUCTIONS
-    s2sVLRecordSampleBtn.innerHTML = window.i18n.S2S_RECORD_SAMPLE
-    i18n_s2s_female.innerHTML = window.i18n.FEMALE
-    i18n_s2s_male.innerHTML = window.i18n.MALE
-    i18n_s2s_other.innerHTML = window.i18n.S2S_OTHER
+    s2s_voiceId_selected_label.innerHTML = window.i18n.VC_ONLY_FOR_V3
+    i18n_settings_model_version_highlight.innerHTML = window.i18n.SETTING_HIGHLIGHT_ONLY_MODELS_V
 
     openDiscord.innerHTML = window.i18n.JOIN_DISCORD
 
-    i18n_s2s_components.innerHTML = window.i18n.S2S_COMPONENTS
-    i18n_s2s_components_pitch.innerHTML = window.i18n.PITCH
-    i18n_s2s_components_duration.innerHTML = window.i18n.DURATIONS
-    i18n_s2s_components_energy.innerHTML = window.i18n.ENERGY
-
-    i18n_settings_model_version_highlight.innerHTML = window.i18n.SETTING_HIGHLIGHT_ONLY_MODELS_V
 
 
     i18n_variant.innerHTML = window.i18n.VARIANT_IS

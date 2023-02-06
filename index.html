@@ -97,12 +97,12 @@
             <div class="content">
                 <div id="inputContainer">
                     <div id="micContainer" style="width:100px">
-                        <svg id="mic_SVG" xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 352 512"><path stroke="white" d="M176 352c53.02 0 96-42.98 96-96V96c0-53.02-42.98-96-96-96S80 42.98 80 96v160c0 53.02 42.98 96 96 96zm160-160h-16c-8.84 0-16 7.16-16 16v48c0 74.8-64.49 134.82-140.79 127.38C96.71 376.89 48 317.11 48 250.3V208c0-8.84-7.16-16-16-16H16c-8.84 0-16 7.16-16 16v40.16c0 89.64 63.97 169.55 152 181.69V464H96c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h160c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16h-56v-33.77C285.71 418.47 352 344.9 352 256v-48c0-8.84-7.16-16-16-16z"/></svg>
+                        <svg id="mic_SVG" xmlns="http://www.w3.org/2000/svg" fill="grey" viewBox="0 0 352 512"><path stroke="grey" d="M176 352c53.02 0 96-42.98 96-96V96c0-53.02-42.98-96-96-96S80 42.98 80 96v160c0 53.02 42.98 96 96 96zm160-160h-16c-8.84 0-16 7.16-16 16v48c0 74.8-64.49 134.82-140.79 127.38C96.71 376.89 48 317.11 48 250.3V208c0-8.84-7.16-16-16-16H16c-8.84 0-16 7.16-16 16v40.16c0 89.64 63.97 169.55 152 181.69V464H96c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h160c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16h-56v-33.77C285.71 418.47 352 344.9 352 256v-48c0-8.84-7.16-16-16-16z"/></svg>
                         <svg id="mic_progress_SVG" height="75" width="75">
                           <circle id="mic_progress_SVG_circle" stroke-width="5" fill="transparent" stroke="white" r="35" cx="37" cy="37" />
                         </svg>
                         <div id="s2s_voiceId_selected_label_container" style="width: 125px;display: flex;justify-content: center;">
-                            <div id="s2s_voiceId_selected_label" style="display:none;color: white;position: absolute;background: rgba(0,0,0,0.5);z-index: 100;padding: 2px;font-size: 9pt;margin-top: -10px;"></div>
+                            <div id="s2s_voiceId_selected_label" style="display:none;color: white;position: absolute;background: rgba(0,0,0,0.5);z-index: 100;padding: 2px;font-size: 9pt;margin-top: -10px;">Voice conversion only available for v3 models.</div>
                         </div>
                     </div>
                     <textarea id="dialogueInput" placeholder="Type your text here..."></textarea>
@@ -528,30 +528,13 @@
                     </div>
 
                     <div>
-                        <div id="i18n_setting_s2s_voice">Speech-to-Speech voice</div>
-                        <div>
-                            <span style="display: flex;align-items: center;">
-                                <span id="s2s_selectedVoiceName"><i>None</i></span>
-                                <button id="s2s_selectVoiceBtn">Select voice</button>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div>
                         <div id="i18n_setting_autogeneratevoice">Automatically generate voice</div>
                         <div>
                             <input id="setting_s2s_autogenerate" type="checkbox" name="">
                         </div>
                     </div>
 
-                    <!-- <div>
-                        <div id="i18n_setting_s2s_preadjust_pitch">Pre-adjust the input audio average pitch to match the xVASpeech model voice's</div>
-                        <div>
-                            <input id="setting_s2s_prePitchShift" type="checkbox" name="">
-                        </div>
-                    </div> -->
-
-                    <div style="min-height: 65px;">
+                    <div style="min-height: 65px;display: none;">
                         <div id="i18n_setting_s2s_bgnoise">Remove background noise from microphone. You need to record a background noise clip first. (requires sox >= v14.4.2) </div>
                         <div>
                             <div style="display: flex;align-items: center;">
@@ -922,92 +905,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div id="s2sSelectContainer" style="display:none">
-            <div class="modal">
-                <h2 id="i18n_s2s_selectvoice">Select Speech-to-Speech voice</h2>
-
-                <div id="i18n_s2s_record_note">You can record a few seconds of silence to capture background noise to remove from your future recordings.</div>
-
-                <div id="s2sNoiseRecordContainer">
-                    <span>
-                        <button id="s2sNoiseRecordSampleBtn">Record noise</button>
-                        <div id="s2sNoiseSampleRecordTimer"></div>
-                    </span>
-                    <div id="s2sNoiseAudioContainer"></div>
-                </div>
-
-                <hr>
-
-                <div id="i18n_s2s_components">Select which aspects to clone from the reference voice, and with how much strength</div>
-
-                <div id="s2sSliders" class="flexTable" style="width: 50%;height: 300px;margin-left: -100px;">
-                    <div>
-                        <div id="i18n_s2s_components_pitch">Pitch</div>
-                        <div>
-                            <div>
-                                <input id="s2s_components_pitch_enabled" type="checkbox">
-                                <input id="s2s_components_pitch_range" type="range" step="0.05" min="0" max="1">
-                                <input id="s2s_components_pitch_strength" type="number" step="0.05" min="0" max="1">
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div id="i18n_s2s_components_duration">Duration</div>
-                        <div>
-                            <div>
-                                <input id="s2s_components_durations_enabled" type="checkbox">
-                                <input id="s2s_components_durations_range" type="range" step="0.05" min="0" max="1">
-                                <input id="s2s_components_durations_strength" type="number" step="0.05" min="0" max="1">
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div id="i18n_s2s_components_energy">Energy</div>
-                        <div>
-                            <div>
-                                <input id="s2s_components_energy_enabled" type="checkbox">
-                                <input id="s2s_components_energy_range" type="range" step="0.05" min="0" max="1">
-                                <input id="s2s_components_energy_strength" type="number" step="0.05" min="0" max="1">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <hr>
-
-                <div id="i18n_s2s_instructions">Pick from the available xVASpeech models which voice sounds most like yours. If you have an xVASpeech model trained for your own voice, make sure you use that one. You can record a short sample here, for comparison. Ensure the volume is also similar. For this to work well, your voice/microphone should sound as similar as possible to the audio of the voice you select.</div>
-
-                <div id="s2sVLSampleRecordContainer">
-                    <span>
-                        <button id="s2sVLRecordSampleBtn">Record sample</button>
-                        <div id="s2sVLSampleRecordTimer"></div>
-                    </span>
-                    <div id="s2sVLVoiceSampleAudioContainer"></div>
-                </div>
-
-
-                <div id="s2sVoiceList">
-
-                </div>
-
-                <div id="s2sGenders">
-                    <div>
-                        <input type="checkbox" id="s2sVLFemale" name="s2sVLFemale" checked>
-                        <label id="i18n_s2s_female" for="s2sVLFemale">Female</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="s2sVLMale" name="s2sVLMale" checked>
-                        <label id="i18n_s2s_male" for="s2sVLMale">Male</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="s2sVLOther" name="s2sVLOther" checked>
-                        <label id="i18n_s2s_other" for="s2sVLOther">Other</label>
-                    </div>
-                </div>
-
             </div>
         </div>
 
@@ -1886,7 +1783,6 @@ chromeQuit.addEventListener("click", () => doFetch(`http://localhost:8008/stopSe
 }))
 </script>
 <style id="pluginsCSS" type="text/css"></style>
-<script src="lib/recorder.js"></script>
 <script src="javascript/script.js"></script>
 <script type="text/javascript" src="lib/Three.min.js"></script>
 <script type="text/javascript" src="lib/OrbitControls.js"></script>

@@ -12,7 +12,7 @@ const doFetch = require("node-fetch")
 const {xVAAppLogger} = require("./javascript/appLogger.js")
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 process.on(`uncaughtException`, (data, origin) => {window.appLogger.log(`uncaughtException: ${data}`);window.appLogger.log(`uncaughtException: ${origin}`)})
-window.onerror = (err, url, lineNum) => window.appLogger.log(`onerror: ${err}`)
+window.onerror = (err, url, lineNum) => window.appLogger.log(`onerror: ${err.stack}`)
 require("./javascript/i18n.js")
 require("./javascript/util.js")
 require("./javascript/nexus.js")
@@ -105,7 +105,11 @@ window.initWaveSurfer = (src) => {
             responsive: true,
         })
     }
-    window.wavesurfer.setSinkId(window.userSettings.base_speaker)
+    try {
+        window.wavesurfer.setSinkId(window.userSettings.base_speaker)
+    } catch (e) {
+        console.log("Can't set sinkId")
+    }
     if (src) {
         window.wavesurfer.load(src)
     }
@@ -791,7 +795,14 @@ generateVoiceButton.addEventListener("click", () => {
             generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
 
             // Set the editor pitch/energy dropdowns to pitch, and freeze them, if energy is not supported by the model
-            if (window.currentModel.modelType.toLowerCase()!="fastpitch1.1" && window.currentModel.modelType.toLowerCase()!="xvapitch") {
+            if (window.currentModel.modelType.toLowerCase()=="xvapitch") {
+                vocoder_options_container.style.display = "none"
+                mic_SVG.children[0].style.fill = "white"
+            } else {
+                vocoder_options_container.style.display = "inline-block"
+                mic_SVG.children[0].style.fill = "grey"
+            }
+            if (window.currentModel.modelType.toLowerCase()!="fastpitch1.1") { // TEMP
                 seq_edit_view_select.value = "pitch"
                 seq_edit_edit_select.value = "pitch"
                 seq_edit_view_select.disabled = true
@@ -1841,12 +1852,6 @@ window.setupModal(arpabetIcon, arpabetContainer, () => setTimeout(()=> !window.a
 // Plugins
 // =======
 window.setupModal(pluginsIcon, pluginsContainer)
-
-// Speech-to-Speech
-// ================
-window.setupModal(s2s_selectVoiceBtn, s2sSelectContainer, () => window.populateS2SVoiceList())
-window.setupModal(s2s_settingsRecNoiseBtn, s2sSelectContainer, () => window.populateS2SVoiceList())
-
 
 
 // Other

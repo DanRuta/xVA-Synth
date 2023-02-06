@@ -3,8 +3,6 @@
 window.speech2speechState = {
     isReadingMic: false,
     elapsedRecording: 0,
-    recorder: null,
-    stream: null,
     s2s_running: false
 }
 
@@ -42,7 +40,6 @@ window.initMic = () => {
             const audio_context = new AudioContext
             const input = audio_context.createMediaStreamSource(stream)
             window.speech2speechState.stream = stream
-            window.speech2speechState.recorder = new Recorder(input)
             resolve()
 
         }).catch(err => {
@@ -58,7 +55,9 @@ const animateRecordingProgress = () => {
     const percentDone = (Date.now() - window.speech2speechState.elapsedRecording) / 10000
 
     if (percentDone >= 1 && percentDone!=Infinity) {
-        window.stopRecord()
+        if (window.speech2speechState.isReadingMic) {
+            window.stopRecord()
+        }
     } else {
         const circle = mic_progress_SVG_circle
         const radius = circle.r.baseVal.value
@@ -88,8 +87,10 @@ const clearProgress = (percent=0) => {
 window.clearProgress = clearProgress
 
 window.startRecord = async () => {
-    await window.initMic()
-    window.speech2speechState.recorder.record()
+
+    doFetch(`http://localhost:8008/start_microphone_recording`, {
+        method: "Post"
+    })
 
     window.speech2speechState.isReadingMic = true
     window.speech2speechState.elapsedRecording = Date.now()
@@ -99,100 +100,133 @@ window.startRecord = async () => {
 }
 
 window.outputS2SRecording = (outPath, callback) => {
-    window.speech2speechState.recorder.exportWAV(AudioBLOB => {
-        const fileReader = new FileReader()
-        fileReader.onload = function() {
-
-            if (fs.existsSync(outPath)) {
-                fs.unlinkSync(outPath)
-            }
-
-            fs.writeFileSync(outPath, Buffer.from(new Uint8Array(this.result)))
-
-            if (callback) {
-                callback()
-            }
-        }
-        fileReader.readAsArrayBuffer(AudioBLOB)
-        window.speech2speechState.recorder.clear()
+    doFetch(`http://localhost:8008/move_recorded_file`, {
+        method: "Post",
+        body: JSON.stringify({
+            file_path: outPath
+        })
+    }).then(r=>r.text()).then(res => {
+        callback()
     })
 }
 
 window.useWavFileForspeech2speech = (fileName) => {
-    let sequence = dialogueInput.value.trim().replace("…", "...")
+    // let sequence = dialogueInput.value.trim().replace("…", "...")
+
+    // For some reason, the samplePlay audio element does not update the source when the file name is the same
+    const tempFileNum = `${Math.random().toString().split(".")[1]}`
+    let tempFileLocation = `${path}/output/temp-${tempFileNum}.wav`
+
+    let style_emb = window.currentModel.audioPreviewPath // Default to the preview audio file, if an embedding can't be found in the json - This shouldn't happen
+    try {
+        style_emb = window.currentModel.games[0].base_speaker_emb // If this fails, the json isn't complete
+    } catch (e) {
+        console.log(e)
+    }
+
+    window.tempFileLocation = `${__dirname.replace("/javascript", "").replace("\\javascript", "")}/output/temp-${tempFileNum}.wav`
+    toggleSpinnerButtons()
+
     doFetch(`http://localhost:8008/runSpeechToSpeech`, {
         method: "Post",
         body: JSON.stringify({
             input_path: fileName,
             modelType: window.currentModel.modelType,
+
+            style_emb: window.currentModel.games[0].base_speaker_emb,
+            audio_out_path: tempFileLocation,
+
             s2s_components: window.userSettings.s2s_components,
-            text: sequence,
             doPitchShift: window.userSettings.s2s_prePitchShift,
             removeNoise: window.userSettings.s2s_removeNoise,
             removeNoiseStrength: window.userSettings.s2s_noiseRemStrength,
-            n_speakers: window.userSettings.s2s_voiceId.split(",").reverse()[1],
-            modelPath: window.userSettings.s2s_voiceId.split(",").reverse()[0],
-            voiceId: window.userSettings.s2s_voiceId.split(",")[0]
+            n_speakers: undefined,
+            modelPath: undefined,
+            voiceId: undefined
         })
     }).then(r=>r.text()).then(res => {
+        // This block of code sometimes gets called before the audio file has actually finished flushing to file
+        // I need a better way to make sure that this doesn't get called until it IS finished, but "for now",
+        // I've set up some recursive re-attempts, below doTheRest
 
-        window.speech2speechState.s2s_running = true
-        mic_progress_SVG.style.animation = "none"
-        clearProgress()
+        let hasLoaded = false
+        let numRetries = 0
+        toggleSpinnerButtons()
 
-        if (res.includes("Traceback")) {
-            window.errorModal(`<h3>${window.i18n.SOMETHING_WENT_WRONG}</h3>${res.replaceAll("\n", "<br>")}`)
-
-        } else if (res.includes("ERROR:APP_VERSION")) {
-            const speech2speechModelVersion = "v"+res.split(",")[1]
-            window.errorModal(`${window.i18n.ERR_XVASPEECH_MODEL_VERSION.replace("_1", speech2speechModelVersion)} ${window.appVersion}`)
-        } else {
-            res = res.split("\n")
-            let pitchData = res[0]
-            let durationsData = res[1]
-            let energyData = res[2]
-            let cleanedSequence = res[3].split("|").map(c=>c.replaceAll("{", "").replaceAll("}", "")).join("")
-
-            if (!dialogueInput.value.length) {
-                dialogueInput.value = cleanedSequence
+        const doTheRest = () => {
+            if (hasLoaded) {
+                return
             }
+            window.wavesurfer = undefined
+            tempFileLocation = tempFileLocation.replaceAll(/\\/, "/")
+            tempFileLocation = tempFileLocation.replaceAll('/resources/app/resources/app', "/resources/app")
 
-            sequence = cleanedSequence
+            dialogueInput.value = ""
+            window.isGenerating = false
 
-            pitchData = pitchData.split(",").map(v => parseFloat(v))
-            if (energyData.length) {
-                energyData = energyData.split(",").map(v => parseFloat(v)).filter(v => !isNaN(v))
+            window.speech2speechState.s2s_running = true
+            mic_progress_SVG.style.animation = "none"
+            clearProgress()
+
+            if (res.includes("Traceback")) {
+                window.errorModal(`<h3>${window.i18n.SOMETHING_WENT_WRONG}</h3>${res.replaceAll("\n", "<br>")}`)
+
+            } else if (res.includes("ERROR:APP_VERSION")) {
+                const speech2speechModelVersion = "v"+res.split(",")[1]
+                window.errorModal(`${window.i18n.ERR_XVASPEECH_MODEL_VERSION.replace("_1", speech2speechModelVersion)} ${window.appVersion}`)
             } else {
-                energyData = []
+
+                keepSampleButton.disabled = false
+                window.tempFileLocation = tempFileLocation
+
+                // Wavesurfer
+                if (!window.wavesurfer) {
+                    window.initWaveSurfer(window.tempFileLocation)
+                } else {
+                    window.wavesurfer.load(window.tempFileLocation)
+                }
+                window.wavesurfer.on("ready",  () => {
+
+                    hasLoaded = true
+                    wavesurferContainer.style.opacity = 1
+
+                    if (window.userSettings.autoPlayGen) {
+
+                        if (window.userSettings.playChangedAudio) {
+                            const playbackStartEnd = window.sequenceEditor.getChangedTimeStamps(start_index, end_index, window.wavesurfer.getDuration())
+                            if (playbackStartEnd) {
+                                wavesurfer.play(playbackStartEnd[0], playbackStartEnd[1])
+                            } else {
+                                wavesurfer.play()
+                            }
+                        } else {
+                            wavesurfer.play()
+                        }
+                        window.sequenceEditor.adjustedLetters = new Set()
+                        samplePlayPause.innerHTML = window.i18n.PAUSE
+                    }
+                })
+
+                // Persistance across sessions
+                localStorage.setItem("tempFileLocation", tempFileLocation)
+                generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
+
+                if (window.userSettings.s2s_autogenerate) {
+                    speech2speechState.s2s_autogenerate = true
+                    generateVoiceButton.click()
+                }
+
+                keepSampleButton.dataset.newFileLocation = `${window.userSettings[`outpath_${window.currentGame.gameId}`]}/${title.dataset.modelId}/vc_${tempFileNum}.wav`
+                keepSampleButton.disabled = false
+                keepSampleButton.style.display = "block"
+                samplePlayPause.style.display = "block"
+
+                setTimeout(doTheRest, 100)
             }
-            durationsData = durationsData.split(",").map(v => parseFloat(v))
 
-            window.sequenceEditor.inputSequence = sequence
-            window.sequenceEditor.sequence = cleanedSequence
-
-            window.sequenceEditor.resetPitch = pitchData
-            window.sequenceEditor.resetDurs = durationsData
-            window.sequenceEditor.resetEnergy = energyData
-
-            window.sequenceEditor.letters = cleanedSequence.replace(/\s/g, "_").split("")
-            window.sequenceEditor.pitchNew = pitchData.map(p=>p)
-            window.sequenceEditor.dursNew = durationsData.map(v=>v)
-            window.sequenceEditor.energyNew = energyData.map(v=>v)
-            window.sequenceEditor.init()
-            window.sequenceEditor.update()
-
-            window.sequenceEditor.sliderBoxes.forEach((box, i) => {box.setValueFromValue(window.sequenceEditor.dursNew[i])})
-            window.sequenceEditor.autoInferTimer = null
-            window.sequenceEditor.hasChanged = false
-
-            generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
-
-            if (window.userSettings.s2s_autogenerate) {
-                speech2speechState.s2s_autogenerate = true
-                generateVoiceButton.click()
-            }
         }
 
+        doTheRest()
     }).catch(e => {
         console.log(e)
         mic_progress_SVG.style.animation = "none"
@@ -200,9 +234,7 @@ window.useWavFileForspeech2speech = (fileName) => {
 }
 
 window.stopRecord = (cancelled) => {
-
-    window.speech2speechState.recorder.stop()
-    window.speech2speechState.stream.getAudioTracks()[0].stop()
+    fs.writeFileSync(`${window.path}/python/temp_stop_recording`, "")
 
     if (!cancelled) {
         clearProgress(0.35)
@@ -220,34 +252,22 @@ window.stopRecord = (cancelled) => {
 }
 
 window.micClickHandler = (ctrlKey) => {
-
-    if (ctrlKey) {
-        s2s_selectVoiceBtn.click()
+    if (window.speech2speechState.isReadingMic) {
+        window.stopRecord()
     } else {
-        if (window.speech2speechState.isReadingMic) {
-            window.stopRecord()
-        } else {
-
-            if (!Object.keys(window.userSettings).includes("s2s_voiceId") || !window.userSettings.s2s_voiceId) {
-                s2s_selectVoiceBtn.click()
-            } else {
-                const speech2speechPath = window.userSettings.s2s_voiceId.split(",")[3]
-                if (!fs.existsSync(speech2speechPath)) {
-                    window.userSettings.s2s_voiceId = undefined
-                    window.micClickHandler()
-                    return
-                }
-                if (window.currentModel && generateVoiceButton.innerHTML == window.i18n.GENERATE_VOICE) {
-                    window.startRecord()
-                } else {
-                    window.errorModal(window.i18n.LOAD_TARGET_MODEL)
-                }
+        if (window.currentModel && generateVoiceButton.innerHTML == window.i18n.GENERATE_VOICE) {
+            if (window.currentModel.modelType.toLowerCase()=="xvapitch") {
+                window.startRecord()
             }
+        } else {
+            window.errorModal(window.i18n.LOAD_TARGET_MODEL)
         }
     }
 }
 mic_SVG.addEventListener("mouseenter", () => {
-    s2s_voiceId_selected_label.style.display = "inline-block"
+    if (!window.currentModel || window.currentModel.modelType.toLowerCase()!="xvapitch") {
+        s2s_voiceId_selected_label.style.display = "inline-block"
+    }
 })
 mic_SVG.addEventListener("mouseleave", () => {
     s2s_voiceId_selected_label.style.display = "none"
@@ -266,184 +286,6 @@ mic_SVG.addEventListener("contextmenu", () => {
 clearProgress()
 
 
-window.populateS2SVoiceList = () => {
-    const models = []
-    Object.values(window.games).forEach(game => {
-        game.models.forEach(model => {
-
-            model.variants.forEach(variant => {
-
-                if (variant.modelType.toLowerCase()=="fastpitch1.1") {
-
-                    if (!s2sVLFemale.checked && variant.gender && variant.gender.toLowerCase()=="female") return
-                    if (!s2sVLMale.checked && variant.gender && variant.gender.toLowerCase()=="male") return
-                    if (!s2sVLOther.checked && variant.gender && variant.gender.toLowerCase()=="other") return
-
-                    const modelPath = window.userSettings[`modelspath_${model.gameId}`] + `/${variant.voiceId}.pt`
-
-                    const themeColour = window.games[model.gameId].gameTheme.themeColourPrimary
-                    models.push([modelPath, model.num_speakers||0, model.audioPreviewPath, model.voiceName, variant.voiceId, themeColour] )
-                }
-            })
-        })
-    })
-
-    s2sVoiceList.innerHTML = ""
-
-    models.forEach(([modelPath, num_speakers, audioPreviewPath, voiceName, voiceId, themeColour]) => {
-        const record = createElem("div")
-
-        const button = createElem("div.voiceType", voiceName)
-        button.style.background = `#${themeColour}`
-
-        record.appendChild(button)
-        const audioElem = createElem("audio", {controls: true}, createElem("source", {
-            src: audioPreviewPath+".wav",
-            type: `audio/wav`
-        }))
-        audioElem.setSinkId(window.userSettings.base_speaker)
-        record.appendChild(audioElem)
-        s2sVoiceList.appendChild(record)
-
-        button.addEventListener("click", () => {
-            window.userSettings.s2s_voiceId = `${voiceId},${voiceName},${num_speakers},${modelPath}`
-            window.saveUserSettings()
-            s2s_selectedVoiceName.innerHTML = voiceName
-            s2s_voiceId_selected_label.innerHTML = voiceName
-            window.closeModal(s2sSelectContainer)
-        })
-    })
-
-    if (s2sVoiceList.innerHTML=="") {
-        s2sVoiceList.appendChild(createElem("div", window.i18n.NO_XVASPEECH_MODELS))
-    }
-}
-
-
-
-if (Object.keys(window.userSettings).includes("s2s_voiceId")) {
-    s2s_selectedVoiceName.innerHTML = window.userSettings.s2s_voiceId.split(",")[1]
-    s2s_voiceId_selected_label.innerHTML = window.userSettings.s2s_voiceId.split(",")[1]
-}
-
-s2sVLFemale.addEventListener("change", () => {
-    window.userSettings.s2sVL_female = s2sVLFemale.checked
-    window.populateS2SVoiceList()
-    window.saveUserSettings()
-})
-if (Object.keys(window.userSettings).includes("s2sVL_female")) {
-    s2sVLFemale.checked = window.userSettings.s2sVL_female
-}
-s2sVLMale.addEventListener("change", () => {
-    window.userSettings.s2sVL_male = s2sVLMale.checked
-    window.populateS2SVoiceList()
-    window.saveUserSettings()
-})
-if (Object.keys(window.userSettings).includes("s2sVL_male")) {
-    s2sVLMale.checked = window.userSettings.s2sVL_male
-}
-s2sVLOther.addEventListener("change", () => {
-    window.userSettings.s2sVL_other = s2sVLOther.checked
-    window.populateS2SVoiceList()
-    window.saveUserSettings()
-})
-if (Object.keys(window.userSettings).includes("s2sVL_other")) {
-    s2sVLOther.checked = window.userSettings.s2sVL_other
-}
-
-
-const silenceFileName = `${__dirname.replace("\\javascript", "").replace(/\\/g,"/")}/output/silence.wav`
-s2sNoiseRecordSampleBtn.addEventListener("click", () => {
-    if (window.speech2speechState.isReadingMic) {
-        return
-    }
-    window.speech2speechState.recorder.record()
-    window.speech2speechState.isReadingMic = true
-
-    const origButtonColour = s2sNoiseRecordSampleBtn.style.background
-    s2sNoiseRecordSampleBtn.style.background = "red"
-
-    let secondsElapsed = 1
-    const interval = setInterval(() => {
-
-        if (secondsElapsed>=5) {
-            s2sNoiseSampleRecordTimer.innerHTML = ""
-            window.speech2speechState.isReadingMic = false
-            clearInterval(interval)
-            s2sNoiseRecordSampleBtn.style.background = origButtonColour
-            window.speech2speechState.recorder.stop()
-            window.speech2speechState.stream.getAudioTracks()[0].stop()
-            window.outputS2SRecording(silenceFileName, () => {
-                s2sNoiseAudioContainer.innerHTML = ""
-                const audioElem = createElem("audio", {controls: true}, createElem("source", {
-                    src: silenceFileName,
-                    type: `audio/wav`
-                }))
-                audioElem.setSinkId(window.userSettings.base_speaker)
-                s2sNoiseAudioContainer.appendChild(audioElem)
-
-
-            })
-        } else {
-            s2sNoiseSampleRecordTimer.innerHTML = `${5-secondsElapsed}s`
-            secondsElapsed++
-        }
-    }, 1000)
-    s2sNoiseSampleRecordTimer.innerHTML = `5s`
-})
-if (fs.existsSync(silenceFileName)) {
-    const audioElem = createElem("audio", {controls: true}, createElem("source", {
-        src: silenceFileName,
-        type: `audio/wav`
-    }))
-    audioElem.setSinkId(window.userSettings.base_speaker)
-    s2sNoiseAudioContainer.appendChild(audioElem)
-}
-
-
-s2sVLRecordSampleBtn.addEventListener("click", () => {
-
-    if (window.speech2speechState.isReadingMic) {
-        return
-    }
-
-    window.speech2speechState.recorder.record()
-    window.speech2speechState.isReadingMic = true
-
-    const origButtonColour = s2sVLRecordSampleBtn.style.background
-    s2sVLRecordSampleBtn.style.background = "red"
-
-    let secondsElapsed = 1
-    const interval = setInterval(() => {
-
-        if (secondsElapsed>=5) {
-            s2sVLSampleRecordTimer.innerHTML = ""
-            window.speech2speechState.isReadingMic = false
-            clearInterval(interval)
-            s2sVLRecordSampleBtn.style.background = origButtonColour
-            window.speech2speechState.recorder.stop()
-            window.speech2speechState.stream.getAudioTracks()[0].stop()
-            const fileName = `${__dirname.replace("\\javascript", "").replace(/\\/g,"/")}/output/temp-recsample.wav`
-            window.outputS2SRecording(fileName, () => {
-                s2sVLVoiceSampleAudioContainer.innerHTML = ""
-                const audioElem = createElem("audio", {controls: true}, createElem("source", {
-                    src: fileName,
-                    type: `audio/wav`
-                }))
-                audioElem.setSinkId(window.userSettings.base_speaker)
-                s2sVLVoiceSampleAudioContainer.appendChild(audioElem)
-
-
-            })
-        } else {
-            s2sVLSampleRecordTimer.innerHTML = `${5-secondsElapsed}s`
-            secondsElapsed++
-        }
-    }, 1000)
-    s2sVLSampleRecordTimer.innerHTML = `5s`
-})
-
-
 
 // File dragging
 window.uploadS2SFile = (eType, event) => {
@@ -460,30 +302,25 @@ window.uploadS2SFile = (eType, event) => {
     event.stopPropagation()
 
     if (eType=="drop") {
+        if (window.currentModel && generateVoiceButton.innerHTML == window.i18n.GENERATE_VOICE) {
+            const dataTransfer = event.dataTransfer
+            const files = Array.from(dataTransfer.files)
+            const file = files[0]
 
-        if (!Object.keys(window.userSettings).includes("s2s_voiceId")) {
-            s2s_selectVoiceBtn.click()
-        } else {
-            if (window.currentModel && generateVoiceButton.innerHTML == window.i18n.GENERATE_VOICE) {
-                const dataTransfer = event.dataTransfer
-                const files = Array.from(dataTransfer.files)
-                const file = files[0]
-
-                if (!file.name.endsWith(".wav")) {
-                    window.errorModal(window.i18n.ONLY_WAV_S2S)
-                    return
-                }
-
-                clearProgress(0.35)
-                mic_progress_SVG.style.animation = "spin 1.5s linear infinite"
-                mic_progress_SVG_circle.style.stroke = "white"
-
-                const fileName = `${__dirname.replace("\\javascript", "").replace(/\\/g,"/")}/output/recorded_file.wav`
-                fs.copyFileSync(file.path, fileName)
-                window.useWavFileForspeech2speech(fileName)
-            } else {
-                window.errorModal(window.i18n.LOAD_TARGET_MODEL)
+            if (!file.name.endsWith(".wav")) {
+                window.errorModal(window.i18n.ONLY_WAV_S2S)
+                return
             }
+
+            clearProgress(0.35)
+            mic_progress_SVG.style.animation = "spin 1.5s linear infinite"
+            mic_progress_SVG_circle.style.stroke = "white"
+
+            const fileName = `${__dirname.replace("\\javascript", "").replace(/\\/g,"/")}/output/recorded_file.wav`
+            fs.copyFileSync(file.path, fileName)
+            window.useWavFileForspeech2speech(fileName)
+        } else {
+            window.errorModal(window.i18n.LOAD_TARGET_MODEL)
         }
     }
 }
