@@ -336,7 +336,7 @@ setting_change_installation.addEventListener("click", () => {
         }
 
         window.currentModel = undefined
-        title.innerHTML = window.i18n.SELECT_VOICE_TYPE
+        titleName.innerHTML = window.i18n.SELECT_VOICE_TYPE
         keepSampleButton.style.display = "none"
         wavesurferContainer.innerHTML = ""
         generateVoiceButton.dataset.modelQuery = "null"

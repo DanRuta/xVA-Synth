@@ -146,6 +146,10 @@ class ResNetSpeakerEncoder(nn.Module):
         self._init_layers()
         self.isReady = True
 
+    def set_device (self, device):
+        self.device = device
+        self = self.to(device)
+
     def _init_layers(self):
         for m in self.modules():
             if isinstance(m, nn.Conv2d):

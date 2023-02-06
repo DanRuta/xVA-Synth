@@ -7,7 +7,7 @@ if __name__ == '__main__':
     multiprocessing.freeze_support()
 
     PROD = False
-    # PROD = True
+    PROD = True
     CPU_ONLY = False
     # CPU_ONLY = True
 
@@ -67,6 +67,9 @@ if __name__ == '__main__':
         logger.addHandler(fh)
         logger.addHandler(ch)
         logger.info(f'New session. Version: {APP_VERSION}. Installation: {"CPU" if CPU_ONLY else "CPU+GPU"} | Log path: {server_log_path}')
+        logger.info("str(os.listdir(.))")
+        logger.info(str(os.listdir(".")))
+        logger.info(str("resources" in os.listdir(".")))
 
         logger.orig_info = logger.info
 
@@ -227,7 +230,7 @@ if __name__ == '__main__':
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["post"], event="post load-model", data=post_data)
 
                     if modelType=="fastpitch1_1":
-                        models_manager.models_bank["fastpitch1_1"].init_arpabet_dicts()
+                        models_manager.models_bank["fastpitch1_1"][instance_index].init_arpabet_dicts()
 
                 if self.path == "/synthesize":
                     logger.info("POST {}".format(self.path))
@@ -393,8 +396,6 @@ if __name__ == '__main__':
 
                 if self.path == "/move_recorded_file":
                     file_path = post_data["file_path"]
-                    logger.info("str(os.listdir(.))")
-                    logger.info(str(os.listdir(".")))
                     move_recorded_file(logger, f'{"./resources/app" if PROD else "."}', file_path)
 
                 self._set_response()

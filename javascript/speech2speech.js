@@ -124,6 +124,10 @@ window.useWavFileForspeech2speech = (fileName) => {
         console.log(e)
     }
 
+    if (window.wavesurfer) {
+        window.wavesurfer.stop()
+        wavesurferContainer.style.opacity = 0
+    }
     window.tempFileLocation = `${__dirname.replace("/javascript", "").replace("\\javascript", "")}/output/temp-${tempFileNum}.wav`
     toggleSpinnerButtons()
 
@@ -157,7 +161,7 @@ window.useWavFileForspeech2speech = (fileName) => {
             if (hasLoaded) {
                 return
             }
-            window.wavesurfer = undefined
+            // window.wavesurfer = undefined
             tempFileLocation = tempFileLocation.replaceAll(/\\/, "/")
             tempFileLocation = tempFileLocation.replaceAll('/resources/app/resources/app', "/resources/app")
             tempFileLocation = tempFileLocation.replaceAll('/resources/app', "")
