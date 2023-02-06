@@ -7,7 +7,7 @@
     "data": {
         "xvasynth": {
             "enabled": true,
-            "arpabet": "EH1 G S V EY0 IH0 S IH0 N TH"
+            "arpabet": "EH1 G S V EY0 EY0 IH0 S IH0 N TH"
         },
         "model": {
             "enabled": true,
@@ -52,6 +52,10 @@
         "gpu": {
             "enabled": true,
             "arpabet": "JH IY1 P IY1 Y UW1"
+        },
+        "video": {
+            "enabled": true,
+            "arpabet": "V IY0 D IY0 OW0"
         }
     }
 }

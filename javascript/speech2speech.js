@@ -160,6 +160,7 @@ window.useWavFileForspeech2speech = (fileName) => {
             window.wavesurfer = undefined
             tempFileLocation = tempFileLocation.replaceAll(/\\/, "/")
             tempFileLocation = tempFileLocation.replaceAll('/resources/app/resources/app', "/resources/app")
+            tempFileLocation = tempFileLocation.replaceAll('/resources/app', "")
 
             dialogueInput.value = ""
             window.isGenerating = false

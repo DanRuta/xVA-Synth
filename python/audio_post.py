@@ -210,7 +210,7 @@ def start_microphone_recording (logger, root_folder):
     FORMAT = pyaudio.paInt16 #paInt8
     CHANNELS = 2
     RATE = 44100 #sample rate
-    RECORD_SECONDS = 4
+    RECORD_SECONDS = 15
     WAVE_OUTPUT_FILENAME = f'{root_folder}/output/recorded_file.wav'
 
     p = pyaudio.PyAudio()
