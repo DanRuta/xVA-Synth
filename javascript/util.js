@@ -30,6 +30,7 @@ window.toggleSpinnerButtons = () => {
 window.confirmModal = message => new Promise(resolve => resolve(createModal("confirm", message)))
 window.spinnerModal = message => new Promise(resolve => resolve(createModal("spinner", message)))
 window.errorModal = message => {
+    window.errorModalHasOpened = true
     if (window.userSettings.useErrorSound) {
         const audioPreview = createElem("audio", {autoplay: false}, createElem("source", {
             src: window.userSettings.errorSoundFile
@@ -49,7 +50,7 @@ window.createModal = (type, message) => {
     return new Promise(resolve => {
         modalContainer.innerHTML = ""
         const displayMessage = message.prompt ? message.prompt : message
-        const modal = createElem("div.modal#activeModal", {style: {opacity: 0}}, createElem("span", displayMessage))
+        const modal = createElem("div.modal#activeModal", {style: {opacity: 0}}, createElem("span.createModalContents", displayMessage))
         modal.dataset.type = type
 
         if (type=="confirm") {
@@ -103,8 +104,12 @@ window.createModal = (type, message) => {
         requestAnimationFrame(() => requestAnimationFrame(() => chromeBar.style.opacity = 1))
     })
 }
-window.closeModal = (container=undefined, notThisOne=undefined) => {
+window.closeModal = (container=undefined, notThisOne=undefined, skipIfErrorOpen=false) => {
     return new Promise(resolve => {
+        if (window.errorModalHasOpened && skipIfErrorOpen) {
+            return resolve()
+        }
+        window.errorModalHasOpened = false
         const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, pluginsContainer, modalContainer, s2sSelectContainer, nexusContainer, embeddingsContainer, totdContainer, nexusReposContainer, EULAContainer, arpabetContainer]
         const containers = container==undefined ? allContainers : (Array.isArray(container) ? container.filter(c=>c!=undefined) : [container])
 
@@ -123,16 +128,20 @@ window.closeModal = (container=undefined, notThisOne=undefined) => {
         }
 
         setTimeout(() => {
-            containers.forEach(cont => {
-                // Hide the containers except the exceptions
-                if (cont!=undefined && !notThisOne.includes(cont)) {
-                    cont.style.display = "none"
-                    const someOpenContainer2 = allContainers.filter(c=>c!=undefined).find(cont => cont.style.opacity==1 && cont.style.display!="none" && cont!=modalContainer)
-                    if (!someOpenContainer2 || someOpenContainer2==container) {
-                        chromeBar.style.opacity = 0.88
+            if (window.errorModalHasOpened && skipIfErrorOpen) {
+            } else {
+                containers.forEach(cont => {
+                    // Hide the containers except the exceptions
+                    if (cont!=undefined && !notThisOne.includes(cont)) {
+                        cont.style.display = "none"
+                        const someOpenContainer2 = allContainers.filter(c=>c!=undefined).find(cont => cont.style.opacity==1 && cont.style.display!="none" && cont!=modalContainer)
+                        if (!someOpenContainer2 || someOpenContainer2==container) {
+                            chromeBar.style.opacity = 0.88
+                        }
                     }
-                }
-            })
+                })
+                window.errorModalHasOpened = false
+            }
             // resolve()
         }, 200)
         try {

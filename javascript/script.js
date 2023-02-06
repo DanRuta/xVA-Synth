@@ -1202,7 +1202,7 @@ window.saveFile = (from, to, skipUIRecord=false) => {
                 options: JSON.stringify(options)
             })
         }).then(r=>r.text()).then(res => {
-            closeModal().then(() => {
+            closeModal(undefined, undefined, true).then(() => {
                 if (res.length && res!="-") {
                     console.log("res", res)
                     window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${window.i18n.INPUT}: ${from}<br>${window.i18n.OUTPUT}: ${to}<br><br>${res}`)
@@ -1219,7 +1219,7 @@ window.saveFile = (from, to, skipUIRecord=false) => {
             })
         }).catch(res => {
             window.appLogger.log(`Error in saveFile->outputAudio[ffmpeg]: ${res}`)
-            closeModal().then(() => {
+            closeModal(undefined, undefined, true).then(() => {
                 window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${window.i18n.INPUT}: ${from}<br>${window.i18n.OUTPUT}: ${to}<br><br>${res}`)
             })
         })
@@ -1400,7 +1400,7 @@ window.doWeirdServerStartupCheck = () => {
                             modelsPaths: JSON.stringify(modelsPaths)
                         })
                     }).then(r => r.text()).then(r => {
-                        closeModal([document.querySelector("#activeModal"), modalContainer], [totdContainer, EULAContainer]).then(() => {
+                        closeModal([document.querySelector("#activeModal"), modalContainer], [totdContainer, EULAContainer], true).then(() => {
                             window.pluginsManager.updateUI()
                             if (!window.pluginsManager.hasRunPostStartPlugins) {
                                 window.pluginsManager.hasRunPostStartPlugins = true

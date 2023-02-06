@@ -858,6 +858,9 @@ a {
      overflow-y: auto;
      overflow-x: hidden;
  }
+ .createModalContents {
+    width: 33vw;
+ }
 
  #patreonButton {
     margin-top: 10px;
