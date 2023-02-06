@@ -41,6 +41,7 @@ class Editor {
 
         this.default_pitchSliderRange = 4
         this.pitchSliderRange = 4
+        this.duration_visual_size_multiplier = 1
 
         this.default_MIN_ENERGY = 3.45
         this.MIN_ENERGY = 3.45
@@ -101,7 +102,8 @@ class Editor {
             this.canvas.style.cursor = "default"
 
             // Check energy grabber hover
-            const isOnEGrabber = seq_edit_view_select.value.includes("energy") && this.energyGrabbers.find(eGrabber => {
+            const isOnEGrabber = seq_edit_view_select.value.includes("energy") && this.energyGrabbers.find((eGrabber, egi) => {
+                if (!this.enabled_disabled_items[egi]) return
                 const grabberX = eGrabber.getXLeft()+eGrabber.sliderBox.width/2-this.ENERGY_GRABBER_RADIUS
                 return (mouseX>grabberX && mouseX<grabberX+this.ENERGY_GRABBER_RADIUS*2+4) && (mouseY>eGrabber.topLeftY-this.ENERGY_GRABBER_RADIUS-2 && mouseY<eGrabber.topLeftY+this.ENERGY_GRABBER_RADIUS+2)
             })
@@ -110,7 +112,8 @@ class Editor {
                 return
             }
             // Check grabber hover
-            const isOnGrabber = seq_edit_view_select.value.includes("pitch") && this.grabbers.find(grabber => {
+            const isOnGrabber = seq_edit_view_select.value.includes("pitch") && this.grabbers.find((grabber, gi) => {
+                if (!this.enabled_disabled_items[gi]) return
                 const grabberX = grabber.getXLeft()
                 return (mouseX>grabberX && mouseX<grabberX+grabber.width) && (mouseY>grabber.topLeftY && mouseY<grabber.topLeftY+grabber.height)
             })
@@ -120,6 +123,7 @@ class Editor {
             }
             // Check letter hover
             const isOnLetter = this.letterClasses.find((letter, l) => {
+                if (!this.enabled_disabled_items[l]) return
                 return (mouseY<this.LETTERS_Y_OFFSET) && (mouseX>this.sliderBoxes[l].getXLeft() && mouseX<this.sliderBoxes[l].getXLeft()+this.sliderBoxes[l].width)
             })
             if (isOnLetter!=undefined) {
@@ -127,7 +131,8 @@ class Editor {
                 return
             }
             // Check box length dragger
-            const isBetweenBoxes = this.sliderBoxes.find(box => {
+            const isBetweenBoxes = this.sliderBoxes.find((box, bi) => {
+                if (!this.enabled_disabled_items[bi]) return
                 const boxX = box.getXLeft()
                 return (mouseY>box.topY && mouseY<box.topY+box.height) && (mouseX>(boxX+box.width-10) && mouseX<(boxX+box.width+10)+5)
             })
@@ -146,7 +151,8 @@ class Editor {
             mouseDownStart.y = mouseY
 
             // Check up-down energy dragging
-            const isOnEGrabber = seq_edit_view_select.value.includes("energy") && this.energyGrabbers.find(eGrabber => {
+            const isOnEGrabber = seq_edit_view_select.value.includes("energy") && this.energyGrabbers.find((eGrabber, egi) => {
+                if (!this.enabled_disabled_items[egi]) return
                 const grabberX = eGrabber.getXLeft()+eGrabber.sliderBox.width/2-this.ENERGY_GRABBER_RADIUS
                 return (mouseX>grabberX && mouseX<grabberX+this.ENERGY_GRABBER_RADIUS*2+4) && (mouseY>eGrabber.topLeftY-this.ENERGY_GRABBER_RADIUS-2 && mouseY<eGrabber.topLeftY+this.ENERGY_GRABBER_RADIUS+2)
             })
@@ -164,7 +170,8 @@ class Editor {
                 return
             }
             // Check up-down pitch dragging
-            const isOnGrabber = seq_edit_view_select.value.includes("pitch") && this.grabbers.find(grabber => {
+            const isOnGrabber = seq_edit_view_select.value.includes("pitch") && this.grabbers.find((grabber, gi) => {
+                if (!this.enabled_disabled_items[gi]) return
                 const grabberX = grabber.getXLeft()
                 return (mouseX>grabberX && mouseX<grabberX+grabber.width) && (mouseY>grabber.topLeftY && mouseY<grabber.topLeftY+grabber.height)
             })
@@ -182,7 +189,8 @@ class Editor {
                 return
             }
             // Check sideways dragging
-            const isBetweenBoxes = this.sliderBoxes.find(box => {
+            const isBetweenBoxes = this.sliderBoxes.find((box, bi) => {
+                if (!this.enabled_disabled_items[bi]) return
                 const boxX = box.getXLeft()
                 return (mouseY>box.topY && mouseY<box.topY+box.height) && (mouseX>(boxX+box.width-10) && mouseX<(boxX+box.width+10)+5)
             })
@@ -196,6 +204,7 @@ class Editor {
 
             // Check clicking on the top letters
             const isOnLetter = this.letterClasses.find((letter, l) => {
+                if (!this.enabled_disabled_items[l]) return
                 return (mouseY<this.LETTERS_Y_OFFSET) && (mouseX>this.sliderBoxes[l].getXLeft() && mouseX<this.sliderBoxes[l].getXLeft()+this.sliderBoxes[l].width)
             })
             if (isOnLetter) {
@@ -305,13 +314,29 @@ class Editor {
     render () {
         if (this.context!=undefined) {
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
-            this.letterClasses.forEach(letter => {letter.context=this.context;letter.render()})
-            this.sliderBoxes.forEach(sliderBox => {sliderBox.context=this.context;sliderBox.render()})
+            this.letterClasses.forEach((letter, li) => {
+                if (this.letters[li]=="<PAD>") return
+                letter.context = this.context
+                letter.render()
+            })
+            this.sliderBoxes.forEach((sliderBox, sbi) => {
+                if (this.letters[sbi]=="<PAD>") return
+                sliderBox.context = this.context
+                sliderBox.render()
+            })
             if (seq_edit_view_select.value=="pitch_energy" || seq_edit_view_select.value=="pitch") {
-                this.grabbers.forEach(grabber => {grabber.context=this.context;grabber.render()})
+                this.grabbers.forEach((grabber,gi) => {
+                    if (this.letters[gi]=="<PAD>") return
+                    grabber.context = this.context
+                    grabber.render()
+                })
             }
             if (seq_edit_view_select.value=="pitch_energy" || seq_edit_view_select.value=="energy") {
-                this.energyGrabbers.forEach(eGrabber => {eGrabber.context=this.context;eGrabber.render()})
+                this.energyGrabbers.forEach((eGrabber, egi) => {
+                    if (this.letters[egi]=="<PAD>") return
+                    eGrabber.context = this.context
+                    eGrabber.render()
+                })
             }
         }
         requestAnimationFrame(() => {this.render()})
@@ -320,23 +345,47 @@ class Editor {
 
 
 
-    update () {
+    update (modelType=undefined) {
+
+        // Make model-specific adjustments
+        if (modelType=="xVAPitch") {
+            this.default_pitchSliderRange = 30
+            this.pitchSliderRange = 30
+            this.duration_visual_size_multiplier = 1
+            this.MAX_LETTER_LENGTH = 200
+        } else {
+            this.default_pitchSliderRange = 4
+            this.pitchSliderRange = 4
+            this.duration_visual_size_multiplier = 1
+            this.MAX_LETTER_LENGTH = 100
+        }
 
         this.letterClasses = []
         this.sliderBoxes = []
         this.grabbers = []
         this.energyGrabbers = []
 
+        this.enabled_disabled_items = []
+
         let xCounter = 0
         let lastBox = undefined
+        let letter_counter = 0
         this.letters.forEach((letter, li) => {
+
+            if (letter=="<PAD>") {
+                this.enabled_disabled_items.push(false)
+                letter_counter += 1
+            } else {
+                this.enabled_disabled_items.push(true)
+            }
+            letter_counter += 1
 
             const dur = this.dursNew[li]
             const width = Math.max(25, dur*10)
 
 
             // Slider box
-            const sliderBox = new SliderBox(this.context, li, lastBox, this.LETTERS_Y_OFFSET, this.EDITOR_HEIGHT, this.MIN_LETTER_LENGTH, this.MAX_LETTER_LENGTH)
+            const sliderBox = new SliderBox(this.context, li, lastBox, this.LETTERS_Y_OFFSET, this.EDITOR_HEIGHT, this.MIN_LETTER_LENGTH, this.MAX_LETTER_LENGTH, letter_counter%2==0)
             sliderBox.render()
             if (lastBox) {
                 lastBox.rightBox = sliderBox
@@ -613,13 +662,14 @@ class EnergyGrabber extends SliderGrabber {
 
 
 class SliderBox {
-    constructor (context, index, leftBox, topY, height, minLetterLength, maxLetterLength) {
+    constructor (context, index, leftBox, topY, height, minLetterLength, maxLetterLength, alternateColour=false) {
         this.type = "box"
         this.context = context
         this.leftBox = leftBox
         this.topY = topY
         this.height = height
         this.index = index
+        this.alternateColour = alternateColour
 
         this.LEFT_RIGHT_SEQ_PADDING = 20
         this.MIN_LETTER_LENGTH = minLetterLength
@@ -631,11 +681,11 @@ class SliderBox {
 
     render () {
         this.context.globalAlpha = 0.3
-        this.context.fillStyle = this.index%2==0 ? "white" : "black"
-        this.context.fillRect(this.LEFT_RIGHT_SEQ_PADDING+ (this.leftBox?this.leftBox.getX():0), this.topY, this.width, this.height)
+        this.context.fillStyle = this.alternateColour ? "white" : "black"
+        this.context.fillRect(this.LEFT_RIGHT_SEQ_PADDING+ (this.getLeftBox()?this.getLeftBox().getX():0), this.topY, this.width, this.height)
 
         this.context.beginPath()
-        this.context.rect(this.LEFT_RIGHT_SEQ_PADDING+ (this.leftBox?this.leftBox.getX():0), this.topY, this.width, this.height)
+        this.context.rect(this.LEFT_RIGHT_SEQ_PADDING+ (this.getLeftBox()?this.getLeftBox().getX():0), this.topY, this.width, this.height)
         this.context.stroke()
 
 
@@ -655,16 +705,26 @@ class SliderBox {
         this.letter.centerX = this.leftX + this.width/2
     }
 
+    getLeftBox () {
+        if (this.leftBox) {
+            if (window.sequenceEditor.enabled_disabled_items[this.leftBox.index]) {
+                return this.leftBox
+            } else {
+                return this.leftBox.leftBox
+            }
+        }
+    }
+
 
     getX () {
         if (this.leftBox) {
-            return this.leftBox.getX() + this.width + 5
+            return this.getLeftBox().getX() + this.width + 5
         }
         return 0 + this.width + 5
     }
     getXLeft () {
         if (this.leftBox) {
-            return this.LEFT_RIGHT_SEQ_PADDING+this.leftBox.getX()
+            return this.LEFT_RIGHT_SEQ_PADDING+this.getLeftBox().getX()
         }
         return this.LEFT_RIGHT_SEQ_PADDING
     }

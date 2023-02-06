@@ -57,7 +57,18 @@ class ModelsManager(object):
                 from python.wav2vec2.model import Wav2Vec2
                 self.models_bank[model_key] = Wav2Vec2(self.logger, self.PROD, self.device, self)
 
-            self.models_bank[model_key].model = self.models_bank[model_key].model.to(self.device)
+            elif model_key=="speaker_rep":
+                from python.xvapitch.speaker_rep.model import ResNetSpeakerEncoder
+                self.models_bank[model_key] = ResNetSpeakerEncoder(self.logger, self.PROD, self.device, self)
+
+            try:
+                self.models_bank[model_key].model = self.models_bank[model_key].model.to(self.device)
+            except:
+                pass
+            try:
+                self.models_bank[model_key] = self.models_bank[model_key].to(self.device)
+            except:
+                pass
         except:
             self.logger.info(traceback.format_exc())
 
@@ -86,4 +97,6 @@ class ModelsManager(object):
             self.models_bank[model_key].set_device(self.device)
 
     def models (self, key):
+        if key.lower() not in self.models_bank.keys():
+            self.init_model(key.lower())
         return self.models_bank[key.lower()]

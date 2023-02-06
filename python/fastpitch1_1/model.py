@@ -239,14 +239,14 @@ class FastPitch1_1(object):
 
         return ""
 
-    def infer(self, plugin_manager, text, output, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None):
+    def infer(self, plugin_manager, text, output, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang=None):
 
         sigma_infer = 0.9
         stft_hop_length = 256
         sampling_rate = 22050
         denoising_strength = 0.01
 
-        text = re.sub(r'[^a-zA-ZäöüÄÖÜß_\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)
+        text = re.sub(r'[^a-zA-ZäöüÄÖÜß_\s\(\)\[\]0-9\?\.\,\!\'\{\}\-]+', '', text)
         text = self.infer_arpabet_dict(text, plugin_manager)
         text = text.replace("(", "").replace(")", "")
         text = re.sub(r'[^a-zA-ZäöüÄÖÜß\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)

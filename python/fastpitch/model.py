@@ -141,7 +141,7 @@ class FastPitch(object):
 
         return ""
 
-    def infer(self, plugin_manager, text, output, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None):
+    def infer(self, plugin_manager, text, output, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang=None):
 
         self.logger.info(f'Inferring: "{text}" ({len(text)})')
 

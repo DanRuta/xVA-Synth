@@ -87,7 +87,7 @@ clearOldTempFiles()
 
 let fileRenameCounter = 0
 let fileChangeCounter = 0
-let isGenerating = false
+window.isGenerating = false
 
 
 // Audio player
@@ -831,7 +831,7 @@ generateVoiceButton.addEventListener("click", () => {
         })
     } else {
 
-        if (isGenerating) {
+        if (window.isGenerating) {
             return
         }
         clearOldTempFiles()
@@ -840,7 +840,7 @@ generateVoiceButton.addEventListener("click", () => {
         if (sequence.length==0) {
             return
         }
-        isGenerating = true
+        window.isGenerating = true
 
         window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["generate-voice"]["pre"], event="pre generate-voice")
         sequence = dialogueInput.value.replace("…", "...").replace("’", "'")
@@ -917,7 +917,7 @@ generateVoiceButton.addEventListener("click", () => {
                 dialogueInput.value = ""
             }
 
-            isGenerating = false
+            window.isGenerating = false
             res = res.split("\n")
             let pitchData = res[0]
             let durationsData = res[1]
@@ -974,7 +974,7 @@ generateVoiceButton.addEventListener("click", () => {
                 window.sequenceEditor.dursNew = durationsData.map(v=>v)
                 window.sequenceEditor.energyNew = energyData.map(v=>v)
                 window.sequenceEditor.init()
-                window.sequenceEditor.update()
+                window.sequenceEditor.update(window.currentModel.modelType)
 
                 window.sequenceEditor.sliderBoxes.forEach((box, i) => {box.setValueFromValue(window.sequenceEditor.dursNew[i])})
                 window.sequenceEditor.autoInferTimer = null
@@ -1076,8 +1076,9 @@ generateVoiceButton.addEventListener("click", () => {
 
 
         }).catch(res => {
-            isGenerating = false
+            window.isGenerating = false
             console.log(res)
+            window.appLogger.log(res)
             window.errorModal(window.i18n.SOMETHING_WENT_WRONG)
             toggleSpinnerButtons()
         })
