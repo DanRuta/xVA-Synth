@@ -797,9 +797,11 @@ generateVoiceButton.addEventListener("click", () => {
             // Set the editor pitch/energy dropdowns to pitch, and freeze them, if energy is not supported by the model
             if (window.currentModel.modelType.toLowerCase()=="xvapitch") {
                 vocoder_options_container.style.display = "none"
+                base_lang_options_container.style.display = "inline-block"
                 mic_SVG.children[0].style.fill = "white"
             } else {
                 vocoder_options_container.style.display = "inline-block"
+                base_lang_options_container.style.display = "none"
                 mic_SVG.children[0].style.fill = "grey"
             }
             if (window.currentModel.modelType.toLowerCase()!="fastpitch1.1") { // TEMP
@@ -896,6 +898,7 @@ generateVoiceButton.addEventListener("click", () => {
             method: "Post",
             body: JSON.stringify({
                 sequence, pitch, duration, energy, speaker_i, pace,
+                base_lang: base_lang_select.value,
                 modelType: window.currentModel.modelType,
                 old_sequence, // For partial re-generation
                 outfile: tempFileLocation,

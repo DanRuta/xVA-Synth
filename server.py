@@ -249,6 +249,7 @@ if __name__ == '__main__':
                         text = post_data["sequence"]
                         pace = float(post_data["pace"])
                         out_path = post_data["outfile"]
+                        base_lang = post_data["base_lang"] if "base_lang" in post_data else None
                         pitch = post_data["pitch"] if "pitch" in post_data else None
                         energy = post_data["energy"] if "energy" in post_data else None
                         duration = post_data["duration"] if "duration" in post_data else None
@@ -259,7 +260,7 @@ if __name__ == '__main__':
                         old_sequence = post_data["old_sequence"] if "old_sequence" in post_data else None
 
                         req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", "")).infer(plugin_manager, text, out_path, vocoder=vocoder, \
-                            speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence, globalAmplitudeModifier=globalAmplitudeModifier)
+                            speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence, globalAmplitudeModifier=globalAmplitudeModifier, base_lang=base_lang)
                         plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["post"], event="post synth-line", data=post_data)
 
 

@@ -22,6 +22,7 @@ window.i18n.setEnglish = () => {
     window.i18n.RESET_LETTER = "Reset Letter"
     window.i18n.AUTO_REGEN = "Auto regenerate"
     window.i18n.VOCODER = "Vocoder:"
+    window.i18n.BASE_LANGUAGE_IS = "Base Language:"
     window.i18n.VARIANT_IS = "Variant:"
 
     window.i18n.SEARCH_GAMES = "Search games..."
@@ -595,6 +596,7 @@ window.i18n.updateUI = () => {
     resetLetter_btn.innerHTML = window.i18n.RESET_LETTER
     i18n_autoregen.innerHTML = window.i18n.AUTO_REGEN
     i18n_vocoder.innerHTML = window.i18n.VOCODER
+    i18n_base_lang.innerHTML = window.i18n.BASE_LANGUAGE_IS
 
     batch_paginationPrev.innerHTML = window.i18n.PREVIOUS
     batch_paginationNext.innerHTML = window.i18n.NEXT

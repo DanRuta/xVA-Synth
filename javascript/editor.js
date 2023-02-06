@@ -1134,5 +1134,44 @@ autoplay_ckbx.addEventListener("change", () => {
 })
 
 
+// Populate the languages dropdown
+window.supportedLanguages = {
+    // "am": "Amharic",
+    "ar": "Arabic",
+    "da": "Danish",
+    "de": "German",
+    "el": "Greek",
+    "en": "English",
+    "es": "Spanish",
+    "fi": "Finnish",
+    "fr": "French",
+    "ha": "Hausa",
+    "hi": "Hindi",
+    "hu": "Hungarian",
+    "it": "Italian",
+    "jp": "Japanese",
+    "ko": "Korean",
+    "la": "Latin",
+    "nl": "Dutch",
+    "pl": "Polish",
+    "pt": "Portuguese",
+    "ro": "Romanian",
+    "ru": "Russian",
+    "sv": "Swedish",
+    "sw": "Swahili",
+    // "th": "Thai",
+    "tr": "Turkish",
+    "uk": "Ukrainian",
+    "vi": "Vietnamese",
+    "wo": "Wolof",
+    "yo": "Yoruba",
+    "zh": "Chinese"
+}
+Object.keys(window.supportedLanguages).sort((a,b)=>window.supportedLanguages[a]<window.supportedLanguages[b]?-1:1).forEach(key => {
+    const opt = createElem("option", window.supportedLanguages[key])
+    opt.value = key
+    base_lang_select.appendChild(opt)
+})
+base_lang_select.value = "en"
 
 exports.Editor = Editor

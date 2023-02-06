@@ -144,7 +144,11 @@
                                 <input id="letterPitchNumb" disabled="true" type="number" name="lengthNum" min="-3" step="0.025" max="3">
                             </div>
                             <button id="resetLetter_btn">Reset Letter</button>
-                            <div>
+                            <div id="base_lang_options_container" style="display: none;">
+                                <span id="i18n_base_lang">Base Language:</span>
+                                <select id="base_lang_select"></select>
+                            </div>
+                            <div id="vocoder_options_container" style="display: none;">
                                 <span id="i18n_vocoder">Vocoder:</span>
                                 <select id="vocoder_select">
                                     <option value="256_waveglow">WaveGlow</option>
