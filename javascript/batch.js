@@ -598,12 +598,12 @@ window.populateBatchRecordsList = records => {
         const rGameElem = createElem("div", record.game_id)
         const rOutPathElem = createElem("div", "&lrm;"+record.out_path+"&lrm;")
         rOutPathElem.title = record.out_path
-        const rBaseLangElem = createElem("div", (record.lang||" ").toString())
+        const rBaseLangElem = createElem("div", record.vc_content?"-":(record.lang||" ").toString())
         const rVCStyleElem = createElem("div", (record.vc_style||" ").toString())
         rVCStyleElem.title = rVCStyleElem.innerText
         const rVocoderElem = createElem("div", record.vocoder)
-        const rPacingElem = createElem("div", (record.pacing||" ").toString())
-        const rPitchAmpElem = createElem("div", (record.pitch_amp||" ").toString())
+        const rPacingElem = createElem("div", record.vc_content?"-":(record.pacing||" ").toString())
+        const rPitchAmpElem = createElem("div", record.vc_content?"-":(record.pitch_amp||" ").toString())
 
 
         row.appendChild(rNumElem)
@@ -973,46 +973,49 @@ window.addActionButtons = (records, ri) => {
             audioPreview.setSinkId(window.userSettings.base_speaker)
         }
     })
-    const editButton = createElem("button.smallButton", window.i18n.EDIT)
-    editButton.style.background = `#${window.currentGame.themeColourPrimary}`
-    editButton.addEventListener("click", () => {
-        audioPreview = undefined
-
-
-        if (window.batch_state.state) {
-            window.errorModal(window.i18n.BATCH_ERR_EDIT)
-            return
-        }
-
-        // Change app theme to the voice's game
-        if (window.currentGame.gameId!=records[ri][0].game_id) {
-            window.changeGame(window.gameAssets[records[ri][0].game_id])
-        }
-
-        dialogueInput.value = records[ri][0].text
-
-        // Simulate voice loading through the UI
-        if (!window.currentModel || window.currentModel.voiceId != records[ri][0].voice_id) {
-            const voiceName = records[ri][0].voiceName
-            const voiceButton = Array.from(voiceTypeContainer.children).find(button => button.innerHTML==voiceName)
-            voiceButton.click()
-            vocoder_select.value = records[ri][0].vocoder=="hifi" ? `${records[ri][0].game_id}/${records[ri][0].voice_id}.hg.pt` : records[ri][0].vocoder
-            generateVoiceButton.click()
-        }
-        window.closeModal(batchGenerationContainer)
-
-        setTimeout(() => {
-            let audioPreviewPath = records[ri][0].fileOutputPath
-            if (audioPreviewPath.startsWith("./")) {
-                audioPreviewPath = window.userSettings.batchOutFolder + audioPreviewPath.replace("./", "/")
-            }
-            keepSampleButton.dataset.newFileLocation = "BATCH_EDIT"+audioPreviewPath
-            generateVoiceButton.click()
-        }, 500)
-    })
     records[ri][1].children[2].appendChild(playButton)
-    records[ri][1].children[2].appendChild(editButton)
 
+    // If not a Voice Conversion line
+    if (!records[ri][0].vc_content) {
+        const editButton = createElem("button.smallButton", window.i18n.EDIT)
+        editButton.style.background = `#${window.currentGame.themeColourPrimary}`
+        editButton.addEventListener("click", () => {
+            audioPreview = undefined
+
+
+            if (window.batch_state.state) {
+                window.errorModal(window.i18n.BATCH_ERR_EDIT)
+                return
+            }
+
+            // Change app theme to the voice's game
+            if (window.currentGame.gameId!=records[ri][0].game_id) {
+                window.changeGame(window.gameAssets[records[ri][0].game_id])
+            }
+
+            dialogueInput.value = records[ri][0].text
+
+            // Simulate voice loading through the UI
+            if (!window.currentModel || window.currentModel.voiceId != records[ri][0].voice_id) {
+                const voiceName = records[ri][0].voiceName
+                const voiceButton = Array.from(voiceTypeContainer.children).find(button => button.innerHTML==voiceName)
+                voiceButton.click()
+                vocoder_select.value = records[ri][0].vocoder=="hifi" ? `${records[ri][0].game_id}/${records[ri][0].voice_id}.hg.pt` : records[ri][0].vocoder
+                generateVoiceButton.click()
+            }
+            window.closeModal(batchGenerationContainer)
+
+            setTimeout(() => {
+                let audioPreviewPath = records[ri][0].fileOutputPath
+                if (audioPreviewPath.startsWith("./")) {
+                    audioPreviewPath = window.userSettings.batchOutFolder + audioPreviewPath.replace("./", "/")
+                }
+                keepSampleButton.dataset.newFileLocation = "BATCH_EDIT"+audioPreviewPath
+                generateVoiceButton.click()
+            }, 500)
+        })
+        records[ri][1].children[2].appendChild(editButton)
+    }
 }
 
 
