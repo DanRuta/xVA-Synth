@@ -17,7 +17,7 @@ class ModelsManager(object):
     def init_model (self, model_key, instance_index=0):
         model_key = model_key.lower()
         try:
-            if model_key in list(self.models_bank.keys()) and self.models_bank[model_key][instance_index].isReady:
+            if model_key in list(self.models_bank.keys()) and instance_index in self.models_bank[model_key].keys() and self.models_bank[model_key][instance_index].isReady:
                 return
             self.logger.info(f'ModelsManager: Initializing model: {model_key}')
 
@@ -98,7 +98,7 @@ class ModelsManager(object):
 
     def load_model (self, model_key, ckpt_path, instance_index=0, **kwargs):
 
-        if model_key not in self.models_bank.keys():
+        if model_key not in self.models_bank.keys() or instance_index not in self.models_bank[model_key].keys():
             self.init_model(model_key, instance_index)
 
         if not os.path.exists(ckpt_path):
@@ -121,6 +121,6 @@ class ModelsManager(object):
             self.models_bank[model_key][instance_index].set_device(self.device)
 
     def models (self, key, instance_index=0):
-        if key.lower() not in self.models_bank.keys():
+        if key.lower() not in self.models_bank.keys() or instance_index not in self.models_bank[key.lower()].keys():
             self.init_model(key.lower(), instance_index=instance_index)
         return self.models_bank[key.lower()][instance_index]
