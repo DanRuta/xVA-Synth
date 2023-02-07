@@ -605,8 +605,8 @@ window.populateBatchRecordsList = records => {
         row.appendChild(rVoiceElem)
         row.appendChild(rTextElem)
         row.appendChild(rGameElem)
-        row.appendChild(rVocoderElem)
         row.appendChild(rOutPathElem)
+        row.appendChild(rVocoderElem)
         row.appendChild(rPacingElem)
         row.appendChild(rPitchAmpElem)
         row.appendChild(rBaseLangElem)
@@ -1501,7 +1501,7 @@ setting_batch_paginationSize.addEventListener("change", () => {
 
 window.toggleNumericalRecordsDisplay = () => {
     window.batch_state.lines.forEach(record => {
-        record[1].children[7].innerHTML = batch_outputNumerically.checked ? `${window.userSettings.batchOutFolder}/${String(record[2]).padStart(10, '0')}` : record[0].out_path
+        record[1].children[6].innerHTML = batch_outputNumerically.checked ? `${window.userSettings.batchOutFolder}/${String(record[2]).padStart(10, '0')}` : record[0].out_path
     })
 }
 batch_outputNumerically.addEventListener("click", () => {
