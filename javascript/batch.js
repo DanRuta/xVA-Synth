@@ -519,7 +519,6 @@ window.preProcessCSVData = data => {
 
             data[di].modelType = undefined
             let hasHifi = false
-            record.lang = "en"
             window.games[data[di].game_id].models.forEach(model => {
                 model.variants.forEach(variant => {
                     if (variant.voiceId==data[di].voice_id) {
@@ -528,12 +527,11 @@ window.preProcessCSVData = data => {
                         if (variant.hifi) {
                             hasHifi = variant.hifi
                         }
-                        if (variant.lang) {
+                        if (variant.lang && !record.lang) {
                             record.lang = "en"
                         }
                         // TODO allow batch mode voice conversion/speech to speech by computing the embs of specified audio files instead of using the base voice embedding
                         // Also TODO, might need to allow for custom voice embeddings
-                        console.log("variant", variant)
                         if (variant.modelType=="xVAPitch") {
                             record.base_emb = variant.base_speaker_emb
                         }
@@ -594,6 +592,7 @@ window.populateBatchRecordsList = records => {
         rOutPathElem.title = record.out_path
         const rPacingElem = createElem("div", (record.pacing||" ").toString())
         const rPitchAmpElem = createElem("div", (record.pitch_amp||" ").toString())
+        const rBaseLangElem = createElem("div", (record.lang||" ").toString())
 
 
         row.appendChild(rNumElem)
@@ -606,6 +605,7 @@ window.populateBatchRecordsList = records => {
         row.appendChild(rOutPathElem)
         row.appendChild(rPacingElem)
         row.appendChild(rPitchAmpElem)
+        row.appendChild(rBaseLangElem)
 
         window.batch_state.lines.push([record, row, ri])
     })

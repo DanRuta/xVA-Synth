@@ -1142,6 +1142,11 @@ a {
     min-width: 85px;
     max-width: 85px;
 }
+/*Base language*/
+#batchRecordsHeader > div:nth-child(11), #batchRecordsContainer > div > div:nth-child(11) {
+    min-width: 85px;
+    max-width: 85px;
+}
 
 #batch_ETA_container {
     display: flex;

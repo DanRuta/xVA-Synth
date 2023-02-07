@@ -180,6 +180,7 @@ window.i18n.setEnglish = () => {
     window.i18n.BATCHH_OUTPATH = "Out Path"
     window.i18n.BATCHH_PACING = "Pacing"
     window.i18n.BATCHH_PITCH_AMP = "Pitch Amp."
+    window.i18n.BATCHH_BASE_LANG = "Base lang"
     window.i18n.BATCH_ABS_DIR_PLACEHOLDER = "Complete absolute directory path to output"
 
     window.i18n.BATCH_CLEAR_DIR = "Clear out the directory first"
@@ -837,6 +838,7 @@ window.i18n.updateUI = () => {
     i18n_batchh_outpath.innerHTML = window.i18n.BATCHH_OUTPATH
     i18n_batchh_pacing.innerHTML = window.i18n.BATCHH_PACING
     i18n_batchh_pitch_amp.innerHTML = window.i18n.BATCHH_PITCH_AMP
+    i18n_batchh_base_lang.innerHTML = window.i18n.BATCHH_BASE_LANG
     batch_outputFolderInput.placeholder = window.i18n.BATCH_ABS_DIR_PLACEHOLDER
 
     i18n_batch_cleardir.innerHTML = window.i18n.BATCH_CLEAR_DIR
