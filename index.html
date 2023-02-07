@@ -814,9 +814,9 @@
             </div>
         </div>
         <div id="batchGenerationContainer" style="display:none;">
-            <div class="modal" style="height: 85vh;width: 95vw;">
-                <h2 id="i18n_batch_synthesis">Batch synthesis</h2>
-                <div id="batch_container">
+            <div class="modal" style="height: 85vh;width: 97vw;padding-bottom: 0;">
+                <h2 id="i18n_batch_synthesis" style="margin-top: -15px;margin-bottom: 10px;">Batch synthesis</h2>
+                <div id="batch_container" style="margin-top: 0;margin-bottom: 0;">
                     <div id="batch_intro">
                         <div>
                             <div style="display: flex;align-items: center;justify-content: center;">
@@ -828,13 +828,20 @@
                                 <span id="vramUsage">22.5/24.0 GB (87%)</span>
                             </div>
                         </div>
-                        <div>
-                            <span id="i18n_batch_instr1">Place the .csv batch file(s) into the box below. The mandatory columns are "game_id", "voice_id", and "text", but you can also specify output filename/filepath under "out_path", pacing under "pacing", and vocoder under "vocoder" (Available options: 'hifi', 'quickanddirty', 'waveglow', 'waveglowBIG'). Click the "Generate sample" button to generate an example .csv file if you need one. Watch </span>
-
-                            <a id="i18n_batch_instr2" href="https://www.youtube.com/watch?v=PK-m54f84q4" target="_blank">this short video</a>
-                            <span id="i18n_batch_instr3">for a demo and more instructions.</span>
-                        </div>
-                        <div>
+                        <div></div>
+                        <div style="flex-grow: 1;display: flex;align-items: center;justify-content: flex-end;">
+                            <div>
+                                <div style="height: 40px;display: flex;justify-content: center;align-items: center;">
+                                    <div><button id="batch_paginationPrev">Previous</button></div>
+                                    <div style="display: flex;align-items: center;">
+                                        <div id="i18n_page">Page:</div>
+                                        <input id="batch_pageNum" type="number" min="1" step="1" style="height: 25px;width: 50px;margin: 10px;">
+                                        <div id="batch_total_pages" style="margin-right: 10px;"></div>
+                                    </div>
+                                    <div><button id="batch_paginationNext">Next</button></div>
+                                </div>
+                            </div>
+                            <button id="batch_instructions_btn">Instructions</button>
                             <button id="batch_generateSample">Generate Sample</button>
                         </div>
                     </div>
@@ -858,18 +865,7 @@
                         </div>
                     </div>
                     <div id="batch_footer" style="padding-bottom: 0;padding-top: 0;">
-                        <div>
-                            <div style="height: 40px;display: flex;justify-content: center;align-items: center;">
-                                <div><button id="batch_paginationPrev">Previous</button></div>
-                                <div style="display: flex;align-items: center;">
-                                    <div id="i18n_page">Page:</div>
-                                    <input id="batch_pageNum" type="number" min="1" step="1" style="height: 25px;width: 50px;margin: 10px;">
-                                    <div id="batch_total_pages" style="margin-right: 10px;"></div>
-                                </div>
-                                <div><button id="batch_paginationNext">Next</button></div>
-                            </div>
-                        </div>
-                        <div style="max-height: 35px;display: flex;justify-content: center;">
+                        <div style="max-height: 35px;display: flex;justify-content: center;margin-top: 5px;">
                             <input type="text" id="batch_outputFolderInput" placeholder="Complete absolute directory path to output">
                             <div style="display: none;" id="batch_progressBar"></div>
                         </div>

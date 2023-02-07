@@ -980,13 +980,13 @@ a {
     justify-content: center;
     align-items: center;
     height: 50vh;
-    width: 94vw;
+    width: 97vw;
     background: rgb(75,75,75);
     color: gray;
     overflow: auto;
 }
 #batch_main {
-    height: 55vh;
+    height: 66vh;
 }
 #plugins_main {
     width: 90vw;
@@ -1012,15 +1012,15 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 20px;
-    width: 94vw;
+    width: 97vw;
+    margin-top: -20px;
 }
 #batch_intro > div:first-child {
     display: flex;
-    height: 50px;
-    width: 350px;
+    height: 40px;
+    width: 450px;
     justify-content: space-between;
-    flex-direction: column;
+    align-items: center;
 }
 #batch_intro > div:last-child {
     width: 250px;
@@ -1028,9 +1028,6 @@ a {
 #batch_intro > div:first-child > div:first-child > input {
     width: 50px;
     margin-left: 10px;
-}
-#batch_intro > div:nth-child(2) {
-    width: 80%;
 }
 #batch_outputFolderInput, #batch_progressBar {
     width: 400px;
@@ -1051,7 +1048,8 @@ a {
     border: 1px solid white;
 }
 #batch_out_opts, #plugins_opts {
-    min-height: 45px;
+    min-height: 30px;
+    height: 30px;
 }
 #batch_out_opts, #batch_out_opts>span, #plugins_opts {
     display: flex;

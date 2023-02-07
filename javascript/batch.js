@@ -130,6 +130,9 @@ let smiInterval = setInterval(() => {
     }
 }, 1000)
 
+batch_instructions_btn.addEventListener("click", () => {
+    window.createModal("error", `${window.i18n.BATCH_INSTR1} <a href="https://www.youtube.com/watch?v=PK-m54f84q4" target="_blank">${window.i18n.BATCH_INSTR2}</a> <span>${window.i18n.BATCH_INSTR3}</span>`)
+})
 
 batch_generateSample.addEventListener("click", () => {
     // const lines = []

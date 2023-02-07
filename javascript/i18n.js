@@ -168,6 +168,7 @@ window.i18n.setEnglish = () => {
     window.i18n.BATCH_INSTR2 = "this short video"
     window.i18n.BATCH_INSTR3 = "for a demo and more instructions."
     window.i18n.BATCH_GEN_SAMPLE = "Generate Sample"
+    window.i18n.BATCH_INSTRUCTIONS = "Instructions"
     window.i18n.BATCH_DROPZONE = "Drag and drop .csv files here"
 
     window.i18n.BATCHH_NUM = "#"
@@ -820,10 +821,8 @@ window.i18n.updateUI = () => {
 
     i18n_batch_synthesis.innerHTML = window.i18n.BATCH_SYNTHESIS
     i18n_batchsize.innerHTML = window.i18n.BATCH_SIZE
-    i18n_batch_instr1.innerHTML = window.i18n.BATCH_INSTR1
-    i18n_batch_instr2.innerHTML = window.i18n.BATCH_INSTR2
-    i18n_batch_instr3.innerHTML = window.i18n.BATCH_INSTR3
     batch_generateSample.innerHTML = window.i18n.BATCH_GEN_SAMPLE
+    batch_instructions_btn.innerHTML = window.i18n.BATCH_INSTRUCTIONS
     batchDropZoneNote.innerHTML = window.i18n.BATCH_DROPZONE
 
     i18n_batchh_num.innerHTML = window.i18n.BATCHH_NUM
