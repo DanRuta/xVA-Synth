@@ -519,6 +519,7 @@ window.preProcessCSVData = data => {
 
             data[di].modelType = undefined
             let hasHifi = false
+            record.lang = "en"
             window.games[data[di].game_id].models.forEach(model => {
                 model.variants.forEach(variant => {
                     if (variant.voiceId==data[di].voice_id) {
@@ -526,6 +527,15 @@ window.preProcessCSVData = data => {
                         record.voiceName = model.voiceName // For easy access later on
                         if (variant.hifi) {
                             hasHifi = variant.hifi
+                        }
+                        if (variant.lang) {
+                            record.lang = "en"
+                        }
+                        // TODO allow batch mode voice conversion/speech to speech by computing the embs of specified audio files instead of using the base voice embedding
+                        // Also TODO, might need to allow for custom voice embeddings
+                        console.log("variant", variant)
+                        if (variant.modelType=="xVAPitch") {
+                            record.base_emb = variant.base_speaker_emb
                         }
                     }
                 })
@@ -777,6 +787,7 @@ window.batchChangeVoice = (game, voice, modelType) => {
                 "outputs": null,
                 "model": `${window.userSettings[`modelspath_${game}`]}/${voice}`,
                 "model_speakers": model.num_speakers,
+                "base_lang": model.lang,
                 "pluginsContext": JSON.stringify(window.pluginsContext)
             })
         }).then(r=>r.text()).then(res => {
@@ -922,7 +933,7 @@ window.prepareLinesBatchForSynth = () => {
             outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
         }
 
-        linesBatch.push([sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder, pitch_amp])
+        linesBatch.push([sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder, pitch_amp, record[0].lang, record[0].base_emb])
         records.push(record)
     }
 

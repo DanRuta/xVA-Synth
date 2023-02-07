@@ -175,6 +175,8 @@ window.registerModel = (modelsPath, gameFolder, model, {gameId, voiceId, voiceNa
         author: model.author,
         version: model.version,
         modelVersion: model.modelVersion,
+        modelType: model.modelType,
+        base_speaker_emb: model.modelType=="xVAPitch" ? model.games[0].base_speaker_emb : undefined,
         voiceId,
         audioPreviewPath,
         hifi: undefined,

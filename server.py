@@ -281,13 +281,22 @@ if __name__ == '__main__':
                     vocoder = post_data["vocoder"]
                     outputJSON = post_data["outputJSON"]
 
-                    try:
-                        req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", "")).infer_batch(plugin_manager, linesBatch, outputJSON=outputJSON, vocoder=vocoder, speaker_i=speaker_i)
-                    except RuntimeError as e:
-                        if "CUDA out of memory" in str(e):
-                            req_response = "CUDA OOM"
-                        else:
-                            req_response = traceback.format_exc()
+                    with torch.no_grad():
+                        try:
+                            req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", "")).infer_batch(plugin_manager, linesBatch, outputJSON=outputJSON, vocoder=vocoder, speaker_i=speaker_i)
+                        except RuntimeError as e:
+                            if "CUDA out of memory" in str(e):
+                                req_response = "CUDA OOM"
+                            else:
+                                req_response = traceback.format_exc()
+                                logger.info(req_response)
+                        except:
+                            e = traceback.format_exc()
+                            if "CUDA out of memory" in str(e):
+                                req_response = "CUDA OOM"
+                            else:
+                                req_response = e
+                                logger.info(e)
                     post_data["req_response"] = req_response
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["batch-synth-line"]["post"], event="post batch-synth-line", data=post_data)
 
@@ -407,6 +416,7 @@ if __name__ == '__main__':
                 logger.info("Post Error:\n {}".format(repr(e)))
                 print(traceback.format_exc())
                 logger.info(traceback.format_exc())
+
 
     try:
         # server = HTTPServer(("",8008), Handler)

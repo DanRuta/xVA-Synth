@@ -12059,6 +12059,7 @@ gambling|ɡ ˈæ m b l ɪ ŋ
 gamboled|ɡ ˈæ m b oʊ l d
 gambols|ɡ ˈæ m b ɑː l z
 game|ɡ ˈeɪ m
+game_id|ɡ ˈeɪ m aɪ d ˈiː
 gamegemawe|ɡ ˈeɪ m dʒ ɪ m ˌɔː
 gamekeeper|ɡ ˈeɪ m k iː p ɚ
 gamesome|ɡ ˈeɪ m s ʌ m
@@ -14055,6 +14056,7 @@ hierarch|h ˈaɪɚ ɹ ɑːɹ k
 hieroglyphical|h ˌaɪɚ ɹ ə ɡ l ˈɪ f ɪ k əl
 hieronymous|h aɪɚ ɹ ˈɑː n ɪ m ə s
 hierophant|h ˈaɪɚ ɹ ɑː f ə n t
+hifi|h ˈɪ f i
 higgins'|h ˈɪ ɡ ɪ n z
 higgledy|h ˈɪ ɡ əl d i
 higgs's|h ˈɪ ɡ z ᵻ z
@@ -24046,6 +24048,7 @@ questions|k w ˈɛ s tʃ ə n z
 quetzal|k w ˈɛ t s əl
 quex's|k w ˈɛ k s ᵻ z
 quick|k w ˈɪ k
+quickanddirty|k w ˈɪ k ɐ n d ˌɜː ɾ i
 quickener|k w ˈɪ k ə n ɚ
 quickeneth|k w ˈɪ k iː n ə θ
 quicker|k w ˈɪ k ɚ
@@ -33269,11 +33272,13 @@ vocal|v ˈoʊ k əl
 vocalization|v ˌoʊ k ə l ᵻ z ˈeɪ ʃ ə n
 voce|v ˈoʊ tʃ eɪ
 vociferations|v ˌoʊ s ɪ f ɚ ɹ ˈeɪ ʃ ə n z
+vocoder|v ˈoʊ k oʊ d ɚ
 vod|v ˈɑː d
 vodka's|v ˈɑː d k ə z
 voebel|v ˈoʊ b əl
 voebel's|v ˈoʊ b əl z
 voice|v ˈɔɪ s
+voice_id|v ˈɔɪ s aɪ d ˈiː
 voiced|v ˈɔɪ s t
 voices|v ˈɔɪ s ᵻ z
 voicings|v ˈɔɪ s ɪ ŋ z
@@ -33782,6 +33787,8 @@ watts's|w ˈɑː t s ᵻ z
 wav|w ˈæ v
 wave|w ˈeɪ v
 wave's|w ˈeɪ v z
+waveglow|w ˈeɪ v ɡ l oʊ
+waveglowbig|w ˈeɪ v ɡ l oʊ b ˌiː  ˌaɪ dʒ ˈiː
 waves|w ˈeɪ v z
 waving|w ˈeɪ v ɪ ŋ
 wavrick|w ˈæ v ɹ ɪ k

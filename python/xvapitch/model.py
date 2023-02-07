@@ -173,118 +173,89 @@ class xVAPitch(object):
 
 
     def infer_batch(self, plugin_manager, linesBatch, outputJSON, vocoder, speaker_i, old_sequence=None):
-        TODO()
-        pass
-        # print(f'Inferring batch of {len(linesBatch)} lines')
 
-        # sigma_infer = 0.9
-        # stft_hop_length = 256
-        # sampling_rate = 22050
-        # denoising_strength = 0.01
+        sampling_rate = 22050
 
-        # text_sequences = []
-        # cleaned_text_sequences = []
-        # for record in linesBatch:
-        #     text = record[0]
-        #     text = re.sub(r'[^a-zA-ZäöüÄÖÜß_\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)
-        #     text = self.infer_arpabet_dict(text, plugin_manager)
-        #     text = text.replace("(", "").replace(")", "")
-        #     text = re.sub(r'[^a-zA-ZäöüÄÖÜß\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)
-        #     sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
-        #     cleaned_text_sequences.append(sequence_to_text("english_basic", sequence))
-        #     text = torch.LongTensor(sequence)
-        #     text_sequences.append(text)
+        text_sequences = []
+        cleaned_text_sequences = []
+        lang_embs = []
+        speaker_embs = []
+        # [sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder, pitch_amp, base_lang, base_emb]
+        for ri,record in enumerate(linesBatch):
+            # Language set-up
+            base_lang = record[-2]
+            if base_lang not in self.lang_tp.keys():
+                self.lang_tp[base_lang] = get_text_preprocessor(base_lang, self.base_dir, logger=self.logger)
 
-        # text_sequences = pad_sequence(text_sequences, batch_first=True).to(self.device)
+            # Pre-process text
+            text = record[0]
+            sequence, cleaned_text = self.lang_tp[base_lang].text_to_sequence(text)
+            cleaned_text_sequences.append(cleaned_text)
+            text = torch.LongTensor(sequence)
+            text_sequences.append(text)
 
-        # with torch.no_grad():
-        #     pace = torch.tensor([record[3] for record in linesBatch]).unsqueeze(1).to(self.device)
-        #     pitch_amp = torch.tensor([record[7] for record in linesBatch]).unsqueeze(1).to(self.device)
-        #     pitch_data = None # Maybe in the future
-        #     mel, mel_lens, dur_pred, pitch_pred, energy_pred, start_index, end_index = self.model.infer_advanced(self.logger, plugin_manager, cleaned_text_sequences, text_sequences, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=None, pitch_amp=pitch_amp)
+            # Set the language ID per-symbol
+            # TODO, add per-symbol support
+            # lang_embs.append(torch.tensor([self.language_id_mapping[base_lang] for _ in range(text.shape[0])]))
+            lang_embs.append(torch.tensor(self.language_id_mapping[base_lang]))
 
-        #     if "waveglow" in vocoder:
+            # Set the speaker embedding per-symbol
+            # TODO, add per-symbol support
+            # speaker_embs.append(torch.stack([torch.tensor(linesBatch[ri][-1]).unsqueeze(dim=0)[0].unsqueeze(-1) for _ in range(text.shape[0])], dim=0))
+            # speaker_embs.append(torch.stack([torch.tensor(linesBatch[ri][-1]).unsqueeze(-1)], dim=0))
+            speaker_embs.append(torch.tensor(linesBatch[ri][-1]).unsqueeze(-1))
 
-        #         self.models_manager.init_model(vocoder)
-        #         audios = self.models_manager.models(vocoder).model.infer(mel, sigma=sigma_infer)
-        #         audios = self.models_manager.models(vocoder).denoiser(audios.float(), strength=denoising_strength).squeeze(1)
+        lang_embs = torch.stack(lang_embs, dim=0).to(self.models_manager.device)
 
-        #         for i, audio in enumerate(audios):
-        #             audio = audio[:mel_lens[i].item() * stft_hop_length]
-        #             audio = audio/torch.max(torch.abs(audio))
-        #             output = linesBatch[i][4]
-        #             write(output, sampling_rate, audio.cpu().numpy())
-        #         del audios
-        #     else:
-        #         self.models_manager.load_model("hifigan", f'{"./resources/app" if self.PROD else "."}/python/hifigan/hifi.pt' if vocoder=="qnd" else self.ckpt_path.replace(".pt", ".hg.pt"))
-
-        #         y_g_hat = self.models_manager.models("hifigan").model(mel)
-        #         audios = y_g_hat.view((y_g_hat.shape[0], y_g_hat.shape[2]))
-        #         # audio = audio * 2.3026  # This brings it to the same volume, but makes it clip in places
-        #         for i, audio in enumerate(audios):
-        #             audio = audio[:mel_lens[i].item() * stft_hop_length]
-        #             audio = audio.cpu().numpy()
-        #             audio = audio * 32768.0
-        #             audio = audio.astype('int16')
-        #             output = linesBatch[i][4]
-        #             write(output, sampling_rate, audio)
-
-        #     if outputJSON:
-        #         for ri, record in enumerate(linesBatch):
-        #             # linesBatch: sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder
-        #             output_fname = linesBatch[ri][5].replace(".wav", ".json")
-
-        #             containing_folder = "/".join(output_fname.split("/")[:-1])
-        #             os.makedirs(containing_folder, exist_ok=True)
-
-        #             with open(output_fname, "w+") as f:
-        #                 data = {}
-        #                 data["inputSequence"] = str(linesBatch[ri][0])
-        #                 data["pacing"] = float(linesBatch[ri][3])
-        #                 data["letters"] = [char.replace("{", "").replace("}", "") for char in list(cleaned_text_sequences[ri].split("|"))]
-        #                 data["currentVoice"] = self.ckpt_path.split("/")[-1].replace(".pt", "")
-        #                 data["resetEnergy"] = [float(val) for val in list(energy_pred[ri].cpu().detach().numpy())]
-        #                 data["resetPitch"] = [float(val) for val in list(pitch_pred[ri][0].cpu().detach().numpy())]
-        #                 data["resetDurs"] = [float(val) for val in list(dur_pred[ri].cpu().detach().numpy())]
-        #                 data["ampFlatCounter"] = 0
-        #                 data["pitchNew"] = data["resetPitch"]
-        #                 data["energyNew"] = data["resetEnergy"]
-        #                 data["dursNew"] = data["resetDurs"]
-
-        #                 f.write(json.dumps(data, indent=4))
+        text_sequences = pad_sequence(text_sequences, batch_first=True).to(self.models_manager.device)
+        speaker_embs = pad_sequence(speaker_embs, batch_first=True).to(self.models_manager.device)
 
 
-        #     del mel, mel_lens
+        pace = torch.tensor([record[3] for record in linesBatch]).unsqueeze(1).to(self.device)
+        pitch_amp = torch.tensor([record[7] for record in linesBatch]).unsqueeze(1).to(self.device)
 
-        # return ""
+
+        output_wav, dur_pred, pitch_pred, energy_pred, start_index, end_index = self.model.infer_advanced(self.logger, plugin_manager, [cleaned_text_sequences], text_sequences, lang_embs=lang_embs, speaker_embs=speaker_embs, pace=pace, old_sequence=None, pitch_amp=pitch_amp)
+
+        for i,wav in enumerate(output_wav):
+            wav = wav.squeeze().cpu().detach().numpy()
+            wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
+            scipy.io.wavfile.write(linesBatch[i][4], sampling_rate, wav_norm.astype(np.int16))
+
+        if outputJSON:
+            for ri, record in enumerate(linesBatch):
+                # linesBatch: sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder
+                output_fname = linesBatch[ri][5].replace(".wav", ".json")
+
+                containing_folder = "/".join(output_fname.split("/")[:-1])
+                os.makedirs(containing_folder, exist_ok=True)
+
+                with open(output_fname, "w+") as f:
+                    data = {}
+                    data["inputSequence"] = str(linesBatch[ri][0])
+                    data["pacing"] = float(linesBatch[ri][3])
+                    data["letters"] = [char.replace("{", "").replace("}", "") for char in list(cleaned_text_sequences[ri].split("|"))]
+                    data["currentVoice"] = self.ckpt_path.split("/")[-1].replace(".pt", "")
+                    data["resetEnergy"] = [float(val) for val in list(energy_pred[ri].cpu().detach().numpy())]
+                    data["resetPitch"] = [float(val) for val in list(pitch_pred[ri][0].cpu().detach().numpy())]
+                    data["resetDurs"] = [float(val) for val in list(dur_pred[ri].cpu().detach().numpy())]
+                    data["ampFlatCounter"] = 0
+                    data["pitchNew"] = data["resetPitch"]
+                    data["energyNew"] = data["resetEnergy"]
+                    data["dursNew"] = data["resetDurs"]
+
+                    f.write(json.dumps(data, indent=4))
+
+
+        return ""
 
     def infer(self, plugin_manager, text, out_path, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang="en"):
 
         if base_lang not in self.lang_tp.keys():
             self.lang_tp[base_lang] = get_text_preprocessor(base_lang, self.base_dir, logger=self.logger)
 
-
-        # sigma_infer = 0.9
-        # stft_hop_length = 256
         sampling_rate = 22050
-        # denoising_strength = 0.01
-
-        # =============
-
-        # sequence, cleaned_text = self.tp.text_to_sequence(text)
         sequence, cleaned_text = self.lang_tp[base_lang].text_to_sequence(text)
-        # =============
-
-
-
-
-
-        # text = re.sub(r'[^a-zA-ZäöüÄÖÜß_\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)
-        # text = self.infer_arpabet_dict(text, plugin_manager)
-        # text = text.replace("(", "").replace(")", "")
-        # text = re.sub(r'[^a-zA-ZäöüÄÖÜß\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', text)
-        # sequence = text_to_sequence(text, "english_basic", ['english_cleaners'])
-        # cleaned_text = sequence_to_text("english_basic", sequence)
 
         text = torch.LongTensor(sequence)
         text = pad_sequence([text], batch_first=True).to(self.models_manager.device)
@@ -309,9 +280,9 @@ class xVAPitch(object):
 
             # ==== TODO, make editable
             # self.logger.info(f'self.base_emb: {self.base_emb}')
-            speaker_embs = [F.normalize(torch.tensor(self.base_emb).unsqueeze(dim=0))[0].unsqueeze(-1) for _ in range(text.shape[1])]
-            speaker_embs = [F.normalize(torch.tensor(self.base_emb).unsqueeze(dim=0))[0].unsqueeze(-1)] # TODO, add per-symbol support
-            self.logger.info(f'speaker_embs: {len(speaker_embs)}, {len(speaker_embs[0])}')
+            # speaker_embs = [torch.tensor(self.base_emb).unsqueeze(dim=0)[0].unsqueeze(-1) for _ in range(text.shape[1])]
+            # TODO, add per-symbol support
+            speaker_embs = [torch.tensor(self.base_emb).unsqueeze(dim=0)[0].unsqueeze(-1)]
             speaker_embs = torch.stack(speaker_embs, dim=0).to(self.models_manager.device)#.unsqueeze(-1)
 
             # g = F.normalize(speaker_embs[0])
@@ -320,8 +291,6 @@ class xVAPitch(object):
 
 
             # ====
-            self.logger.info(f'speaker_embs: {speaker_embs.shape}')
-            self.logger.info(f'lang_ids: {lang_ids.shape} {lang_ids}')
 
             lang_embs = lang_ids # TODO, use pre-extracted trained language embeddings, for interpolation
 
@@ -333,34 +302,8 @@ class xVAPitch(object):
             wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
             scipy.io.wavfile.write(out_path, sampling_rate, wav_norm.astype(np.int16))
 
-            # if "waveglow" in vocoder:
-
-            #     self.models_manager.init_model(vocoder)
-            #     audios = self.models_manager.models(vocoder).model.infer(mel, sigma=sigma_infer)
-            #     audios = self.models_manager.models(vocoder).denoiser(audios.float(), strength=denoising_strength).squeeze(1)
-
-            #     for i, audio in enumerate(audios):
-            #         audio = audio[:mel_lens[i].item() * stft_hop_length]
-            #         audio = audio/torch.max(torch.abs(audio))
-            #         write(output, sampling_rate, audio.cpu().numpy())
-            #     del audios
-            # else:
-            #     self.models_manager.load_model("hifigan", f'{"./resources/app" if self.PROD else "."}/python/hifigan/hifi.pt' if vocoder=="qnd" else self.ckpt_path.replace(".pt", ".hg.pt"))
-
-            #     y_g_hat = self.models_manager.models("hifigan").model(mel)
-            #     audio = y_g_hat.squeeze()
-            #     audio = audio * 32768.0
-            #     # audio = audio * 2.3026  # This brings it to the same volume, but makes it clip in places
-            #     audio = audio.cpu().numpy().astype('int16')
-            #     write(output, sampling_rate, audio)
-                # del audio
-
-            # del mel, mel_lens
 
         [pitch, durations, energy] = [pitch_pred.squeeze().cpu().detach().numpy(), dur_pred.squeeze().cpu().detach().numpy(), energy_pred.cpu().detach().numpy() if energy_pred is not None else []]
-        # self.logger.info(f'pitch: {pitch}')
-        # self.logger.info(f'durations: {durations}')
-        # self.logger.info(f'energy: {energy}')
         pitch_durations_energy_text = ",".join([str(v) for v in pitch]) + "\n" + ",".join([str(v) for v in durations]) + "\n" + ",".join([str(v) for v in energy])
 
         del pitch_pred, dur_pred, energy_pred, text, sequence
@@ -372,9 +315,5 @@ class xVAPitch(object):
         self.model.enc = self.model.enc.to(device)
         self.model.post = self.model.post.to(device)
         self.model.device = device
-
-
-    # def run_speech_to_speech (self, audiopath, models_manager, plugin_manager, modelType, s2s_components, text):
-    #     return self.model.run_speech_to_speech(self.device, self.logger, models_manager, plugin_manager, modelType, s2s_components, audiopath, text, text_to_sequence, sequence_to_text, self)
 
 
