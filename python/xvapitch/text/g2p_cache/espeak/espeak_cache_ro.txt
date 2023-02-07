@@ -682,6 +682,7 @@ anchetelor|ˌa n k e t ˈe l o r
 anchetă|a n k ˈe t ə
 ancorăm|ˌa n k o ɾ ˈə m
 ancuţa|a n k ˈu ts a
+and|ˈa n d
 anderlecht|ˌa n d e r l ˈe k t
 andreea|a n d  r ˈe ea
 andreescu|ˌa n d  r e ˈe s k u
@@ -2422,6 +2423,7 @@ coloanele|k ˌo l ɔa n ˈe l e
 coloranţi|k ˌo l o ɾ ˈa n tsʲʲ
 colorat|k ˌo l o ɾ ˈa t
 columbia|k o l ˈu m b j a
+columns|k o l ˈu m n s
 colţ|k ˈo l ts
 colţul|k ˈo l ts u l
 colțul|k ˈo l ts u l
@@ -4930,6 +4932,7 @@ filarmonică|f ˌi l a r m o n ˈi k ə
 filat|f i l ˈa t
 filatelie|f ˌi l a t ˈe l j e
 filiala|f i l j ˈa l a
+filled|f i l ˈe d
 filmat|f i l m ˈa t
 filmează|f i l m ˈea z ə
 filmezi|f i l m ˈe zʲʲ
@@ -5287,6 +5290,7 @@ galbeni|ɡ ˈa l b e nʲˌʲ
 galbenă|ɡ ˈa l b e n ˌə
 galeria|ɡ ˌa l e ɾ ˈi  a
 gamba|ɡ ˈa m b a
+game_id|ɡ ˈa m e ˈi d
 garajul|ɡ a ɾ ˈa ʒ u l
 garanta|ɡ a ɾ ˈa n t a
 garantare|ɡ ˌa ɾ a n t ˈa ɾ e
@@ -6719,6 +6723,7 @@ limitările|l ˌi m i t ə ɾʲ ˈi l e
 limpezeală|l ˌi m p e z ˈea l ə
 lin|l ˈi n
 line|l ˈi n e
+lines|l i n ˈe s
 linie|l ˈi n j e
 linişte|l ˈi n i ʃ t ˌe
 liniştit|l ˌi n i ʃ t ˈi t
@@ -6971,6 +6976,7 @@ majoritar|m ˌa ʒ o ɾ i t ˈa r
 majoritate|m ˌa ʒ o ɾ i t ˈa t e
 majoritatea|m ˌa ʒ o ɾ i t ˈa t ea
 majoră|m a ʒ ˈo ɾ ə
+make|m ˈa k e
 mal|m ˈa l
 malaezia|m ˌa l a ˈe z j a
 malul|m ˈa l u l
@@ -6995,6 +7001,7 @@ manuale|m a n w ˈa l e
 manuc|m a n ˈu k
 manuel|m a n w ˈe l
 manuscrisul|m ˌa n u s k  r ˈi s u l
+many|m ˈa n i
 mană|m ˈa n ə
 mara|m ˈa ɾ a
 maramureş|m ˌa ɾ a m ˈu ɾ e ʃ
@@ -8484,6 +8491,7 @@ omul|ˈo m u l
 omule|o m ˈu l e
 omului|ˈo m u l uɪ
 oncescu|o n tʃ ˈe s k u
+one|ˈo n e
 onestitate|ˌo n e s t i t ˈa t e
 onicaş|ˌo n i k ˈa ʃ
 online|o n l ˈi n e
@@ -8639,6 +8647,7 @@ osândi|o s ˈɨ n dʲʲ
 osândit|ˌo s ɨ n d ˈi t
 osândă|o s ˈɨ n d ə
 otrăvită|ˌo t  r ə v ˈi t ə
+out|ˈoʊ t
 ouă|ˈoʊ ə
 ouăle|oʊ ˈə l e
 oxidante|ˌo k s i d ˈa n t e
@@ -10270,6 +10279,7 @@ reacția|r e ˈa k ts j a
 reacție|r e ˈa k ts i  ˌe
 reacții|r e ˈa k ts iɪ
 reacționeze|r e ˌa k ts j o n ˈe z e
+read|r e ˈa d
 readmisie|r e a d m ˈi s j e
 reafirm|r e a f ˈi r m
 real|r e ˈa l
@@ -10531,6 +10541,7 @@ republicanii|r e p ˌu b l i k ˈa n iɪ
 repurta|r e p ˈu r t a
 repusă|r e p ˈu s ə
 reputaţia|r e p u t ˈa ts j a
+required|r e k w i ɾ ˈe d
 resimte|r e s ˈi m t e
 resimțea|r e s ˈi m ts ea
 respect|r e s p ˈe k t
@@ -12264,6 +12275,7 @@ supărări|s ˌu p ə ɾ ˈə ɾʲʲ
 supărările|s ˌu p ə ɾ ə ɾʲ ˈi l e
 supărătoare|s ˌu p ə ɾ ə t ˈɔa ɾ e
 supți|s ˈu p tsʲʲ
+sure|s ˈu ɾ e
 surescitaţi|s ˌu ɾ e s tʃ i t ˈa tsʲʲ
 surori|s u ɾ ˈo ɾʲʲ
 surorii|s u ɾ ˈo ɾ iɪ
@@ -12626,6 +12638,7 @@ teza|t ˈe z a
 teze|t ˈe z e
 teşitura|t ˌe ʃ i t ˈu ɾ a
 teşitură|t ˌe ʃ i t ˈu ɾ ə
+that|t h ˈa t
 the|t h ˈe
 this|t h ˈi s
 three|t h  r ˈe e
@@ -13636,6 +13649,8 @@ voiai|v o j ˈaɪ
 voiam|v o j ˈa m
 voiască|v o j ˈa s k ə
 voiau|v o j ˈaʊ
+voice|v ˈo i tʃ ˌe
+voice_id|v ˈo i tʃ ˌe ˈi d
 voie|v ˈo j e
 voiesc|v o j ˈe s k
 voiește|v o j ˈe ʃ t e
@@ -13814,10 +13829,12 @@ washington|w ˌa ʃ i ŋ ɡ t ˈo n
 web|w ˈe b
 weekend|w ˌe e k ˈe n d
 weekendurile|w ˌe e k e n d ˈu r i l e
+wish|w ˈi ʃ
 with|w ˈi t h
 x|ˈi k s
 xvasynth|ˈi k s v ˌe ˈa s ˈi n t h
 york|j ˈo r k
+you|j ˈoʊ
 zace|z ˈa tʃ e
 zadarnice|z a d ˈa r n i tʃ ˌe
 zadarnică|z ˌa d a r n ˈi k ə

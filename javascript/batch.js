@@ -372,28 +372,29 @@ window.uploadBatchCSVs = async (eType, event) => {
                                 window.appLogger.log("Adding files to queue")
                             }
                             records.forEach(item => {
-                                if (window.userSettings.batch_skipExisting) {
-                                    let outPath
+                                let outPath
 
-                                    if (item.out_path && item.out_path.split("/").reverse()[0].includes(".")) {
+                                if (item.out_path && item.out_path.split("/").reverse()[0].includes(".")) {
+                                    outPath = item.out_path
+                                } else {
+                                    if (item.out_path) {
                                         outPath = item.out_path
                                     } else {
-                                        if (item.out_path) {
-                                            outPath = item.out_path
-                                        } else {
-                                            outPath = window.userSettings.batchOutFolder
-                                        }
+                                        outPath = window.userSettings.batchOutFolder
+                                    }
+                                    if (item.vc_content) {
+                                        let vc_content_fname = item.vc_content.split("/").reverse()[0]
+                                        outPath = `${outPath}/${vc_content_fname.slice(0,vc_content_fname.length-4).slice(0, window.userSettings.max_filename_chars-10).replace(/\.$/, "")}.${window.userSettings.audio.format}`
+                                    } else {
                                         outPath = `${outPath}/${item.voice_id}_${item.vocoder}_${item.text.replace(/[\/\\:\*?<>"|]*/g, "").slice(0, window.userSettings.max_filename_chars-10).replace(/\.$/, "")}.${window.userSettings.audio.format}`
                                     }
+                                }
 
-                                    outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
+                                outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
+                                item.out_path = outPath
 
-                                    if (!fs.existsSync(outPath)) {
-                                        dataLines.push(item)
-                                    } else {
-                                        window.batch_state.skippedExisting++
-                                    }
-
+                                if (window.userSettings.batch_skipExisting && fs.existsSync(outPath)) {
+                                    window.batch_state.skippedExisting++
                                 } else {
                                     dataLines.push(item)
                                 }
@@ -417,26 +418,27 @@ window.uploadBatchCSVs = async (eType, event) => {
             records.forEach((item, ii) => {
                 let outPath
 
-                if (window.userSettings.batch_skipExisting) {
-
-                    if (item.out_path && item.out_path.split("/").reverse()[0].includes(".")) {
+                if (item.out_path && item.out_path.split("/").reverse()[0].includes(".")) {
+                    outPath = item.out_path
+                } else {
+                    if (item.out_path) {
                         outPath = item.out_path
                     } else {
-                        if (item.out_path) {
-                            outPath = item.out_path
-                        } else {
-                            outPath = window.userSettings.batchOutFolder
-                        }
+                        outPath = window.userSettings.batchOutFolder
+                    }
+                    if (item.vc_content) {
+                        let vc_content_fname = item.vc_content.split("/").reverse()[0]
+                        outPath = `${outPath}/${vc_content_fname.slice(0,vc_content_fname.length-4).slice(0,item.vc_content.length-4).slice(0, window.userSettings.max_filename_chars-10).replace(/\.$/, "")}.${window.userSettings.audio.format}`
+                    } else {
                         outPath = `${outPath}/${item.voice_id}_${item.vocoder}_${item.text.replace(/[\/\\:\*?<>"|]*/g, "").slice(0, window.userSettings.max_filename_chars-10).replace(/\.$/, "")}.${window.userSettings.audio.format}`
                     }
+                }
 
-                    outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
+                outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
+                item.out_path = outPath
 
-                    if (!fs.existsSync(outPath)) {
-                        dataLines.push(item)
-                    } else {
-                        window.batch_state.skippedExisting++
-                    }
+                if (window.userSettings.batch_skipExisting && fs.existsSync(outPath)) {
+                    window.batch_state.skippedExisting++
                 } else {
                     dataLines.push(item)
                 }
@@ -494,8 +496,8 @@ window.preProcessCSVData = data => {
                 window.errorModal(`[${window.i18n.LINE}: ${di+2}] ${window.i18n.ERROR}: ${window.i18n.MISSING} voice_id`)
                 return []
             }
-            if (!record.text || record.text.length==0) {
-                window.errorModal(`[${window.i18n.LINE}: ${di+2}] ${window.i18n.ERROR}: ${window.i18n.MISSING} text`)
+            if ((!record.text || record.text.length==0) && (!record.vc_content)) {
+                window.errorModal(`[${window.i18n.LINE}: ${di+2}] ${window.i18n.ERROR}: ${window.i18n.MISSING} text/vc_content`)
                 return []
             }
 
@@ -515,7 +517,7 @@ window.preProcessCSVData = data => {
                 return []
             }
             // Check that the vocoder exists
-            if (!["quickanddirty", "waveglow", "waveglowBIG", "hifi", undefined].includes(record.vocoder)) {
+            if (!["quickanddirty", "waveglow", "waveglowBIG", "hifi", "", "-", undefined].includes(record.vocoder)) {
                 window.errorModal(`[${window.i18n.LINE}: ${di+2}] ${window.i18n.ERROR}: ${window.i18n.BATCHH_VOCODER} "${record.vocoder}" ${window.i18n.BATCH_ERR_VOCODER1}: quickanddirty, waveglow, waveglowBIG, hifi ${window.i18n.BATCH_ERR_VOCODER2}`)
                 return []
             }
@@ -588,15 +590,20 @@ window.populateBatchRecordsList = records => {
         const rStatusElem = createElem("div", "Ready")
         const rActionsElem = createElem("div")
         const rVoiceElem = createElem("div", record.voice_id)
-        const rTextElem = createElem("div", record.text)
-        rTextElem.title = record.text
+        const rTextElem = createElem("div", (record.vc_content?record.vc_content:record.text).toString())
+        rTextElem.title = rTextElem.innerText
+        if (record.vc_content) {
+            rTextElem.style.fontStyle = "italic"
+        }
         const rGameElem = createElem("div", record.game_id)
-        const rVocoderElem = createElem("div", record.vocoder)
         const rOutPathElem = createElem("div", "&lrm;"+record.out_path+"&lrm;")
         rOutPathElem.title = record.out_path
+        const rBaseLangElem = createElem("div", (record.lang||" ").toString())
+        const rVCStyleElem = createElem("div", (record.vc_style||" ").toString())
+        rVCStyleElem.title = rVCStyleElem.innerText
+        const rVocoderElem = createElem("div", record.vocoder)
         const rPacingElem = createElem("div", (record.pacing||" ").toString())
         const rPitchAmpElem = createElem("div", (record.pitch_amp||" ").toString())
-        const rBaseLangElem = createElem("div", (record.lang||" ").toString())
 
 
         row.appendChild(rNumElem)
@@ -606,10 +613,11 @@ window.populateBatchRecordsList = records => {
         row.appendChild(rTextElem)
         row.appendChild(rGameElem)
         row.appendChild(rOutPathElem)
+        row.appendChild(rBaseLangElem)
+        row.appendChild(rVCStyleElem)
         row.appendChild(rVocoderElem)
         row.appendChild(rPacingElem)
         row.appendChild(rPitchAmpElem)
-        row.appendChild(rBaseLangElem)
 
         window.batch_state.lines.push([record, row, ri])
     })
@@ -921,14 +929,8 @@ window.prepareLinesBatchForSynth = () => {
         let outPath
         let outFolder
 
-        if (record[0].out_path.split("/").reverse()[0].includes(".")) {
-            outPath = record[0].out_path
-            outFolder = String(record[0].out_path).split("/").reverse().slice(1,10000).reverse().join("/")
-        } else {
-            const trimmedFileName = sequence.replace(/[\/\\:\*?<>"|]*/g, "").slice(0, window.userSettings.max_filename_chars-10).replace(/\.$/, "")
-            outPath = `${record[0].out_path}/${record[0].voice_id}_${record[0].vocoder}_${trimmedFileName}.${window.userSettings.audio.format}`
-            outFolder = record[0].out_path
-        }
+        outPath = record[0].out_path
+        outFolder = String(record[0].out_path).split("/").reverse().slice(1,10000).reverse().join("/")
         outFolder = outFolder.length ? outFolder : window.userSettings.batchOutFolder
 
         if (batch_outputNumerically.checked) {
@@ -937,7 +939,7 @@ window.prepareLinesBatchForSynth = () => {
             outPath = outPath.startsWith("./") ? window.userSettings.batchOutFolder + outPath.slice(1,100000) : outPath
         }
 
-        linesBatch.push([sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder, pitch_amp, record[0].lang, record[0].base_emb])
+        linesBatch.push([sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder, pitch_amp, record[0].lang, record[0].base_emb, record[0].vc_content, record[0].vc_style])
         records.push(record)
     }
 

@@ -4846,7 +4846,7 @@ bacheliers|b a ʃ ə l j ˈe
 bachique|b a ʃ ˈi k
 bachiques|b a ʃ ˈi k
 back|(en) b ˈa k (fr)
-backbone| b ˈa k b əʊ n 
+backbone|b ˈa k b əʊ n
 bacon|b a k ˈɔ̃
 baconier|b a k o n j ˈe
 bad|b ˈa d
@@ -24566,7 +24566,7 @@ firmament|f i ʁ m a m ˈɑ̃
 firme|f ˈi ʁ m
 firmes|f ˈi ʁ m
 firmin|f i ʁ m ˈɛ̃
-first| f ˈɜː s t 
+first|f ˈɜː s t
 fis|f ˈi
 fiscalité|f i s k a l i t ˈe
 fissa|f i s ˈa
@@ -29672,6 +29672,7 @@ incliné|ɛ̃ k l i n ˈe
 inclinée|ɛ̃ k l i n ˈe
 inclinés|ɛ̃ k l i n ˈe
 incluait|ɛ̃ k l y ˈɛ
+include|ɛ̃ k l ˈy d
 inclus|ɛ̃ k l ˈy
 inclut|ɛ̃ k l ˈy
 inclémences|ɛ̃ k l e m ˈɑ̃ s
@@ -36583,6 +36584,7 @@ lincolnien|l ɛ̃ k ɔ l n j ˈɛ̃
 lincolnshire|l ɛ̃ k ɔ l n ʃ ˈi ʁ
 lindai|l ɛ̃ d ˈe
 line|(en) l ˈaɪ n (fr)
+lines| l ˈaɪ n z 
 linge|l ˈɛ̃ ʒ
 lingerie|l ɛ̃ ʒ ʁ ˈi
 linges|l ˈɛ̃ ʒ
@@ -40660,6 +40662,7 @@ manuscrit|m a n y s k ʁ ˈi
 manuscrites|m a n y s k ʁ ˈi t
 manuscrits|m a n y s k ʁ ˈi
 manutentions|m a n y t ɑ̃ s j ˈɔ̃
+many| m ˈɛ n i 
 manzanilla|m ɑ̃ z a n i j ˈa
 manège|m a n ˈɛ ʒ
 manœuvra|m a n œ v ʁ ˈa
@@ -46179,6 +46182,7 @@ ondulés|ɔ̃ d y l ˈe
 ondé|ɔ̃ d ˈe
 ondées|ɔ̃ d ˈe
 ondés|ɔ̃ d ˈe
+one| w ˈɒ n 
 ongar|ɔ̃ ɡ ˈa ʁ
 ongle|ˈɔ̃ ɡ l
 onglenoir|ɔ̃ ɡ l ə n w ˈa ʁ
@@ -67132,7 +67136,7 @@ vec|v ˈɛ k
 vecchio|v ɛ k j ˈo
 vecteur|v ɛ k t ˈœ ʁ
 vedette|v ə d ˈɛ t
-vee| v ˈiː 
+vee|v ˈiː
 veilla|v ɛ j ˈa
 veillaient|v ɛ j ˈɛ
 veillaientsur|v ɛ j ɛ s ˈy ʁ
@@ -67451,7 +67455,7 @@ verulus|v ə ʁ y l ˈy s
 verus|v ə ʁ ˈy s
 verve|v ˈɛ ʁ v
 verveine|v ɛ ʁ v ˈɛ n
-very| v ˈɛ ɹ i 
+very|v ˈɛ ɹ i
 vespétro|v ɛ s p e t ʁ ˈo
 vesta|v ɛ s t ˈa
 veste|v ˈɛ s t
@@ -67975,6 +67979,7 @@ voguer|v o ɡ ˈe
 voguions|v o ɡ j ˈɔ̃
 voguèrent|v o ɡ ˈɛ ʁ
 voi|v w ˈa
+voice| v ˈɔɪ s 
 voici|v w a s ˈi
 voicy|(en) v ˈəʊ ɪ s i (fr)
 voie|v w ˈa
@@ -68525,7 +68530,7 @@ wison|w i z ˈɔ̃
 wisons|w i z ˈɔ̃
 wiss|(en) w ˈɪ s (fr)
 witchoûra|(en) w ˈɪ tʃ ə ɹ ˌuː ɹ ə (fr)
-with| w ˈɪ ð 
+with|w ˈɪ ð
 witse|(en) w ˈɪ t s i (fr)
 witseidutsei|(en) w ˈɪ t s eɪ d ˌʌ t s eɪ (fr)
 woah|(en) w ˈəʊ (fr)

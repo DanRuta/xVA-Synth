@@ -711,22 +711,14 @@ class xVAPitch(nn.Module):
         o = self.waveform_decoder((z * y_mask)[:, :, : self.max_inference_len], g=g)
         return o
 
-    # def voice_conversion(self, y, y_lengths=None, speaker_cond_src=None, speaker_cond_tgt=None, spk1_emb=None, spk2_emb=None):
     def voice_conversion(self, y, y_lengths=None, spk1_emb=None, spk2_emb=None):
-
-        # spk1_emb = spk1_emb.unsqueeze(0)
-        # spk2_emb = spk2_emb.unsqueeze(0)
-        # spk1_emb = F.normalize(spk1_emb, dim=1)
-        # spk2_emb = F.normalize(spk2_emb, dim=1)
-
-        # g_src = spk1_emb.unsqueeze(-1)
-        # g_tgt = spk2_emb.unsqueeze(-1)
 
         if y_lengths is None:
             y_lengths = self.y_lengths_default
 
         z, _, _, y_mask = self.posterior_encoder(y, y_lengths, g=spk1_emb)
         # z_hat = z
+        y_mask = y_mask.squeeze(0)
         z_p = self.flow(z, y_mask, g=spk1_emb)
         z_hat = self.flow(z_p, y_mask, g=spk2_emb, reverse=True)
 

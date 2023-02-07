@@ -176,7 +176,8 @@ window.i18n.setEnglish = () => {
     window.i18n.BATCHH_ACTIONS = "Actions"
     window.i18n.BATCHH_GAME = "Game"
     window.i18n.BATCHH_VOICE = "Voice"
-    window.i18n.BATCHH_TEXT = "Text"
+    window.i18n.BATCHH_TEXT = "Text or <i>VC content</i>"
+    window.i18n.BATCHH_VC_STYLE = "VC Style"
     window.i18n.BATCHH_VOCODER = "Vocoder"
     window.i18n.BATCHH_OUTPATH = "Out Path"
     window.i18n.BATCHH_PACING = "Pacing"
@@ -834,6 +835,7 @@ window.i18n.updateUI = () => {
     i18n_batchh_voice.innerHTML = window.i18n.BATCHH_VOICE
     i18n_batchh_text.innerHTML = window.i18n.BATCHH_TEXT
     i18n_batchh_vocoder.innerHTML = window.i18n.BATCHH_VOCODER
+    i18n_batchh_vc_style.innerHTML = window.i18n.BATCHH_VC_STYLE
     i18n_batchh_outpath.innerHTML = window.i18n.BATCHH_OUTPATH
     i18n_batchh_pacing.innerHTML = window.i18n.BATCHH_PACING
     i18n_batchh_pitch_amp.innerHTML = window.i18n.BATCHH_PITCH_AMP

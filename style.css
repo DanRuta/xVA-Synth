@@ -986,7 +986,7 @@ a {
     overflow: auto;
 }
 #batch_main {
-    height: 66vh;
+    height: 68vh;
 }
 #plugins_main {
     width: 90vw;
@@ -1125,23 +1125,30 @@ a {
     direction: rtl;
     text-align: left;
 }
-/*Vocoder*/
+/*Base language*/
 #batchRecordsHeader > div:nth-child(8), #batchRecordsContainer > div > div:nth-child(8) {
+    min-width: 85px;
+    max-width: 85px;
+}
+/*VC style*/
+#batchRecordsHeader > div:nth-child(9), #batchRecordsContainer > div > div:nth-child(9) {
+    min-width: 250px;
+    max-width: 250px;
+    direction: rtl;
+    text-align: left;
+}
+/*Vocoder*/
+#batchRecordsHeader > div:nth-child(10), #batchRecordsContainer > div > div:nth-child(10) {
     min-width: 100px;
     max-width: 100px;
 }
 /*Pacing*/
-#batchRecordsHeader > div:nth-child(9), #batchRecordsContainer > div > div:nth-child(9) {
+#batchRecordsHeader > div:nth-child(11), #batchRecordsContainer > div > div:nth-child(11) {
     min-width: 80px;
     max-width: 80px;
 }
 /*Pitch amplification*/
-#batchRecordsHeader > div:nth-child(10), #batchRecordsContainer > div > div:nth-child(10) {
-    min-width: 85px;
-    max-width: 85px;
-}
-/*Base language*/
-#batchRecordsHeader > div:nth-child(11), #batchRecordsContainer > div > div:nth-child(11) {
+#batchRecordsHeader > div:nth-child(12), #batchRecordsContainer > div > div:nth-child(12) {
     min-width: 85px;
     max-width: 85px;
 }

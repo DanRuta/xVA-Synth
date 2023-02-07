@@ -180,71 +180,129 @@ class xVAPitch(object):
         cleaned_text_sequences = []
         lang_embs = []
         speaker_embs = []
-        # [sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder, pitch_amp, base_lang, base_emb]
+        # [sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder, pitch_amp, base_lang, base_emb, vc_content, vc_style]
+        vc_input = []
+        tts_input = []
         for ri,record in enumerate(linesBatch):
-            # Language set-up
-            base_lang = record[-2]
-            if base_lang not in self.lang_tp.keys():
-                self.lang_tp[base_lang] = get_text_preprocessor(base_lang, self.base_dir, logger=self.logger)
+            if record[-2]: # If a VC content file has been given, handle this as VC
+                vc_input.append(record)
+            else:
+                tts_input.append(record)
 
-            # Pre-process text
-            text = record[0]
-            sequence, cleaned_text = self.lang_tp[base_lang].text_to_sequence(text)
-            cleaned_text_sequences.append(cleaned_text)
-            text = torch.LongTensor(sequence)
-            text_sequences.append(text)
+        # =================
+        # ======= Handle VC
+        # =================
+        if len(vc_input):
+            for ri,record in enumerate(vc_input):
+                self.logger.info(f'record[-2]: {record[-2]}')
+                self.logger.info(f'record[-1]: {record[-1]}')
+                content_emb = self.models_manager.models("speaker_rep").compute_embedding(record[-2]).squeeze()
+                style_emb = self.models_manager.models("speaker_rep").compute_embedding(record[-1]).squeeze()
+                # content_emb = F.normalize(content_emb.unsqueeze(0), dim=1).squeeze(0)
+                content_emb = content_emb.unsqueeze(0).unsqueeze(-1).to(self.models_manager.device)
+                # style_emb = F.normalize(style_emb.unsqueeze(0), dim=1).squeeze(0)
+                style_emb = style_emb.unsqueeze(0).unsqueeze(-1).to(self.models_manager.device)
 
-            # Set the language ID per-symbol
-            # TODO, add per-symbol support
-            # lang_embs.append(torch.tensor([self.language_id_mapping[base_lang] for _ in range(text.shape[0])]))
-            lang_embs.append(torch.tensor(self.language_id_mapping[base_lang]))
+                self.logger.info(f'content_emb: {content_emb.shape}')
+                self.logger.info(f'style_emb: {style_emb.shape}')
 
-            # Set the speaker embedding per-symbol
-            # TODO, add per-symbol support
-            # speaker_embs.append(torch.stack([torch.tensor(linesBatch[ri][-1]).unsqueeze(dim=0)[0].unsqueeze(-1) for _ in range(text.shape[0])], dim=0))
-            # speaker_embs.append(torch.stack([torch.tensor(linesBatch[ri][-1]).unsqueeze(-1)], dim=0))
-            speaker_embs.append(torch.tensor(linesBatch[ri][-1]).unsqueeze(-1))
+                y, sr = librosa.load(record[-2], sr=22050)
+                D = librosa.stft(
+                            y=y,
+                            n_fft=1024,
+                            hop_length=256,
+                            win_length=1024,
+                            pad_mode="reflect",
+                            window="hann",
+                            center=True,
+                        )
+                spec = np.abs(D).astype(np.float32)
+                ref_spectrogram = torch.FloatTensor(spec).unsqueeze(0)
 
-        lang_embs = torch.stack(lang_embs, dim=0).to(self.models_manager.device)
+                y_lengths = torch.tensor([ref_spectrogram.size(-1)]).to(self.models_manager.device)
+                y = ref_spectrogram.to(self.models_manager.device)
 
-        text_sequences = pad_sequence(text_sequences, batch_first=True).to(self.models_manager.device)
-        speaker_embs = pad_sequence(speaker_embs, batch_first=True).to(self.models_manager.device)
+                # Run Voice Conversion
+                self.model.logger = self.logger
+                wav = self.model.voice_conversion(y=y, y_lengths=y_lengths, spk1_emb=content_emb, spk2_emb=style_emb)
+                wav = wav.squeeze().cpu().detach().numpy()
+
+                wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
+                scipy.io.wavfile.write(vc_input[ri][4], 22050, wav_norm.astype(np.int16))
+
+        # ==================
+        # ======= Handle TTS
+        # ==================
+        if len(tts_input):
+            for ri,record in enumerate(tts_input):
+                # Language set-up
+                base_lang = record[-4]
+                if base_lang not in self.lang_tp.keys():
+                    self.lang_tp[base_lang] = get_text_preprocessor(base_lang, self.base_dir, logger=self.logger)
+
+                # Pre-process text
+                text = record[0]
+                sequence, cleaned_text = self.lang_tp[base_lang].text_to_sequence(text)
+                cleaned_text_sequences.append(cleaned_text)
+                text = torch.LongTensor(sequence)
+                text_sequences.append(text)
+
+                # Set the language ID per-symbol
+                # TODO, add per-symbol support
+                # lang_embs.append(torch.tensor([self.language_id_mapping[base_lang] for _ in range(text.shape[0])]))
+                lang_embs.append(torch.tensor(self.language_id_mapping[base_lang]))
+
+                # Set the speaker embedding per-symbol
+                # TODO, add per-symbol support
+                # speaker_embs.append(torch.stack([torch.tensor(tts_input[ri][-1]).unsqueeze(dim=0)[0].unsqueeze(-1) for _ in range(text.shape[0])], dim=0))
+                # speaker_embs.append(torch.stack([torch.tensor(tts_input[ri][-1]).unsqueeze(-1)], dim=0))
+                speaker_embs.append(torch.tensor(tts_input[ri][-3]).unsqueeze(-1))
+
+            lang_embs = torch.stack(lang_embs, dim=0).to(self.models_manager.device)
+
+            text_sequences = pad_sequence(text_sequences, batch_first=True).to(self.models_manager.device)
+            speaker_embs = pad_sequence(speaker_embs, batch_first=True).to(self.models_manager.device)
 
 
-        pace = torch.tensor([record[3] for record in linesBatch]).unsqueeze(1).to(self.device)
-        pitch_amp = torch.tensor([record[7] for record in linesBatch]).unsqueeze(1).to(self.device)
+            pace = torch.tensor([record[3] for record in tts_input]).unsqueeze(1).to(self.device)
+            pitch_amp = torch.tensor([record[7] for record in tts_input]).unsqueeze(1).to(self.device)
 
 
-        output_wav, dur_pred, pitch_pred, energy_pred, start_index, end_index = self.model.infer_advanced(self.logger, plugin_manager, [cleaned_text_sequences], text_sequences, lang_embs=lang_embs, speaker_embs=speaker_embs, pace=pace, old_sequence=None, pitch_amp=pitch_amp)
+            # Could pass indexes (and get them returned) to the tts inference fn
+            # Do the same to the vc infer fn
+            # Then marge them into their place in an output array?
 
-        for i,wav in enumerate(output_wav):
-            wav = wav.squeeze().cpu().detach().numpy()
-            wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
-            scipy.io.wavfile.write(linesBatch[i][4], sampling_rate, wav_norm.astype(np.int16))
+            output_wav, dur_pred, pitch_pred, energy_pred, _, _ = self.model.infer_advanced(self.logger, plugin_manager, [cleaned_text_sequences], text_sequences, lang_embs=lang_embs, speaker_embs=speaker_embs, pace=pace, old_sequence=None, pitch_amp=pitch_amp)
 
-        if outputJSON:
-            for ri, record in enumerate(linesBatch):
-                # linesBatch: sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder
-                output_fname = linesBatch[ri][5].replace(".wav", ".json")
+            for i,wav in enumerate(output_wav):
+                wav = wav.squeeze().cpu().detach().numpy()
+                wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
+                scipy.io.wavfile.write(tts_input[i][4], sampling_rate, wav_norm.astype(np.int16))
 
-                containing_folder = "/".join(output_fname.split("/")[:-1])
-                os.makedirs(containing_folder, exist_ok=True)
+            if outputJSON:
+                for ri, record in enumerate(tts_input):
+                    # tts_input: sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder
+                    output_fname = tts_input[ri][5].replace(".wav", ".json")
 
-                with open(output_fname, "w+") as f:
-                    data = {}
-                    data["inputSequence"] = str(linesBatch[ri][0])
-                    data["pacing"] = float(linesBatch[ri][3])
-                    data["letters"] = [char.replace("{", "").replace("}", "") for char in list(cleaned_text_sequences[ri].split("|"))]
-                    data["currentVoice"] = self.ckpt_path.split("/")[-1].replace(".pt", "")
-                    data["resetEnergy"] = [float(val) for val in list(energy_pred[ri].cpu().detach().numpy())]
-                    data["resetPitch"] = [float(val) for val in list(pitch_pred[ri][0].cpu().detach().numpy())]
-                    data["resetDurs"] = [float(val) for val in list(dur_pred[ri].cpu().detach().numpy())]
-                    data["ampFlatCounter"] = 0
-                    data["pitchNew"] = data["resetPitch"]
-                    data["energyNew"] = data["resetEnergy"]
-                    data["dursNew"] = data["resetDurs"]
+                    containing_folder = "/".join(output_fname.split("/")[:-1])
+                    os.makedirs(containing_folder, exist_ok=True)
 
-                    f.write(json.dumps(data, indent=4))
+                    with open(output_fname, "w+") as f:
+                        data = {}
+                        data["inputSequence"] = str(tts_input[ri][0])
+                        data["pacing"] = float(tts_input[ri][3])
+                        data["letters"] = [char.replace("{", "").replace("}", "") for char in list(cleaned_text_sequences[ri].split("|"))]
+                        data["currentVoice"] = self.ckpt_path.split("/")[-1].replace(".pt", "")
+                        data["resetEnergy"] = [float(val) for val in list(energy_pred[ri].cpu().detach().numpy())]
+                        data["resetPitch"] = [float(val) for val in list(pitch_pred[ri][0].cpu().detach().numpy())]
+                        data["resetDurs"] = [float(val) for val in list(dur_pred[ri].cpu().detach().numpy())]
+                        data["ampFlatCounter"] = 0
+                        data["pitchNew"] = data["resetPitch"]
+                        data["energyNew"] = data["resetEnergy"]
+                        data["dursNew"] = data["resetDurs"]
+
+                        f.write(json.dumps(data, indent=4))
+
 
 
         return ""
