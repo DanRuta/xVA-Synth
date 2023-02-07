@@ -1012,6 +1012,7 @@ window.addActionButtons = (records, ri) => {
 
 
 window.batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options, extraInfo) => {
+    let hasShownError = false
     return new Promise((resolve, reject) => {
         doFetch(`http://localhost:8008/batchOutputAudio`, {
             method: "Post",
@@ -1028,11 +1029,12 @@ window.batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options, extr
             res = res.split("\n")
             res.forEach((resItem, ri) => {
                 if (resItem.length && resItem!="-") {
-                    window.appLogger.log("resItem", resItem)
-                    window.errorModal(res.join("\n"))
+                    window.appLogger.log(`Batch error, item ${ri} - ${resItem}`)
                     if (window.batch_state.state) {
                         batch_pauseBtn.click()
                     }
+                    window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}:<br><br>`+resItem)
+                    hasShownError = true
 
                     records[ri][1].children[1].innerHTML = window.i18n.FAILED
                     records[ri][1].children[1].style.background = "red"
@@ -1069,7 +1071,9 @@ window.batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options, extr
                 if (document.getElementById("activeModal")) {
                     activeModal.remove()
                 }
-                window.errorModal(e.message)
+                if (!hasShownError) {
+                    window.errorModal(e.message)
+                }
                 resolve()
             }
         })
