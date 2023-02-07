@@ -27,7 +27,7 @@ def mp_ffmpeg_output (PROD, logger, processes, input_paths, output_paths, option
     return "\n".join(results)
 
 def processingTask(data):
-    return run_audio_post(data[0], data[1], data[2], data[3], data[4])
+    return run_audio_post(data[0], data[1], data[2], data[3], data[4]).replace("\n", "<br>")
 
 
 
