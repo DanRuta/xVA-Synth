@@ -534,6 +534,7 @@ window.preProcessCSVData = data => {
                         // Also TODO, might need to allow for custom voice embeddings
                         if (variant.modelType=="xVAPitch") {
                             record.base_emb = variant.base_speaker_emb
+                            record.vocoder = "-"
                         }
                     }
                 })
@@ -884,7 +885,7 @@ window.prepareLinesBatchForSynth = () => {
         const record = window.batch_state.lines[window.batch_state.lineIndex+i]
 
         const vocoderMappings = [["waveglow", "256_waveglow"], ["waveglowBIG", "big_waveglow"], ["quickanddirty", "qnd"], ["hifi", `${record[0].game_id}/${record[0].voice_id}.hg.pt`]]
-        const vocoder = vocoderMappings.find(voc => voc[0]==record[0].vocoder)[1]
+        const vocoder = record[0].vocoder=="-"?"-":vocoderMappings.find(voc => voc[0]==record[0].vocoder)[1]
 
         if (firstItemVoiceId==undefined) firstItemVoiceId = record[0].voice_id
         if (firstItemVocoder==undefined) firstItemVocoder = vocoder
@@ -1339,7 +1340,7 @@ window.performSynthesis = async () => {
     }
 
     // Change the vocoder if the next line uses a different one
-    if (window.batch_state.lastVocoder!=record[0].vocoder) {
+    if (window.batch_state.lastVocoder!=record[0].vocoder && record[0].vocoder!="-") {
         await window.batchChangeVocoder(record[0].vocoder, record[0].game_id, record[0].voice_id)
     }
 
