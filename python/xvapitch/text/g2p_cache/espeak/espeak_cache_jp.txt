@@ -158,27 +158,31 @@ a|(en) ˈeɪ (ja)
 a+|(en) ˈeɪ p l ˈʌ s (ja)
 a4|(en) ˈeɪ (ja) s ˈi
 a9|(en) ˈeɪ (ja) kʲ ˈɯᵝɯᵝ
+aceasta|  ˈeɪ  s ˈiː  ˈiː  ˈeɪ  ˈɛ s  t ˈiː  ˈeɪ 
 aj|(en) ˈeɪ  dʒ ˈeɪ (ja)
 a。|(en) ˈeɪ (ja)
 b|(en) b ˈiː (ja)
 b2|(en) b ˈiː (ja) n ˈiː
 b5|(en) b ˈiː (ja) ɡ ˈo̞
 b7|(en) b ˈiː (ja) s ˈi ts i
-backbone|  b ˈiː  ˈeɪ  s ˈiː  k ˈeɪ  b ˈiː  ˈəʊ  ˈɛ n  ˈiː 
+backbone|b ˈiː  ˈeɪ  s ˈiː  k ˈeɪ  b ˈiː  ˈəʊ  ˈɛ n  ˈiː
 boy|(en) b ˈiː  ˈəʊ  w ˈaɪ (ja)
 c|(en) s ˈiː (ja)
 cpg|(en) s ˈiː  p ˈiː  dʒ ˈiː (ja)
 cpu|(en) s ˈiː  p ˈiː  j ˈuː (ja)
 d|(en) d ˈiː (ja)
-demo|  d ˈiː  ˈiː  ˈɛ m  ˈəʊ 
+de|  d ˈiː  ˈiː 
+demo|d ˈiː  ˈiː  ˈɛ m  ˈəʊ
 dia|(en) d ˈiː  ˈaɪ  ˈeɪ (ja)
 dj|(en) d ˈiː  dʒ ˈeɪ (ja)
 dr|(en) d ˈiː  ˈɑː (ja)
-experiment|  ˈiː  ˈɛ k s  p ˈiː  ˈiː  ˈɑː  ˈaɪ  ˈɛ m  ˈiː  ˈɛ n  t ˈiː 
+embs|  ˈiː  ˈɛ m  b ˈiː  ˈɛ s 
+este|  ˈiː  ˈɛ s  t ˈiː  ˈiː 
+experiment|ˈiː  ˈɛ k s  p ˈiː  ˈiː  ˈɑː  ˈaɪ  ˈɛ m  ˈiː  ˈɛ n  t ˈiː
 f6|(en) ˈɛ f (ja) ɹ ˈo̞ k ɯᵝ
 fev|(en) ˈɛ f  ˈiː  v ˈiː (ja)
-first|  ˈɛ f  ˈaɪ  ˈɑː  ˈɛ s  t ˈiː 
-for|  ˈɛ f  ˈəʊ  ˈɑː 
+first|ˈɛ f  ˈaɪ  ˈɑː  ˈɛ s  t ˈiː
+for|ˈɛ f  ˈəʊ  ˈɑː
 g|(en) dʒ ˈiː (ja)
 g5|(en) dʒ ˈiː (ja) ɡ ˈo̞
 gnn|(en) dʒ ˈiː  ˈɛ n  ˈɛ n (ja)
@@ -192,7 +196,8 @@ k|(en) k ˈeɪ (ja)
 kia|(en) k ˈeɪ  ˈaɪ  ˈeɪ (ja)
 kilo|(en) k ˈeɪ  ˈaɪ  ˈɛ l  ˈəʊ (ja)
 l&l|(en) ˈɛ l  a n d  ˈɛ l (ja)
-line|  ˈɛ l  ˈaɪ  ˈɛ n  ˈiː 
+limba|  ˈɛ l  ˈaɪ  ˈɛ m  b ˈiː  ˈeɪ 
+line|ˈɛ l  ˈaɪ  ˈɛ n  ˈiː
 l。|(en) ˈɛ l (ja)
 m|(en) ˈɛ m (ja)
 mark28|(en) ˈɛ m  ˈeɪ  ˈɑː  k ˈeɪ (ja) n ˌi d  z ɯᵝ  h ˈä ts i
@@ -204,48 +209,56 @@ mod|(en) ˈɛ m  ˈəʊ  d ˈiː (ja)
 mr|(en) ˈɛ m  ˈɑː (ja)
 mrs|(en) ˈɛ m  ˈɑː  ˈɛ s (ja)
 ms|(en) ˈɛ m  ˈɛ s (ja)
-new|  ˈɛ n  ˈiː  d ˈʌ b əl j ˌuː 
+mumbling|  ˈɛ m  j ˈuː  ˈɛ m  b ˈiː  ˈɛ l  ˈaɪ  ˈɛ n  dʒ ˈiː 
+n|  ˈɛ n 
+new|ˈɛ n  ˈiː  d ˈʌ b əl j ˌuː
 no。|(en) ˈɛ n  ˈəʊ (ja)
 o|(en) ˈəʊ (ja)
 od|(en) ˈəʊ  d ˈiː (ja)
 ok|(en) ˈəʊ  k ˈeɪ (ja)
 ok。|(en) ˈəʊ  k ˈeɪ (ja)
+out|  ˈəʊ  j ˈuː  t ˈiː 
 p|(en) p ˈiː (ja)
 pam|(en) p ˈiː  ˈeɪ  ˈɛ m (ja)
 pam、|(en) p ˈiː  ˈeɪ  ˈɛ m (ja)
 pc|(en) p ˈiː  s ˈiː (ja)
 pip|(en) p ˈiː  ˈaɪ  p ˈiː (ja)
+propoziie|  p ˈiː  ˈɑː  ˈəʊ  p ˈiː  ˈəʊ  z ˈɛ d  ˈaɪ  ˈaɪ  ˈiː 
 r|(en) ˈɑː (ja)
 rad|(en) ˈɑː  ˈeɪ  d ˈiː (ja)
 right|(en) ˈɑː  ˈaɪ  dʒ ˈiː  ˈeɪ tʃ  t ˈiː (ja)
+romn|  ˈɑː  ˈəʊ  ˈɛ m  ˈɛ n 
+rostit|  ˈɑː  ˈəʊ  ˈɛ s  t ˈiː  ˈaɪ  t ˈiː 
 s|(en) ˈɛ s (ja)
-sentence|  ˈɛ s  ˈiː  ˈɛ n  t ˈiː  ˈiː  ˈɛ n  s ˈiː  ˈiː 
+sentence|ˈɛ s  ˈiː  ˈɛ n  t ˈiː  ˈiː  ˈɛ n  s ˈiː  ˈiː
 sf|(en) ˈɛ s  ˈɛ f (ja)
-speech|  ˈɛ s  p ˈiː  ˈiː  ˈiː  s ˈiː  ˈeɪ tʃ 
+speech|ˈɛ s  p ˈiː  ˈiː  ˈiː  s ˈiː  ˈeɪ tʃ
 srb|(en) ˈɛ s  ˈɑː  b ˈiː (ja)
 s？|(en) ˈɛ s (ja)
 t|(en) t ˈiː (ja)
 tec|(en) t ˈiː  ˈiː  s ˈiː (ja)
 tec？|(en) t ˈiː  ˈiː  s ˈiː (ja)
-text|  t ˈiː  ˈiː  ˈɛ k s  t ˈiː 
-the|  t ˈiː  ˈeɪ tʃ  ˈiː 
-this|  t ˈiː  ˈeɪ tʃ  ˈaɪ  ˈɛ s 
-three|  t ˈiː  ˈeɪ tʃ  ˈɑː  ˈiː  ˈiː 
-to|  t ˈiː  ˈəʊ 
+testing|  t ˈiː  ˈiː  ˈɛ s  t ˈiː  ˈaɪ  ˈɛ n  dʒ ˈiː 
+text|t ˈiː  ˈiː  ˈɛ k s  t ˈiː
+the|t ˈiː  ˈeɪ tʃ  ˈiː
+this|t ˈiː  ˈeɪ tʃ  ˈaɪ  ˈɛ s
+three|t ˈiː  ˈeɪ tʃ  ˈɑː  ˈiː  ˈiː
+to|t ˈiː  ˈəʊ
 ufo|(en) j ˈuː  ˈɛ f  ˈəʊ (ja)
 usaf|(en) j ˈuː  ˈɛ s  ˈeɪ  ˈɛ f (ja)
 uss|(en) j ˈuː  ˈɛ s  ˈɛ s (ja)
 vault|(en) v ˈiː  ˈeɪ  j ˈuː  ˈɛ l  t ˈiː (ja)
 vault。|(en) v ˈiː  ˈeɪ  j ˈuː  ˈɛ l  t ˈiː (ja)
-vee|  v ˈiː  ˈiː  ˈiː 
-very|  v ˈiː  ˈiː  ˈɑː  w ˈaɪ 
-with|  d ˈʌ b əl j ˌuː  ˈaɪ  t ˈiː  ˈeɪ tʃ 
+vee|v ˈiː  ˈiː  ˈiː
+very|v ˈiː  ˈiː  ˈɑː  w ˈaɪ
+with|d ˈʌ b əl j ˌuː  ˈaɪ  t ˈiː  ˈeɪ tʃ
 x|(en) ˈɛ k s (ja)
 x111|(en) ˈɛ k s (ja) ˌi ts i  ç ˌä k ɯᵝ d  z ɯᵝ  ˈi ts i
 x4|(en) ˈɛ k s (ja) s ˈi
 x6|(en) ˈɛ k s (ja) ɹ ˈo̞ k ɯᵝ
 x6。|(en) ˈɛ k s (ja) ɹ ˈo̞ k ɯᵝ
 x6？|(en) ˈɛ k s (ja) ɹ ˈo̞ k ɯᵝ
+xvasynth|  ˈɛ k s  v ˌiː  ˈeɪ  ˈɛ s  w ˈaɪ  ˈɛ n  t ˈiː  ˈeɪ tʃ 
 x？|(en) ˈɛ k s (ja)
 y9|(en) w ˈaɪ (ja) kʲ ˈɯᵝɯᵝ
 z1|(en) z ˈɛ d (ja) ˈi ts i
@@ -21178,6 +21191,7 @@ zeta|(en) z ˈɛ d  ˈiː  t ˈiː  ˈeɪ (ja)
 せいしんぶんせきか|s ˌe̞ i ɕ ˌi ũ b ˌɯᵝ ũ s e̞ k ˈi k ä
 せいじけいたい|s ˌe̞ i dʑ ˌi k e̞ i t ˈä i
 せいじん、|s e̞ ˈi dʑ i ɴ
+せいせいさ|s ˌe̞ i s e̞ ˈi s ä
 せいせいし、|s ˌe̞ i s e̞ ˈi ɕ i
 せいせいしたわ。|s ˌe̞ i s ˌe̞ i ɕ i t ˈä w ä
 せいせいす|s ˌe̞ i s e̞ ˈi s ɯᵝ

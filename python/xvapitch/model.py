@@ -307,7 +307,7 @@ class xVAPitch(object):
 
         return ""
 
-    def infer(self, plugin_manager, text, out_path, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang="en"):
+    def infer(self, plugin_manager, text, out_path, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang="en", base_emb=None):
 
         if base_lang not in self.lang_tp.keys():
             self.lang_tp[base_lang] = get_text_preprocessor(base_lang, self.base_dir, logger=self.logger)
@@ -340,7 +340,8 @@ class xVAPitch(object):
             # self.logger.info(f'self.base_emb: {self.base_emb}')
             # speaker_embs = [torch.tensor(self.base_emb).unsqueeze(dim=0)[0].unsqueeze(-1) for _ in range(text.shape[1])]
             # TODO, add per-symbol support
-            speaker_embs = [torch.tensor(self.base_emb).unsqueeze(dim=0)[0].unsqueeze(-1)]
+            base_emb = [float(val) for val in base_emb.split(",")] if "," in base_emb else self.base_emb
+            speaker_embs = [torch.tensor(base_emb).unsqueeze(dim=0)[0].unsqueeze(-1)]
             speaker_embs = torch.stack(speaker_embs, dim=0).to(self.models_manager.device)#.unsqueeze(-1)
 
             # g = F.normalize(speaker_embs[0])

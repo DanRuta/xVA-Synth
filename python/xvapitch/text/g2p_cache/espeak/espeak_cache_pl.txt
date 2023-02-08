@@ -2581,7 +2581,7 @@ balmora|b a l m ˈɔ r a
 balmory|b a l m ˈɔ r ɨ
 balo|b ˈa l ɔ
 balon|b ˈa l ɔ n
-balona|b a l ˈɔ n a 
+balona|b a l ˈɔ n a
 balonach|b a l ˈɔ n a x
 balonami|b ˌa l ɔ n ˈa m i
 balonem|b a l ˈɔ n ɛ m
@@ -8287,7 +8287,7 @@ czarno|tʃ ˈa r n ɔ
 czarnobylu|tʃ ˌa r n ɔ b ˈɨ l u
 czarnogóry|tʃ ˌa r n ɔ ɡ ˈu r ɨ
 czarnohebanowego|tʃ ˌa r n ɔ x ˌɛ b a n ɔ v ˈɛ ɡ ɔ
-czarnokrwista|tʃ ˌa r n ɔ k r f ˈi s t a 
+czarnokrwista|tʃ ˌa r n ɔ k r f ˈi s t a
 czarnoksięskie|tʃ ˌa r n ɔ k ɕ ˈɛ̃ s kʲ ɛ
 czarnoksięskiego|tʃ ˌa r n ɔ k ɕ ɛ̃ s kʲ ˈɛ ɡ ɔ
 czarnoksięstwu|tʃ ˌa r n ɔ k ɕ ˈɛ̃ s t f u
@@ -46113,7 +46113,7 @@ organizowane|ˌɔ r ɡ a ɲ ˌi z ɔ v ˈa n ɛ
 organizowanie|ˌɔ r ɡ a ɲ ˌi z ɔ v ˈa ɲʲ ɛ
 organizowaniem|ˌɔ r ɡ a ɲ ˌi z ɔ v ˈa ɲʲ ɛ m
 organizowany|ˌɔ r ɡ a ɲ ˌi z ɔ v ˈa n ɨ
-organizowaną|ˌɔ r ɡ a ɲ ˌi z ɔ v ˈa n ɔ̃ 
+organizowaną|ˌɔ r ɡ a ɲ ˌi z ɔ v ˈa n ɔ̃
 organizować|ˌɔ r ɡ a ɲ i z ˈɔ v a tɕ
 organizowały|ˌɔ r ɡ a ɲ ˌi z ɔ v ˈa w ɨ
 organizuje|ˌɔ r ɡ a ɲ i z ˈu j ɛ
@@ -90297,7 +90297,7 @@ wybudowano|v ˌɨ b u d ɔ v ˈa n ɔ
 wybudowaną|v ˌɨ b u d ɔ v ˈa n ɔ̃
 wybudować|v ˌɨ b u d ˈɔ v a tɕ
 wybudował|v ˌɨ b u d ˈɔ v a w
-wybudowała|v ˌɨ b u d ɔ v ˈa w a 
+wybudowała|v ˌɨ b u d ɔ v ˈa w a
 wybuduj|v ɨ b ˈu d u j
 wybudujesz|v ˌɨ b u d ˈu j ɛ ʃ
 wybudują|v ˌɨ b u d ˈu j ɔ̃
@@ -90984,6 +90984,7 @@ wygasło|v ɨ ɡ ˈa s w ɔ
 wygasły|v ɨ ɡ ˈa s w ɨ
 wygasłym|v ɨ ɡ ˈa s w ɨ m
 wygaśnie|v ɨ ɡ ˈa ɕ ɲʲ ɛ
+wygenerowane|v ˌɨ ɡ ɛ n ˌɛ r ɔ v ˈa n ɛ
 wygina|v ɨ ɡʲ ˈi n a
 wyginają|v ˌɨ ɡʲ i n ˈa j ɔ̃
 wyginającej|v ˌɨ ɡʲ i n a j ˈɔ n ts ɛ j
@@ -95639,6 +95640,7 @@ xiężyca|k sʲ ɛ̃ ʒ ˈɨ ts a
 xoaz|k s ˈɔ a s
 xoaza|k s ɔ ˈa z a
 xoazowi|k s ˌɔ a z ˈɔ v i
+xvasynth|ˈi k s f ˌa w ˈa s ˈɨ n s
 xviii|ɡ z v j ˈi
 xx|ˌi k s ˈi k s
 xxi|k s k s ˈi

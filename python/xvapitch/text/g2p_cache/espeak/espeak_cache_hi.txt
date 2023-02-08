@@ -151,16 +151,19 @@
 97|s ə tː ˈaː n ə b ˌeː
 98|ʌ tʰː ˈaː n ə b ˌeː
 99|n ɪ ɲ j ˈaː n ə b ˌeː
-a| ˈeɪ 
-backbone| b ˈa k b əʊ n 
+a|ˈeɪ
+backbone|b ˈa k b əʊ n
+c'est| s ˈeɪ 
 day|(en) d ˈeɪ (hi)
-demo| d ˈɛ m əʊ 
+demo|d ˈɛ m əʊ
 election|(en) ɪ l ˈɛ k ʃ ə n (hi)
-experiment| ɛ k s p ˈɛ ɹ ɪ m ə n t 
+en| ˈɛ n 
+experiment|ɛ k s p ˈɛ ɹ ɪ m ə n t
 facebook|(en) f ˈeɪ s b ʊ k (hi)
 film|(en) f ˈɪ l m (hi)
-first| f ˈɜː s t 
-for| f ˈɔː 
+first|f ˈɜː s t
+for|f ˈɔː
+franais| f ɹ ˈa n aɪ z 
 go|(en) ɡ ˈəʊ (hi)
 google|(en) ɡ ˈuː ɡ əl (hi)
 heart|(en) h ˈɑː t (hi)
@@ -169,32 +172,37 @@ in|(en) ˈɪ n (hi)
 inspiring|(en) ɪ n s p ˈaɪə ɹ ɪ ŋ (hi)
 instagram|(en) ˈɪ n s t ɐ ɡ ɹ ˌa m (hi)
 iphone|(en) ˈaɪ f ˈəʊ n (hi)
-is| ˈɪ z 
+is|ˈɪ z
 italy|(en) ˈɪ t ə l i (hi)
 karnataka|(en) k ə n ˈɑː t ə k ə (hi)
-line| l ˈaɪ n 
+line|l ˈaɪ n
 love|(en) l ˈʌ v (hi)
 memes|(en) m ˈiː m z (hi)
-new| n j ˈuː 
+new|n j ˈuː
 org|(en) ˈɔː ɡ (hi)
+par| p ˈɑː 
+phrase| f ɹ ˈeɪ z 
+prononce| p ɹ ˈɒ n ɒ n s 
 redmi|(en) ɹ ˈɛ d m i (hi)
 review|(en) ɹ ɪ v j ˈuː (hi)
-sentence| s ˈɛ n t ə n s 
+sentence|s ˈɛ n t ə n s
 shocking|(en) ʃ ˈɒ k ɪ ŋ (hi)
-speech| s p ˈiː tʃ 
+speech|s p ˈiː tʃ
 story|(en) s t ˈɔː ɹ i (hi)
 tatoeba|(en) t a t ˈəʊ b ə (hi)
 tatoebaorg|(en) t ˌa t əʊ b eɪ ˈɔː ɡ (hi)
-text| t ˈɛ k s t 
-the| ð ˈə 
-this| ð ˈɪ s 
-three| θ ɹ ˈiː 
-to| t ˈuː 
-vee| v ˈiː 
-very| v ˈɛ ɹ i 
-with| w ˈɪ ð 
+text|t ˈɛ k s t
+the|ð ˈə
+this|ð ˈɪ s
+three|θ ɹ ˈiː
+to|t ˈuː
+une| j ˈuː n 
+vee|v ˈiː
+very|v ˈɛ ɹ i
+with|w ˈɪ ð
 world|(en) w ˈɜː l d (hi)
 xiaomi|(en) z ˌaɪ ə ɹ ˈəʊ m i (hi)
+xvasynth| ˈɛ k s v ˈiː  ˈeɪ s ˈɪ n θ 
 ँ|c ˈʌ n d ɾ ə b ˈɪ n d ʊ
 ँखें|n kʰ ˈẽː
 ँखो|n kʰ ˈoː

@@ -287,11 +287,11 @@ a {
  }
  #voiceSamples {
      /*width: calc(95vw - 300px);*/
-     height: calc(91vh - 185px - 290px - 45px - 50px);
+     height: calc(91vh - 185px - 290px - 45px - 50px - 46px);
      background: rgba(255,255,255,0.1);
      margin-left: 10px;
      margin-right: 6px;
-     margin-top: 70px;
+     margin-top: 115px;
      overflow-y: auto;
  }
 .sample {
@@ -417,7 +417,7 @@ a {
  }
 
 
- #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer, #EULAContainer, #patreonContainer, #pluginsContainer, #nexusContainer, #nexusReposContainer, #embeddingsContainer, #totdContainer, #arpabetContainer, #resetContainer, .modelContainer {
+ #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer, #EULAContainer, #patreonContainer, #pluginsContainer, #nexusContainer, #nexusReposContainer, #embeddingsContainer, #totdContainer, #arpabetContainer, #styleEmbeddingsContainer, #resetContainer, .modelContainer {
      display: flex;
      justify-content: center;
      align-items: center;
@@ -472,13 +472,13 @@ a {
      width: 25vw;
      text-align: center;
  }
- #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal, #patreonContainer > .modal, #pluginsContainer > .modal, #nexusContainer > .modal, #nexusReposContainer > .modal, #embeddingsContainer > .modal, #totdContainer > .modal, #arpabetContainer > .modal, #resetContainer > .modal, .modelContainer > .modal {
+ #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal, #patreonContainer > .modal, #pluginsContainer > .modal, #nexusContainer > .modal, #nexusReposContainer > .modal, #embeddingsContainer > .modal, #totdContainer > .modal, #arpabetContainer > .modal, #styleEmbeddingsContainer > .modal, #resetContainer > .modal, .modelContainer > .modal {
      height: 65vh;
      width: 50vw;
      min-height: 500px;
      min-width: 750px;
  }
- #gameSelectionContainer > .modal, #batchGenerationContainer > .modal, #EULAContainer > .modal, #nexusContainer > .modal, #embeddingsContainer > .modal, #arpabetContainer > .modal, #resetContainer > .modal, .modelContainer > .modal {
+ #gameSelectionContainer > .modal, #batchGenerationContainer > .modal, #EULAContainer > .modal, #nexusContainer > .modal, #embeddingsContainer > .modal, #arpabetContainer > .modal, #styleEmbeddingsContainer > .modal, #resetContainer > .modal, .modelContainer > .modal {
     height: 75vh;
     width: 85vw;
     min-height: 500px;
@@ -724,6 +724,7 @@ a {
      display: flex;
      align-items: center;
      justify-content: space-between;
+     height: 40px;
      background: rgba(255,255,255,0.2);
      margin-bottom: 5px;
  }
@@ -975,7 +976,7 @@ a {
     flex-direction: column;
     align-items: center;
 }
-#batch_main, #plugins_main, #nexus_main, #embeddings_main, #nexus_search_main, #nexus_reposUsed_main, #arpabetWordsList_main {
+#batch_main, #plugins_main, #styleembs_main, #nexus_main, #embeddings_main, #nexus_search_main, #nexus_reposUsed_main, #arpabetWordsList_main {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -990,6 +991,9 @@ a {
 }
 #plugins_main {
     width: 90vw;
+}
+#styleembs_main {
+    width: 40vw;
 }
 .centeredSettingsSectionPlugins {
     justify-content: center !important;
@@ -1057,26 +1061,26 @@ a {
     justify-content: center;
     padding: 5px;
 }
-#batchRecordsHeader, #pluginsRecordsHeader, #nexusRecordsHeader, #embeddingsRecordsHeader, #nexusSearchHeader, #nexusReposUsedHeader, #arpabetWordsListHeader {
+#batchRecordsHeader, #pluginsRecordsHeader, #styleembsRecordsHeader, #nexusRecordsHeader, #embeddingsRecordsHeader, #nexusSearchHeader, #nexusReposUsedHeader, #arpabetWordsListHeader {
     position: sticky;
     top: 0;
 }
-#batchRecordsHeader > div, #pluginsRecordsHeader > div, #nexusRecordsHeader > div, #embeddingsRecordsHeader > div, #nexusSearchHeader > div, #nexusReposUsedHeader > div, #arpabetWordsListHeader > div {
+#batchRecordsHeader > div, #pluginsRecordsHeader > div, #styleembsRecordsHeader > div, #nexusRecordsHeader > div, #embeddingsRecordsHeader > div, #nexusSearchHeader > div, #nexusReposUsedHeader > div, #arpabetWordsListHeader > div {
     background-color: rgb(75,75,75);
     box-shadow: 0 1px 5px 1px rgba(0,0,0,0.3);
     text-shadow: 0 0 2px black;
     font-weight: bold;
 }
-#pluginsRecordsContainer > div {
+#pluginsRecordsContainer > div, #styleembsRecordsContainer > div {
     cursor: pointer;
 }
-#batchRecordsHeader, #batchRecordsContainer > div, #pluginsRecordsHeader, #pluginsRecordsContainer > div, #nexusRecordsHeader, #nexusRecordsContainer > div, #embeddingsRecordsHeader, #embeddingsRecordsContainer > div, #nexusSearchHeader, #nexusSearchContainer > div, #nexusReposUsedHeader, #nexusReposUsedContainer > div, #arpabetWordsListHeader, #arpabetWordsListContainer > div {
+#batchRecordsHeader, #batchRecordsContainer > div, #pluginsRecordsHeader, #styleembsRecordsHeader, #pluginsRecordsContainer > div, #styleembsRecordsContainer > div, #nexusRecordsHeader, #nexusRecordsContainer > div, #embeddingsRecordsHeader, #embeddingsRecordsContainer > div, #nexusSearchHeader, #nexusSearchContainer > div, #nexusReposUsedHeader, #nexusReposUsedContainer > div, #arpabetWordsListHeader, #arpabetWordsListContainer > div {
     width: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
 }
-#batchRecordsHeader > div, #batchRecordsContainer > div > div, #pluginsRecordsHeader > div, #pluginsRecordsContainer > div > div, #nexusRecordsHeader > div, #nexusRecordsContainer > div > div, #embeddingsRecordsHeader > div, #embeddingsRecordsContainer > div > div , #nexusSearchHeader > div, #nexusSearchContainer > div > div, #nexusReposUsedHeader > div, #nexusReposUsedContainer > div > div, #arpabetWordsListHeader > div, #arpabetWordsListContainer > div > div {
+#batchRecordsHeader > div, #batchRecordsContainer > div > div, #pluginsRecordsHeader > div, #styleembsRecordsHeader > div, #pluginsRecordsContainer > div > div, #styleembsRecordsContainer > div > div, #nexusRecordsHeader > div, #nexusRecordsContainer > div > div, #embeddingsRecordsHeader > div, #embeddingsRecordsContainer > div > div , #nexusSearchHeader > div, #nexusSearchContainer > div > div, #nexusReposUsedHeader > div, #nexusReposUsedContainer > div > div, #arpabetWordsListHeader > div, #arpabetWordsListContainer > div > div {
     padding: 2px;
     border: 1px solid;
     color: white;
@@ -1520,6 +1524,57 @@ a {
     /*max-width: 100px;*/
 }
 
+/* STYLE embeddings stuff */
+#styleembsRecordsHeader > div {
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#styleembsRecordsContainer > div > div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#styleembsRecordsContainer > div > div:first-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#styleembsRecordsHeader > div:first-child, #styleembsRecordsContainer > div > div:first-child {
+    min-width: 65px;
+    max-width: 65px;
+}
+/*Embedding name*/
+#styleembsRecordsHeader > div:nth-child(2), #styleembsRecordsContainer > div > div:nth-child(2) {
+    min-width: 200px;
+    max-width: 200px;
+}
+/*Game ID*/
+#styleembsRecordsHeader > div:nth-child(3), #styleembsRecordsContainer > div > div:nth-child(3) {
+    min-width: 125px;
+    max-width: 125px;
+}
+/*Voice ID*/
+#styleembsRecordsHeader > div:nth-child(4), #styleembsRecordsContainer > div > div:nth-child(4) {
+    min-width: 200px;
+    max-width: 200px;
+}
+/*Description*/
+#styleembsRecordsHeader > div:nth-child(5), #styleembsRecordsContainer > div > div:nth-child(5) {
+    min-width: 250px;
+    max-width: 250px;
+}
+/*Emb ID*/
+#styleembsRecordsHeader > div:nth-child(6), #styleembsRecordsContainer > div > div:nth-child(6) {
+    min-width: 200px;
+    max-width: 200px;
+}
+/*Version*/
+#styleembsRecordsHeader > div:nth-child(7), #styleembsRecordsContainer > div > div:nth-child(7) {
+    min-width: 50px;
+    /*max-width: 50px;*/
+}
 
 
 

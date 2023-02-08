@@ -21539,6 +21539,7 @@ embrumée|ɑ̃ b ʁ y m ˈe
 embruns|(en) ɛ m b ɹ ˈʌ n z (fr)
 embry|ɑ̃ b ʁ ˈi
 embryon|ɑ̃ b ʁ i ˈɔ̃
+embs|ˈɑ̃ b
 embuscade|ɑ̃ b y s k ˈa d
 embuscades|ɑ̃ b y s k ˈa d
 embusqué|ɑ̃ b y s k ˈe
@@ -36584,7 +36585,7 @@ lincolnien|l ɛ̃ k ɔ l n j ˈɛ̃
 lincolnshire|l ɛ̃ k ɔ l n ʃ ˈi ʁ
 lindai|l ɛ̃ d ˈe
 line|(en) l ˈaɪ n (fr)
-lines| l ˈaɪ n z 
+lines|l ˈaɪ n z
 linge|l ˈɛ̃ ʒ
 lingerie|l ɛ̃ ʒ ʁ ˈi
 linges|l ˈɛ̃ ʒ
@@ -40662,7 +40663,7 @@ manuscrit|m a n y s k ʁ ˈi
 manuscrites|m a n y s k ʁ ˈi t
 manuscrits|m a n y s k ʁ ˈi
 manutentions|m a n y t ɑ̃ s j ˈɔ̃
-many| m ˈɛ n i 
+many|m ˈɛ n i
 manzanilla|m ɑ̃ z a n i j ˈa
 manège|m a n ˈɛ ʒ
 manœuvra|m a n œ v ʁ ˈa
@@ -42633,6 +42634,7 @@ mulush|(en) m j ˈʊ l ʌ ʃ (fr)
 mulâtre|m y l ˈaː t ʁ
 mulâtres|m y l ˈaː t ʁ
 mulâtresses|m y l a t ʁ ˈɛ s
+mumbling| m ˈʌ m b l ɪ ŋ 
 mumuse|m y m ˈy z
 munda|m œ̃ d ˈa
 mundus|m œ̃ d ˈy
@@ -46182,7 +46184,7 @@ ondulés|ɔ̃ d y l ˈe
 ondé|ɔ̃ d ˈe
 ondées|ɔ̃ d ˈe
 ondés|ɔ̃ d ˈe
-one| w ˈɒ n 
+one|w ˈɒ n
 ongar|ɔ̃ ɡ ˈa ʁ
 ongle|ˈɔ̃ ɡ l
 onglenoir|ɔ̃ ɡ l ə n w ˈa ʁ
@@ -64573,6 +64575,7 @@ test|t ˈɛ s t
 testament|t ɛ s t ˈa m
 tester|t ɛ s t ˈe
 testez|t ɛ s t ˈe
+testing| t ˈɛ s t ɪ ŋ 
 testostérone|t ɛ s t ɔ s t e ʁ ˈɔ n
 tests|t ˈɛ s t
 testées|t ɛ s t ˈe
@@ -67979,7 +67982,7 @@ voguer|v o ɡ ˈe
 voguions|v o ɡ j ˈɔ̃
 voguèrent|v o ɡ ˈɛ ʁ
 voi|v w ˈa
-voice| v ˈɔɪ s 
+voice|v ˈɔɪ s
 voici|v w a s ˈi
 voicy|(en) v ˈəʊ ɪ s i (fr)
 voie|v w ˈa
@@ -68582,6 +68585,7 @@ xiv|ɡ z ˈi v
 xive|ɡ z ˈi v
 xix|ɡ z ˈi k s
 xv|ˌi k s v ˈe
+xvasynth| ˈi k s v ˌe ˈa  s ˈɪ n θ 
 xvi|i k s v ˈi
 xvie|i k s v ˈi
 xvii|i k s v j ˈi

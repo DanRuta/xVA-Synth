@@ -8532,6 +8532,7 @@ dexterous|d ˈɛ k s t ɚ ɹ ə s
 dexterously|d ˈɛ k s t ɚ ɹ ə s l i
 dextros|d ˈɛ k s t ɹ oʊ z
 dez|d ˈɛ z
+dfgdfgdfgd|d ˌiː  ˌɛ f dʒ ˈiː d ˌiː  ˌɛ f dʒ ˈiː d ˌiː  ˌɛ f dʒ ˌiː d ˈiː
 dh'oine|d ˈɔɪ n
 dhatri|d ˈæ t ɹ i
 diabolic|d ˌaɪ ə b ˈɑː l ɪ k
@@ -9802,6 +9803,7 @@ embroidered|ɛ m b ɹ ˈɔɪ d ɚ d
 embroiling|ɛ m b ɹ ˈɔɪ l ɪ ŋ
 embryological|ˌɛ m b ɹ ɪ  ə l ˈɑː dʒ ɪ k əl
 embryologists|ˌɛ m b ɹ ɪ  ˈɑː l ə dʒ ˌɪ s t s
+embs|ˈɛ m z
 emeet|ɪ m ˈiː t
 emendations|ɪ m ə n d ˈeɪ ʃ ə n z
 emer|ɪ m ˈɜː
@@ -10150,6 +10152,7 @@ etheric|iː θ ˈɜː ɹ ɪ k
 ethics|ˈɛ θ ɪ k s
 ethnological|ˌɛ θ n ə l ˈɑː dʒ ɪ k əl
 etira|ɛ t ˈiə ɹ ə
+eto|ˈiː ɾ oʊ
 etrich|ɪ t ɹ ˈɪ tʃ
 eugal|j ˈuː ɡ əl
 eugene|j ˈuː dʒ iː n
@@ -10803,6 +10806,7 @@ fawe|f ˈɔː
 fawned|f ˈɔː n d
 fawns|f ˈɔː n z
 fbi|ˌɛ f b ˌiː  ˈaɪ
+fdgdf|ˌɛ f d ˌiː dʒ ˈiː d ˌiː  ˈɛ f
 fear|f ˈɪɹ
 feared|f ˈɪɹ d
 fearest|f ˈɪ ɹ ɪ s t
@@ -12238,6 +12242,7 @@ gazing|ɡ ˈeɪ z ɪ ŋ
 gazu|ɡ ˈɑː z uː
 gazute|ɡ ˈæ z j uː t
 gc|dʒ ˌiː s ˈiː
+gdfg|dʒ ˌiː d ˌiː  ˌɛ f dʒ ˈiː
 ge|dʒ ˈiː
 ge'els|dʒ ˈɛ əl z
 ge'els'll|dʒ ˈɛ əl z əl
@@ -14648,6 +14653,7 @@ i'm|ˈaɪ m
 i'ma|aɪ m ˈæ
 i've|ˈaɪ v
 i'yachus|aɪ j ˈæ tʃ ə s
+iazyke|ˈaɪ eɪ z ˌaɪ k
 ice|ˈaɪ s
 icebrain|ˈaɪ s b ɹ eɪ n
 icebrains|ˈaɪ s b ɹ eɪ n z
@@ -23235,6 +23241,7 @@ predetermines|p ɹ ɪ d ɪ t ˈɜː m ɪ n z
 predicable|p ɹ ɪ d ˈɪ k ə b əl
 predilections|p ɹ ˌɛ d ə l ˈɛ k ʃ ə n z
 preditor|p ɹ iː d ˈɪ ɾ ɚ
+predlozhenie|p ɹ ɪ d l ˈɑː ʒ ɛ n i
 preem|p ɹ iː  ˈɛ m
 prefaces|p ɹ ˈɛ f ə s ᵻ z
 prefecting|p ɹ ˈiː f ɛ k t ɪ ŋ
@@ -25677,6 +25684,7 @@ ruso|ɹ ˈuː s oʊ
 russet|ɹ ˈʌ s ɛ t
 russian|ɹ ˈʌ ʃ ə n
 russias|ɹ ˈʌ ʃ ə z
+russkom|ɹ ˈʌ s k ə m
 rust|ɹ ˈʌ s t
 rustic|ɹ ˈʌ s t ɪ k
 rusticated|ɹ ˈʌ s t ᵻ k ˌeɪ ɾ ᵻ d
@@ -26904,6 +26912,7 @@ seyda|s ˈeɪ d ə
 seyee|s ˈeɪ iː
 seymour|s ˈiː m oːɹ
 seyume|s ˈeɪ j uː m
+sgenerirovannoe|ˈɛ s dʒ ə n ˈɛ ɹ ɪ ɹ ˌɑː v ɐ n ˌoʊ
 sgi|ˌɛ s dʒ ˌiː  ˈaɪ
 sh|ˌɛ s ˈeɪ tʃ
 sha'ira|ʃ æ ˈiə ɹ ə

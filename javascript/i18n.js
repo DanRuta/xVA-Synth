@@ -15,6 +15,11 @@ window.i18n.setEnglish = () => {
     window.i18n.PITCH = "Pitch"
     window.i18n.ENERGY = "Energy"
     window.i18n.DURATIONS = "Durations"
+    window.i18n.MANAGE = "Manage"
+    window.i18n.DEFAULT = "Default"
+    window.i18n.ENABLED = "Enabled"
+    window.i18n.ACTIONS = "Actions"
+    window.i18n.DESCRIPTION = "Description"
 
     window.i18n.VIEW_IS = "View:"
     window.i18n.ENERGY_IS = "Energy:"
@@ -23,6 +28,7 @@ window.i18n.setEnglish = () => {
     window.i18n.AUTO_REGEN = "Auto regenerate"
     window.i18n.VOCODER = "Vocoder:"
     window.i18n.BASE_LANGUAGE_IS = "Base Language:"
+    window.i18n.STYLE_EMB_IS = "Style:"
     window.i18n.VARIANT_IS = "Variant:"
 
     window.i18n.SEARCH_GAMES = "Search games..."
@@ -315,6 +321,20 @@ window.i18n.setEnglish = () => {
     window.i18n.SATURDAY = "Saturday"
     window.i18n.SUNDAY = "Sunday"
 
+    window.i18n.EMBEDDINGS = "Embeddings"
+    window.i18n.EMB_NAME = "Embedding Name"
+    window.i18n.EMB_DESCRIPTION = "Embedding description"
+    window.i18n.EMB_ID = "Embedding ID"
+    window.i18n.STYLE_EMB_ID = "Embedding ID (Write a short, descriptive, alpha-numerical ID you think will be unique)"
+    window.i18n.EMB_ID = "Emb ID"
+    window.i18n.STYLE_EMBEDDINGS = "Style Embeddings"
+    window.i18n.STYLE_EMB_WAVPATH = "Wav file path"
+    window.i18n.STYLE_EMB_WAVPATH_PLACEHOLDER = "Drag+drop or full file path"
+    window.i18n.ERROR_FILE_MUST_BE_WAV = "File type must be .wav"
+    window.i18n.ERROR_NEED_WAV_FILE = "Add a wav file path"
+    window.i18n.STYLE_EMB_VALUES = "Style embedding values"
+    window.i18n.ERROR_MISSING_FIELDS = "Missing values for the following fields: _1"
+    window.i18n.CONFIRM_DELETE_STYLE_EMB = "Are you sure you want to delete this style embedding forever?"
 
 
     window.i18n.TOTD_1 = "You can right-click a voice on the left to hear a preview of the voice"
@@ -600,6 +620,9 @@ window.i18n.updateUI = () => {
     i18n_autoregen.innerHTML = window.i18n.AUTO_REGEN
     i18n_vocoder.innerHTML = window.i18n.VOCODER
     i18n_base_lang.innerHTML = window.i18n.BASE_LANGUAGE_IS
+    i18n_style_emb_is.innerHTML = window.i18n.STYLE_EMB_IS
+    default_opt_style_emb.innerHTML = window.i18n.DEFAULT
+    style_emb_manage_btn.innerHTML = window.i18n.MANAGE
 
     batch_paginationPrev.innerHTML = window.i18n.PREVIOUS
     batch_paginationNext.innerHTML = window.i18n.NEXT
@@ -697,6 +720,27 @@ window.i18n.updateUI = () => {
     embeddingsCloseHelpUI.innerHTML = window.i18n.CLOSE
     nexusMenuButton.innerHTML = window.i18n.GET_MORE_VOICES
 
+    i18n_embeddings.innerHTML = window.i18n.STYLE_EMBEDDINGS
+    i18n_style_emb_wavpath.innerHTML = window.i18n.STYLE_EMB_WAVPATH
+    i18n_style_emb_author.innerHTML = window.i18n.AUTHOR
+    i18n_style_emb_gameId.innerHTML = window.i18n.GAME_ID
+    i18n_style_emb_voiceId.innerHTML = window.i18n.VOICE_ID
+    i18n_style_emb_name.innerHTML = window.i18n.EMB_NAME
+    i18n_style_emb_description.innerHTML = window.i18n.EMB_DESCRIPTION
+    i18n_style_emb_id.innerHTML = window.i18n.STYLE_EMB_ID
+    wavFilepathForEmbComputeInput.placeholder = window.i18n.STYLE_EMB_WAVPATH_PLACEHOLDER
+    i18n_style_emb_values.innerHTML = window.i18n.STYLE_EMB_VALUES
+    i18n_styleembsh_enabled.innerHTML = window.i18n.ENABLED
+    i18n_styleembsh_name.innerHTML = window.i18n.EMB_NAME
+    i18n_styleembsh_gameID.innerHTML = window.i18n.GAME_ID
+    i18n_styleembsh_voiceID.innerHTML = window.i18n.VOICE_ID
+    // i18n_styleembsh_actions.innerHTML = window.i18n.ACTIONS
+    i18n_styleembsh_description.innerHTML = window.i18n.DESCRIPTION
+    i18n_styleembsh_embId.innerHTML = window.i18n.EMB_ID
+    i18n_styleembsh_version.innerHTML = window.i18n.VERSION
+    // i18n_styleembsh_endorse.innerHTML = window.i18n.ENDORSE
+    styleEmbSave.innerHTML = window.i18n.SAVE
+    styleEmbDelete.innerHTML = window.i18n.DELETE
 
 
     reset_btn.innerHTML = window.i18n.RESET

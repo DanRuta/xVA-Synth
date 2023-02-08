@@ -110,7 +110,7 @@ window.closeModal = (container=undefined, notThisOne=undefined, skipIfErrorOpen=
             return resolve()
         }
         window.errorModalHasOpened = false
-        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, pluginsContainer, modalContainer, nexusContainer, embeddingsContainer, totdContainer, nexusReposContainer, EULAContainer, arpabetContainer]
+        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, pluginsContainer, modalContainer, nexusContainer, embeddingsContainer, totdContainer, nexusReposContainer, EULAContainer, arpabetContainer, styleEmbeddingsContainer]
         const containers = container==undefined ? allContainers : (Array.isArray(container) ? container.filter(c=>c!=undefined) : [container])
 
         notThisOne = Array.isArray(notThisOne) ? notThisOne : (notThisOne==undefined ? [] : [notThisOne])
@@ -168,6 +168,9 @@ window.setTheme = (meta) => {
     } catch (e) {}
     try {
         Array.from(pluginsRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${primaryColour}`)
+    } catch (e) {}
+    try {
+        Array.from(styleembsRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${primaryColour}`)
     } catch (e) {}
     try {
         Array.from(nexusRecordsHeader.children).forEach(item => item.style.backgroundColor = `#${primaryColour}`)

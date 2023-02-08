@@ -445,30 +445,34 @@ a|(en) ˈeɪ (ko)
 a'b'는|(en) ˈeɪ  t ˈɪ k b ˈiː  t ˈɪ k (ko) n i  ˈɯ n ˈɯ n
 ab와|(en) ˈa b (ko) w ˈɐ
 b|(en) b ˈiː (ko)
-backbone| b ˈa k b əʊ n 
+backbone|b ˈa k b əʊ n
 cd를|(en) s ˌiː d ˈiː (ko) ɾ ˈɯ ɫ
 c가|(en) s ˈiː (ko) ɡ ˈɐ
-demo| d ˈɛ m əʊ 
+demo|d ˈɛ m əʊ
+embs| ˈɛ m z 
 esc를|(en) ˈɛ s k (ko) ɾ ˈɯ ɫ
-experiment| ɛ k s p ˈɛ ɹ ɪ m ə n t 
+experiment|ɛ k s p ˈɛ ɹ ɪ m ə n t
 f1|(en) ˈɛ f (ko) ˈi r
-first| f ˈɜː s t 
-for| f ˈɔː 
+first|f ˈɜː s t
+for|f ˈɔː
 g20|(en) dʒ ˈiː (ko) ˈi  s ˈi p
 h2o는|(en) ˈeɪ tʃ (ko) ˈi  (en) ˈəʊ (ko) n ˈɯ n
-is| ˈɪ z 
-line| l ˈaɪ n 
+is|ˈɪ z
+line|l ˈaɪ n
 mp3|(en) ˌɛ m p ˈiː (ko) s ˈɐ m
-new| n j ˈuː 
+mumbling| m ˈʌ m b l ɪ ŋ 
+new|n j ˈuː
+out| ˈaʊ t 
 pc를|(en) p ˌiː s ˈiː (ko) ɾ ˈɯ ɫ
 pc방|(en) p ˌiː s ˈiː (ko) p ˈɐ ŋ
-sentence| s ˈɛ n t ə n s 
-speech| s p ˈiː tʃ 
-text| t ˈɛ k s t 
-the| ð ˈə 
-this| ð ˈɪ s 
-three| θ ɹ ˈiː 
-to| t ˈuː 
+sentence|s ˈɛ n t ə n s
+speech|s p ˈiː tʃ
+testing| t ˈɛ s t ɪ ŋ 
+text|t ˈɛ k s t
+the|ð ˈə
+this|ð ˈɪ s
+three|θ ɹ ˈiː
+to|t ˈuː
 tv|(en) t ˌiː v ˈiː (ko)
 tv는|(en) t ˌiː v ˈiː (ko) n ˈɯ n
 tv만|(en) t ˌiː v ˈiː (ko) m ˈɐ n
@@ -478,9 +482,9 @@ tv에는|(en) t ˌiː v ˈiː (ko) ˈe n ɯ n
 tv에서|(en) t ˌiː v ˈiː (ko) ˈe s ʌ
 tv의|(en) t ˌiː v ˈiː (ko) ˈɯ j
 tv프로그램은|(en) t ˌiː v ˈiː (ko) ph ˈɯ ɾ o q ˌɯ ɾ ɛ m ˌɯ n
-vee| v ˈiː 
-very| v ˈɛ ɹ i 
-with| w ˈɪ ð 
+vee|v ˈiː
+very|v ˈɛ ɹ i
+with|w ˈɪ ð
 ‘아줌마’는|ɐ dʑ ˈu m m ɐ n ˌɯ n
 “아니요”라고|ˈɐ n i j ˌo   ɾ ˈɐ q o
 “예”나|j ˈe   n ˈɐ

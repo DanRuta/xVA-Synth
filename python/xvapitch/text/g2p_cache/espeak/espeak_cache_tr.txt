@@ -4832,6 +4832,7 @@ cömertsiniz|dʒ œ m ˈɛ r t s i n ɪ z
 cübbeleri|dʒ y bː e l e ɾ ˈɪ
 cüceleri|dʒ y dʒ e l e ɾ ˈɪ
 cümleden|dʒ ˈø m l e d æ n
+cümledir|dʒ ˈø m l e d ɪ r
 cümleler|dʒ ˈø m l e l ɛ r
 cümlelere|dʒ ø m l e l e ɾ ˈɛ
 cümleleri|dʒ ø m l e l e ɾ ˈɪ
@@ -23529,6 +23530,7 @@ vızıldanma|v ɯ z ɯ ɫ d ˈa n m a
 vızıldanıyordu|v ɯ z ɯ ɫ d a n ˈɯ j ɔ r d ʊ
 vızıldayarak|v ɯ z ɯ ɫ d a j a ɾ ˈa k
 washington|w a s h ɪ n ɡ t ˈɔ n
+xvasynth|ˈi k s v ˌɛ ˈa s j n t h
 y|j ˈɛ
 ya|j ˈa
 yaa|j a ˈa

@@ -22269,6 +22269,7 @@ emanzipatorischer|ˌeː m a n ts ˌiː p a t ˈoː r ɪ ʃ ɜ
 emblemen|ɛ m b l ˈeː m ə n
 embry|ˈɛ m b ɾ iː
 embryo|ˈɛ m b ɾ yː ˌoː
+embs| ˈɛ m p s
 emer|ˈeː m ɜ
 emeuten|ˈeː m ɔø t ə n
 emfrid|ɛ m f r ˈiː t
@@ -58958,6 +58959,7 @@ multipolaren|m ˌʊ l t iː p oː l ˈɑː r ə n
 multrig|m ˈʊ l t ɾ ɪ ç
 mulush|m ˈuː l ʊ ʃ
 mumbai|m ˈʊ m b aɪ
+mumbling|m ˈʊ m b l ɪ ŋ
 mumie|m ˈuː m ɪ  ə
 mumien|m uː m ˈiː ə n
 mumiengesicht|m ˈuː m iː ŋ ˌeː z ɪ ç t
@@ -81751,6 +81753,7 @@ testen|t ˈɛ s t ə n
 testest|t ˈɛ s t ə s t
 testet|t ˈɛ s t ə t
 testexemplare|t ˌɛ s t ɛ k s ɛ m p l ˈɑː r ə
+testing|t ˈɛ s t ɪ ŋ
 testobjekte|t ˈɛ s t ɔ b j ˌɛ k t ə
 testosteron|t ˈɛ s t ɔ s t ˌeː r oː n
 tests|t ˈɛ s t s

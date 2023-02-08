@@ -19,6 +19,7 @@ require("./javascript/nexus.js")
 require("./javascript/embeddings.js")
 require("./javascript/totd.js")
 require("./javascript/arpabet.js")
+require("./javascript/style_embeddings.js")
 const {Editor} = require("./javascript/editor.js")
 const {saveUserSettings, deleteFolderRecursive} = require("./javascript/settingsMenu.js")
 const xVASpeech = require("./javascript/speech2speech.js")
@@ -799,11 +800,15 @@ generateVoiceButton.addEventListener("click", () => {
             // Set the editor pitch/energy dropdowns to pitch, and freeze them, if energy is not supported by the model
             if (window.currentModel.modelType.toLowerCase()=="xvapitch") {
                 vocoder_options_container.style.display = "none"
-                base_lang_options_container.style.display = "inline-block"
+                base_lang_select.disabled = false
+                style_emb_select.disabled = false
+                window.loadStyleEmbsForVoice(window.currentModel)
                 mic_SVG.children[0].style.fill = "white"
+                base_lang_select.value = window.currentModel.lang
             } else {
                 vocoder_options_container.style.display = "inline-block"
-                base_lang_options_container.style.display = "none"
+                base_lang_select.disabled = true
+                style_emb_select.disabled = true
                 mic_SVG.children[0].style.fill = "grey"
             }
             if (window.currentModel.modelType.toLowerCase()!="fastpitch1.1") { // TEMP
@@ -881,7 +886,9 @@ generateVoiceButton.addEventListener("click", () => {
         }
 
         // Check if editing an existing line (otherwise it's a fresh new line)
-        if (!window.arpabetMenuState.hasChangedARPAbet && (speech2speechState.s2s_autogenerate || (editorContainer.innerHTML && editorContainer.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice)))) {
+        if (!window.arpabetMenuState.hasChangedARPAbet && !window.styleEmbsMenuState.hasChangedEmb &&
+            (speech2speechState.s2s_autogenerate || (editorContainer.innerHTML && editorContainer.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice)))) {
+
             speech2speechState.s2s_autogenerate = false
             pitch = window.sequenceEditor.pitchNew.map(v=> v==undefined?0:v)
             duration = window.sequenceEditor.dursNew.map(v => v*pace_slid.value).map(v=> v==undefined?0:v)
@@ -889,6 +896,7 @@ generateVoiceButton.addEventListener("click", () => {
             isFreshRegen = false
         }
         window.arpabetMenuState.hasChangedARPAbet = false
+        window.styleEmbsMenuState.hasChangedEmb = false
         window.sequenceEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
 
         const speaker_i = window.currentModel.games[0].emb_i
@@ -901,6 +909,7 @@ generateVoiceButton.addEventListener("click", () => {
             body: JSON.stringify({
                 sequence, pitch, duration, energy, speaker_i, pace,
                 base_lang: base_lang_select.value,
+                base_emb: style_emb_select.value||"",
                 modelType: window.currentModel.modelType,
                 old_sequence, // For partial re-generation
                 outfile: tempFileLocation,
@@ -1858,6 +1867,9 @@ window.setupModal(arpabetIcon, arpabetContainer, () => setTimeout(()=> !window.a
 // Plugins
 // =======
 window.setupModal(pluginsIcon, pluginsContainer)
+
+
+window.setupModal(style_emb_manage_btn, styleEmbeddingsContainer, window.styleEmbsModalOpenCallback)
 
 
 // Other

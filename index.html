@@ -144,10 +144,6 @@
                                 <input id="letterPitchNumb" disabled="true" type="number" name="lengthNum" min="-3" step="0.025" max="3">
                             </div>
                             <button id="resetLetter_btn">Reset Letter</button>
-                            <div id="base_lang_options_container" style="display: none;">
-                                <span id="i18n_base_lang">Base Language:</span>
-                                <select id="base_lang_select"></select>
-                            </div>
                             <div id="vocoder_options_container" style="display: none;">
                                 <span id="i18n_vocoder">Vocoder:</span>
                                 <select id="vocoder_select">
@@ -186,8 +182,22 @@
                                 <span id="i18n_variant">Variant</span>
                                 <select id="variant_select"></select>
                             </div>
-
                         </div>
+
+                        <div>
+                            <div id="style_embedding_dropdown_container">
+                                <span id="i18n_style_emb_is">Style:</span>
+                                <select id="style_emb_select" style="width: 200px;" disabled="true">
+                                    <option id="default_opt_style_emb"></option>
+                                </select>
+                                <button id="style_emb_manage_btn" style="margin-left: 5px;">Manage</button>
+                            </div>
+                            <div id="base_lang_options_container">
+                                <span id="i18n_base_lang">Base Language:</span>
+                                <select id="base_lang_select" disabled="true"></select>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <div id="voiceSamples"></div>
@@ -1618,6 +1628,98 @@
                                 </div>
 
 
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div id="styleEmbeddingsContainer" style="display: none;">
+            <div class="modal" style="height: 60vh;min-width: 700px;width: 95vw;">
+                <h2><span id="i18n_embeddings">Style Embeddings</span></h2>
+
+                <div style="display: flex;justify-content: center;align-items: center;height: 100%;margin: 5vw;width: 100%">
+
+                    <div id="wavFileDragDropArea" style="width: 30vw" class="flexTable">
+                        <div>
+                            <div id="i18n_style_emb_author">Author</div>
+                            <div>
+                                <input id="styleEmbAuthorInput" name="">
+                            </div>
+                        </div>
+                        <div>
+                            <div id="i18n_style_emb_gameId">Game ID</div>
+                            <div>
+                                <input id="styleEmbGameIdInput" name="">
+                            </div>
+                        </div>
+                        <div>
+                            <div id="i18n_style_emb_voiceId">Voice ID</div>
+                            <div>
+                                <input id="styleEmbVoiceIdInput" name="">
+                            </div>
+                        </div>
+                        <div>
+                            <div id="i18n_style_emb_name">Embedding name</div>
+                            <div>
+                                <input id="styleEmbNameInput" name="">
+                            </div>
+                        </div>
+                        <div>
+                            <div id="i18n_style_emb_description">Embedding description</div>
+                            <div>
+                                <input id="styleEmbDescriptionInput" name="">
+                            </div>
+                        </div>
+                        <div>
+                            <div id="i18n_style_emb_id">Embedding ID (Write a short, descriptive, alpha-numerical ID you think will be unique)</div>
+                            <div>
+                                <input id="styleEmbIdInput" name="">
+                            </div>
+                        </div>
+
+
+                        <div>
+                            <div id="i18n_style_emb_wavpath">Wav file path</div>
+                            <div>
+                                <input id="wavFilepathForEmbComputeInput" name="">
+                            </div>
+                        </div>
+                        <div style="display: flex;justify-content: center;">
+                            <button id="getStyleEmbeddingBtn">Get embedding</button>
+                        </div>
+                        <div>
+                            <div id="i18n_style_emb_values">Style embedding values</div>
+                            <div>
+                                <input id="styleEmbValuesInput" name="">
+                            </div>
+                        </div>
+                        <div>
+                            <button style="margin: 5px" id="styleEmbSave">Save</button>
+                            <button style="margin: 5px" id="styleEmbDelete" disabled="true">Delete</button>
+
+                        </div>
+                    </div>
+
+                    <div style="height: 50vh;;width: 0px;background-color: white;"></div>
+
+
+                    <div>
+                        <div id="styleembs_main" style="display: block;width: 70vw;margin-left: 10px;">
+                            <div id="styleembsRecordsHeader">
+                                <div id="i18n_styleembsh_enabled">Enabled</div>
+                                <div id="i18n_styleembsh_name">Emb Name</div>
+                                <div id="i18n_styleembsh_gameID">Game ID</div>
+                                <div id="i18n_styleembsh_voiceID">Voice ID</div>
+                                <div id="i18n_styleembsh_description">Description</div>
+                                <div id="i18n_styleembsh_embId">Emb Id</div>
+                                <div id="i18n_styleembsh_version">Version</div>
+                                <!-- <div id="i18n_styleembsh_endorse">Endorse</div> -->
+                            </div>
+                            <div id="styleembsRecordsContainer">
                             </div>
                         </div>
                     </div>
