@@ -349,10 +349,14 @@ class Editor {
 
         // Make model-specific adjustments
         if (modelType=="xVAPitch") {
-            this.default_pitchSliderRange = 30
-            this.pitchSliderRange = 30
+            this.default_pitchSliderRange = 6
+            this.pitchSliderRange = 6
             this.duration_visual_size_multiplier = 1
             this.MAX_LETTER_LENGTH = 200
+            this.default_MIN_ENERGY = 0
+            this.MIN_ENERGY = 0
+            this.default_MAX_ENERGY = 1.07
+            this.MAX_ENERGY = 1.07
         } else {
             this.default_pitchSliderRange = 4
             this.pitchSliderRange = 4
@@ -409,12 +413,17 @@ class Editor {
 
             if (this.energyNew && this.energyNew.length) {
                 // Energy round grabber
-                let energyPercent = 1 - ( (this.energyNew[li]-this.MIN_ENERGY) / (this.MAX_ENERGY-this.MIN_ENERGY)  )
+                let energyPercent
+                if (modelType=="xVAPitch") {
+                    energyPercent = ( (this.energyNew[li]-this.MIN_ENERGY) / (this.MAX_ENERGY-this.MIN_ENERGY)  )
+                } else {
+                    energyPercent = 1 - ( (this.energyNew[li]-this.MIN_ENERGY) / (this.MAX_ENERGY-this.MIN_ENERGY)  )
+                }
                 energyPercent = Math.max(0, energyPercent)
                 energyPercent = Math.min(energyPercent, 1)
 
-                const topLeftY = (1 - energyPercent) * (this.EDITOR_HEIGHT-2-this.ENERGY_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
-                const energyGrabber = new EnergyGrabber(this.context, li, sliderBox, topLeftY, width-2, this.ENERGY_GRABBER_RADIUS)
+                let topLeftY = (1 - energyPercent) * (this.EDITOR_HEIGHT-2-this.ENERGY_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
+                const energyGrabber = new EnergyGrabber(this.context, li, sliderBox, topLeftY, width-2, this.ENERGY_GRABBER_RADIUS, undefined, modelType)
                 energyGrabber.render()
                 this.energyGrabbers.push(energyGrabber)
             }
@@ -623,9 +632,10 @@ class SliderGrabber {
 
 class EnergyGrabber extends SliderGrabber {
 
-    constructor (context, index, sliderBox, topLeftY, width, height, sliderRange) {
+    constructor (context, index, sliderBox, topLeftY, width, height, sliderRange, modelType) {
         super(context, index, sliderBox, topLeftY, width, height, sliderRange)
         this.type = "energy_slider"
+        this.modelType = modelType
     }
 
     render () {
@@ -647,17 +657,24 @@ class EnergyGrabber extends SliderGrabber {
         this.topLeftY = Math.max(window.sequenceEditor.LETTERS_Y_OFFSET+window.sequenceEditor.ENERGY_GRABBER_RADIUS, this.topLeftY)
         this.topLeftY = Math.min(this.topLeftY, window.sequenceEditor.LETTERS_Y_OFFSET+(window.sequenceEditor.EDITOR_HEIGHT-2-window.sequenceEditor.ENERGY_GRABBER_RADIUS/2))
 
-        this.percentUp = 1-(this.topLeftY-window.sequenceEditor.LETTERS_Y_OFFSET)/(window.sequenceEditor.EDITOR_HEIGHT-window.sequenceEditor.ENERGY_GRABBER_RADIUS)
+        if (this.modelType=="xVAPitch") {
+            this.percentUp = (this.topLeftY-window.sequenceEditor.LETTERS_Y_OFFSET)/(window.sequenceEditor.EDITOR_HEIGHT-window.sequenceEditor.ENERGY_GRABBER_RADIUS)
+        } else {
+            this.percentUp = 1-(this.topLeftY-window.sequenceEditor.LETTERS_Y_OFFSET)/(window.sequenceEditor.EDITOR_HEIGHT-window.sequenceEditor.ENERGY_GRABBER_RADIUS)
+        }
         window.sequenceEditor.energyNew[this.index] = window.sequenceEditor.MAX_ENERGY - (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)*this.percentUp
     }
 
     setValueFromValue (value) {
         value = Math.max(window.sequenceEditor.MIN_ENERGY, value)
         value = Math.min(value, window.sequenceEditor.MAX_ENERGY)
-        this.percentUp = 1 - ( (value-window.sequenceEditor.MIN_ENERGY) / (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)  )
+        if (this.modelType=="xVAPitch") {
+            this.percentUp = ( (value-window.sequenceEditor.MIN_ENERGY) / (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)  )
+        } else {
+            this.percentUp = 1 - ( (value-window.sequenceEditor.MIN_ENERGY) / (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)  )
+        }
         this.topLeftY = (1 - this.percentUp) * (window.sequenceEditor.EDITOR_HEIGHT-2-window.sequenceEditor.ENERGY_GRABBER_RADIUS*2) + (window.sequenceEditor.LETTERS_Y_OFFSET+1)
     }
-
 }
 
 

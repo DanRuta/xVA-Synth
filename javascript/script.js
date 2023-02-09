@@ -811,7 +811,7 @@ generateVoiceButton.addEventListener("click", () => {
                 style_emb_select.disabled = true
                 mic_SVG.children[0].style.fill = "grey"
             }
-            if (window.currentModel.modelType.toLowerCase()!="fastpitch1.1") { // TEMP
+            if (window.currentModel.modelType.toLowerCase()=="fastpitch") {
                 seq_edit_view_select.value = "pitch"
                 seq_edit_edit_select.value = "pitch"
                 seq_edit_view_select.disabled = true
@@ -919,8 +919,12 @@ generateVoiceButton.addEventListener("click", () => {
             })
         }).then(r=>r.text()).then(res => {
 
-            if (res=="ENOENT") {
-                window.errorModal(`${window.i18n.BATCH_MODEL_NOT_FOUND}.${vocoder_select.value.includes("waveglow")?" "+window.i18n.BATCH_DOWNLOAD_WAVEGLOW:""}`)
+            if (res=="ENOENT" || res.startsWith("ERR:")) {
+                if (res.startsWith("ERR:")) {
+                    window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${res.replace("ERR:","").replaceAll(/\n/g, "<br>")}`)
+                } else {
+                    window.errorModal(`${window.i18n.BATCH_MODEL_NOT_FOUND}.${vocoder_select.value.includes("waveglow")?" "+window.i18n.BATCH_DOWNLOAD_WAVEGLOW:""}`)
+                }
                 toggleSpinnerButtons()
                 return
             }

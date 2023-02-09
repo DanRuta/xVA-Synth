@@ -166,28 +166,31 @@ class xVAPitch(nn.Module):
             dur_pred = dur_pred.view((1, dur_pred.shape[0])).float().to(self.device)
             pitch_pred = torch.tensor(pitch_pred)
             pitch_pred = pitch_pred.view((1, pitch_pred.shape[0])).float().to(self.device)
+            energy_pred = torch.tensor(energy_pred)
+            energy_pred = energy_pred.view((1, energy_pred.shape[0])).float().to(self.device)
 
             if not self.USE_PITCH_COND and pitch_pred.shape[1]==speaker_embs.shape[2]:
-                pitch_delta = self.pitch_emb_values * pitch_pred/5
+                pitch_delta = self.pitch_emb_values * pitch_pred
                 speaker_embs = speaker_embs + pitch_delta.float()
 
             try:
-                wav, dur_pred, pitch_pred_out, energy_pred, start_index, end_index = self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace, dur_pred_existing=dur_pred, pitch_pred_existing=pitch_pred, old_sequence=old_sequence, new_sequence=text, pitch_amp=pitch_amp)
+                wav, dur_pred, pitch_pred_out, energy_pred, start_index, end_index, wav_mult = self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace, dur_pred_existing=dur_pred, pitch_pred_existing=pitch_pred, energy_pred_existing=energy_pred, old_sequence=old_sequence, new_sequence=text, pitch_amp=pitch_amp)
                 if not self.USE_PITCH_COND and pitch_pred.shape[1]==speaker_embs.shape[2]:
                     pitch_pred_out = pitch_pred
-                return wav, dur_pred, pitch_pred_out, energy_pred, start_index, end_index
+                return wav, dur_pred, pitch_pred_out, energy_pred, start_index, end_index, wav_mult
             except:
                 print(traceback.format_exc())
                 logger.info(traceback.format_exc())
-                return self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace, None, None, None, None, pitch_amp=pitch_amp)
+                return traceback.format_exc()
+                return self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace, None, None, None, None, None, pitch_amp=pitch_amp)
 
         else:
-            return self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace, None, None, None, None, pitch_amp=pitch_amp)
+            return self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace, None, None, None, None, None, pitch_amp=pitch_amp)
 
 
 
 
-    def infer_using_vals (self, logger, plugin_manager, cleaned_text, sequence, lang_embs, speaker_embs, pace, dur_pred_existing, pitch_pred_existing, old_sequence, new_sequence, pitch_amp=None):
+    def infer_using_vals (self, logger, plugin_manager, cleaned_text, sequence, lang_embs, speaker_embs, pace, dur_pred_existing, pitch_pred_existing, energy_pred_existing, old_sequence, new_sequence, pitch_amp=None):
 
         start_index = None
         end_index = None
@@ -285,7 +288,10 @@ class xVAPitch(nn.Module):
             del attn_all
             m_p = torch.stack(m_p_all, dim=1).squeeze(dim=0)
             logs_p = torch.stack(logs_p_all, dim=1).squeeze(dim=0)
-            pitch_pred = torch.stack(pitch_pred_all, dim=1).squeeze(dim=0)
+            if self.USE_PITCH_COND:
+                pitch_pred = torch.stack(pitch_pred_all, dim=1).squeeze(dim=0)
+            else:
+                pitch_pred = torch.zeros((x.shape[0], x.shape[0], x.shape[2])).to(x)
         else:
             attn_mask = torch.unsqueeze(x_mask, 2) * torch.unsqueeze(y_mask, -1)
             attn = generate_path(dur_pred.squeeze(1), attn_mask.squeeze(0).transpose(1, 2))
@@ -373,13 +379,19 @@ class xVAPitch(nn.Module):
         start_index = -1 if start_index is None else start_index
         end_index = -1 if end_index is None else end_index
 
-        # TODO, make editable and actually doing something
-        # if self.USE_PITCH_COND:
-        energy_pred = [1.0 for _ in range(pitch_pred.shape[-1])]
-        energy_pred = torch.tensor(energy_pred)
-        # else:
 
-        return wav, dur_pred, pitch_pred, energy_pred, start_index, end_index
+        # Apply volume adjustments
+        stretched_energy_mult = None
+        if energy_pred_existing is not None:
+            energy_mult = self.expand_pitch_energy(energy_pred_existing.unsqueeze(0), dur_pred, logger=logger)
+            stretched_energy_mult = torch.nn.functional.interpolate(energy_mult.unsqueeze(0).unsqueeze(0), (1,1,wav.shape[2])).squeeze()
+            stretched_energy_mult = stretched_energy_mult.cpu().detach().numpy()
+            energy_pred = energy_pred_existing.squeeze()
+        else:
+            energy_pred = [1.0 for _ in range(pitch_pred.shape[-1])]
+            energy_pred = torch.tensor(energy_pred)
+
+        return wav, dur_pred, pitch_pred, energy_pred, start_index, end_index, stretched_energy_mult
 
 
 

@@ -191,12 +191,9 @@ class xVAPitch(object):
                 content_emb = self.models_manager.models("speaker_rep").compute_embedding(record[-2]).squeeze()
                 style_emb = self.models_manager.models("speaker_rep").compute_embedding(record[-1]).squeeze()
                 # content_emb = F.normalize(content_emb.unsqueeze(0), dim=1).squeeze(0)
-                content_emb = content_emb.unsqueeze(0).unsqueeze(-1).to(self.models_manager.device)
                 # style_emb = F.normalize(style_emb.unsqueeze(0), dim=1).squeeze(0)
+                content_emb = content_emb.unsqueeze(0).unsqueeze(-1).to(self.models_manager.device)
                 style_emb = style_emb.unsqueeze(0).unsqueeze(-1).to(self.models_manager.device)
-
-                self.logger.info(f'content_emb: {content_emb.shape}')
-                self.logger.info(f'style_emb: {style_emb.shape}')
 
                 y, sr = librosa.load(record[-2], sr=22050)
                 D = librosa.stft(
@@ -264,36 +261,40 @@ class xVAPitch(object):
             # Do the same to the vc infer fn
             # Then marge them into their place in an output array?
 
-            output_wav, dur_pred, pitch_pred, energy_pred, _, _ = self.model.infer_advanced(self.logger, plugin_manager, [cleaned_text_sequences], text_sequences, lang_embs=lang_embs, speaker_embs=speaker_embs, pace=pace, old_sequence=None, pitch_amp=pitch_amp)
+            out = self.model.infer_advanced(self.logger, plugin_manager, [cleaned_text_sequences], text_sequences, lang_embs=lang_embs, speaker_embs=speaker_embs, pace=pace, old_sequence=None, pitch_amp=pitch_amp)
+            if isinstance(out, str):
+                return out
+            else:
+                output_wav, dur_pred, pitch_pred, energy_pred, _, _, _ = out
 
-            for i,wav in enumerate(output_wav):
-                wav = wav.squeeze().cpu().detach().numpy()
-                wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
-                scipy.io.wavfile.write(tts_input[i][4], sampling_rate, wav_norm.astype(np.int16))
+                for i,wav in enumerate(output_wav):
+                    wav = wav.squeeze().cpu().detach().numpy()
+                    wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
+                    scipy.io.wavfile.write(tts_input[i][4], sampling_rate, wav_norm.astype(np.int16))
 
-            if outputJSON:
-                for ri, record in enumerate(tts_input):
-                    # tts_input: sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder
-                    output_fname = tts_input[ri][5].replace(".wav", ".json")
+                if outputJSON:
+                    for ri, record in enumerate(tts_input):
+                        # tts_input: sequence, pitch, duration, pace, tempFileLocation, outPath, outFolder
+                        output_fname = tts_input[ri][5].replace(".wav", ".json")
 
-                    containing_folder = "/".join(output_fname.split("/")[:-1])
-                    os.makedirs(containing_folder, exist_ok=True)
+                        containing_folder = "/".join(output_fname.split("/")[:-1])
+                        os.makedirs(containing_folder, exist_ok=True)
 
-                    with open(output_fname, "w+") as f:
-                        data = {}
-                        data["inputSequence"] = str(tts_input[ri][0])
-                        data["pacing"] = float(tts_input[ri][3])
-                        data["letters"] = [char.replace("{", "").replace("}", "") for char in list(cleaned_text_sequences[ri].split("|"))]
-                        data["currentVoice"] = self.ckpt_path.split("/")[-1].replace(".pt", "")
-                        data["resetEnergy"] = [float(val) for val in list(energy_pred[ri].cpu().detach().numpy())]
-                        data["resetPitch"] = [float(val) for val in list(pitch_pred[ri][0].cpu().detach().numpy())]
-                        data["resetDurs"] = [float(val) for val in list(dur_pred[ri].cpu().detach().numpy())]
-                        data["ampFlatCounter"] = 0
-                        data["pitchNew"] = data["resetPitch"]
-                        data["energyNew"] = data["resetEnergy"]
-                        data["dursNew"] = data["resetDurs"]
+                        with open(output_fname, "w+") as f:
+                            data = {}
+                            data["inputSequence"] = str(tts_input[ri][0])
+                            data["pacing"] = float(tts_input[ri][3])
+                            data["letters"] = [char.replace("{", "").replace("}", "") for char in list(cleaned_text_sequences[ri].split("|"))]
+                            data["currentVoice"] = self.ckpt_path.split("/")[-1].replace(".pt", "")
+                            data["resetEnergy"] = [float(val) for val in list(energy_pred[ri].cpu().detach().numpy())]
+                            data["resetPitch"] = [float(val) for val in list(pitch_pred[ri][0].cpu().detach().numpy())]
+                            data["resetDurs"] = [float(val) for val in list(dur_pred[ri].cpu().detach().numpy())]
+                            data["ampFlatCounter"] = 0
+                            data["pitchNew"] = data["resetPitch"]
+                            data["energyNew"] = data["resetEnergy"]
+                            data["dursNew"] = data["resetDurs"]
 
-                        f.write(json.dumps(data, indent=4))
+                            f.write(json.dumps(data, indent=4))
 
 
 
@@ -353,10 +354,17 @@ class xVAPitch(object):
 
 
             editor_data = pitch_data # TODO, propagate rename
-            output_wav, dur_pred, pitch_pred, energy_pred, start_index, end_index = self.model.infer_advanced(self.logger, plugin_manager, [cleaned_text], text, lang_embs=lang_embs, speaker_embs=speaker_embs, pace=pace, editor_data=editor_data, old_sequence=old_sequence)
-            wav = output_wav.squeeze().cpu().detach().numpy()
-            wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
-            scipy.io.wavfile.write(out_path, sampling_rate, wav_norm.astype(np.int16))
+            out = self.model.infer_advanced(self.logger, plugin_manager, [cleaned_text], text, lang_embs=lang_embs, speaker_embs=speaker_embs, pace=pace, editor_data=editor_data, old_sequence=old_sequence)
+            if isinstance(out, str):
+                return f'ERR:{out}'
+            else:
+                output_wav, dur_pred, pitch_pred, energy_pred, start_index, end_index, wav_mult = out
+
+                wav = output_wav.squeeze().cpu().detach().numpy()
+                wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
+                if wav_mult is not None:
+                    wav_norm = wav_norm * wav_mult
+                scipy.io.wavfile.write(out_path, sampling_rate, wav_norm.astype(np.int16))
 
 
         [pitch, durations, energy] = [pitch_pred.squeeze().cpu().detach().numpy(), dur_pred.squeeze().cpu().detach().numpy(), energy_pred.cpu().detach().numpy() if energy_pred is not None else []]
