@@ -15,13 +15,6 @@ import librosa
 from scipy.io.wavfile import write
 import numpy as np
 
-# from python.xvapitch import models
-# from python.xvapitch.fastpitch import FastPitch
-
-# from python.common.text import text_to_sequence, sequence_to_text
-
-
-
 try:
     import sys
     sys.path.append(".")
@@ -38,10 +31,6 @@ except:
         except:
             from text import ALL_SYMBOLS, get_text_preprocessor, lang_names
             from xvapitch_model import xVAPitch as xVAPitchModel
-            # try:
-            # except:
-            #     from text_processing import ALL_SYMBOLS, get_text_preprocessor
-
 
 
 class xVAPitch(object):
