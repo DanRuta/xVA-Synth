@@ -112,29 +112,32 @@ class xVAPitch(nn.Module):
             conv_post_bias=False,
         )
 
-        self.pitch_predictor = RelativePositioningPitchEnergyEncoder(
-            # 165,
-            # len(ALL_SYMBOLS),
-            out_channels=1,
-            hidden_channels=self.latent_size+self.embedded_language_dim,#196,
-            hidden_channels_ffn=768,
-            num_heads=2,
-            # num_layers=10,
-            num_layers=3,
-            kernel_size=3,
-            dropout_p=0.1,
-            # language_emb_dim=4,
-            conditioning_emb_dim=self.args.d_vector_dim,
-        )
+        self.USE_PITCH_COND = False
+        # self.USE_PITCH_COND = True
+        if self.USE_PITCH_COND:
+            self.pitch_predictor = RelativePositioningPitchEnergyEncoder(
+                # 165,
+                # len(ALL_SYMBOLS),
+                out_channels=1,
+                hidden_channels=self.latent_size+self.embedded_language_dim,#196,
+                hidden_channels_ffn=768,
+                num_heads=2,
+                # num_layers=10,
+                num_layers=3,
+                kernel_size=3,
+                dropout_p=0.1,
+                # language_emb_dim=4,
+                conditioning_emb_dim=self.args.d_vector_dim,
+            )
 
-        self.pitch_emb = nn.Conv1d(
-            # 1, 384,
-            # 1, 196,
-            1,
-            self.args.expanded_flow_dim if args.expanded_flow else self.latent_size,
-            # pitch_conditioning_formants, symbols_embedding_dim,
-            kernel_size=3,
-            padding=int((3 - 1) / 2))
+            self.pitch_emb = nn.Conv1d(
+                # 1, 384,
+                # 1, 196,
+                1,
+                self.args.expanded_flow_dim if args.expanded_flow else self.latent_size,
+                # pitch_conditioning_formants, symbols_embedding_dim,
+                kernel_size=3,
+                padding=int((3 - 1) / 2))
 
 
         self.TEMP_timing = []
@@ -164,8 +167,15 @@ class xVAPitch(nn.Module):
             pitch_pred = torch.tensor(pitch_pred)
             pitch_pred = pitch_pred.view((1, pitch_pred.shape[0])).float().to(self.device)
 
+            if not self.USE_PITCH_COND and pitch_pred.shape[1]==speaker_embs.shape[2]:
+                pitch_delta = self.pitch_emb_values * pitch_pred/5
+                speaker_embs = speaker_embs + pitch_delta.float()
+
             try:
-                return self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace, dur_pred_existing=dur_pred, pitch_pred_existing=pitch_pred, old_sequence=old_sequence, new_sequence=text, pitch_amp=pitch_amp)
+                wav, dur_pred, pitch_pred_out, energy_pred, start_index, end_index = self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace, dur_pred_existing=dur_pred, pitch_pred_existing=pitch_pred, old_sequence=old_sequence, new_sequence=text, pitch_amp=pitch_amp)
+                if not self.USE_PITCH_COND and pitch_pred.shape[1]==speaker_embs.shape[2]:
+                    pitch_pred_out = pitch_pred
+                return wav, dur_pred, pitch_pred_out, energy_pred, start_index, end_index
             except:
                 print(traceback.format_exc())
                 logger.info(traceback.format_exc())
@@ -243,6 +253,7 @@ class xVAPitch(nn.Module):
         # Calculate its own pitch, and duration vals if these were not already provided
         if (dur_pred_existing is None or dur_pred_existing.shape[1]==0) or old_sequence is not None:
             # Predict durations
+            self.duration_predictor.logger = logger
             logw = self.duration_predictor(x, x_mask, g=speaker_embs, reverse=True, noise_scale=self.inference_noise_scale_dp, lang_emb=lang_emb)
 
             w = torch.exp(logw) * x_mask * self.length_scale
@@ -269,7 +280,8 @@ class xVAPitch(nn.Module):
                 attn_all.append(generate_path(dur_pred.squeeze(1)[b,:].unsqueeze(0), attn_mask.squeeze(0).transpose(1, 2)))
                 m_p_all.append(torch.matmul(attn_all[-1].transpose(1, 2), m_p[b,:].unsqueeze(0).transpose(1, 2)).transpose(1, 2))
                 logs_p_all.append(torch.matmul(attn_all[-1].transpose(1, 2), logs_p[b,:].unsqueeze(0).transpose(1, 2)).transpose(1, 2))
-                pitch_pred_all.append(self.pitch_predictor(x[b,:].unsqueeze(0).permute(0, 2, 1), x_lengths[b].unsqueeze(0), speaker_emb=speaker_embs[b,:].unsqueeze(0), stats=False))
+                if self.USE_PITCH_COND:
+                    pitch_pred_all.append(self.pitch_predictor(x[b,:].unsqueeze(0).permute(0, 2, 1), x_lengths[b].unsqueeze(0), speaker_emb=speaker_embs[b,:].unsqueeze(0), stats=False))
             del attn_all
             m_p = torch.stack(m_p_all, dim=1).squeeze(dim=0)
             logs_p = torch.stack(logs_p_all, dim=1).squeeze(dim=0)
@@ -281,11 +293,14 @@ class xVAPitch(nn.Module):
             logs_p = torch.matmul(attn.transpose(1, 2), logs_p.transpose(1, 2)).transpose(1, 2)
 
 
-            if (pitch_pred_existing is None or pitch_pred_existing.shape[1]==0) or old_sequence is not None:
-                # Pitch over chars
-                pitch_pred = self.pitch_predictor(x.permute(0, 2, 1), x_lengths, speaker_emb=speaker_embs, stats=False)
+            if self.USE_PITCH_COND:
+                if (pitch_pred_existing is None or pitch_pred_existing.shape[1]==0) or old_sequence is not None:
+                    # Pitch over chars
+                    pitch_pred = self.pitch_predictor(x.permute(0, 2, 1), x_lengths, speaker_emb=speaker_embs, stats=False)
+                else:
+                    pitch_pred = pitch_pred_existing.unsqueeze(1)#.unsqueeze(1)
             else:
-                pitch_pred = pitch_pred_existing.unsqueeze(1)#.unsqueeze(1)
+                pitch_pred = torch.zeros((x.shape[0], x.shape[0], x.shape[2])).to(x)
 
 
         # Splice/replace pitch/duration values from the old input if simulating only a partial re-generation
@@ -330,17 +345,20 @@ class xVAPitch(nn.Module):
             dur_pred = torch.tensor(plugin_data["duration"]).to(self.device)
             pitch_pred = torch.tensor(plugin_data["pitch"]).unsqueeze(1).to(self.device)
 
-        pitch_emb = self.pitch_emb(self.expand_pitch_energy(pitch_pred, dur_pred, logger=logger))
+        if self.USE_PITCH_COND:
+            pitch_emb = self.pitch_emb(self.expand_pitch_energy(pitch_pred, dur_pred, logger=logger))
+            m_p += pitch_emb * self.args.pe_scaling
 
 
-        m_p += pitch_emb * self.args.pe_scaling
         # TODO, incorporate some sort of control for this
         self.inference_noise_scale = 0
         for flow in self.flow.flows:
             flow.logger = logger
+            flow.enc.logger = logger
 
         z_p = m_p + torch.randn_like(m_p) * torch.exp(logs_p) * self.inference_noise_scale
         z = self.flow(z_p, y_mask, g=speaker_embs, reverse=True)
+        self.waveform_decoder.logger = logger
         wav = self.waveform_decoder((z * y_mask.unsqueeze(1))[:, :, : self.max_inference_len], g=speaker_embs)
 
         # In batch mode, trim the shorter audio waves in the batch. The masking doesn't seem to work, so have to do it manually
@@ -356,8 +374,10 @@ class xVAPitch(nn.Module):
         end_index = -1 if end_index is None else end_index
 
         # TODO, make editable and actually doing something
+        # if self.USE_PITCH_COND:
         energy_pred = [1.0 for _ in range(pitch_pred.shape[-1])]
         energy_pred = torch.tensor(energy_pred)
+        # else:
 
         return wav, dur_pred, pitch_pred, energy_pred, start_index, end_index
 

@@ -255,7 +255,8 @@ class StochasticDurationPredictor(nn.Module):
         # condition encoder text
         x = self.pre(x)
         if g is not None:
-            x = x + self.cond(g)
+            cond = self.cond(g)
+            x = x + cond
 
         if lang_emb is not None:
             x = x + self.cond_lang(lang_emb)

@@ -91,6 +91,9 @@ class WN(torch.nn.Module):
         x_mask = 1.0 if x_mask is None else x_mask
         if g is not None:
             g = self.cond_layer(g)
+
+        g = torch.nn.functional.interpolate(g.unsqueeze(0).unsqueeze(0), (g.shape[0], g.shape[1], self.in_layers[0](x).shape[2]))[0][0]
+
         for i in range(self.num_layers):
             x_in = self.in_layers[i](x)
             x_in = self.dropout(x_in)

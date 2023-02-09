@@ -245,7 +245,9 @@ class HifiganGenerator(torch.nn.Module):
         """
         o = self.conv_pre(x)
         if hasattr(self, "cond_layer") and g is not None:
-            o = o + self.cond_layer(g)
+            cond = self.cond_layer(g)
+            cond = torch.nn.functional.interpolate(cond.unsqueeze(0).unsqueeze(0), (g.shape[0], g.shape[1], o.shape[2]))[0][0]
+            o = o + cond
         for i in range(self.num_upsamples):
             o = F.leaky_relu(o, LRELU_SLOPE)
             o = self.ups[i](o)

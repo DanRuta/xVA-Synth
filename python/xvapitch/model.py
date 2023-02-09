@@ -55,12 +55,15 @@ class xVAPitch(object):
         self.language_id_mapping = {name: i for i, name in enumerate(sorted(list(lang_names.keys())))}
 
 
+        self.pitch_emb_values = torch.tensor(np.load(f'{"./resources/app" if self.PROD else "."}/python/xvapitch/pitch_emb.npy')).unsqueeze(0).unsqueeze(-1)
+
         self.base_lang = "en"
-        self.init_model("english_basic")
+        self.init_model()
+        self.model.pitch_emb_values = self.pitch_emb_values
         self.isReady = True
 
 
-    def init_model (self, symbols_alphabet):
+    def init_model (self):
 
         parser = argparse.ArgumentParser()
         args = parser.parse_args()
@@ -311,7 +314,6 @@ class xVAPitch(object):
 
             if old_sequence is not None:
                 old_sequence = re.sub(r'[^a-zA-Z\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', old_sequence)
-                self.logger.info(f'old_sequence: {old_sequence}')
                 # old_sequence = text_to_sequence(old_sequence, "english_basic", ['english_cleaners'])
                 old_sequence, clean_old_sequence = self.lang_tp[base_lang].text_to_sequence(old_sequence)#, "english_basic", ['english_cleaners'])
                 old_sequence = torch.LongTensor(old_sequence)
@@ -332,6 +334,12 @@ class xVAPitch(object):
             base_emb = [float(val) for val in base_emb.split(",")] if "," in base_emb else self.base_emb
             speaker_embs = [torch.tensor(base_emb).unsqueeze(dim=0)[0].unsqueeze(-1)]
             speaker_embs = torch.stack(speaker_embs, dim=0).to(self.models_manager.device)#.unsqueeze(-1)
+
+
+            if not self.model.USE_PITCH_COND:
+                speaker_embs = speaker_embs.repeat(1,1,text.shape[1])
+
+
 
             # g = F.normalize(speaker_embs[0])
             # if g.ndim == 2:
