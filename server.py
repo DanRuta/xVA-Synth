@@ -256,6 +256,7 @@ if __name__ == '__main__':
                         pace = float(post_data["pace"])
                         out_path = post_data["outfile"]
                         base_lang = post_data["base_lang"] if "base_lang" in post_data else None
+                        base_emb = post_data["base_emb"] if "base_emb" in post_data else None
                         pitch = post_data["pitch"] if "pitch" in post_data else None
                         energy = post_data["energy"] if "energy" in post_data else None
                         duration = post_data["duration"] if "duration" in post_data else None
@@ -266,7 +267,7 @@ if __name__ == '__main__':
                         old_sequence = post_data["old_sequence"] if "old_sequence" in post_data else None
 
                         req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", ""), instance_index=instance_index).infer(plugin_manager, text, out_path, vocoder=vocoder, \
-                            speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence, globalAmplitudeModifier=globalAmplitudeModifier, base_lang=base_lang)
+                            speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence, globalAmplitudeModifier=globalAmplitudeModifier, base_lang=base_lang, base_emb=base_emb)
                         plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["post"], event="post synth-line", data=post_data)
 
 
@@ -381,6 +382,15 @@ if __name__ == '__main__':
                     logger.info("status")
                     logger.info(status)
                     req_response = ",".join(status)
+
+
+                if self.path == "/getWavV3StyleEmb":
+                    wav_path = post_data["wav_path"]
+                    models_manager.init_model("speaker_rep")
+                    models_manager.load_model("speaker_rep", f'{"./resources/app" if PROD else "."}/python/xvapitch/speaker_rep.pt')
+
+                    style_emb = models_manager.models("speaker_rep").compute_embedding(wav_path).squeeze().cpu().detach().numpy()
+                    req_response = ",".join([str(v) for v in style_emb])
 
 
                 if self.path == "/computeEmbsAndDimReduction":
