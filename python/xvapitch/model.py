@@ -186,8 +186,6 @@ class xVAPitch(object):
         # =================
         if len(vc_input):
             for ri,record in enumerate(vc_input):
-                self.logger.info(f'record[-2]: {record[-2]}')
-                self.logger.info(f'record[-1]: {record[-1]}')
                 content_emb = self.models_manager.models("speaker_rep").compute_embedding(record[-2]).squeeze()
                 style_emb = self.models_manager.models("speaker_rep").compute_embedding(record[-1]).squeeze()
                 # content_emb = F.normalize(content_emb.unsqueeze(0), dim=1).squeeze(0)

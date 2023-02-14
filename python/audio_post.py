@@ -251,7 +251,7 @@ def start_microphone_recording (logger, root_folder):
     wf.writeframes(b''.join(frames))
     wf.close()
 
-def move_recorded_file(logger, root_folder, file_path):
+def move_recorded_file(PROD, logger, root_folder, file_path):
     if not os.path.exists(f'{root_folder}/output/recorded_file.wav'):
         logger.info("Not found audio file")
         import time

@@ -413,7 +413,7 @@ if __name__ == '__main__':
 
                 if self.path == "/move_recorded_file":
                     file_path = post_data["file_path"]
-                    move_recorded_file(logger, f'{"./resources/app" if PROD else "."}', file_path)
+                    move_recorded_file(PROD, logger, f'{"./resources/app" if PROD else "."}', file_path)
 
                 self._set_response()
                 self.wfile.write(req_response.encode("utf-8"))
