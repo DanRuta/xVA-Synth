@@ -1,5 +1,5 @@
 "use strict"
-window.appVersion = "v2.3.0"
+window.appVersion = "v3.0.0"
 
 window.PRODUCTION = module.filename.includes("resources")
 const path = window.PRODUCTION ? "./resources/app" : "."
@@ -845,6 +845,7 @@ generateVoiceButton.addEventListener("click", () => {
         }
         clearOldTempFiles()
 
+        dialogueInput.value = " "+dialogueInput.value.trim()+" "
         let sequence = dialogueInput.value.replace("…", "...").replace("’", "'")
         if (sequence.length==0) {
             return
@@ -852,7 +853,6 @@ generateVoiceButton.addEventListener("click", () => {
         window.isGenerating = true
 
         window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["generate-voice"]["pre"], event="pre generate-voice")
-        sequence = dialogueInput.value.replace("…", "...").replace("’", "'")
 
         if (window.wavesurfer) {
             window.wavesurfer.stop()
@@ -1487,8 +1487,8 @@ modalContainer.addEventListener("click", event => {
 
 // Cached UI stuff
 // =========
-dialogueInput.addEventListener("keyup", () => {
-    localStorage.setItem("dialogueInput", dialogueInput.value)
+dialogueInput.addEventListener("keyup", (event) => {
+    localStorage.setItem("dialogueInput", " "+dialogueInput.value.trim()+" ")
     window.sequenceEditor.hasChanged = true
 })
 
@@ -1948,3 +1948,10 @@ document.querySelectorAll('a[href^="http"]').forEach(a => a.addEventListener("cl
     event.preventDefault()
     shell.openExternal(a.href)
 }))
+
+
+// TEMP - pre-alpha builds
+setInterval(() => {
+    dragBar.innerHTML = "xVASynth PRE-ALPHA v3 PREVIEW"
+    dragBar.style.backgroundColor = "red"
+}, 1000)
