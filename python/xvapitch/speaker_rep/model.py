@@ -87,6 +87,7 @@ class ResNetSpeakerEncoder(nn.Module):
 
 
 
+        self.ckpt_path = None
         self.encoder_type = encoder_type
         self.input_dim = input_dim
         self.log_input = log_input
@@ -271,12 +272,9 @@ class ResNetSpeakerEncoder(nn.Module):
             embeddings = torch.mean(embeddings, dim=0, keepdim=True)
         return embeddings
 
-    # def load_checkpoint(self, config: dict, checkpoint_path: str, eval: bool = False, use_cuda: bool = False, cuda_device: int = 0):
-    # def load_checkpoint(self, checkpoint_path: str, eval: bool = False, use_cuda: bool = False, cuda_device: int = 0):
-    def load_state_dict(self, checkpoint_path: str, eval: bool = False, use_cuda: bool = False, cuda_device: int = 0):
-        # state = load_fsspec(checkpoint_path, map_location=torch.device("cpu"))
-        state = torch.load(checkpoint_path, map_location=torch.device("cpu"))
-        self.load_state_dict(state["model"])
+    def load_checkpoint(self, ckpt_path, state_dict):
+        self.ckpt_path = ckpt_path
+        self.load_state_dict(state_dict["model"])
         self.eval()
 
     def load_and_prepare(self, filepath, device):

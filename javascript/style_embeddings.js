@@ -290,7 +290,11 @@ getStyleEmbeddingBtn.addEventListener("click", () => {
             method: "Post",
             body: JSON.stringify({wav_path: wavFilepathForEmbComputeInput.value})
         }).then(r=>r.text()).then(v => {
-            styleEmbValuesInput.value = v
-        })
+            if (v=="ENOENT") {
+                window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>ENOENT`)
+            } else {
+                styleEmbValuesInput.value = v
+            }
+        }).catch(console.log)
     }
 })

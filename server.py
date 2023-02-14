@@ -316,7 +316,7 @@ if __name__ == '__main__':
                     final_path = prepare_input_audio(PROD, logger, input_path, removeNoise, removeNoiseStrength)
 
                     models_manager.init_model("speaker_rep")
-                    models_manager.load_model("speaker_rep", f'{"./resources/app" if PROD else "."}/python/xvapitch/speaker_rep.pt')
+                    models_manager.load_model("speaker_rep", f'{"./resources/app" if PROD else "."}/python/xvapitch/speaker_rep/speaker_rep.pt')
 
                     try:
                         models_manager.models("xvapitch").run_speech_to_speech(final_path, audio_out_path, style_emb, models_manager, plugin_manager, modelType, s2s_components=s2s_components)
@@ -385,12 +385,15 @@ if __name__ == '__main__':
 
 
                 if self.path == "/getWavV3StyleEmb":
+                    logger.info("POST {}".format(self.path))
                     wav_path = post_data["wav_path"]
                     models_manager.init_model("speaker_rep")
-                    models_manager.load_model("speaker_rep", f'{"./resources/app" if PROD else "."}/python/xvapitch/speaker_rep.pt')
-
-                    style_emb = models_manager.models("speaker_rep").compute_embedding(wav_path).squeeze().cpu().detach().numpy()
-                    req_response = ",".join([str(v) for v in style_emb])
+                    load_resp = models_manager.load_model("speaker_rep", f'{"./resources/app" if PROD else "."}/python/xvapitch/speaker_rep/speaker_rep.pt')
+                    if load_resp=="ENOENT":
+                        req_response = "ENOENT"
+                    else:
+                        style_emb = models_manager.models("speaker_rep").compute_embedding(wav_path).squeeze().cpu().detach().numpy()
+                        req_response = ",".join([str(v) for v in style_emb])
 
 
                 if self.path == "/computeEmbsAndDimReduction":

@@ -107,7 +107,10 @@ class ModelsManager(object):
         if self.models_bank[model_key][instance_index].ckpt_path != ckpt_path:
             self.logger.info(f'ModelsManager: Loading model checkpoint: {model_key}, {ckpt_path}')
             ckpt = torch.load(ckpt_path, map_location="cpu")
-            self.models_bank[model_key][instance_index].load_state_dict(ckpt_path, ckpt, **kwargs)
+            try:
+                self.models_bank[model_key][instance_index].load_checkpoint(ckpt_path, ckpt, **kwargs)
+            except:
+                self.models_bank[model_key][instance_index].load_state_dict(ckpt_path, ckpt, **kwargs)
 
     def set_device (self, device, instance_index=0):
         if device=="gpu":
