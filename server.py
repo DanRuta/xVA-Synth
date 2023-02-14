@@ -6,10 +6,7 @@ import multiprocessing
 if __name__ == '__main__':
     multiprocessing.freeze_support()
 
-    PROD = False
-    PROD = True
-    CPU_ONLY = False
-    # CPU_ONLY = True
+    PROD = 'xVASynth.exe' in os.listdir(".")
 
     # Saves me having to do backend re-compilations for every little UI hotfix
     with open(f'{"./resources/app" if PROD else "."}/javascript/script.js', encoding="utf8") as f:
@@ -52,6 +49,7 @@ if __name__ == '__main__':
         with open("./DEBUG_err_import_torch.txt", "w+") as f:
             f.write(traceback.format_exc())
     # ================
+    CPU_ONLY = not torch.cuda.is_available()
 
     try:
         logger = logging.getLogger('serverLog')
@@ -66,10 +64,7 @@ if __name__ == '__main__':
         ch.setFormatter(formatter)
         logger.addHandler(fh)
         logger.addHandler(ch)
-        logger.info(f'New session. Version: {APP_VERSION}. Installation: {"CPU" if CPU_ONLY else "CPU+GPU"} | Log path: {server_log_path}')
-        logger.info("str(os.listdir(.))")
-        logger.info(str(os.listdir(".")))
-        logger.info(str("resources" in os.listdir(".")))
+        logger.info(f'New session. Version: {APP_VERSION}. Installation: {"CPU" if CPU_ONLY else "CPU+GPU"} | Prod: {PROD} | Log path: {server_log_path}')
 
         logger.orig_info = logger.info
 
