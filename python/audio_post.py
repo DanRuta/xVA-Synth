@@ -4,7 +4,7 @@ import ffmpeg
 import traceback
 import subprocess
 from pydub import AudioSegment
-
+from lib.ffmpeg_normalize._ffmpeg_normalize import FFmpegNormalize
 
 import multiprocessing as mp
 
@@ -257,7 +257,40 @@ def move_recorded_file(logger, root_folder, file_path):
         import time
         time.sleep(5)
     try:
-        shutil.copyfile(f'{root_folder}/output/recorded_file.wav', file_path)
+        # shutil.copyfile(f'{root_folder}/output/recorded_file.wav', file_path)
+
+        # Do audio normalization also
+        ffmpeg_path = f'{"./resources/app" if PROD else "."}/python/ffmpeg.exe'
+        ffmpeg_normalize = FFmpegNormalize(
+                normalization_type="ebu",
+                target_level=-23.0,
+                print_stats=False,
+                loudness_range_target=7.0,
+                true_peak=-2.0,
+                offset=0.0,
+                dual_mono=False,
+                audio_codec=None,
+                audio_bitrate=None,
+                sample_rate=sample_rate,
+                keep_original_audio=False,
+                pre_filter=None,
+                post_filter=None,
+                video_codec="copy",
+                video_disable=False,
+                subtitle_disable=False,
+                metadata_disable=False,
+                chapters_disable=False,
+                extra_input_options=[],
+                extra_output_options=[],
+                output_format=None,
+                dry_run=False,
+                progress=False,
+                ffmpeg_exe=ffmpeg_path
+            )
+        ffmpeg_normalize.ffmpeg_exe = ffmpeg_path
+        ffmpeg_normalize.add_media_file(f'{root_folder}/output/recorded_file.wav', file_path)
+        ffmpeg_normalize.run_normalization()
+
     except shutil.SameFileError:
         pass
     except:
