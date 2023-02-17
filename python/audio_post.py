@@ -61,6 +61,8 @@ def run_audio_post(PROD, logger, input, output, options=None):
         ffmpeg_options["af"] = ",".join(ffmpeg_options["af"])
 
 
+
+
         if options["bit_depth"]:
             ffmpeg_options["acodec"] = options["bit_depth"]
 
@@ -74,13 +76,22 @@ def run_audio_post(PROD, logger, input, output, options=None):
             except:
                 pass
 
-        stream = ffmpeg.output(stream, output, **ffmpeg_options)
-
-        if logger!=None:
-            logger.info("audio options: "+str(options))
-            logger.info("ffmpeg command: "+ " ".join(stream.compile()))
-
+        output_path = output.replace(".wav", "_temp.wav") if "deessing" in options and options["deessing"]>0 else output
+        stream = ffmpeg.output(stream, output_path, **ffmpeg_options)
         out, err = (ffmpeg.run(stream, cmd=ffmpeg_path, capture_stdout=True, capture_stderr=True, overwrite_output=True))
+
+        # The "filter_complex" option can't be used in the same stream as the normal "filter", so have to do two ffmpeg runs
+        if "deessing" in options and options["deessing"]>0:
+            stream = ffmpeg.input(output_path)
+            ffmpeg_options = {}
+            ffmpeg_options["filter_complex"] = f'deesser=i={options["deessing"]}:m=0.5:f=0.5:s=o'
+            stream = ffmpeg.output(stream, output, **ffmpeg_options)
+            out, err = (ffmpeg.run(stream, cmd=ffmpeg_path, capture_stdout=True, capture_stderr=True, overwrite_output=True))
+            try:
+                os.remove(output_path)
+            except:
+                pass
+
 
     except ffmpeg.Error as e:
         if logger!=None:

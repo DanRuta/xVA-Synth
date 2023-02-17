@@ -73,6 +73,7 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_FFMPEG_PADEND = "Silence padding end (ms)"
     window.i18n.SETTINGS_FFMPEG_PITCHMULT = "Pitch multiplier"
     window.i18n.SETTINGS_FFMPEG_TEMPO = "Tempo"
+    window.i18n.SETTINGS_FFMPEG_DEESSING = "De-essing"
     window.i18n.SETTINGS_FFMPEG_BITDEPTH = "Audio bit depth"
     window.i18n.SETTINGS_FFMPEG_NR = "Noise Reduction (db)"
     window.i18n.SETTINGS_FFMPEG_NF = "Noise Floor (db)"
@@ -784,6 +785,7 @@ window.i18n.updateUI = () => {
     i18n_setting_ffmpeg_padend.innerHTML = window.i18n.SETTINGS_FFMPEG_PADEND
     i18n_setting_ffmpeg_pitchMult.innerHTML = window.i18n.SETTINGS_FFMPEG_PITCHMULT
     i18n_setting_ffmpeg_tempo.innerHTML = window.i18n.SETTINGS_FFMPEG_TEMPO
+    i18n_setting_ffmpeg_deessing.innerHTML = window.i18n.SETTINGS_FFMPEG_DEESSING
     i18n_setting_ffmpeg_bitdepth.innerHTML = window.i18n.SETTINGS_FFMPEG_BITDEPTH
     i18n_setting_ffmpeg_nr.innerHTML = window.i18n.SETTINGS_FFMPEG_NR
     i18n_setting_ffmpeg_nf.innerHTML = window.i18n.SETTINGS_FFMPEG_NF

@@ -42,7 +42,7 @@ if (!Object.keys(window.userSettings).includes("installation")) { // For backwar
     window.userSettings.installation = "cpu"
 }
 if (!Object.keys(window.userSettings).includes("audio")) { // For backwards compatibility
-    window.userSettings.audio = {format: "wav", hz: 22050, padStart: 0, padEnd: 0, pitchMult: 1, tempo: 1, nr: 5, nf: -20}
+    window.userSettings.audio = {format: "wav", hz: 22050, padStart: 0, padEnd: 0, pitchMult: 1, tempo: 1, nr: 5, nf: -20, deessing: 0.1}
 }
 if (!Object.keys(window.userSettings).includes("sliderTooltip")) { // For backwards compatibility
     window.userSettings.sliderTooltip = true
@@ -76,6 +76,9 @@ if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.u
 }
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("tempo")) { // For backwards compatibility
     window.userSettings.audio.tempo = 1
+}
+if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("deessing")) { // For backwards compatibility
+    window.userSettings.audio.deessing = 0.1
 }
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("nr")) { // For backwards compatibility
     window.userSettings.audio.nr = 5
@@ -256,6 +259,7 @@ const updateUIWithSettings = () => {
     setting_audio_pad_end.value = window.userSettings.audio.padEnd
     setting_audio_pitchMult.value = window.userSettings.audio.pitchMult
     setting_audio_tempo.value = window.userSettings.audio.tempo
+    setting_audio_deessing.value = window.userSettings.audio.deessing
     setting_audio_nr.value = window.userSettings.audio.nr
     setting_audio_nf.value = window.userSettings.audio.nf
     setting_audio_bitdepth.value = window.userSettings.audio.bitdepth
@@ -552,6 +556,7 @@ initMenuSetting(setting_audio_ffmpeg, "audio.ffmpeg", "checkbox", () => {
     setting_audio_pad_end.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_pitchMult.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_tempo.disabled = !window.userSettings.audio.ffmpeg
+    setting_audio_deessing.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_nr.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_nf.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_bitdepth.disabled = !window.userSettings.audio.ffmpeg
@@ -566,6 +571,7 @@ initMenuSetting(setting_audio_pad_start, "audio.padStart", "text", undefined, pa
 initMenuSetting(setting_audio_pad_end, "audio.padEnd", "text", undefined, parseInt)
 initMenuSetting(setting_audio_pitchMult, "audio.pitchMult", "number", undefined, parseFloat)
 initMenuSetting(setting_audio_tempo, "audio.tempo", "number", undefined, parseFloat)
+initMenuSetting(setting_audio_deessing, "audio.deessing", "number", undefined, parseFloat)
 initMenuSetting(setting_audio_nr, "audio.nr", "number", undefined, parseFloat)
 initMenuSetting(setting_audio_nf, "audio.nf", "number", undefined, parseFloat)
 initMenuSetting(setting_audio_bitdepth, "audio.bitdepth", "select")
@@ -624,6 +630,7 @@ setting_audio_pad_start.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_pad_end.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_pitchMult.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_tempo.disabled = !window.userSettings.audio.ffmpeg
+setting_audio_deessing.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_nr.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_nf.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_bitdepth.disabled = !window.userSettings.audio.ffmpeg
