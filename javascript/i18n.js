@@ -66,7 +66,7 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_BASE_SPEAKER = "Base app output device"
     window.i18n.SETTINGS_ALT_SPEAKER = "Alternate output device (ctrl+click play)"
     window.i18n.SETTINGS_EXTERNALEDIT = "External program for editing audio"
-    window.i18n.SETTINGS_FFMPEG = "Use ffmpeg post-processing (requires ffmpeg >=4.3)"
+    window.i18n.SETTINGS_FFMPEG = "Use ffmpeg post-processing"
     window.i18n.SETTINGS_FFMPEG_FORMAT = "Audio format (wav, mp3, etc)"
     window.i18n.SETTINGS_FFMPEG_HZ = "Audio sample rate (Hz)"
     window.i18n.SETTINGS_FFMPEG_PADSTART = "Silence padding start (ms)"
@@ -74,6 +74,8 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_FFMPEG_PITCHMULT = "Pitch multiplier"
     window.i18n.SETTINGS_FFMPEG_TEMPO = "Tempo"
     window.i18n.SETTINGS_FFMPEG_BITDEPTH = "Audio bit depth"
+    window.i18n.SETTINGS_FFMPEG_NR = "Noise Reduction (db)"
+    window.i18n.SETTINGS_FFMPEG_NF = "Noise Floor (db)"
     window.i18n.SETTINGS_FFMPEG_AMPLITUDE = "Amplitude multiplier"
     window.i18n.SETTINGS_BATCH_JSON = "Output .json editor data for batch lines"
     window.i18n.SETTINGS_BATCH_FASTMODE = "Use fast mode for Batch synth (start next batch in parallel to current batch outputting via ffmpeg)"
@@ -439,6 +441,7 @@ window.i18n.setEnglish = () => {
     window.i18n.SHOW_NOW = "Show now"
     window.i18n.SETTINGS_PLAYCHANGEDAUDIO = "Play only changed audio, when regenerating"
     window.i18n.SETTINGS_PREAPPLY_FFMPEG = "(recommended) Pre-apply ffmpeg effects to the preview sample"
+    window.i18n.SETTINGS_USE_NR = "Use noise reduction (recommended when using SR)"
     window.i18n.SETTINGS_DOUBLE_AMP_DISPLAY = "Also display amplitude setting in the editor"
     window.i18n.SETTINGS_CSV_DELIMITER = "CSV delimiter"
     window.i18n.SETTINGS_PAGINATION_SIZE_BATCH = "Batch pagination size"
@@ -665,6 +668,7 @@ window.i18n.updateUI = () => {
     i18n_settings_unseenTOTD.innerHTML = window.i18n.TOTD_SHOW_UNSEEN
     i18n_settings_playChangedAudio.innerHTML = window.i18n.SETTINGS_PLAYCHANGEDAUDIO
     i18n_setting_ffmpeg_preapply.innerHTML = window.i18n.SETTINGS_PREAPPLY_FFMPEG
+    i18n_setting_useNR.innerHTML = window.i18n.SETTINGS_USE_NR
     i18n_settings_doubleAmpDisplay.innerHTML = window.i18n.SETTINGS_DOUBLE_AMP_DISPLAY
     i18n_settings_csv_delimiter.innerHTML = window.i18n.SETTINGS_CSV_DELIMITER
     i18n_settings_paginationSize.innerHTML = window.i18n.SETTINGS_PAGINATION_SIZE_BATCH
@@ -781,6 +785,8 @@ window.i18n.updateUI = () => {
     i18n_setting_ffmpeg_pitchMult.innerHTML = window.i18n.SETTINGS_FFMPEG_PITCHMULT
     i18n_setting_ffmpeg_tempo.innerHTML = window.i18n.SETTINGS_FFMPEG_TEMPO
     i18n_setting_ffmpeg_bitdepth.innerHTML = window.i18n.SETTINGS_FFMPEG_BITDEPTH
+    i18n_setting_ffmpeg_nr.innerHTML = window.i18n.SETTINGS_FFMPEG_NR
+    i18n_setting_ffmpeg_nf.innerHTML = window.i18n.SETTINGS_FFMPEG_NF
     i18n_setting_ffmpeg_amplitude.innerHTML = window.i18n.SETTINGS_FFMPEG_AMPLITUDE
     i18n_setting_batch_json.innerHTML = window.i18n.SETTINGS_BATCH_JSON
     i18n_setting_batch_fastmode.innerHTML = window.i18n.SETTINGS_BATCH_FASTMODE

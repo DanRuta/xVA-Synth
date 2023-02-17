@@ -221,7 +221,7 @@
 
         </div>
         <div id="settingsContainer" style="display:none">
-            <div class="modal" style="height: 75vh">
+            <div class="modal" style="height: 75vh;width: 60vw">
                 <h2 id="i18n_settings" style="margin-bottom: 0;">Settings</h2>
                 <div style="width: 90%;">
                     <input id="searchSettingsInput" placeholder="Search settings...">
@@ -406,7 +406,7 @@
                     </div>
 
                     <div>
-                        <div id="i18n_setting_ffmpeg">Use ffmpeg post-processing (requires ffmpeg >=4.3)</div>
+                        <div id="i18n_setting_ffmpeg">Use ffmpeg post-processing</div>
                         <div>
                             <input id="setting_audio_ffmpeg" name="" type="checkbox">
                         </div>
@@ -460,6 +460,24 @@
                                 <option value="pcm_s16le">pcm_s16le</option>
                                 <option value="pcm_s32le">pcm_s32le</option>
                             </select>
+                        </div>
+                    </div>
+                    <div>
+                        <div id="i18n_setting_useNR">Use noise reduction (recommended when using SR)</div>
+                        <div>
+                            <input id="setting_audio_useNR" name="" type="checkbox">
+                        </div>
+                    </div>
+                    <div>
+                        <div id="i18n_setting_ffmpeg_nr">Noise Reduction (dB)</div>
+                        <div>
+                            <input id="setting_audio_nr" name="" type="number" placeholder="5" min="0.01" max="97" step="0.1">
+                        </div>
+                    </div>
+                    <div>
+                        <div id="i18n_setting_ffmpeg_nf">Noise Floor (dB)</div>
+                        <div>
+                            <input id="setting_audio_nf" name="" type="number" placeholder="-20" min="-80" max="-20" step="1">
                         </div>
                     </div>
                     <div>

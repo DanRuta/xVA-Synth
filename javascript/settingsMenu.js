@@ -42,7 +42,7 @@ if (!Object.keys(window.userSettings).includes("installation")) { // For backwar
     window.userSettings.installation = "cpu"
 }
 if (!Object.keys(window.userSettings).includes("audio")) { // For backwards compatibility
-    window.userSettings.audio = {format: "wav", hz: 22050, padStart: 0, padEnd: 0, pitchMult: 1, tempo: 1}
+    window.userSettings.audio = {format: "wav", hz: 22050, padStart: 0, padEnd: 0, pitchMult: 1, tempo: 1, nr: 5, nf: -20}
 }
 if (!Object.keys(window.userSettings).includes("sliderTooltip")) { // For backwards compatibility
     window.userSettings.sliderTooltip = true
@@ -77,11 +77,20 @@ if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.u
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("tempo")) { // For backwards compatibility
     window.userSettings.audio.tempo = 1
 }
+if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("nr")) { // For backwards compatibility
+    window.userSettings.audio.nr = 5
+}
+if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("nf")) { // For backwards compatibility
+    window.userSettings.audio.nf = -20
+}
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("ffmpeg")) { // For backwards compatibility
     window.userSettings.audio.ffmpeg = true
 }
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("ffmpeg_preview")) { // For backwards compatibility
     window.userSettings.audio.ffmpeg_preview = true
+}
+if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("useNR")) { // For backwards compatibility
+    window.userSettings.audio.useNR = true
 }
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("bitdepth")) { // For backwards compatibility
     window.userSettings.audio.bitdepth = "pcm_s32le"
@@ -240,12 +249,15 @@ const updateUIWithSettings = () => {
     setting_external_audio_editor.value = window.userSettings.externalAudioEditor
     setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
     setting_audio_ffmpeg_preview.checked = window.userSettings.audio.ffmpeg && window.userSettings.audio.ffmpeg_preview
+    setting_audio_useNR.checked = window.userSettings.audio.ffmpeg && window.userSettings.audio.useNR
     setting_audio_format.value = window.userSettings.audio.format
     setting_audio_hz.value = window.userSettings.audio.hz
     setting_audio_pad_start.value = window.userSettings.audio.padStart
     setting_audio_pad_end.value = window.userSettings.audio.padEnd
     setting_audio_pitchMult.value = window.userSettings.audio.pitchMult
     setting_audio_tempo.value = window.userSettings.audio.tempo
+    setting_audio_nr.value = window.userSettings.audio.nr
+    setting_audio_nf.value = window.userSettings.audio.nf
     setting_audio_bitdepth.value = window.userSettings.audio.bitdepth
     setting_audio_amplitude.value = window.userSettings.audio.amplitude
     setting_editor_audio_amplitude.value = window.userSettings.audio.amplitude
@@ -532,23 +544,30 @@ initFilePickerButton(setting_externalEditorButton, setting_external_audio_editor
 initMenuSetting(setting_audio_ffmpeg, "audio.ffmpeg", "checkbox", () => {
     setting_audio_ffmpeg_preview.checked = window.userSettings.audio.ffmpeg && window.userSettings.audio.ffmpeg_preview
     setting_audio_ffmpeg_preview.disabled = !window.userSettings.audio.ffmpeg
+    setting_audio_useNR.checked = window.userSettings.audio.ffmpeg && window.userSettings.audio.useNR
+    setting_audio_useNR.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_format.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_hz.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_pad_start.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_pad_end.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_pitchMult.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_tempo.disabled = !window.userSettings.audio.ffmpeg
+    setting_audio_nr.disabled = !window.userSettings.audio.ffmpeg
+    setting_audio_nf.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_bitdepth.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_amplitude.disabled = !window.userSettings.audio.ffmpeg
     setting_editor_audio_amplitude.disabled = !window.userSettings.audio.ffmpeg
 })
 initMenuSetting(setting_audio_ffmpeg_preview, "audio.ffmpeg_preview", "checkbox")
+initMenuSetting(setting_audio_useNR, "audio.useNR", "checkbox")
 initMenuSetting(setting_audio_format, "audio.format", "text")
 initMenuSetting(setting_audio_hz, "audio.hz", "text", undefined, parseInt)
 initMenuSetting(setting_audio_pad_start, "audio.padStart", "text", undefined, parseInt)
 initMenuSetting(setting_audio_pad_end, "audio.padEnd", "text", undefined, parseInt)
 initMenuSetting(setting_audio_pitchMult, "audio.pitchMult", "number", undefined, parseFloat)
 initMenuSetting(setting_audio_tempo, "audio.tempo", "number", undefined, parseFloat)
+initMenuSetting(setting_audio_nr, "audio.nr", "number", undefined, parseFloat)
+initMenuSetting(setting_audio_nf, "audio.nf", "number", undefined, parseFloat)
 initMenuSetting(setting_audio_bitdepth, "audio.bitdepth", "select")
 initMenuSetting(setting_audio_amplitude, "audio.amplitude", "number", () => {
     setting_editor_audio_amplitude.value = setting_audio_amplitude.value
@@ -605,6 +624,8 @@ setting_audio_pad_start.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_pad_end.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_pitchMult.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_tempo.disabled = !window.userSettings.audio.ffmpeg
+setting_audio_nr.disabled = !window.userSettings.audio.ffmpeg
+setting_audio_nf.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_bitdepth.disabled = !window.userSettings.audio.ffmpeg
 setting_audio_amplitude.disabled = !window.userSettings.audio.ffmpeg
 setting_editor_audio_amplitude.disabled = !window.userSettings.audio.ffmpeg

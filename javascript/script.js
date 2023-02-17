@@ -1052,6 +1052,9 @@ generateVoiceButton.addEventListener("click", () => {
                     amplitude: window.userSettings.audio.amplitude,
                     pitchMult: window.userSettings.audio.pitchMult,
                     tempo: window.userSettings.audio.tempo,
+                    nr: window.userSettings.audio.nr,
+                    nf: window.userSettings.audio.nf,
+                    useNR: window.userSettings.audio.useNR,
                     useSR: useSRCkbx.checked
                 }
 
@@ -1190,7 +1193,11 @@ window.saveFile = (from, to, skipUIRecord=false) => {
         bit_depth: window.userSettings.audio.bitdepth,
         amplitude: window.userSettings.audio.amplitude,
         pitchMult: window.userSettings.audio.pitchMult,
-        tempo: window.userSettings.audio.tempo
+        tempo: window.userSettings.audio.tempo,
+        nr: window.userSettings.audio.nr,
+        nf: window.userSettings.audio.nf,
+        useNR: window.userSettings.audio.useNR,
+        useSR: useSRCkbx.checked
     }
     pluginData.audioOptions = options
     window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["pre"], event="pre keep-sample", pluginData)

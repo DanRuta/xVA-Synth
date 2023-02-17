@@ -536,7 +536,7 @@ a {
  }
  #settingsOptionsContainer {
     flex-grow: 1;
-    width: 90%;
+    width: 95%;
     overflow-y: auto;
     overflow-x: hidden;
  }
