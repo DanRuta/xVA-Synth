@@ -912,6 +912,7 @@ generateVoiceButton.addEventListener("click", () => {
                 base_emb: style_emb_select.value||"",
                 modelType: window.currentModel.modelType,
                 old_sequence, // For partial re-generation
+                useSR: useSRCkbx.checked,
                 outfile: tempFileLocation,
                 pluginsContext: JSON.stringify(window.pluginsContext),
                 vocoder: window.userSettings.vocoder,
@@ -1050,7 +1051,8 @@ generateVoiceButton.addEventListener("click", () => {
                     bit_depth: window.userSettings.audio.bitdepth,
                     amplitude: window.userSettings.audio.amplitude,
                     pitchMult: window.userSettings.audio.pitchMult,
-                    tempo: window.userSettings.audio.tempo
+                    tempo: window.userSettings.audio.tempo,
+                    useSR: useSRCkbx.checked
                 }
 
                 const extraInfo = {

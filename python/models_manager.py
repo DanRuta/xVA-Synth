@@ -81,6 +81,15 @@ class ModelsManager(object):
                     self.models_bank[model_key] = {}
                 self.models_bank[model_key][instance_index] = ResNetSpeakerEncoder(self.logger, self.PROD, self.device, self)
 
+            elif model_key=="nuwave2":
+                from python.nuwave2.model import Nuwave2Model
+                if model_key not in self.models_bank.keys():
+                    self.models_bank[model_key] = {}
+                self.models_bank[model_key][instance_index] = Nuwave2Model(self.logger, self.PROD, self.device, self)
+
+            else:
+                raise(f'Model not recognized: {model_key}')
+
             try:
                 if model_key not in self.models_bank.keys():
                     self.models_bank[model_key] = {}

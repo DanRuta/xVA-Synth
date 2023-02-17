@@ -48,11 +48,16 @@ def run_audio_post(PROD, logger, input, output, options=None):
 
 
         # Pitch
-        ffmpeg_options["af"].append(f'asetrate={22050*(options["pitchMult"])},atempo=1/{options["pitchMult"]}')
+        hz = 48000 if "useSR" in options.keys() and options["useSR"] else 22050
+        ffmpeg_options["af"].append(f'asetrate={hz*(options["pitchMult"])},atempo=1/{options["pitchMult"]}')
         # Tempo
         ffmpeg_options["af"].append(f'atempo={options["tempo"]}')
 
         ffmpeg_options["af"].append(f'volume={options["amplitude"]}')
+
+        if "useSR" in options.keys() and options["useSR"]:
+            ffmpeg_options["af"].append(f'afftdn=nr=5:nf=-20:tn=0')
+
         ffmpeg_options["af"] = ",".join(ffmpeg_options["af"])
 
 

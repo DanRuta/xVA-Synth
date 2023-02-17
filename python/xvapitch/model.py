@@ -59,7 +59,7 @@ class xVAPitch(object):
 
         self.base_lang = "en"
         self.init_model()
-        self.model.pitch_emb_values = self.pitch_emb_values
+        self.model.pitch_emb_values = self.pitch_emb_values.to(self.models_manager.device)
         self.isReady = True
 
 
@@ -298,7 +298,7 @@ class xVAPitch(object):
 
         return ""
 
-    def infer(self, plugin_manager, text, out_path, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang="en", base_emb=None):
+    def infer(self, plugin_manager, text, out_path, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang="en", base_emb=None, useSR=False):
 
         if base_lang not in self.lang_tp.keys():
             self.lang_tp[base_lang] = get_text_preprocessor(base_lang, self.base_dir, logger=self.logger)
@@ -312,7 +312,7 @@ class xVAPitch(object):
         with torch.no_grad():
 
             if old_sequence is not None:
-                old_sequence = re.sub(r'[^a-zA-Z\s\(\)\[\]0-9\?\.\,\!\'\{\}]+', '', old_sequence)
+                old_sequence = re.sub(r'[^a-zA-Z\s\(\)\[\]0-9\?\.\,\!\'\{\}\_\@]+', '', old_sequence)
                 # old_sequence = text_to_sequence(old_sequence, "english_basic", ['english_cleaners'])
                 old_sequence, clean_old_sequence = self.lang_tp[base_lang].text_to_sequence(old_sequence)#, "english_basic", ['english_cleaners'])
                 old_sequence = torch.LongTensor(old_sequence)
@@ -362,7 +362,14 @@ class xVAPitch(object):
                 wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
                 if wav_mult is not None:
                     wav_norm = wav_norm * wav_mult
-                scipy.io.wavfile.write(out_path, sampling_rate, wav_norm.astype(np.int16))
+                scipy.io.wavfile.write(out_path.replace(".wav", "_preSR.wav") if useSR else out_path, sampling_rate, wav_norm.astype(np.int16))
+
+                if useSR:
+                    self.models_manager.init_model("nuwave2")
+                    self.models_manager.models("nuwave2").sr_audio(out_path.replace(".wav", "_preSR.wav"), out_path)
+
+
+
 
 
         [pitch, durations, energy] = [pitch_pred.squeeze().cpu().detach().numpy(), dur_pred.squeeze().cpu().detach().numpy(), energy_pred.cpu().detach().numpy() if energy_pred is not None else []]
@@ -374,8 +381,7 @@ class xVAPitch(object):
     def set_device (self, device):
         self.device = device
         self.model = self.model.to(device)
-        self.model.enc = self.model.enc.to(device)
-        self.model.post = self.model.post.to(device)
+        self.model.pitch_emb_values = self.model.pitch_emb_values.to(device)
         self.model.device = device
 
 

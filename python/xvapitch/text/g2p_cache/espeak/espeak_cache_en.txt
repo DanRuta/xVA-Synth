@@ -30563,6 +30563,7 @@ testator|t ɛ s t ˈeɪ ɾ ɚ
 tester's|t ˈɛ s t ɚ z
 testified|t ˈɛ s t ᵻ f ˌaɪ d
 testing|t ˈɛ s t ɪ ŋ
+testisng|t ˈɛ s t ɪ s ŋ
 tetanic|t ɛ t ˈæ n ɪ k
 tetawe|t ˈɛ ɾ ɔː
 tete|t ˈiː t
@@ -33350,6 +33351,7 @@ vowel|v ˈaʊ əl
 voyage|v ˈɔɪ ɪ dʒ
 voyaging|v ˈɔɪ ɪ dʒ ɪ ŋ
 vrolik|v ɹ ˈɑː l ɪ k
+vthree|v ˈiː θ ɹ ˈiː
 vul|v ˈʌ l
 vulgar|v ˈʌ l ɡ ɚ
 vulgarest|v ˈʌ l ɡ ɛ ɹ ɪ s t

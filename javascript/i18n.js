@@ -28,6 +28,8 @@ window.i18n.setEnglish = () => {
     window.i18n.AUTO_REGEN = "Auto regenerate"
     window.i18n.VOCODER = "Vocoder:"
     window.i18n.BASE_LANGUAGE_IS = "Base Language:"
+    window.i18n.USE_SR_IS = "Use SR:"
+    window.i18n.USE_SR_TITLE = "Super-resolution (Hz) - SLOW ON CPU"
     window.i18n.STYLE_EMB_IS = "Style:"
     window.i18n.VARIANT_IS = "Variant:"
 
@@ -619,6 +621,8 @@ window.i18n.updateUI = () => {
     resetLetter_btn.innerHTML = window.i18n.RESET_LETTER
     i18n_autoregen.innerHTML = window.i18n.AUTO_REGEN
     i18n_vocoder.innerHTML = window.i18n.VOCODER
+    i18n_use_SR.innerHTML = window.i18n.USE_SR_IS
+    i18n_use_SR.title = window.i18n.USE_SR_TITLE
     i18n_base_lang.innerHTML = window.i18n.BASE_LANGUAGE_IS
     i18n_style_emb_is.innerHTML = window.i18n.STYLE_EMB_IS
     default_opt_style_emb.innerHTML = window.i18n.DEFAULT

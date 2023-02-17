@@ -141,7 +141,7 @@ class FastPitch(object):
 
         return ""
 
-    def infer(self, plugin_manager, text, output, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang=None, base_emb=None):
+    def infer(self, plugin_manager, text, output, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang=None, base_emb=None, useSR=False):
 
         self.logger.info(f'Inferring: "{text}" ({len(text)})')
 
@@ -185,7 +185,11 @@ class FastPitch(object):
                 audio = audio * 32768.0
                 # audio = audio * 2.3026  # This brings it to the same volume, but makes it clip in places
                 audio = audio.cpu().numpy().astype('int16')
-                write(output, sampling_rate, audio)
+                write(output.replace(".wav", "_preSR.wav") if useSR else output, sampling_rate, audio)
+
+                if useSR:
+                    self.models_manager.init_model("nuwave2")
+                    self.models_manager.models("nuwave2").sr_audio(output.replace(".wav", "_preSR.wav"), output)
                 del audio
 
             del mel, mel_lens

@@ -170,7 +170,7 @@ class xVAPitch(nn.Module):
             energy_pred = energy_pred.view((1, energy_pred.shape[0])).float().to(self.device)
 
             if not self.USE_PITCH_COND and pitch_pred.shape[1]==speaker_embs.shape[2]:
-                pitch_delta = self.pitch_emb_values * pitch_pred
+                pitch_delta = self.pitch_emb_values.to(pitch_pred.device) * pitch_pred
                 speaker_embs = speaker_embs + pitch_delta.float()
 
             try:
