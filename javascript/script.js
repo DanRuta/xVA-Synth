@@ -843,7 +843,9 @@ generateVoiceButton.addEventListener("click", () => {
         if (window.isGenerating) {
             return
         }
-        clearOldTempFiles()
+        if (!window.speech2speechState.s2s_running) {
+            clearOldTempFiles()
+        }
 
         dialogueInput.value = " "+dialogueInput.value.trim()+" "
         let sequence = dialogueInput.value.replace("…", "...").replace("’", "'")

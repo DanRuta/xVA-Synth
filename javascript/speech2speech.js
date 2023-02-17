@@ -131,22 +131,38 @@ window.useWavFileForspeech2speech = (fileName) => {
     window.tempFileLocation = `${__dirname.replace("/javascript", "").replace("\\javascript", "")}/output/temp-${tempFileNum}.wav`
     toggleSpinnerButtons()
 
+    const options = {
+        hz: window.userSettings.audio.hz,
+        padStart: window.userSettings.audio.padStart,
+        padEnd: window.userSettings.audio.padEnd,
+        bit_depth: window.userSettings.audio.bitdepth,
+        amplitude: window.userSettings.audio.amplitude,
+        pitchMult: window.userSettings.audio.pitchMult,
+        tempo: window.userSettings.audio.tempo,
+        deessing: window.userSettings.audio.deessing,
+        nr: window.userSettings.audio.nr,
+        nf: window.userSettings.audio.nf,
+        useNR: window.userSettings.audio.useNR,
+        useSR: useSRCkbx.checked
+    }
+
     doFetch(`http://localhost:8008/runSpeechToSpeech`, {
         method: "Post",
         body: JSON.stringify({
             input_path: fileName,
-            modelType: window.currentModel.modelType,
+            useSR: useSRCkbx.checked,
 
             style_emb: window.currentModel.games[0].base_speaker_emb,
             audio_out_path: tempFileLocation,
 
-            s2s_components: window.userSettings.s2s_components,
             doPitchShift: window.userSettings.s2s_prePitchShift,
             removeNoise: window.userSettings.s2s_removeNoise,
             removeNoiseStrength: window.userSettings.s2s_noiseRemStrength,
             n_speakers: undefined,
             modelPath: undefined,
-            voiceId: undefined
+            voiceId: undefined,
+
+            options: JSON.stringify(options)
         })
     }).then(r=>r.text()).then(res => {
         // This block of code sometimes gets called before the audio file has actually finished flushing to file
@@ -234,6 +250,7 @@ window.useWavFileForspeech2speech = (fileName) => {
         doTheRest()
     }).catch(e => {
         console.log(e)
+        window.errorModal(`<h3>${window.i18n.SOMETHING_WENT_WRONG}</h3>`)
         mic_progress_SVG.style.animation = "none"
     })
 }

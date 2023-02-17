@@ -302,9 +302,9 @@ if __name__ == '__main__':
                     logger.info("POST {}".format(self.path))
                     input_path = post_data["input_path"]
                     style_emb = post_data["style_emb"]
+                    options = post_data["options"]
                     audio_out_path = post_data["audio_out_path"]
-                    modelType = post_data["modelType"]
-                    s2s_components = post_data["s2s_components"]
+                    useSR = post_data["useSR"]
 
                     removeNoise = post_data["removeNoise"]
                     removeNoiseStrength = post_data["removeNoiseStrength"]
@@ -315,7 +315,7 @@ if __name__ == '__main__':
                     models_manager.load_model("speaker_rep", f'{"./resources/app" if PROD else "."}/python/xvapitch/speaker_rep/speaker_rep.pt')
 
                     try:
-                        models_manager.models("xvapitch").run_speech_to_speech(final_path, audio_out_path, style_emb, models_manager, plugin_manager, modelType, s2s_components=s2s_components)
+                        models_manager.models("xvapitch").run_speech_to_speech(final_path, audio_out_path, style_emb, models_manager, plugin_manager, useSR=useSR)
 
                         data_out = ""
                         req_response = data_out

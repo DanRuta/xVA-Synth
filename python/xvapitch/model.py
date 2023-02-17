@@ -126,7 +126,7 @@ class xVAPitch(object):
                         self.arpabet_dict[word] = json_data["data"][word]["arpabet"]
 
 
-    def run_speech_to_speech (self, audiopath, audio_out_path, style_emb, models_manager, plugin_manager, modelType, s2s_components):
+    def run_speech_to_speech (self, audiopath, audio_out_path, style_emb, models_manager, plugin_manager, useSR=False):
 
         if ".wav" in style_emb:
             style_emb = models_manager.models("speaker_rep").compute_embedding(style_emb).squeeze()
@@ -159,7 +159,11 @@ class xVAPitch(object):
         wav = wav.squeeze().cpu().detach().numpy()
 
         wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
-        scipy.io.wavfile.write(audio_out_path, 22050, wav_norm.astype(np.int16))
+        scipy.io.wavfile.write(audio_out_path.replace(".wav", "_preSR.wav") if useSR else audio_out_path, 22050, wav_norm.astype(np.int16))
+
+        if useSR:
+            self.models_manager.init_model("nuwave2")
+            self.models_manager.models("nuwave2").sr_audio(audio_out_path.replace(".wav", "_preSR.wav"), audio_out_path)
         return
 
 

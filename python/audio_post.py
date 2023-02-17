@@ -287,7 +287,7 @@ def move_recorded_file(PROD, logger, root_folder, file_path):
                 dual_mono=False,
                 audio_codec=None,
                 audio_bitrate=None,
-                sample_rate=sample_rate,
+                sample_rate=22050,
                 keep_original_audio=False,
                 pre_filter=None,
                 post_filter=None,
