@@ -151,6 +151,7 @@ window.useWavFileForspeech2speech = (fileName) => {
         body: JSON.stringify({
             input_path: fileName,
             useSR: useSRCkbx.checked,
+            isBatchMode: false,
 
             style_emb: window.currentModel.games[0].base_speaker_emb,
             audio_out_path: tempFileLocation,

@@ -315,10 +315,14 @@ if __name__ == '__main__':
                     models_manager.load_model("speaker_rep", f'{"./resources/app" if PROD else "."}/python/xvapitch/speaker_rep/speaker_rep.pt')
 
                     try:
-                        models_manager.models("xvapitch").run_speech_to_speech(final_path, audio_out_path, style_emb, models_manager, plugin_manager, useSR=useSR)
+                        models_manager.models("xvapitch").run_speech_to_speech(final_path, audio_out_path.replace(".wav", "_tempS2S.wav"), style_emb, models_manager, plugin_manager, useSR=useSR)
 
                         data_out = ""
                         req_response = data_out
+
+                        # For use by /outputAudio
+                        post_data["input_path"] = audio_out_path.replace(".wav", "_tempS2S.wav")
+                        post_data["output_path"] = audio_out_path
 
                     except RuntimeError:
                         req_response = traceback.format_exc()
@@ -347,10 +351,10 @@ if __name__ == '__main__':
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["mp-output-audio"]["post"], event="post mp-output-audio", data=extraInfo)
 
 
-                if self.path == "/outputAudio":
+                if self.path == "/outputAudio" or self.path == "/runSpeechToSpeech":
                     isBatchMode = post_data["isBatchMode"]
                     if not isBatchMode:
-                        logger.info("POST {}".format(self.path))
+                        logger.info("POST /outputAudio")
 
                     input_path = post_data["input_path"]
                     output_path = post_data["output_path"]
