@@ -42,7 +42,7 @@ if (!Object.keys(window.userSettings).includes("installation")) { // For backwar
     window.userSettings.installation = "cpu"
 }
 if (!Object.keys(window.userSettings).includes("audio")) { // For backwards compatibility
-    window.userSettings.audio = {format: "wav", hz: 22050, padStart: 0, padEnd: 0, pitchMult: 1, tempo: 1, nr: 5, nf: -20, deessing: 0.1}
+    window.userSettings.audio = {format: "wav", hz: 44100, padStart: 0, padEnd: 0, pitchMult: 1, tempo: 1, nr: 5, nf: -20, deessing: 0.1}
 }
 if (!Object.keys(window.userSettings).includes("sliderTooltip")) { // For backwards compatibility
     window.userSettings.sliderTooltip = true
@@ -63,7 +63,7 @@ if (!Object.keys(window.userSettings).includes("autoReloadVoices")) { // For bac
     window.userSettings.autoReloadVoices = false
 }
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("hz")) { // For backwards compatibility
-    window.userSettings.audio.hz = 22050
+    window.userSettings.audio.hz = 44100
 }
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("padStart")) { // For backwards compatibility
     window.userSettings.audio.padStart = 0
@@ -699,23 +699,68 @@ reset_settings_btn.addEventListener("click", () => {
     window.confirmModal(window.i18n.SURE_RESET_SETTINGS).then(confirmation => {
         if (confirmation) {
             window.userSettings.audio.format = "wav"
-            window.userSettings.audio.hz = 22050
+            window.userSettings.audio.hz = 44100
             window.userSettings.audio.padStart = 0
             window.userSettings.audio.padEnd = 0
-            window.userSettings.audio.ffmpeg = false
-            window.userSettings.autoPlayGen = false
+            window.userSettings.audio.pitchMult = 1
+            window.userSettings.audio.tempo = 1
+            window.userSettings.audio.deessing = 0.1
+            window.userSettings.audio.nr = 5
+            window.userSettings.audio.nf = -20
+            window.userSettings.audio.ffmpeg = true
+            window.userSettings.audio.ffmpeg_preview = true
+            window.userSettings.audio.useNR = true
+            window.userSettings.audio.amplitude = 1
+            window.userSettings.autoPlayGen = true
             window.userSettings.autoReloadVoices = false
             window.userSettings.autoplay = true
             window.userSettings.darkPrompt = false
+            window.userSettings.showDiscordStatus = true
+            window.userSettings.prompt_fontSize = 15
+            window.userSettings.bg_gradient_opacity = 13
+            window.userSettings.outputJSON = true
+            window.userSettings.keepEditorOnVoiceChange = false
+            window.userSettings.filenameNumericalSeq = false
+            window.userSettings.useErrorSound = false
+            window.userSettings.showTipOfTheDay = true
+            window.userSettings.showUnseenTipOfTheDay = false
+            window.userSettings.playChangedAudio = false
+
+
+            window.userSettings.plugins = {}
+            window.userSettings.plugins.loadOrder = ""
+            window.userSettings.externalAudioEditor = ""
+            window.userSettings.s2s_autogenerate = true // TODO, remove
+            window.userSettings.s2s_prePitchShift = false // TODO, remove
+            window.userSettings.s2s_removeNoise = false // TODO, remove
+            window.userSettings.s2s_noiseRemStrength = 0.25 // TODO, remove
+
             window.userSettings.defaultToHiFi = true
             window.userSettings.keepPaceOnNew = true
             window.userSettings.sliderTooltip = true
             window.userSettings.audio.bitdepth = "pcm_s32le"
+            window.userSettings.showEditorFFMPEGAmplitude = false
+            window.userSettings.vocoder = "256_waveglow"
+            window.userSettings.max_filename_chars = 70
+            window.userSettings.clear_text_after_synth = false
+            window.userSettings.do_model_version_highlight = false
+            window.userSettings.model_version_highlight = 2.0
+            window.userSettings.keepPaceOnNew = true
+            window.userSettings.arpabet_paginationSize = 200
 
-            window.userSettings.batch_batchSize = 1
-            window.userSettings.batch_clearDirFirst= false
+            window.userSettings.batch_clearDirFirst = false
             window.userSettings.batch_fastMode = false
+            window.userSettings.batch_batchSize = 1
             window.userSettings.batch_skipExisting = true
+            window.userSettings.batch_fastModeMaxParallelizations = 1000
+            window.userSettings.batch_json = false
+            window.userSettings.batch_useMP = false
+            window.userSettings.batch_MPCount = 0
+            window.userSettings.batch_doGrouping = true
+            window.userSettings.batch_doVocoderGrouping = false
+            window.userSettings.batch_delimiter = ","
+            window.userSettings.batch_paginationSize = 100
+
             updateUIWithSettings()
             saveUserSettings()
         }
@@ -749,6 +794,7 @@ reset_paths_btn.addEventListener("click", () => {
                 window.currentModelButton.click()
             }
 
+            window.userSettings.errorSoundFile = `${__dirname.replace(/\\/g,"/")}/lib/xp_error.mp3`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
             window.userSettings.batchOutFolder = `${__dirname.replace(/\\/g,"/")}/batch`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
             batch_outputFolderInput.value = window.userSettings.batchOutFolder
 
