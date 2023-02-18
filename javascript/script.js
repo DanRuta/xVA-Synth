@@ -1629,7 +1629,17 @@ window.changeVocoder = vocoder => {
 }
 vocoder_select.addEventListener("change", () => window.changeVocoder(vocoder_select.value))
 
+useSRCkbx.addEventListener("click", () => {
+    let userHasSeenThisAlready = localStorage.getItem("useSRHintSeen")
+    if (useSRCkbx.checked && !userHasSeenThisAlready) {
+        window.confirmModal(window.i18n.USE_SR_HINT).then(resp => {
+            if (resp) {
+                localStorage.setItem("useSRHintSeen", "true")
+            }
+        })
+    }
 
+})
 
 dialogueInput.addEventListener("contextmenu", event => {
     event.preventDefault()

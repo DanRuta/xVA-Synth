@@ -30,6 +30,7 @@ window.i18n.setEnglish = () => {
     window.i18n.BASE_LANGUAGE_IS = "Base Language:"
     window.i18n.USE_SR_IS = "Use SR:"
     window.i18n.USE_SR_TITLE = "Super-resolution (Hz) - SLOW ON CPU"
+    window.i18n.USE_SR_HINT = "Super-resolution improves the quality of your audio through Super-resolution of 22050Hz audio into 48000Hz audio. To be able to hear the difference, you need to make sure your ffmpeg settings don't then convert the audio back down to something low like 22050, in the post-processing. Keep the Hz setting to something higher like 48000 or 44100.<br><br>Also to note, this is a fairly slow process on the CPU, but it's pretty quick on the GPU, so I'd recommend switching on GPU usage if you have an NVIDIA card.<br><br>Hide this notice in the future?"
     window.i18n.STYLE_EMB_IS = "Style:"
     window.i18n.VARIANT_IS = "Variant:"
 
@@ -796,15 +797,12 @@ window.i18n.updateUI = () => {
     i18n_setting_batch_multip.innerHTML = window.i18n.SETTINGS_BATCH_USEMULTIP
     i18n_setting_batch_multip_count.innerHTML = window.i18n.SETTINGS_BATCH_MULTIPCOUNT
     i18n_setting_microphone.innerHTML = window.i18n.SETTINGS_MICROPHONE
-    // i18n_setting_s2s_voice.innerHTML = window.i18n.SETTINGS_S2S_VOICE
     i18n_setting_autogeneratevoice.innerHTML = window.i18n.SETTINGS_AUTOGENERATEVOICE
-    // i18n_setting_s2s_preadjust_pitch.innerHTML = window.i18n.SETTINGS_S2S_PREADJUST_PITCH
     i18n_setting_s2s_bgnoise.innerHTML = window.i18n.SETTINGS_S2S_BGNOISE
     s2s_settingsRecNoiseBtn.innerHTML = window.i18n.SETTINGS_S2S_RECNOISE
     i18n_setting_s2s_bgnoise_strength.innerHTML = window.i18n.SETTINGS_S2S_BGNOISE_STRENGTH
     reset_settings_btn.innerHTML = window.i18n.SETTINGS_RESET_SETTINGS
     reset_paths_btn.innerHTML = window.i18n.SETTINGS_RESET_PATHS
-    // s2s_selectVoiceBtn.innerHTML = window.i18n.SELECT_VOICE
 
     updatesVersions.innerHTML = window.i18n.UPDATES_VERSION
     i18n_updateslog.innerHTML = window.i18n.UPDATES_LOG
