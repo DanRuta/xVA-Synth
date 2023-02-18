@@ -121,28 +121,28 @@ class NuWave2(pl.LightningModule):
         loss = self.loss(noise_estimation, z)
         return loss, wav, wav_noisy, z, noise_estimation, logsnr
 
-    @torch.no_grad()
     def inference(self, wav_l, band, step, noise_schedule=None):
-        signal = torch.randn(wav_l.shape, dtype=wav_l.dtype, device=wav_l.device)
-        signal_list = []
-        if noise_schedule == None:
-            h = (self.hparams.logsnr.logsnr_max - self.hparams.logsnr.logsnr_min) / step
-        for i in range(step):
+        with torch.no_grad():
+            signal = torch.randn(wav_l.shape, dtype=wav_l.dtype, device=wav_l.device)
+            signal_list = []
             if noise_schedule == None:
-                logsnr_t = (self.hparams.logsnr.logsnr_min + i * h) * torch.ones(signal.shape[0], dtype=signal.dtype,
-                                                                                 device=signal.device)
-                logsnr_s = (self.hparams.logsnr.logsnr_min + (i+1) * h) * torch.ones(signal.shape[0], dtype=signal.dtype,
-                                                                                 device=signal.device)
-                signal, recon = self.model.denoise_ddim(signal, wav_l, band, logsnr_t, logsnr_s)
-            else:
-                logsnr_t = noise_schedule[i] * torch.ones(signal.shape[0], dtype=signal.dtype, device=signal.device)
-                if i == step-1:
-                    logsnr_s = self.hparams.logsnr.logsnr_max * torch.ones(signal.shape[0], dtype=signal.dtype, device=signal.device)
+                h = (self.hparams.logsnr.logsnr_max - self.hparams.logsnr.logsnr_min) / step
+            for i in range(step):
+                if noise_schedule == None:
+                    logsnr_t = (self.hparams.logsnr.logsnr_min + i * h) * torch.ones(signal.shape[0], dtype=signal.dtype,
+                                                                                     device=signal.device)
+                    logsnr_s = (self.hparams.logsnr.logsnr_min + (i+1) * h) * torch.ones(signal.shape[0], dtype=signal.dtype,
+                                                                                     device=signal.device)
+                    signal, recon = self.model.denoise_ddim(signal, wav_l, band, logsnr_t, logsnr_s)
                 else:
-                    logsnr_s = noise_schedule[i+1] * torch.ones(signal.shape[0], dtype=signal.dtype, device=signal.device)
-                signal, recon = self.model.denoise_ddim(signal, wav_l, band, logsnr_t, logsnr_s)
-            signal_list.append(signal)
-        wav_recon = torch.clamp(signal, min=-1, max=1-torch.finfo(torch.float16).eps)
+                    logsnr_t = noise_schedule[i] * torch.ones(signal.shape[0], dtype=signal.dtype, device=signal.device)
+                    if i == step-1:
+                        logsnr_s = self.hparams.logsnr.logsnr_max * torch.ones(signal.shape[0], dtype=signal.dtype, device=signal.device)
+                    else:
+                        logsnr_s = noise_schedule[i+1] * torch.ones(signal.shape[0], dtype=signal.dtype, device=signal.device)
+                    signal, recon = self.model.denoise_ddim(signal, wav_l, band, logsnr_t, logsnr_s)
+                signal_list.append(signal)
+            wav_recon = torch.clamp(signal, min=-1, max=1-torch.finfo(torch.float16).eps)
         return wav_recon, signal_list
 
     def training_step(self, batch, batch_idx):
@@ -220,15 +220,15 @@ class STFTMag(nn.Module):
         self.register_buffer('window', torch.hann_window(nfft), False)
 
     #x: [B,T] or [T]
-    @torch.no_grad()
     def forward(self, x):
-        T = x.shape[-1]
-        stft = torch.stft(x,
-                          self.nfft,
-                          self.hop,
-                          window=self.window,
-                          )#return_complex=False)  #[B, F, TT,2]
-        mag = torch.norm(stft, p=2, dim =-1) #[B, F, TT]
+        with torch.no_grad():
+            T = x.shape[-1]
+            stft = torch.stft(x,
+                              self.nfft,
+                              self.hop,
+                              window=self.window,
+                              )#return_complex=False)  #[B, F, TT,2]
+            mag = torch.norm(stft, p=2, dim =-1) #[B, F, TT]
         return mag
 
 
