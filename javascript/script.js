@@ -917,7 +917,7 @@ generateVoiceButton.addEventListener("click", () => {
                 useSR: useSRCkbx.checked,
                 outfile: tempFileLocation,
                 pluginsContext: JSON.stringify(window.pluginsContext),
-                vocoder: window.userSettings.vocoder,
+                vocoder: window.currentModel.modelType=="xVAPitch" ? "n/a" : window.userSettings.vocoder,
                 waveglowPath: vocoder_select.value=="256_waveglow" ? window.userSettings.waveglow_path : window.userSettings.bigwaveglow_path
             })
         }).then(r=>r.text()).then(res => {
@@ -926,6 +926,7 @@ generateVoiceButton.addEventListener("click", () => {
                 if (res.startsWith("ERR:")) {
                     window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${res.replace("ERR:","").replaceAll(/\n/g, "<br>")}`)
                 } else {
+                    window.appLogger.log(res)
                     window.errorModal(`${window.i18n.BATCH_MODEL_NOT_FOUND}.${vocoder_select.value.includes("waveglow")?" "+window.i18n.BATCH_DOWNLOAD_WAVEGLOW:""}`)
                 }
                 toggleSpinnerButtons()
