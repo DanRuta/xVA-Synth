@@ -129,6 +129,9 @@ window.initWaveSurfer = (src) => {
 window.registerModel = (modelsPath, gameFolder, model, {gameId, voiceId, voiceName, voiceDescription, gender, variant, modelType, emb_i}) => {
     // Add game, if the game hasn't been added yet
     let audioPreviewPath
+    try {
+        audioPreviewPath = `${modelsPath}/${model.games.find(({gameId}) => gameId==gameFolder).voiceId}`
+    } catch (e) {}
     if (!window.games.hasOwnProperty(gameId)) {
 
         const gameAsset = fs.readdirSync(`${path}/assets`).find(f => f==gameId+".json")
@@ -140,7 +143,7 @@ window.registerModel = (modelsPath, gameFolder, model, {gameId, voiceId, voiceNa
                 gameTheme,
                 gameAsset
             }
-            audioPreviewPath = `${modelsPath}/${model.games.find(({gameId}) => gameId==gameFolder).voiceId}`
+
         } else {
             window.appLogger.log(`Something not right with loading model: ${voiceId} . The asset file for its game (${gameId}) could not be found here: ${path}/assets. You need a ${gameId}.json file. Loading a generic theme for this voice's game/category.`)
 
@@ -538,7 +541,6 @@ window.changeGame = (meta) => {
 
             } else {
                 generateVoiceButton.innerHTML = window.i18n.LOAD_MODEL
-
                 const modelGameFolder = audioPreviewPath.split("/")[0]
 
                 generateVoiceButton.dataset.modelQuery = JSON.stringify({
@@ -2006,6 +2008,6 @@ document.querySelectorAll('a[href^="http"]').forEach(a => a.addEventListener("cl
 
 // TEMP - pre-alpha builds
 setInterval(() => {
-    dragBar.innerHTML = "xVASynth PRE-ALPHA v3 PREVIEW"
+    dragBar.innerHTML = "xVASynth PRE-ALPHA v3.0.0a3 PREVIEW"
     dragBar.style.backgroundColor = "red"
 }, 1000)
