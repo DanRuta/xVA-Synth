@@ -135153,3 +135153,103 @@ zyuganov(2) Z UW1 G AA0 N AA0 V
 zyuganov's Z Y UW1 G AA0 N AA0 V Z
 zyuganov's(2) Z UW1 G AA0 N AA0 V Z
 zywicki Z IH0 W IH1 K IY0
+pft P F T
+pftt P F T T
+pfttt P F T T T
+pftttt P F T T T T
+pfttttt P F T T T T T
+pftttttt P F T T T T T T
+pfttttttt P F T T T T T T T
+pftttttttt P F T T T T T T T T
+pfttttttttt P F T T T T T T T T T
+pftttttttttt P F T T T T T T T T T T
+pfft P F F T
+pfftt P F F T T
+pffttt P F F T T T
+pfftttt P F F T T T T
+pffttttt P F F T T T T T
+pfftttttt P F F T T T T T T
+pffttttttt P F F T T T T T T T
+pfftttttttt P F F T T T T T T T T
+pffttttttttt P F F T T T T T T T T T
+pfftttttttttt P F F T T T T T T T T T T
+pffft P F F F T
+pffftt P F F F T T
+pfffttt P F F F T T T
+pffftttt P F F F T T T T
+pfffttttt P F F F T T T T T
+pffftttttt P F F F T T T T T T
+pfffttttttt P F F F T T T T T T T
+pffftttttttt P F F F T T T T T T T T
+pfffttttttttt P F F F T T T T T T T T T
+pffftttttttttt P F F F T T T T T T T T T T
+pfffft P F F F F T
+pfffftt P F F F F T T
+pffffttt P F F F F T T T
+pfffftttt P F F F F T T T T
+pffffttttt P F F F F T T T T T
+pfffftttttt P F F F F T T T T T T
+pffffttttttt P F F F F T T T T T T T
+pfffftttttttt P F F F F T T T T T T T T
+pffffttttttttt P F F F F T T T T T T T T T
+pfffftttttttttt P F F F F T T T T T T T T T T
+pffffft P F F F F F T
+pffffftt P F F F F F T T
+pfffffttt P F F F F F T T T
+pffffftttt P F F F F F T T T T
+pfffffttttt P F F F F F T T T T T
+pffffftttttt P F F F F F T T T T T T
+pfffffttttttt P F F F F F T T T T T T T
+pffffftttttttt P F F F F F T T T T T T T T
+pfffffttttttttt P F F F F F T T T T T T T T T
+pffffftttttttttt P F F F F F T T T T T T T T T T
+pfffffft P F F F F F F T
+pfffffftt P F F F F F F T T
+pffffffttt P F F F F F F T T T
+pfffffftttt P F F F F F F T T T T
+pffffffttttt P F F F F F F T T T T T
+pfffffftttttt P F F F F F F T T T T T T
+pffffffttttttt P F F F F F F T T T T T T T
+pfffffftttttttt P F F F F F F T T T T T T T T
+pffffffttttttttt P F F F F F F T T T T T T T T T
+pfffffftttttttttt P F F F F F F T T T T T T T T T T
+pffffffft P F F F F F F F T
+pffffffftt P F F F F F F F T T
+pfffffffttt P F F F F F F F T T T
+pffffffftttt P F F F F F F F T T T T
+pfffffffttttt P F F F F F F F T T T T T
+pffffffftttttt P F F F F F F F T T T T T T
+pfffffffttttttt P F F F F F F F T T T T T T T
+pffffffftttttttt P F F F F F F F T T T T T T T T
+pfffffffttttttttt P F F F F F F F T T T T T T T T T
+pffffffftttttttttt P F F F F F F F T T T T T T T T T T
+pfffffffft P F F F F F F F F T
+pfffffffftt P F F F F F F F F T T
+pffffffffttt P F F F F F F F F T T T
+pfffffffftttt P F F F F F F F F T T T T
+pffffffffttttt P F F F F F F F F T T T T T
+pfffffffftttttt P F F F F F F F F T T T T T T
+pffffffffttttttt P F F F F F F F F T T T T T T T
+pfffffffftttttttt P F F F F F F F F T T T T T T T T
+pffffffffttttttttt P F F F F F F F F T T T T T T T T T
+pfffffffftttttttttt P F F F F F F F F T T T T T T T T T T
+pffffffffft P F F F F F F F F F T
+pffffffffftt P F F F F F F F F F T T
+pfffffffffttt P F F F F F F F F F T T T
+pffffffffftttt P F F F F F F F F F T T T T
+pfffffffffttttt P F F F F F F F F F T T T T T
+pffffffffftttttt P F F F F F F F F F T T T T T T
+pfffffffffttttttt P F F F F F F F F F T T T T T T T
+pffffffffftttttttt P F F F F F F F F F T T T T T T T T
+pfffffffffttttttttt P F F F F F F F F F T T T T T T T T T
+pffffffffftttttttttt P F F F F F F F F F T T T T T T T T T T
+pfffffffffft P F F F F F F F F F F T
+pfffffffffftt P F F F F F F F F F F T T
+pffffffffffttt P F F F F F F F F F F T T T
+pfffffffffftttt P F F F F F F F F F F T T T T
+pffffffffffttttt P F F F F F F F F F F T T T T T
+pfffffffffftttttt P F F F F F F F F F F T T T T T T
+pffffffffffttttttt P F F F F F F F F F F T T T T T T T
+pfffffffffftttttttt P F F F F F F F F F F T T T T T T T T
+pffffffffffttttttttt P F F F F F F F F F F T T T T T T T T T
+pfffffffffftttttttttt P F F F F F F F F F F T T T T T T T T T T
