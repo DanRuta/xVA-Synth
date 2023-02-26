@@ -205,7 +205,7 @@ if __name__ == '__main__':
                 if self.path == "/setDevice":
                     logger.info("POST {}".format(self.path))
                     logger.info(post_data)
-                    use_gpu = post_data["device"]=="gpu"
+                    use_gpu = post_data["device"]=="gpu" or "cuda" in post_data["device"]
                     models_manager.set_device('cuda' if use_gpu else 'cpu')
 
                 if self.path == "/loadModel":
@@ -232,6 +232,7 @@ if __name__ == '__main__':
                     post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])
                     instance_index = post_data["instance_index"] if "instance_index" in post_data else 0
 
+
                     # Handle the case where the vocoder remains selected on app start-up, with auto-HiFi turned off, but no setVocoder call is made before synth
                     continue_synth = True
                     if "waveglow" in post_data["vocoder"]:
@@ -240,7 +241,8 @@ if __name__ == '__main__':
                         if req_response=="ENOENT":
                             continue_synth = False
 
-                    models_manager.set_device(models_manager.device_label, instance_index=instance_index)
+                    device = post_data["device"] if "device" in post_data else models_manager.device_label
+                    models_manager.set_device(device, instance_index=instance_index)
 
                     if continue_synth:
                         plugin_manager.set_context(post_data["pluginsContext"])

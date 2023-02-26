@@ -914,6 +914,7 @@ generateVoiceButton.addEventListener("click", () => {
                 base_emb: style_emb_select.value||"",
                 modelType: window.currentModel.modelType,
                 old_sequence, // For partial re-generation
+                device: window.userSettings.installation=="cpu"?"cpu":(window.userSettings.useGPU?"cuda:0":"cpu"),
                 useSR: useSRCkbx.checked,
                 outfile: tempFileLocation,
                 pluginsContext: JSON.stringify(window.pluginsContext),

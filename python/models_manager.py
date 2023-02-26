@@ -123,7 +123,7 @@ class ModelsManager(object):
 
     def set_device (self, device, instance_index=0):
         if device=="gpu":
-            device = "cuda"
+            device = "cuda:0"
         if self.device_label==device:
             return
         self.device_label = device
