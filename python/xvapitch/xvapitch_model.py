@@ -382,7 +382,7 @@ class xVAPitch(nn.Module):
 
         # Apply volume adjustments
         stretched_energy_mult = None
-        if energy_pred_existing is not None:
+        if energy_pred_existing is not None and pitch_pred_existing is not None:
             energy_mult = self.expand_pitch_energy(energy_pred_existing.unsqueeze(0), dur_pred, logger=logger)
             stretched_energy_mult = torch.nn.functional.interpolate(energy_mult.unsqueeze(0).unsqueeze(0), (1,1,wav.shape[2])).squeeze()
             stretched_energy_mult = stretched_energy_mult.cpu().detach().numpy()
