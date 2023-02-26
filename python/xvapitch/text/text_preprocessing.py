@@ -443,7 +443,11 @@ class TextPreprocessor():
         return xVAARPAbet
 
 
+    def clean_special_chars(self, text):
+        return text.replace("*","")
+
     def text_to_phonemes (self, text):
+        text = self.clean_special_chars(text)
         text = self.collapse_whitespace(text).replace(" }", "}").replace("{ ", "{")
         text = self.clean_numbers(text)
         # print(f'clean_numbers: |{text}|')
