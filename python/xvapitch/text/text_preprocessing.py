@@ -373,7 +373,7 @@ class TextPreprocessor():
 
                             if len(sp):
                                 # print(f'sp, {sp}')
-                                if sp.lower() in self.g2p_cache.keys():
+                                if sp.lower() in self.g2p_cache.keys() and len(self.g2p_cache[sp.lower()].trim()):
                                     # print("in cache")
                                     g2p_out = ipa2xvaarpabet(self.g2p_cache[sp.lower()])
                                     # print(f'g2p_out, {g2p_out}')
@@ -1203,7 +1203,7 @@ class ChineseTextPreprocessor(TextPreprocessor):
                             sp = sp.replace("\"", "").replace(")", "").replace("(", "").replace("]", "").replace("[", "").strip()
 
                             if len(sp):
-                                if sp.lower() in self.g2p_cache.keys():
+                                if sp.lower() in self.g2p_cache.keys() and len(self.g2p_cache[sp.lower()].trim()):
                                     g2p_out = self.g2p_cache[sp.lower()]
                                     g2p_out = self.post_process_pinyin_symbs(g2p_out)
                                     sub_part_phonemes.append(g2p_out)
