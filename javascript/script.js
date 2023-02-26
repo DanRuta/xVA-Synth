@@ -128,19 +128,39 @@ window.initWaveSurfer = (src) => {
 
 window.registerModel = (modelsPath, gameFolder, model, {gameId, voiceId, voiceName, voiceDescription, gender, variant, modelType, emb_i}) => {
     // Add game, if the game hasn't been added yet
+    let audioPreviewPath
     if (!window.games.hasOwnProperty(gameId)) {
 
         const gameAsset = fs.readdirSync(`${path}/assets`).find(f => f==gameId+".json")
-        const gameTheme = JSON.parse(fs.readFileSync(`${path}/assets/${gameAsset}`))
+        if (gameAsset && gameAsset.length && gameAsset[0]) {
+            const gameTheme = JSON.parse(fs.readFileSync(`${path}/assets/${gameAsset}`))
 
-        window.games[gameId] = {
-            models: [],
-            gameTheme,
-            gameAsset
+            window.games[gameId] = {
+                models: [],
+                gameTheme,
+                gameAsset
+            }
+            audioPreviewPath = `${modelsPath}/${model.games.find(({gameId}) => gameId==gameFolder).voiceId}`
+        } else {
+            window.appLogger.log(`Something not right with loading model: ${voiceId} . The asset file for its game (${gameId}) could not be found here: ${path}/assets. You need a ${gameId}.json file. Loading a generic theme for this voice's game/category.`)
+
+            const dummyGameTheme = {
+                "gameName": gameId,
+                "assetFile": "other.jpg",
+                "themeColourPrimary": "aaaaaa",
+                "themeColourSecondary": null,
+                "gameCode": "x",
+                "nexusGamePageIDs": []
+            }
+            const dummyGameAsset = "other.json"
+            window.games[gameId] = {
+                models: [],
+                dummyGameTheme,
+                dummyGameAsset
+            }
+            audioPreviewPath = `${modelsPath}/${model.games[0].voiceId}`
         }
     }
-
-    const audioPreviewPath = `${modelsPath}/${model.games.find(({gameId}) => gameId==gameFolder).voiceId}`
 
     // Catch duplicates, for when/if a model is registered for multiple games, but there's already the same model in that game, from another version
     // const existingDuplicates = []
@@ -246,9 +266,9 @@ window.loadAllModels = (forceUpdate=false) => {
 
                     } catch (e) {
                         console.log(e)
-                        window.appLogger.log(`${window.i18n.ERR_LOADING_MODELS_FOR_GAME_WITH_FILENAME.replace("_1", gameFolder)} `+fileName)
-                        window.appLogger.log(e)
-                        window.appLogger.log(e.stack)
+                        // window.appLogger.log(`${window.i18n.ERR_LOADING_MODELS_FOR_GAME_WITH_FILENAME.replace("_1", gameFolder)} `+fileName)
+                        // window.appLogger.log(e)
+                        // window.appLogger.log(e.stack)
                     }
                 })
             } catch (e) {
@@ -295,8 +315,8 @@ window.loadAllModels = (forceUpdate=false) => {
                 window.appLogger.log(`${window.i18n.ERR_LOADING_MODELS_FOR_GAME}: `+ gameFolder)
                 window.appLogger.log(e)
             }
-
         })
+        window.updateGameList(false)
         resolve()
     })
 }
@@ -1008,7 +1028,11 @@ generateVoiceButton.addEventListener("click", () => {
                 if (keepSampleButton.dataset.newFileLocation && keepSampleButton.dataset.newFileLocation.startsWith("BATCH_EDIT")) {
                     console.log("_debug_")
                 } else {
-                    keepSampleButton.dataset.newFileLocation = `${window.userSettings[`outpath_${game}`]}/${voiceType}/${outputFileName}.wav`
+                    if (window.userSettings[`outpath_${game}`]) {
+                        keepSampleButton.dataset.newFileLocation = `${window.userSettings[`outpath_${game}`]}/${voiceType}/${outputFileName}.wav`
+                    } else {
+                        keepSampleButton.dataset.newFileLocation = `${__dirname.replace(/\\/g,"/")}/output/${voiceType}/${outputFileName}.wav`
+                    }
                 }
                 keepSampleButton.disabled = false
                 window.tempFileLocation = tempFileLocation
@@ -1752,7 +1776,7 @@ changeGameButton.addEventListener("click", () => searchGameInput.focus())
 
 window.gameAssets = {}
 
-window.updateGameList = () => {
+window.updateGameList = (doLoadAllModels=true) => {
     gameSelectionListContainer.innerHTML = ""
     const fileNames = fs.readdirSync(`${window.path}/assets`)
 
@@ -1760,10 +1784,11 @@ window.updateGameList = () => {
     let totalGames = new Set()
 
     const itemsToSort = []
+    const gameIDs = doLoadAllModels ? fileNames.filter(fn=>fn.endsWith(".json")) : Object.keys(window.games).map(gID => gID+".json")
 
-    fileNames.filter(fn=>fn.endsWith(".json")).forEach(gameId => {
+    gameIDs.forEach(gameId => {
 
-        const metadata = JSON.parse(fs.readFileSync(`${window.path}/assets/${gameId}`))
+        const metadata = fs.existsSync(`${window.path}/assets/${gameId}`) ? JSON.parse(fs.readFileSync(`${window.path}/assets/${gameId}`)) : window.games[gameId.replace(".json", "")].dummyGameTheme
         gameId = gameId.replace(".json", "")
         metadata.gameId = gameId
         const assetFile = metadata.assetFile
@@ -1812,7 +1837,9 @@ window.updateGameList = () => {
             try {
                 fs.watch(modelsDir, {recursive: false, persistent: true}, (eventType, filename) => {
                     if (window.userSettings.autoReloadVoices) {
-                        loadAllModels().then(() => changeGame(metadata))
+                        if (doLoadAllModels) {
+                            loadAllModels().then(() => changeGame(metadata))
+                        }
                     }
                 })
             } catch (e) {
@@ -1853,14 +1880,16 @@ window.updateGameList = () => {
 
     searchGameInput.placeholder = window.i18n.SEARCH_N_GAMES_WITH_N2_VOICES.replace("_1", Array.from(totalGames).length).replace("_2", totalVoices)
 
-    loadAllModels().then(() => {
-        // Load the last selected game
-        const lastGame = localStorage.getItem("lastGame")
+    if (doLoadAllModels) {
+        loadAllModels().then(() => {
+            // Load the last selected game
+            const lastGame = localStorage.getItem("lastGame")
 
-        if (lastGame) {
-            changeGame(JSON.parse(lastGame))
-        }
-    })
+            if (lastGame) {
+                changeGame(JSON.parse(lastGame))
+            }
+        })
+    }
 }
 window.updateGameList()
 
