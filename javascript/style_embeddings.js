@@ -197,6 +197,9 @@ styleEmbSave.addEventListener("click", () => {
         window.loadStyleEmbsFromDisk()
         window.refreshStyleEmbsTable()
     }
+    if (window.currentModel) {
+        window.loadStyleEmbsForVoice(window.currentModel)
+    }
 })
 
 
@@ -206,6 +209,9 @@ styleEmbDelete.addEventListener("click", () => {
             fs.unlinkSync(window.styleEmbsMenuState.selectedEmb[1].fileName)
             window.loadStyleEmbsFromDisk()
             window.refreshStyleEmbsTable()
+            if (window.currentModel) {
+                window.loadStyleEmbsForVoice(window.currentModel)
+            }
         }
     })
 })
