@@ -400,8 +400,9 @@ if __name__ == '__main__':
 
                 if self.path == "/computeEmbsAndDimReduction":
                     logger.info("POST {}".format(self.path))
-                    models_manager.init_model("resemblyzer")
-                    embs = models_manager.models("resemblyzer").reduce_data_dimension(post_data["mappings"], post_data["includeAllVoices"], post_data["onlyInstalled"], post_data["algorithm"])
+                    models_manager.init_model("speaker_rep")
+                    load_resp = models_manager.load_model("speaker_rep", f'{"./resources/app" if PROD else "."}/python/xvapitch/speaker_rep/speaker_rep.pt')
+                    embs = models_manager.models("speaker_rep").reduce_data_dimension(post_data["mappings"], post_data["includeAllVoices"], post_data["onlyInstalled"], post_data["algorithm"])
                     req_response = embs
 
                 if self.path == "/checkReady":

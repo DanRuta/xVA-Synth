@@ -21,13 +21,7 @@ class ModelsManager(object):
                 return
             self.logger.info(f'ModelsManager: Initializing model: {model_key}')
 
-            if model_key=="resemblyzer":
-                from python.resemblyzer.model import ResemblyzerModel
-                if model_key not in self.models_bank.keys():
-                    self.models_bank[model_key] = {}
-                self.models_bank[model_key][instance_index] = ResemblyzerModel(self.logger, self.PROD, self.device, self)
-
-            elif model_key=="hifigan":
+            if model_key=="hifigan":
                 from python.hifigan.model import HiFi_GAN
                 if model_key not in self.models_bank.keys():
                     self.models_bank[model_key] = {}
