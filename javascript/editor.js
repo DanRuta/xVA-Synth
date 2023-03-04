@@ -24,6 +24,7 @@ class Editor {
         this.inputSequence = undefined
         this.currentVoice = undefined
         this.letterFocus = []
+        this.lastSelected = 0
         this.letterClasses = []
         this.resetDurs = []
         this.resetPitch = []
@@ -159,8 +160,7 @@ class Editor {
             if (isOnEGrabber) {
 
                 const eGrabber = isOnEGrabber
-
-                if (this.letterFocus.length <= 1 || (!event.ctrlKey && !this.letterFocus.includes(eGrabber.index))) {
+                if (this.letterFocus.length <= 1 || (!this.letterFocus.includes(eGrabber.index))) {
                     this.setLetterFocus(this.energyGrabbers.indexOf(eGrabber), event.ctrlKey, event.shiftKey, event.altKey)
                 }
                 this.multiLetterEnergyDelta = eGrabber.topLeftY
@@ -178,8 +178,7 @@ class Editor {
             if (isOnGrabber) {
 
                 const slider = isOnGrabber
-
-                if (this.letterFocus.length <= 1 || (!event.ctrlKey && !this.letterFocus.includes(slider.index))) {
+                if (this.letterFocus.length <= 1 || (!this.letterFocus.includes(slider.index))) {
                     this.setLetterFocus(this.grabbers.indexOf(slider), event.ctrlKey, event.shiftKey, event.altKey)
                 }
                 this.multiLetterPitchDelta = slider.topLeftY
@@ -439,20 +438,51 @@ class Editor {
     }
 
     setLetterFocus (l, ctrlKey, shiftKey, altKey) {
-        // On alt key modifier, make a selection on the whole whole word
-        if (altKey) {
-            this.letterFocus.push(l)
-            let l2 = l
-            // Looking backwards
-            while (l2>=0) {
-                let prevLetter = this.letters[l2]
-                if (prevLetter!="_") {
-                    this.letterFocus.push(l2)
-                } else {
-                    break
+        
+        // NONE = Clear selection, add l to selection
+        // Ctrl = Add l to existing selection
+        // Shift = Add all letters from the last selected letter up to and including l to existing selection
+        // Ctrl + Shift = (See Shift)
+        // Alt = Clear selection and select word surrounding l (space delimited)
+        // Ctrl + Alt = Add word surrounding l to existing selection
+        // Shift + Alt = Same as shift, then afterwards add word (space delimited) around l to selection
+        // Ctrl + Shift + Alt = (See Shift + Alt)
+
+        // If nothing is selected and we hold shift, we assume we start from the first letter: at position 0
+        
+        // If we don't press shift or ctrl, we can clear our current selection.
+        if (!(ctrlKey || shiftKey) && this.letterFocus.length){
+                this.letterFocus.forEach(li => {
+                    this.letterClasses[li].colour = "black"
+                })
+                this.letterFocus = []
+                this.lastSelected = 0
+        }
+        if (shiftKey){
+            if (l>this.lastSelected) {
+                for (let i=this.lastSelected; i<=l; i++) {
+                    this.letterFocus.push(i)
                 }
-                l2--
+            } else {
+                for (let i=l; i<=this.lastSelected; i++) {
+                    this.letterFocus.push(i)
+                }
             }
+        }
+        this.letterFocus.push(l) // Push l
+        this.lastSelected = l
+        if (altKey){
+            let l2 = l
+                // Looking backwards
+                while (l2>=0) {
+                    let prevLetter = this.letters[l2]
+                    if (prevLetter!="_") {
+                        this.letterFocus.push(l2)
+                    } else {
+                        break
+                    }
+                    l2--
+                }
             l2 = l
             // Looking forward
             while (l2<this.letters.length) {
@@ -463,32 +493,6 @@ class Editor {
                     break
                 }
                 l2++
-            }
-
-        } else {
-
-            if (shiftKey && this.letterFocus.length) {
-                const lastSelected = this.letterFocus[this.letterFocus.length-1]
-
-                if (l>lastSelected) {
-                    for (let i=lastSelected; i<=l; i++) {
-                        this.letterFocus.push(i)
-                    }
-                } else {
-                    for (let i=l; i<=this.letterFocus[0]; i++) {
-                        this.letterFocus.push(i)
-                    }
-                }
-            } else {
-                if (this.letterFocus.length && !ctrlKey) {
-                    this.letterFocus.forEach(li => {
-                        this.letterClasses[li].colour = "black"
-                    })
-
-
-                    this.letterFocus = []
-                }
-                this.letterFocus.push(l)
             }
         }
 
