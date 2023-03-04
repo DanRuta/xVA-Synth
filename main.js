@@ -80,6 +80,17 @@ ipcMain.on("updateDiscord", (event, arg) => {
         instance: true,
     })
 })
+ipcMain.on("show-context-menu-editor", (event) => {
+    const template = [
+        {
+            label: 'Copy ARPAbet [v3]',
+            click: () => { event.sender.send('context-menu-command', 'context-copy-editor') }
+        },
+    ]
+    const menu = Menu.buildFromTemplate(template)
+    menu.popup(BrowserWindow.fromWebContents(event.sender))
+})
+
 ipcMain.on("show-context-menu", (event) => {
     const template = [
         {

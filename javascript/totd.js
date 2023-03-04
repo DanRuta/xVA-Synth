@@ -31,7 +31,8 @@ const tips = {
     "27": window.i18n.TOTD_27,
     "28": window.i18n.TOTD_28,
     "29": window.i18n.TOTD_29,
-    "30": window.i18n.TOTD_30
+    "30": window.i18n.TOTD_30,
+    "31": window.i18n.TOTD_31,
 }
 
 window.totd_state = {

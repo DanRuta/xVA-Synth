@@ -373,6 +373,7 @@ window.i18n.setEnglish = () => {
     window.i18n.TOTD_28 = "With v3 models, you can change the default speaking style of your voice by creating an embedding for it. You do so by drag+dropping an example audio file (usually from the same original voice) into the Management menu."
     window.i18n.TOTD_29 = "The v3 models don't pre-generate pitch or energy values. Instead, the values in the editor are multipliers rather than absolute values. So initially, tney are set to 1, and you can CHANGE what they are rather than setting values like for v1 and v2 models."
     window.i18n.TOTD_30 = "To get the absolute highest quality from an audio file, you should enable the 'Use SR' option, to run super-resolution from the default 22050Hz into 48000Hz. It's best to use the GPU mode for this, else it can be quite slow. You also need to make sure that you didn't set the ffmpeg Hz post-processing value to something low like 22050, else you won't hear the benefits."
+    window.i18n.TOTD_31 = "With v3 models, you can right click the sliders editor to open the context menu, where you can select to copy the final symbol sequence to clipboard."
 
     window.i18n.TOTD_NO_UNSEEN = "There are no unseen tips left to show. Untick the 'Only show unseen tips' setting to show all tips."
 

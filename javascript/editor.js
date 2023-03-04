@@ -1191,4 +1191,38 @@ Object.keys(window.supportedLanguages).sort((a,b)=>window.supportedLanguages[a]<
 })
 base_lang_select.value = "en"
 
+
+
+// For copying the generated ARPAbet sequence to the clipboard
+editorContainer.addEventListener("contextmenu", event => {
+    event.preventDefault()
+    ipcRenderer.send('show-context-menu-editor')
+})
+ipcRenderer.on('context-menu-command', (e, command) => {
+
+    if (command=="context-copy-editor") {
+        if (window.sequenceEditor && window.sequenceEditor.sequence && window.sequenceEditor.sequence.length && window.currentModel && window.currentModel.modelType=="xVAPitch") {
+
+            let seqARPAbet = window.sequenceEditor.sequence
+            if (seqARPAbet[0]=="_") {
+                seqARPAbet = seqARPAbet.slice(1, seqARPAbet.length)
+            }
+            if (seqARPAbet[seqARPAbet.length-1]=="_") {
+                seqARPAbet = seqARPAbet.slice(0, seqARPAbet.length-1)
+            }
+
+            seqARPAbet = seqARPAbet.filter(val => val!="<PAD>")
+            seqARPAbet = seqARPAbet.map(v => {
+                if (v=="_") {
+                    return "} {"
+                }
+                return v
+            })
+
+            clipboard.writeText("{"+seqARPAbet.join(" ")+"}")
+        }
+    }
+})
+
+
 exports.Editor = Editor
