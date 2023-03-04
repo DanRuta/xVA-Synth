@@ -308,7 +308,16 @@ class xVAPitch(object):
             self.lang_tp[base_lang] = get_text_preprocessor(base_lang, self.base_dir, logger=self.logger)
 
         sampling_rate = 22050
-        sequence, cleaned_text = self.lang_tp[base_lang].text_to_sequence(text)
+        try:
+            sequence, cleaned_text = self.lang_tp[base_lang].text_to_sequence(text)
+        except ValueError as e:
+            self.logger.info("====")
+            self.logger.info(str(e))
+            self.logger.info("====--")
+            if "not in list" in str(e):
+                symbol_not_in_list = str(e).split("is not in list")[0].split("ValueError:")[-1].replace("'", "").strip()
+                return f'ERR: ARPABET_NOT_IN_LIST: {symbol_not_in_list}'
+
 
         text = torch.LongTensor(sequence)
         text = pad_sequence([text], batch_first=True).to(self.models_manager.device)

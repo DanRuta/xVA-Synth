@@ -250,6 +250,7 @@ window.i18n.setEnglish = () => {
     window.i18n.ERR_LOADING_MODELS_FOR_GAME = "ERROR loading models for game"
     window.i18n.ERR_LOADING_MODELS_FOR_GAME_WITH_FILENAME = "ERROR loading models for game _1 with filename:"
     window.i18n.ERR_XVASPEECH_MODEL_VERSION = `This xVASpeech model needs minimum app version _1. Your app version:`
+    window.i18n.ERR_ARPABET_NOT_EXIST = `The following ARPAbet symbol does not exist: _1`
 
     window.i18n.CHANGING_MODELS = "Changing models..."
     window.i18n.CHANGING_DEVICE = "Changing device..."

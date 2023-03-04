@@ -947,7 +947,12 @@ generateVoiceButton.addEventListener("click", () => {
 
             if (res=="ENOENT" || res.startsWith("ERR:")) {
                 if (res.startsWith("ERR:")) {
-                    window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${res.replace("ERR:","").replaceAll(/\n/g, "<br>")}`)
+                    if (res.includes("ARPABET_NOT_IN_LIST")) {
+                        const symbolNotInList = res.split(":").reverse()[0]
+                        window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${window.i18n.ERR_ARPABET_NOT_EXIST.replace("_1", symbolNotInList)}`)
+                    } else {
+                        window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${res.replace("ERR:","").replaceAll(/\n/g, "<br>")}`)
+                    }
                 } else {
                     window.appLogger.log(res)
                     window.errorModal(`${window.i18n.BATCH_MODEL_NOT_FOUND}.${vocoder_select.value.includes("waveglow")?" "+window.i18n.BATCH_DOWNLOAD_WAVEGLOW:""}`)
