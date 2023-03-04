@@ -779,368 +779,373 @@ window.makeSample = (src, newSample) => {
 }
 
 
-generateVoiceButton.addEventListener("click", () => {
+window.loadModel = () => {
+    if (window.batch_state.state) {
+        window.errorModal(window.i18n.BATCH_ERR_IN_PROGRESS)
+        return
+    }
+
+    const body = JSON.parse(generateVoiceButton.dataset.modelQuery)
+
+    const appVersionOk = window.checkVersionRequirements(body.version, appVersion)
+    if (!appVersionOk) {
+        window.errorModal(`${window.i18n.MODEL_REQUIRES_VERSION} v${body.version}<br><br>${window.i18n.THIS_APP_VERSION}: ${window.appVersion}`)
+        return
+    }
+
+
+    window.appLogger.log(`${window.i18n.LOADING_VOICE}: ${JSON.parse(generateVoiceButton.dataset.modelQuery).model}`)
+    window.batch_state.lastModel = JSON.parse(generateVoiceButton.dataset.modelQuery).model.split("/").reverse()[0]
+
+    body["pluginsContext"] = JSON.stringify(window.pluginsContext)
+
+    spinnerModal(`${window.i18n.LOADING_VOICE}`)
+    doFetch(`http://localhost:8008/loadModel`, {
+        method: "Post",
+        body: JSON.stringify(body)
+    }).then(r=>r.text()).then(res => {
+
+        window.currentModel.loaded = true
+        generateVoiceButton.dataset.modelQuery = null
+        generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
+        generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
+
+        // Set the editor pitch/energy dropdowns to pitch, and freeze them, if energy is not supported by the model
+        if (window.currentModel.modelType.toLowerCase()=="xvapitch") {
+            vocoder_options_container.style.display = "none"
+            base_lang_select.disabled = false
+            style_emb_select.disabled = false
+            window.loadStyleEmbsForVoice(window.currentModel)
+            mic_SVG.children[0].style.fill = "white"
+            base_lang_select.value = window.currentModel.lang
+        } else {
+            vocoder_options_container.style.display = "inline-block"
+            base_lang_select.disabled = true
+            style_emb_select.disabled = true
+            mic_SVG.children[0].style.fill = "grey"
+        }
+        if (window.currentModel.modelType.toLowerCase()=="fastpitch") {
+            seq_edit_view_select.value = "pitch"
+            seq_edit_edit_select.value = "pitch"
+            seq_edit_view_select.disabled = true
+            seq_edit_edit_select.disabled = true
+        } else {
+            seq_edit_view_select.value = "pitch_energy"
+            seq_edit_view_select.disabled = false
+            seq_edit_edit_select.disabled = false
+        }
+
+        if (window.userSettings.defaultToHiFi && window.currentModel.hifi) {
+            vocoder_select.value = Array.from(vocoder_select.children).find(opt => opt.innerHTML=="Bespoke HiFi GAN").value
+            window.changeVocoder(vocoder_select.value).then(() => dialogueInput.focus())
+        } else if (window.userSettings.vocoder.includes(".hg.pt")) {
+            window.changeVocoder("qnd").then(() => dialogueInput.focus())
+        } else {
+            closeModal().then(() => dialogueInput.focus())
+        }
+    }).catch(e => {
+        console.log(e)
+        if (e.code =="ENOENT") {
+            closeModal(null, modalContainer).then(() => {
+                window.errorModal(window.i18n.ERR_SERVER)
+            })
+        }
+    })
+}
+
+window.syntehsizeSample = () => {
 
     const game = window.currentGame.gameId
 
-    try {fs.mkdirSync(window.userSettings[`outpath_${game}`])} catch (e) {/*Do nothing*/}
-    try {fs.mkdirSync(`${window.userSettings[`outpath_${game}`]}/${voiceId}`)} catch (e) {/*Do nothing*/}
+    if (window.isGenerating) {
+        return
+    }
+    if (!window.speech2speechState.s2s_running) {
+        clearOldTempFiles()
+    }
 
+    dialogueInput.value = " "+dialogueInput.value.trim()+" "
+    let sequence = dialogueInput.value.replace("…", "...").replace("’", "'")
+    if (sequence.length==0) {
+        return
+    }
+    window.isGenerating = true
 
-    if (generateVoiceButton.dataset.modelQuery && generateVoiceButton.dataset.modelQuery!="null") {
+    window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["generate-voice"]["pre"], event="pre generate-voice")
 
-        if (window.batch_state.state) {
-            window.errorModal(window.i18n.BATCH_ERR_IN_PROGRESS)
-            return
+    if (window.wavesurfer) {
+        window.wavesurfer.stop()
+        wavesurferContainer.style.opacity = 0
+    }
+    toggleSpinnerButtons()
+
+    const voiceType = title.dataset.modelId
+    const outputFileName = dialogueInput.value.slice(0, 260).replace(/\n/g, " ").replace(/[\/\\:\*?<>"|]*/g, "").replace(/^[\.\s]+/, "")
+
+    try {fs.unlinkSync(localStorage.getItem("tempFileLocation"))} catch (e) {/*Do nothing*/}
+
+    // For some reason, the samplePlay audio element does not update the source when the file name is the same
+    const tempFileNum = `${Math.random().toString().split(".")[1]}`
+    let tempFileLocation = `${path}/output/temp-${tempFileNum}.wav`
+    let pitch = []
+    let duration = []
+    let energy = []
+    let isFreshRegen = true
+    let old_sequence = undefined
+
+    if (editorContainer.innerHTML && editorContainer.innerHTML.length && generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice) {
+        if (window.sequenceEditor.audioInput || window.sequenceEditor.sequence && sequence!=window.sequenceEditor.inputSequence) {
+            old_sequence = window.sequenceEditor.inputSequence
         }
+    }
+    // Don't use the old_sequence if running speech-to-speech
+    if (window.speech2speechState.s2s_running) {
+        old_sequence = undefined
+        window.speech2speechState.s2s_running = false
+    }
 
-        const body = JSON.parse(generateVoiceButton.dataset.modelQuery)
+    // Check if editing an existing line (otherwise it's a fresh new line)
+    if (!window.arpabetMenuState.hasChangedARPAbet && !window.styleEmbsMenuState.hasChangedEmb &&
+        (speech2speechState.s2s_autogenerate || (editorContainer.innerHTML && editorContainer.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice)))) {
 
-        const appVersionOk = window.checkVersionRequirements(body.version, appVersion)
-        if (!appVersionOk) {
-            window.errorModal(`${window.i18n.MODEL_REQUIRES_VERSION} v${body.version}<br><br>${window.i18n.THIS_APP_VERSION}: ${window.appVersion}`)
-            return
-        }
+        speech2speechState.s2s_autogenerate = false
+        pitch = window.sequenceEditor.pitchNew.map(v=> v==undefined?0:v)
+        duration = window.sequenceEditor.dursNew.map(v => v*pace_slid.value).map(v=> v==undefined?0:v)
+        energy = window.sequenceEditor.energyNew ? window.sequenceEditor.energyNew.map(v => v==undefined?0:v).filter(v => !isNaN(v)) : []
+        isFreshRegen = false
+    }
+    window.arpabetMenuState.hasChangedARPAbet = false
+    window.styleEmbsMenuState.hasChangedEmb = false
+    window.sequenceEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
 
+    const speaker_i = window.currentModel.games[0].emb_i
+    const pace = (window.userSettings.keepPaceOnNew && isFreshRegen)?pace_slid.value:1
 
-        window.appLogger.log(`${window.i18n.LOADING_VOICE}: ${JSON.parse(generateVoiceButton.dataset.modelQuery).model}`)
-        window.batch_state.lastModel = JSON.parse(generateVoiceButton.dataset.modelQuery).model.split("/").reverse()[0]
+    window.appLogger.log(`${window.i18n.SYNTHESIZING}: ${sequence}`)
 
-        body["pluginsContext"] = JSON.stringify(window.pluginsContext)
-
-        spinnerModal(`${window.i18n.LOADING_VOICE}`)
-        doFetch(`http://localhost:8008/loadModel`, {
-            method: "Post",
-            body: JSON.stringify(body)
-        }).then(r=>r.text()).then(res => {
-
-            window.currentModel.loaded = true
-            generateVoiceButton.dataset.modelQuery = null
-            generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
-            generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
-
-            // Set the editor pitch/energy dropdowns to pitch, and freeze them, if energy is not supported by the model
-            if (window.currentModel.modelType.toLowerCase()=="xvapitch") {
-                vocoder_options_container.style.display = "none"
-                base_lang_select.disabled = false
-                style_emb_select.disabled = false
-                window.loadStyleEmbsForVoice(window.currentModel)
-                mic_SVG.children[0].style.fill = "white"
-                base_lang_select.value = window.currentModel.lang
-            } else {
-                vocoder_options_container.style.display = "inline-block"
-                base_lang_select.disabled = true
-                style_emb_select.disabled = true
-                mic_SVG.children[0].style.fill = "grey"
-            }
-            if (window.currentModel.modelType.toLowerCase()=="fastpitch") {
-                seq_edit_view_select.value = "pitch"
-                seq_edit_edit_select.value = "pitch"
-                seq_edit_view_select.disabled = true
-                seq_edit_edit_select.disabled = true
-            } else {
-                seq_edit_view_select.value = "pitch_energy"
-                seq_edit_view_select.disabled = false
-                seq_edit_edit_select.disabled = false
-            }
-
-            if (window.userSettings.defaultToHiFi && window.currentModel.hifi) {
-                vocoder_select.value = Array.from(vocoder_select.children).find(opt => opt.innerHTML=="Bespoke HiFi GAN").value
-                window.changeVocoder(vocoder_select.value).then(() => dialogueInput.focus())
-            } else if (window.userSettings.vocoder.includes(".hg.pt")) {
-                window.changeVocoder("qnd").then(() => dialogueInput.focus())
-            } else {
-                closeModal().then(() => dialogueInput.focus())
-            }
-        }).catch(e => {
-            console.log(e)
-            if (e.code =="ENOENT") {
-                closeModal(null, modalContainer).then(() => {
-                    window.errorModal(window.i18n.ERR_SERVER)
-                })
-            }
+    doFetch(`http://localhost:8008/synthesize`, {
+        method: "Post",
+        body: JSON.stringify({
+            sequence, pitch, duration, energy, speaker_i, pace,
+            base_lang: base_lang_select.value,
+            base_emb: style_emb_select.value||"",
+            modelType: window.currentModel.modelType,
+            old_sequence, // For partial re-generation
+            device: window.userSettings.installation=="cpu"?"cpu":(window.userSettings.useGPU?"cuda:0":"cpu"),
+            useSR: useSRCkbx.checked,
+            outfile: tempFileLocation,
+            pluginsContext: JSON.stringify(window.pluginsContext),
+            vocoder: window.currentModel.modelType=="xVAPitch" ? "n/a" : window.userSettings.vocoder,
+            waveglowPath: vocoder_select.value=="256_waveglow" ? window.userSettings.waveglow_path : window.userSettings.bigwaveglow_path
         })
-    } else {
+    }).then(r=>r.text()).then(res => {
 
-        if (window.isGenerating) {
-            return
-        }
-        if (!window.speech2speechState.s2s_running) {
-            clearOldTempFiles()
-        }
-
-        dialogueInput.value = " "+dialogueInput.value.trim()+" "
-        let sequence = dialogueInput.value.replace("…", "...").replace("’", "'")
-        if (sequence.length==0) {
-            return
-        }
-        window.isGenerating = true
-
-        window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["generate-voice"]["pre"], event="pre generate-voice")
-
-        if (window.wavesurfer) {
-            window.wavesurfer.stop()
-            wavesurferContainer.style.opacity = 0
-        }
-        toggleSpinnerButtons()
-
-        const voiceType = title.dataset.modelId
-        const outputFileName = dialogueInput.value.slice(0, 260).replace(/\n/g, " ").replace(/[\/\\:\*?<>"|]*/g, "").replace(/^[\.\s]+/, "")
-
-        try {fs.unlinkSync(localStorage.getItem("tempFileLocation"))} catch (e) {/*Do nothing*/}
-
-        // For some reason, the samplePlay audio element does not update the source when the file name is the same
-        const tempFileNum = `${Math.random().toString().split(".")[1]}`
-        let tempFileLocation = `${path}/output/temp-${tempFileNum}.wav`
-        let pitch = []
-        let duration = []
-        let energy = []
-        let isFreshRegen = true
-        let old_sequence = undefined
-
-        if (editorContainer.innerHTML && editorContainer.innerHTML.length && generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice) {
-            if (window.sequenceEditor.audioInput || window.sequenceEditor.sequence && sequence!=window.sequenceEditor.inputSequence) {
-                old_sequence = window.sequenceEditor.inputSequence
-            }
-        }
-        // Don't use the old_sequence if running speech-to-speech
-        if (window.speech2speechState.s2s_running) {
-            old_sequence = undefined
-            window.speech2speechState.s2s_running = false
-        }
-
-        // Check if editing an existing line (otherwise it's a fresh new line)
-        if (!window.arpabetMenuState.hasChangedARPAbet && !window.styleEmbsMenuState.hasChangedEmb &&
-            (speech2speechState.s2s_autogenerate || (editorContainer.innerHTML && editorContainer.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice)))) {
-
-            speech2speechState.s2s_autogenerate = false
-            pitch = window.sequenceEditor.pitchNew.map(v=> v==undefined?0:v)
-            duration = window.sequenceEditor.dursNew.map(v => v*pace_slid.value).map(v=> v==undefined?0:v)
-            energy = window.sequenceEditor.energyNew ? window.sequenceEditor.energyNew.map(v => v==undefined?0:v).filter(v => !isNaN(v)) : []
-            isFreshRegen = false
-        }
-        window.arpabetMenuState.hasChangedARPAbet = false
-        window.styleEmbsMenuState.hasChangedEmb = false
-        window.sequenceEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
-
-        const speaker_i = window.currentModel.games[0].emb_i
-        const pace = (window.userSettings.keepPaceOnNew && isFreshRegen)?pace_slid.value:1
-
-        window.appLogger.log(`${window.i18n.SYNTHESIZING}: ${sequence}`)
-
-        doFetch(`http://localhost:8008/synthesize`, {
-            method: "Post",
-            body: JSON.stringify({
-                sequence, pitch, duration, energy, speaker_i, pace,
-                base_lang: base_lang_select.value,
-                base_emb: style_emb_select.value||"",
-                modelType: window.currentModel.modelType,
-                old_sequence, // For partial re-generation
-                device: window.userSettings.installation=="cpu"?"cpu":(window.userSettings.useGPU?"cuda:0":"cpu"),
-                useSR: useSRCkbx.checked,
-                outfile: tempFileLocation,
-                pluginsContext: JSON.stringify(window.pluginsContext),
-                vocoder: window.currentModel.modelType=="xVAPitch" ? "n/a" : window.userSettings.vocoder,
-                waveglowPath: vocoder_select.value=="256_waveglow" ? window.userSettings.waveglow_path : window.userSettings.bigwaveglow_path
-            })
-        }).then(r=>r.text()).then(res => {
-
-            if (res=="ENOENT" || res.startsWith("ERR:")) {
-                if (res.startsWith("ERR:")) {
-                    if (res.includes("ARPABET_NOT_IN_LIST")) {
-                        const symbolNotInList = res.split(":").reverse()[0]
-                        window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${window.i18n.ERR_ARPABET_NOT_EXIST.replace("_1", symbolNotInList)}`)
-                    } else {
-                        window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${res.replace("ERR:","").replaceAll(/\n/g, "<br>")}`)
-                    }
+        if (res=="ENOENT" || res.startsWith("ERR:")) {
+            if (res.startsWith("ERR:")) {
+                if (res.includes("ARPABET_NOT_IN_LIST")) {
+                    const symbolNotInList = res.split(":").reverse()[0]
+                    window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${window.i18n.ERR_ARPABET_NOT_EXIST.replace("_1", symbolNotInList)}`)
                 } else {
-                    window.appLogger.log(res)
-                    window.errorModal(`${window.i18n.BATCH_MODEL_NOT_FOUND}.${vocoder_select.value.includes("waveglow")?" "+window.i18n.BATCH_DOWNLOAD_WAVEGLOW:""}`)
+                    window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${res.replace("ERR:","").replaceAll(/\n/g, "<br>")}`)
                 }
-                toggleSpinnerButtons()
-                return
+            } else {
+                window.appLogger.log(res)
+                window.errorModal(`${window.i18n.BATCH_MODEL_NOT_FOUND}.${vocoder_select.value.includes("waveglow")?" "+window.i18n.BATCH_DOWNLOAD_WAVEGLOW:""}`)
             }
+            toggleSpinnerButtons()
+            return
+        }
 
-            dialogueInput.focus()
+        dialogueInput.focus()
 
-            if (window.userSettings.clear_text_after_synth) {
-                dialogueInput.value = ""
-            }
+        if (window.userSettings.clear_text_after_synth) {
+            dialogueInput.value = ""
+        }
 
-            window.isGenerating = false
-            res = res.split("\n")
-            let pitchData = res[0]
-            let durationsData = res[1]
-            let energyData = res[2]
-            let cleanedSequence = res[3].split("|").map(c=>c.replaceAll("{", "").replaceAll("}", "").replace(/\s/g, "_"))
-            const start_index = res[4]
-            const end_index = res[5]
-            pitchData = pitchData.split(",").map(v => parseFloat(v))
+        window.isGenerating = false
+        res = res.split("\n")
+        let pitchData = res[0]
+        let durationsData = res[1]
+        let energyData = res[2]
+        let cleanedSequence = res[3].split("|").map(c=>c.replaceAll("{", "").replaceAll("}", "").replace(/\s/g, "_"))
+        const start_index = res[4]
+        const end_index = res[5]
+        pitchData = pitchData.split(",").map(v => parseFloat(v))
+
+        // For use in adjusting editor range
+        const maxPitchVal = pitchData.reduce((p,c)=>Math.max(p, Math.abs(c)), 0)
+        if (maxPitchVal>window.sequenceEditor.default_pitchSliderRange) {
+            window.sequenceEditor.pitchSliderRange = maxPitchVal
+        } else {
+            window.sequenceEditor.pitchSliderRange = window.sequenceEditor.default_pitchSliderRange
+        }
+
+        if (energyData.length) {
+            energyData = energyData.split(",").map(v => parseFloat(v)).filter(v => !isNaN(v))
 
             // For use in adjusting editor range
-            const maxPitchVal = pitchData.reduce((p,c)=>Math.max(p, Math.abs(c)), 0)
-            if (maxPitchVal>window.sequenceEditor.default_pitchSliderRange) {
-                window.sequenceEditor.pitchSliderRange = maxPitchVal
+            const maxEnergyVal = energyData.reduce((p,c)=>Math.max(p, c), 0)
+            const minEnergyVal = energyData.reduce((p,c)=>Math.min(p, c), 100)
+
+            if (minEnergyVal<window.sequenceEditor.default_MIN_ENERGY) {
+                window.sequenceEditor.MIN_ENERGY = minEnergyVal
             } else {
-                window.sequenceEditor.pitchSliderRange = window.sequenceEditor.default_pitchSliderRange
+                window.sequenceEditor.MIN_ENERGY = window.sequenceEditor.default_MIN_ENERGY
+            }
+            if (maxEnergyVal>window.sequenceEditor.default_MAX_ENERGY) {
+                window.sequenceEditor.MAX_ENERGY = maxEnergyVal
+            } else {
+                window.sequenceEditor.MAX_ENERGY = window.sequenceEditor.default_MAX_ENERGY
             }
 
-            if (energyData.length) {
-                energyData = energyData.split(",").map(v => parseFloat(v)).filter(v => !isNaN(v))
+        } else {
+            energyData = []
+        }
+        durationsData = durationsData.split(",").map(v => isFreshRegen ? parseFloat(v) : parseFloat(v)/pace_slid.value)
 
-                // For use in adjusting editor range
-                const maxEnergyVal = energyData.reduce((p,c)=>Math.max(p, c), 0)
-                const minEnergyVal = energyData.reduce((p,c)=>Math.min(p, c), 100)
+        const doTheRest = () => {
 
-                if (minEnergyVal<window.sequenceEditor.default_MIN_ENERGY) {
-                    window.sequenceEditor.MIN_ENERGY = minEnergyVal
-                } else {
-                    window.sequenceEditor.MIN_ENERGY = window.sequenceEditor.default_MIN_ENERGY
-                }
-                if (maxEnergyVal>window.sequenceEditor.default_MAX_ENERGY) {
-                    window.sequenceEditor.MAX_ENERGY = maxEnergyVal
-                } else {
-                    window.sequenceEditor.MAX_ENERGY = window.sequenceEditor.default_MAX_ENERGY
-                }
+            window.sequenceEditor.inputSequence = sequence
+            window.sequenceEditor.sequence = cleanedSequence
 
-            } else {
-                energyData = []
+            if (pitch.length==0 || isFreshRegen) {
+                window.sequenceEditor.resetPitch = pitchData
+                window.sequenceEditor.resetDurs = durationsData
+                window.sequenceEditor.resetEnergy = energyData
             }
-            durationsData = durationsData.split(",").map(v => isFreshRegen ? parseFloat(v) : parseFloat(v)/pace_slid.value)
 
-            const doTheRest = () => {
+            window.sequenceEditor.letters = cleanedSequence
+            window.sequenceEditor.pitchNew = pitchData.map(p=>p)
+            window.sequenceEditor.dursNew = durationsData.map(v=>v)
+            window.sequenceEditor.energyNew = energyData.map(v=>v)
+            window.sequenceEditor.init()
+            window.sequenceEditor.update(window.currentModel.modelType)
 
-                window.sequenceEditor.inputSequence = sequence
-                window.sequenceEditor.sequence = cleanedSequence
-
-                if (pitch.length==0 || isFreshRegen) {
-                    window.sequenceEditor.resetPitch = pitchData
-                    window.sequenceEditor.resetDurs = durationsData
-                    window.sequenceEditor.resetEnergy = energyData
-                }
-
-                window.sequenceEditor.letters = cleanedSequence
-                window.sequenceEditor.pitchNew = pitchData.map(p=>p)
-                window.sequenceEditor.dursNew = durationsData.map(v=>v)
-                window.sequenceEditor.energyNew = energyData.map(v=>v)
-                window.sequenceEditor.init()
-                window.sequenceEditor.update(window.currentModel.modelType)
-
-                window.sequenceEditor.sliderBoxes.forEach((box, i) => {box.setValueFromValue(window.sequenceEditor.dursNew[i])})
-                window.sequenceEditor.autoInferTimer = null
-                window.sequenceEditor.hasChanged = false
+            window.sequenceEditor.sliderBoxes.forEach((box, i) => {box.setValueFromValue(window.sequenceEditor.dursNew[i])})
+            window.sequenceEditor.autoInferTimer = null
+            window.sequenceEditor.hasChanged = false
 
 
-                toggleSpinnerButtons()
-                if (keepSampleButton.dataset.newFileLocation && keepSampleButton.dataset.newFileLocation.startsWith("BATCH_EDIT")) {
-                    console.log("_debug_")
+            toggleSpinnerButtons()
+            if (keepSampleButton.dataset.newFileLocation && keepSampleButton.dataset.newFileLocation.startsWith("BATCH_EDIT")) {
+                console.log("_debug_")
+            } else {
+                if (window.userSettings[`outpath_${game}`]) {
+                    keepSampleButton.dataset.newFileLocation = `${window.userSettings[`outpath_${game}`]}/${voiceType}/${outputFileName}.wav`
                 } else {
-                    if (window.userSettings[`outpath_${game}`]) {
-                        keepSampleButton.dataset.newFileLocation = `${window.userSettings[`outpath_${game}`]}/${voiceType}/${outputFileName}.wav`
-                    } else {
-                        keepSampleButton.dataset.newFileLocation = `${__dirname.replace(/\\/g,"/")}/output/${voiceType}/${outputFileName}.wav`
-                    }
+                    keepSampleButton.dataset.newFileLocation = `${__dirname.replace(/\\/g,"/")}/output/${voiceType}/${outputFileName}.wav`
                 }
-                keepSampleButton.disabled = false
-                window.tempFileLocation = tempFileLocation
+            }
+            keepSampleButton.disabled = false
+            window.tempFileLocation = tempFileLocation
 
 
-                // Wavesurfer
-                if (!window.wavesurfer) {
-                    window.initWaveSurfer(`${__dirname.replace("/javascript", "")}/output/${tempFileLocation.split("/").reverse()[0]}`)
-                } else {
-                    window.wavesurfer.load(`${__dirname.replace("/javascript", "")}/output/${tempFileLocation.split("/").reverse()[0]}`)
-                }
+            // Wavesurfer
+            if (!window.wavesurfer) {
+                window.initWaveSurfer(`${__dirname.replace("/javascript", "")}/output/${tempFileLocation.split("/").reverse()[0]}`)
+            } else {
+                window.wavesurfer.load(`${__dirname.replace("/javascript", "")}/output/${tempFileLocation.split("/").reverse()[0]}`)
+            }
 
-                window.wavesurfer.on("ready",  () => {
+            window.wavesurfer.on("ready",  () => {
 
-                    wavesurferContainer.style.opacity = 1
+                wavesurferContainer.style.opacity = 1
 
-                    if (window.userSettings.autoPlayGen) {
+                if (window.userSettings.autoPlayGen) {
 
-                        if (window.userSettings.playChangedAudio) {
-                            const playbackStartEnd = window.sequenceEditor.getChangedTimeStamps(start_index, end_index, window.wavesurfer.getDuration())
-                            if (playbackStartEnd) {
-                                wavesurfer.play(playbackStartEnd[0], playbackStartEnd[1])
-                            } else {
-                                wavesurfer.play()
-                            }
+                    if (window.userSettings.playChangedAudio) {
+                        const playbackStartEnd = window.sequenceEditor.getChangedTimeStamps(start_index, end_index, window.wavesurfer.getDuration())
+                        if (playbackStartEnd) {
+                            wavesurfer.play(playbackStartEnd[0], playbackStartEnd[1])
                         } else {
                             wavesurfer.play()
                         }
-                        window.sequenceEditor.adjustedLetters = new Set()
-                        samplePlayPause.innerHTML = window.i18n.PAUSE
-                    }
-                })
-
-                // Persistance across sessions
-                localStorage.setItem("tempFileLocation", tempFileLocation)
-            }
-
-
-            if (window.userSettings.audio.ffmpeg && setting_audio_ffmpeg_preview.checked) {
-                const options = {
-                    hz: window.userSettings.audio.hz,
-                    padStart: window.userSettings.audio.padStart,
-                    padEnd: window.userSettings.audio.padEnd,
-                    bit_depth: window.userSettings.audio.bitdepth,
-                    amplitude: window.userSettings.audio.amplitude,
-                    pitchMult: window.userSettings.audio.pitchMult,
-                    tempo: window.userSettings.audio.tempo,
-                    deessing: window.userSettings.audio.deessing,
-                    nr: window.userSettings.audio.nr,
-                    nf: window.userSettings.audio.nf,
-                    useNR: window.userSettings.audio.useNR,
-                    useSR: useSRCkbx.checked
-                }
-
-                const extraInfo = {
-                    game: window.currentGame.gameId,
-                    voiceId: window.currentModel.voiceId,
-                    voiceName: window.currentModel.voiceName,
-                    inputSequence: sequence,
-                    letters: cleanedSequence,
-                    pitch: pitchData.map(p=>p),
-                    energy: energyData.map(p=>p),
-                    durations: durationsData.map(v=>v)
-                }
-
-                doFetch(`http://localhost:8008/outputAudio`, {
-                    method: "Post",
-                    body: JSON.stringify({
-                        input_path: tempFileLocation,
-                        output_path: tempFileLocation.replace(".wav", `_ffmpeg.${window.userSettings.audio.format}`),
-                        pluginsContext: JSON.stringify(window.pluginsContext),
-                        extraInfo: JSON.stringify(extraInfo),
-                        isBatchMode: false,
-                        options: JSON.stringify(options)
-                    })
-                }).then(r=>r.text()).then(res => {
-                    if (res.length && res!="-") {
-                        console.log("res", res)
-                        window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${res}`).then(() => toggleSpinnerButtons())
                     } else {
-                        tempFileLocation = tempFileLocation.replace(".wav", `_ffmpeg.${window.userSettings.audio.format}`)
-                        doTheRest()
+                        wavesurfer.play()
                     }
-                }).catch(res => {
-                    window.appLogger.log(`outputAudio error: ${res}`)
-                    // closeModal().then(() => {
-                        window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${res}`)
-                    // })
-                })
-            } else {
-                doTheRest()
+                    window.sequenceEditor.adjustedLetters = new Set()
+                    samplePlayPause.innerHTML = window.i18n.PAUSE
+                }
+            })
+
+            // Persistance across sessions
+            localStorage.setItem("tempFileLocation", tempFileLocation)
+        }
+
+
+        if (window.userSettings.audio.ffmpeg && setting_audio_ffmpeg_preview.checked) {
+            const options = {
+                hz: window.userSettings.audio.hz,
+                padStart: window.userSettings.audio.padStart,
+                padEnd: window.userSettings.audio.padEnd,
+                bit_depth: window.userSettings.audio.bitdepth,
+                amplitude: window.userSettings.audio.amplitude,
+                pitchMult: window.userSettings.audio.pitchMult,
+                tempo: window.userSettings.audio.tempo,
+                deessing: window.userSettings.audio.deessing,
+                nr: window.userSettings.audio.nr,
+                nf: window.userSettings.audio.nf,
+                useNR: window.userSettings.audio.useNR,
+                useSR: useSRCkbx.checked
             }
 
+            const extraInfo = {
+                game: window.currentGame.gameId,
+                voiceId: window.currentModel.voiceId,
+                voiceName: window.currentModel.voiceName,
+                inputSequence: sequence,
+                letters: cleanedSequence,
+                pitch: pitchData.map(p=>p),
+                energy: energyData.map(p=>p),
+                durations: durationsData.map(v=>v)
+            }
 
-        }).catch(res => {
-            window.isGenerating = false
-            console.log(res)
-            window.appLogger.log(res)
-            window.errorModal(window.i18n.SOMETHING_WENT_WRONG)
-            toggleSpinnerButtons()
-        })
+            doFetch(`http://localhost:8008/outputAudio`, {
+                method: "Post",
+                body: JSON.stringify({
+                    input_path: tempFileLocation,
+                    output_path: tempFileLocation.replace(".wav", `_ffmpeg.${window.userSettings.audio.format}`),
+                    pluginsContext: JSON.stringify(window.pluginsContext),
+                    extraInfo: JSON.stringify(extraInfo),
+                    isBatchMode: false,
+                    options: JSON.stringify(options)
+                })
+            }).then(r=>r.text()).then(res => {
+                if (res.length && res!="-") {
+                    console.log("res", res)
+                    window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${res}`).then(() => toggleSpinnerButtons())
+                } else {
+                    tempFileLocation = tempFileLocation.replace(".wav", `_ffmpeg.${window.userSettings.audio.format}`)
+                    doTheRest()
+                }
+            }).catch(res => {
+                window.appLogger.log(`outputAudio error: ${res}`)
+                // closeModal().then(() => {
+                    window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${res}`)
+                // })
+            })
+        } else {
+            doTheRest()
+        }
+
+
+    }).catch(res => {
+        window.isGenerating = false
+        console.log(res)
+        window.appLogger.log(res)
+        window.errorModal(window.i18n.SOMETHING_WENT_WRONG)
+        toggleSpinnerButtons()
+    })
+}
+
+generateVoiceButton.addEventListener("click", () => {
+    try {fs.mkdirSync(window.userSettings[`outpath_${game}`])} catch (e) {/*Do nothing*/}
+    try {fs.mkdirSync(`${window.userSettings[`outpath_${game}`]}/${voiceId}`)} catch (e) {/*Do nothing*/}
+
+    if (generateVoiceButton.dataset.modelQuery && generateVoiceButton.dataset.modelQuery!="null") {
+        window.loadModel()
+    } else {
+        window.syntehsizeSample()
     }
 })
 
