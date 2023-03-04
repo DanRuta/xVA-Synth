@@ -64,6 +64,7 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_KEEPEDITORSTATE = "Keep editor state on voice change"
     window.i18n.SETTINGS_OUTPUTJSON = "Output .json (needed for editing)"
     window.i18n.SETTINGS_SEQNUMBERING = "Use sequential numbering for file names"
+    window.i18n.SETTINGS_SPACEPADDING = "Automatically pad text sequence with spaces (better quality, usually)"
     window.i18n.SETTINGS_BASE_SPEAKER = "Base app output device"
     window.i18n.SETTINGS_ALT_SPEAKER = "Alternate output device (ctrl+click play)"
     window.i18n.SETTINGS_EXTERNALEDIT = "External program for editing audio"
@@ -778,6 +779,7 @@ window.i18n.updateUI = () => {
     i18n_setting_keepeditorstate.innerHTML = window.i18n.SETTINGS_KEEPEDITORSTATE
     i18n_setting_outputjson.innerHTML = window.i18n.SETTINGS_OUTPUTJSON
     i18n_setting_seqnumbering.innerHTML = window.i18n.SETTINGS_SEQNUMBERING
+    i18n_setting_spacepadding.innerHTML = window.i18n.SETTINGS_SPACEPADDING
     i18n_setting_base_speaker.innerHTML = window.i18n.SETTINGS_BASE_SPEAKER
     i18n_setting_alt_speaker.innerHTML = window.i18n.SETTINGS_ALT_SPEAKER
     i18n_setting_external_edit.innerHTML = window.i18n.SETTINGS_EXTERNALEDIT

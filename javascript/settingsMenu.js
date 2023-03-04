@@ -177,6 +177,9 @@ if (!Object.keys(window.userSettings).includes("keepEditorOnVoiceChange")) { // 
 if (!Object.keys(window.userSettings).includes("filenameNumericalSeq")) { // For backwards compatibility
     window.userSettings.filenameNumericalSeq = false
 }
+if (!Object.keys(window.userSettings).includes("spacePadding")) { // For backwards compatibility
+    window.userSettings.spacePadding = true
+}
 if (!Object.keys(window.userSettings).includes("useErrorSound")) { // For backwards compatibility
     window.userSettings.useErrorSound = false
 }
@@ -238,6 +241,7 @@ const updateUIWithSettings = () => {
     setting_areload_voices.checked = window.userSettings.autoReloadVoices
     setting_output_json.checked = window.userSettings.outputJSON
     setting_output_num_seq.checked = window.userSettings.filenameNumericalSeq
+    setting_space_padding.checked = window.userSettings.spacePadding
     setting_keepEditorOnVoiceChange.checked = window.userSettings.keepEditorOnVoiceChange
     setting_use_error_sound.checked = window.userSettings.useErrorSound
     setting_error_sound_file.value = window.userSettings.errorSoundFile
@@ -518,6 +522,7 @@ initMenuSetting(setting_areload_voices, "autoReloadVoices", "checkbox")
 initMenuSetting(setting_output_json, "outputJSON", "checkbox")
 initMenuSetting(setting_keepEditorOnVoiceChange, "keepEditorOnVoiceChange", "checkbox")
 initMenuSetting(setting_output_num_seq, "filenameNumericalSeq", "checkbox")
+initMenuSetting(setting_space_padding, "spacePadding", "checkbox")
 initMenuSetting(setting_darkprompt, "darkPrompt", "checkbox", setPromptTheme)
 initMenuSetting(setting_show_discord_status, "showDiscordStatus", "checkbox", updateDiscord)
 initMenuSetting(setting_prompt_fontSize, "prompt_fontSize", "number", setPromptFontSize)
@@ -721,6 +726,7 @@ reset_settings_btn.addEventListener("click", () => {
             window.userSettings.outputJSON = true
             window.userSettings.keepEditorOnVoiceChange = false
             window.userSettings.filenameNumericalSeq = false
+            window.userSettings.spacePadding = true
             window.userSettings.useErrorSound = false
             window.userSettings.showTipOfTheDay = true
             window.userSettings.showUnseenTipOfTheDay = false

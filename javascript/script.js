@@ -864,8 +864,11 @@ window.syntehsizeSample = () => {
         clearOldTempFiles()
     }
 
-    dialogueInput.value = " "+dialogueInput.value.trim()+" "
     let sequence = dialogueInput.value.replace("…", "...").replace("’", "'")
+    if (window.userSettings.spacePadding) { // Pad start and end of the input sequence with spaces
+        sequence = " "+sequence.trim()+" "
+    }
+
     if (sequence.length==0) {
         return
     }
@@ -2018,6 +2021,6 @@ document.querySelectorAll('a[href^="http"]').forEach(a => a.addEventListener("cl
 
 // TEMP - pre-alpha builds
 setInterval(() => {
-    dragBar.innerHTML = "xVASynth PRE-ALPHA v3.0.0a3 PREVIEW"
+    dragBar.innerHTML = "xVASynth PRE-ALPHA v3.0.0a4 PREVIEW"
     dragBar.style.backgroundColor = "red"
 }, 1000)
