@@ -81,6 +81,12 @@ class ModelsManager(object):
                     self.models_bank[model_key] = {}
                 self.models_bank[model_key][instance_index] = Nuwave2Model(self.logger, self.PROD, self.device, self)
 
+            elif model_key=="deepfilternet2":
+                from python.deepfilternet2.model import DeepFilter2Model
+                if model_key not in self.models_bank.keys():
+                    self.models_bank[model_key] = {}
+                self.models_bank[model_key][instance_index] = DeepFilter2Model(self.logger, self.PROD, self.device, self)
+
             else:
                 raise(f'Model not recognized: {model_key}')
 

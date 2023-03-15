@@ -143,7 +143,8 @@ window.useWavFileForspeech2speech = (fileName) => {
         nr: window.userSettings.audio.nr,
         nf: window.userSettings.audio.nf,
         useNR: window.userSettings.audio.useNR,
-        useSR: useSRCkbx.checked
+        useSR: useSRCkbx.checked,
+        useCleanup: useCleanupCkbx.checked
     }
 
     doFetch(`http://localhost:8008/runSpeechToSpeech`, {

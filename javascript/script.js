@@ -936,6 +936,7 @@ window.syntehsizeSample = () => {
             old_sequence, // For partial re-generation
             device: window.userSettings.installation=="cpu"?"cpu":(window.userSettings.useGPU?"cuda:0":"cpu"),
             useSR: useSRCkbx.checked,
+            useCleanup: useCleanupCkbx.checked,
             outfile: tempFileLocation,
             pluginsContext: JSON.stringify(window.pluginsContext),
             vocoder: window.currentModel.modelType=="xVAPitch" ? "n/a" : window.userSettings.vocoder,
@@ -1089,7 +1090,8 @@ window.syntehsizeSample = () => {
                 nr: window.userSettings.audio.nr,
                 nf: window.userSettings.audio.nf,
                 useNR: window.userSettings.audio.useNR,
-                useSR: useSRCkbx.checked
+                useSR: useSRCkbx.checked,
+                useCleanup: useCleanupCkbx.checked,
             }
 
             const extraInfo = {
@@ -2021,6 +2023,6 @@ document.querySelectorAll('a[href^="http"]').forEach(a => a.addEventListener("cl
 
 // TEMP - pre-alpha builds
 setInterval(() => {
-    dragBar.innerHTML = "xVASynth PRE-ALPHA v3.0.0a4 PREVIEW"
+    dragBar.innerHTML = "xVASynth PRE-ALPHA v3.0.0a5 PREVIEW"
     dragBar.style.backgroundColor = "red"
 }, 1000)

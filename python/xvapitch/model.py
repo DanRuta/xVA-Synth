@@ -2,6 +2,7 @@ import os
 import re
 import json
 import codecs
+import ffmpeg
 import argparse
 
 import torch
@@ -126,7 +127,7 @@ class xVAPitch(object):
                         self.arpabet_dict[word] = json_data["data"][word]["arpabet"]
 
 
-    def run_speech_to_speech (self, audiopath, audio_out_path, style_emb, models_manager, plugin_manager, useSR=False):
+    def run_speech_to_speech (self, audiopath, audio_out_path, style_emb, models_manager, plugin_manager, useSR=False, useCleanup=False):
 
         if ".wav" in style_emb:
             style_emb = models_manager.models("speaker_rep").compute_embedding(style_emb).squeeze()
@@ -159,11 +160,19 @@ class xVAPitch(object):
         wav = wav.squeeze().cpu().detach().numpy()
 
         wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
-        scipy.io.wavfile.write(audio_out_path.replace(".wav", "_preSR.wav") if useSR else audio_out_path, 22050, wav_norm.astype(np.int16))
+        if useCleanup:
+            scipy.io.wavfile.write(audio_out_path.replace(".wav", "_preSR.wav") if useSR else audio_out_path.replace(".wav", "_preCleanup.wav"), 22050, wav_norm.astype(np.int16))
+        else:
+            scipy.io.wavfile.write(audio_out_path.replace(".wav", "_preSR.wav") if useSR else audio_out_path, 22050, wav_norm.astype(np.int16))
 
         if useSR:
             self.models_manager.init_model("nuwave2")
-            self.models_manager.models("nuwave2").sr_audio(audio_out_path.replace(".wav", "_preSR.wav"), audio_out_path)
+            self.models_manager.models("nuwave2").sr_audio(audio_out_path.replace(".wav", "_preSR.wav"), audio_out_path.replace(".wav", "_preCleanup.wav") if useCleanup else audio_out_path)
+
+        if useCleanup:
+            self.models_manager.init_model("deepfilternet2")
+            self.models_manager.models("deepfilternet2").cleanup_audio(audio_out_path.replace(".wav", "_preCleanup.wav"), audio_out_path)
+
         return
 
 
@@ -302,7 +311,7 @@ class xVAPitch(object):
 
         return ""
 
-    def infer(self, plugin_manager, text, out_path, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang="en", base_emb=None, useSR=False):
+    def infer(self, plugin_manager, text, out_path, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang="en", base_emb=None, useSR=False, useCleanup=False):
 
         if base_lang not in self.lang_tp.keys():
             self.lang_tp[base_lang] = get_text_preprocessor(base_lang, self.base_dir, logger=self.logger)
@@ -375,11 +384,30 @@ class xVAPitch(object):
                 wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
                 if wav_mult is not None:
                     wav_norm = wav_norm * wav_mult
-                scipy.io.wavfile.write(out_path.replace(".wav", "_preSR.wav") if useSR else out_path, sampling_rate, wav_norm.astype(np.int16))
+                if useCleanup:
+                    ffmpeg_path = f'{"./resources/app" if self.PROD else "."}/python/ffmpeg.exe'
+
+                    if useSR:
+                        scipy.io.wavfile.write(out_path.replace(".wav", "_preSR.wav"), 22050, wav_norm.astype(np.int16))
+                    else:
+                        scipy.io.wavfile.write(out_path.replace(".wav", "_preCleanupPreFFmpeg.wav"), 22050, wav_norm.astype(np.int16))
+                        stream = ffmpeg.input(out_path.replace(".wav", "_preCleanupPreFFmpeg.wav"))
+                        ffmpeg_options = {"ar": 48000}
+                        output_path = out_path.replace(".wav", "_preCleanup.wav")
+                        stream = ffmpeg.output(stream, output_path, **ffmpeg_options)
+                        out, err = (ffmpeg.run(stream, cmd=ffmpeg_path, capture_stdout=True, capture_stderr=True, overwrite_output=True))
+                        os.remove(out_path.replace(".wav", "_preCleanupPreFFmpeg.wav"))
+
+                else:
+                    scipy.io.wavfile.write(out_path.replace(".wav", "_preSR.wav") if useSR else out_path, 22050, wav_norm.astype(np.int16))
 
                 if useSR:
                     self.models_manager.init_model("nuwave2")
-                    self.models_manager.models("nuwave2").sr_audio(out_path.replace(".wav", "_preSR.wav"), out_path)
+                    self.models_manager.models("nuwave2").sr_audio(out_path.replace(".wav", "_preSR.wav"), out_path.replace(".wav", "_preCleanup.wav") if useCleanup else out_path)
+
+                if useCleanup:
+                    self.models_manager.init_model("deepfilternet2")
+                    self.models_manager.models("deepfilternet2").cleanup_audio(out_path.replace(".wav", "_preCleanup.wav"), out_path)
 
 
 

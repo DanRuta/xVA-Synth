@@ -259,13 +259,14 @@ if __name__ == '__main__':
                         duration = post_data["duration"] if "duration" in post_data else None
                         speaker_i = post_data["speaker_i"] if "speaker_i" in post_data else None
                         useSR = post_data["useSR"] if "useSR" in post_data else None
+                        useCleanup = post_data["useCleanup"] if "useCleanup" in post_data else None
                         vocoder = post_data["vocoder"]
                         globalAmplitudeModifier = float(post_data["globalAmplitudeModifier"]) if "globalAmplitudeModifier" in post_data else None
                         pitch_data = [pitch, duration, energy]
                         old_sequence = post_data["old_sequence"] if "old_sequence" in post_data else None
 
                         req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", ""), instance_index=instance_index).infer(plugin_manager, text, out_path, vocoder=vocoder, \
-                            speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence, globalAmplitudeModifier=globalAmplitudeModifier, base_lang=base_lang, base_emb=base_emb, useSR=useSR)
+                            speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence, globalAmplitudeModifier=globalAmplitudeModifier, base_lang=base_lang, base_emb=base_emb, useSR=useSR, useCleanup=useCleanup)
                         plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["post"], event="post synth-line", data=post_data)
 
 

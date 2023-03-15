@@ -48,7 +48,7 @@ def run_audio_post(PROD, logger, input, output, options=None):
 
 
         # Pitch
-        hz = 48000 if "useSR" in options.keys() and options["useSR"] else 22050
+        hz = 48000 if ("useSR" in options.keys() and options["useSR"] or "useCleanup" in options.keys() and options["useCleanup"]) else 22050
         ffmpeg_options["af"].append(f'asetrate={hz*(options["pitchMult"])},atempo=1/{options["pitchMult"]}')
         # Tempo
         ffmpeg_options["af"].append(f'atempo={options["tempo"]}')

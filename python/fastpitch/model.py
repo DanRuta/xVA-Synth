@@ -1,6 +1,7 @@
 import re
 import os
 import json
+import ffmpeg
 import argparse
 
 import torch
@@ -141,7 +142,7 @@ class FastPitch(object):
 
         return ""
 
-    def infer(self, plugin_manager, text, output, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang=None, base_emb=None, useSR=False):
+    def infer(self, plugin_manager, text, output, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang=None, base_emb=None, useSR=False, useCleanup=False):
 
         self.logger.info(f'Inferring: "{text}" ({len(text)})')
 
@@ -185,11 +186,31 @@ class FastPitch(object):
                 audio = audio * 32768.0
                 # audio = audio * 2.3026  # This brings it to the same volume, but makes it clip in places
                 audio = audio.cpu().numpy().astype('int16')
-                write(output.replace(".wav", "_preSR.wav") if useSR else output, sampling_rate, audio)
+
+                if useCleanup:
+                    ffmpeg_path = f'{"./resources/app" if self.PROD else "."}/python/ffmpeg.exe'
+
+                    if useSR:
+                        write(output.replace(".wav", "_preSR.wav"), sampling_rate, audio)
+                    else:
+                        write(output.replace(".wav", "_preCleanupPreFFmpeg.wav"), sampling_rate, audio)
+                        stream = ffmpeg.input(output.replace(".wav", "_preCleanupPreFFmpeg.wav"))
+                        ffmpeg_options = {"ar": 48000}
+                        output_path = output.replace(".wav", "_preCleanup.wav")
+                        stream = ffmpeg.output(stream, output_path, **ffmpeg_options)
+                        out, err = (ffmpeg.run(stream, cmd=ffmpeg_path, capture_stdout=True, capture_stderr=True, overwrite_output=True))
+                        os.remove(output.replace(".wav", "_preCleanupPreFFmpeg.wav"))
+                else:
+                    write(output.replace(".wav", "_preSR.wav") if useSR else output, sampling_rate, audio)
 
                 if useSR:
                     self.models_manager.init_model("nuwave2")
-                    self.models_manager.models("nuwave2").sr_audio(output.replace(".wav", "_preSR.wav"), output)
+                    self.models_manager.models("nuwave2").sr_audio(output.replace(".wav", "_preSR.wav"), output.replace(".wav", "_preCleanup.wav") if useCleanup else output)
+
+                if useCleanup:
+                    self.models_manager.init_model("deepfilternet2")
+                    self.models_manager.models("deepfilternet2").cleanup_audio(output.replace(".wav", "_preCleanup.wav"), output)
+
                 del audio
 
             del mel, mel_lens
