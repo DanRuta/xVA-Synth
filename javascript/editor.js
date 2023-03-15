@@ -438,7 +438,7 @@ class Editor {
     }
 
     setLetterFocus (l, ctrlKey, shiftKey, altKey) {
-        
+
         // NONE = Clear selection, add l to selection
         // Ctrl = Add l to existing selection
         // Shift = Add all letters from the last selected letter up to and including l to existing selection
@@ -449,7 +449,7 @@ class Editor {
         // Ctrl + Shift + Alt = (See Shift + Alt)
 
         // If nothing is selected and we hold shift, we assume we start from the first letter: at position 0
-        
+
         // If we don't press shift or ctrl, we can clear our current selection.
         if (!(ctrlKey || shiftKey) && this.letterFocus.length){
                 this.letterFocus.forEach(li => {
@@ -1024,7 +1024,13 @@ jitter_btn.addEventListener("click", () => {
             if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(pi)==-1) {
                 return p
             }
-            const newVal = p*(1+ (Math.random()*0.2+0.05) * ((Math.random()-0.5)>0 ? 1 : -1)  )
+            let newVal
+            if (p==0) {
+                newVal = 1*(1+ (Math.random()*0.4+0.05) * ((Math.random()-0.5)>0 ? 1 : -1)  )
+                newVal -= 1
+            } else {
+                newVal = p*(1+ (Math.random()*0.2+0.05) * ((Math.random()-0.5)>0 ? 1 : -1)  )
+            }
             return newVal>0 ? Math.min(window.sequenceEditor.pitchSliderRange, newVal) : Math.max(-window.sequenceEditor.pitchSliderRange, newVal)
         })
         window.sequenceEditor.grabbers.forEach((slider, l) => {
