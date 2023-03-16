@@ -272,7 +272,7 @@ const updateUIWithSettings = () => {
     setting_show_editor_ffmpegamplitude.checked = window.userSettings.showEditorFFMPEGAmplitude
     editor_amplitude_options.style.display = window.userSettings.showEditorFFMPEGAmplitude ? "flex" : "none"
 
-    setting_s2s_autogenerate.checked = window.userSettings.s2s_autogenerate
+    // setting_s2s_autogenerate.checked = window.userSettings.s2s_autogenerate
     // setting_s2s_prePitchShift.checked = window.userSettings.s2s_prePitchShift
     setting_s2s_removeNoise.checked = window.userSettings.s2s_removeNoise
     setting_s2s_noiseRemStrength.value = window.userSettings.s2s_noiseRemStrength
@@ -603,7 +603,7 @@ initMenuSetting(batch_batchSizeInput, "batch_batchSize", "text", undefined, pars
 initMenuSetting(setting_batch_delimiter, "batch_delimiter")
 initMenuSetting(setting_batch_paginationSize, "batch_paginationSize", "number", undefined, parseInt)
 
-initMenuSetting(setting_s2s_autogenerate, "s2s_autogenerate", "checkbox")
+// initMenuSetting(setting_s2s_autogenerate, "s2s_autogenerate", "checkbox")
 // initMenuSetting(setting_s2s_prePitchShift, "s2s_prePitchShift", "checkbox")
 initMenuSetting(setting_s2s_removeNoise, "s2s_removeNoise", "checkbox")
 initMenuSetting(setting_s2s_noiseRemStrength, "s2s_noiseRemStrength", "number", undefined, parseFloat)

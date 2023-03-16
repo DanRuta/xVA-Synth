@@ -807,7 +807,7 @@ window.i18n.updateUI = () => {
     i18n_setting_batch_multip.innerHTML = window.i18n.SETTINGS_BATCH_USEMULTIP
     i18n_setting_batch_multip_count.innerHTML = window.i18n.SETTINGS_BATCH_MULTIPCOUNT
     i18n_setting_microphone.innerHTML = window.i18n.SETTINGS_MICROPHONE
-    i18n_setting_autogeneratevoice.innerHTML = window.i18n.SETTINGS_AUTOGENERATEVOICE
+    // i18n_setting_autogeneratevoice.innerHTML = window.i18n.SETTINGS_AUTOGENERATEVOICE
     i18n_setting_s2s_bgnoise.innerHTML = window.i18n.SETTINGS_S2S_BGNOISE
     s2s_settingsRecNoiseBtn.innerHTML = window.i18n.SETTINGS_S2S_RECNOISE
     i18n_setting_s2s_bgnoise_strength.innerHTML = window.i18n.SETTINGS_S2S_BGNOISE_STRENGTH
