@@ -689,6 +689,8 @@ batch_clearBtn.addEventListener("click", () => {
     batch_outputFolderInput.style.display = "inline-block"
     batch_clearDirOpts.style.display = "flex"
     batch_skipExistingOpts.style.display = "flex"
+    batch_useSR.style.display = "flex"
+    batch_useCleanup.style.display = "flex"
     batch_outputNumericallyOpts.style.display = "flex"
     batch_progressItems.style.display = "none"
     batch_progressBar.style.display = "none"
@@ -735,6 +737,8 @@ window.startBatch = () => {
     batch_outputFolderInput.style.display = "none"
     batch_clearDirOpts.style.display = "none"
     batch_skipExistingOpts.style.display = "none"
+    batch_useSR.style.display = "none"
+    batch_useCleanup.style.display = "none"
     batch_outputNumericallyOpts.style.display = "none"
     batch_progressItems.style.display = "flex"
     batch_progressBar.style.display = "flex"
@@ -1169,6 +1173,8 @@ window.batchKickOffGeneration = () => {
             defaultOutFolder: window.userSettings.batchOutFolder,
             pluginsContext: JSON.stringify(window.pluginsContext),
             outputJSON: window.userSettings.batch_json,
+            useSR: batch_useSRCkbx.checked,
+            useCleanup: batch_useCleanupCkbx.checked,
             speaker_i, vocoder, linesBatch
         }
         doFetch(`http://localhost:8008/synthesize_batch`, {
@@ -1209,7 +1215,13 @@ window.batchKickOffGeneration = () => {
                     bit_depth: window.userSettings.audio.bitdepth,
                     amplitude: window.userSettings.audio.amplitude,
                     pitchMult: window.userSettings.audio.pitchMult,
-                    tempo: window.userSettings.audio.tempo
+                    tempo: window.userSettings.audio.tempo,
+                    deessing: window.userSettings.audio.deessing,
+                    nr: window.userSettings.audio.nr,
+                    nf: window.userSettings.audio.nf,
+                    useNR: window.userSettings.audio.useNR,
+                    useSR: batch_useSRCkbx.checked,
+                    useCleanup: batch_useCleanupCkbx.checked,
                 }
 
                 if (window.batch_state.state) {
@@ -1408,6 +1420,8 @@ window.stopBatch = (stoppedByUser) => {
     batch_outputFolderInput.style.display = "inline-block"
     batch_clearDirOpts.style.display = "flex"
     batch_skipExistingOpts.style.display = "flex"
+    batch_useSR.style.display = "flex"
+    batch_useCleanup.style.display = "flex"
     batch_outputNumericallyOpts.style.display = "flex"
     batch_progressItems.style.display = "none"
     batch_progressBar.style.display = "none"

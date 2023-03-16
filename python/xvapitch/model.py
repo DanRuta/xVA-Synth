@@ -177,9 +177,8 @@ class xVAPitch(object):
 
 
 
-    def infer_batch(self, plugin_manager, linesBatch, outputJSON, vocoder, speaker_i, old_sequence=None):
-
-        sampling_rate = 22050
+    def infer_batch(self, plugin_manager, linesBatch, outputJSON, vocoder, speaker_i, old_sequence=None, useSR=False, useCleanup=False):
+        print(f'Inferring batch of {len(linesBatch)} lines')
 
         text_sequences = []
         cleaned_text_sequences = []
@@ -226,9 +225,35 @@ class xVAPitch(object):
                 self.model.logger = self.logger
                 wav = self.model.voice_conversion(y=y, y_lengths=y_lengths, spk1_emb=content_emb, spk2_emb=style_emb)
                 wav = wav.squeeze().cpu().detach().numpy()
-
                 wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
-                scipy.io.wavfile.write(vc_input[ri][4], 22050, wav_norm.astype(np.int16))
+
+                if useCleanup:
+                    ffmpeg_path = f'{"./resources/app" if self.PROD else "."}/python/ffmpeg.exe'
+
+                    if useSR:
+                        scipy.io.wavfile.write(tts_input[ri][4].replace(".wav", "_preSR.wav"), 22050, wav_norm.astype(np.int16))
+                    else:
+                        scipy.io.wavfile.write(tts_input[ri][4].replace(".wav", "_preCleanupPreFFmpeg.wav"), 22050, wav_norm.astype(np.int16))
+                        stream = ffmpeg.input(tts_input[ri][4].replace(".wav", "_preCleanupPreFFmpeg.wav"))
+                        ffmpeg_options = {"ar": 48000}
+                        output_path = tts_input[ri][4].replace(".wav", "_preCleanup.wav")
+                        stream = ffmpeg.output(stream, output_path, **ffmpeg_options)
+                        out, err = (ffmpeg.run(stream, cmd=ffmpeg_path, capture_stdout=True, capture_stderr=True, overwrite_output=True))
+                        os.remove(tts_input[ri][4].replace(".wav", "_preCleanupPreFFmpeg.wav"))
+                else:
+                    scipy.io.wavfile.write(vc_input[ri][4].replace(".wav", "_preSR.wav") if useSR else vc_input[ri][4], 22050, wav_norm.astype(np.int16))
+
+                if useSR:
+                    self.models_manager.init_model("nuwave2")
+                    self.models_manager.models("nuwave2").sr_audio(vc_input[ri][4].replace(".wav", "_preSR.wav"), vc_input[ri][4].replace(".wav", "_preCleanup.wav") if useCleanup else vc_input[ri][4])
+                    os.remove(vc_input[ri][4].replace(".wav", "_preSR.wav"))
+
+                if useCleanup:
+                    self.models_manager.init_model("deepfilternet2")
+                    self.models_manager.models("deepfilternet2").cleanup_audio(vc_input[ri][4].replace(".wav", "_preCleanup.wav"), vc_input[ri][4])
+                    os.remove(vc_input[ri][4].replace(".wav", "_preCleanup.wav"))
+
+
 
         # ==================
         # ======= Handle TTS
@@ -281,7 +306,31 @@ class xVAPitch(object):
                 for i,wav in enumerate(output_wav):
                     wav = wav.squeeze().cpu().detach().numpy()
                     wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
-                    scipy.io.wavfile.write(tts_input[i][4], sampling_rate, wav_norm.astype(np.int16))
+                    if useCleanup:
+                        ffmpeg_path = f'{"./resources/app" if self.PROD else "."}/python/ffmpeg.exe'
+
+                        if useSR:
+                            scipy.io.wavfile.write(tts_input[i][4].replace(".wav", "_preSR.wav"), 22050, wav_norm.astype(np.int16))
+                        else:
+                            scipy.io.wavfile.write(tts_input[i][4].replace(".wav", "_preCleanupPreFFmpeg.wav"), 22050, wav_norm.astype(np.int16))
+                            stream = ffmpeg.input(tts_input[i][4].replace(".wav", "_preCleanupPreFFmpeg.wav"))
+                            ffmpeg_options = {"ar": 48000}
+                            output_path = tts_input[i][4].replace(".wav", "_preCleanup.wav")
+                            stream = ffmpeg.output(stream, output_path, **ffmpeg_options)
+                            out, err = (ffmpeg.run(stream, cmd=ffmpeg_path, capture_stdout=True, capture_stderr=True, overwrite_output=True))
+                            os.remove(tts_input[i][4].replace(".wav", "_preCleanupPreFFmpeg.wav"))
+                    else:
+                        scipy.io.wavfile.write(tts_input[i][4].replace(".wav", "_preSR.wav") if useSR else tts_input[i][4], 22050, wav_norm.astype(np.int16))
+
+                    if useSR:
+                        self.models_manager.init_model("nuwave2")
+                        self.models_manager.models("nuwave2").sr_audio(tts_input[i][4].replace(".wav", "_preSR.wav"), tts_input[i][4].replace(".wav", "_preCleanup.wav") if useCleanup else tts_input[i][4])
+                        os.remove(tts_input[i][4].replace(".wav", "_preSR.wav"))
+
+                    if useCleanup:
+                        self.models_manager.init_model("deepfilternet2")
+                        self.models_manager.models("deepfilternet2").cleanup_audio(tts_input[i][4].replace(".wav", "_preCleanup.wav"), tts_input[i][4])
+                        os.remove(tts_input[i][4].replace(".wav", "_preCleanup.wav"))
 
                 if outputJSON:
                     for ri, record in enumerate(tts_input):

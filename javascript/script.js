@@ -853,7 +853,7 @@ window.loadModel = () => {
     })
 }
 
-window.syntehsizeSample = () => {
+window.synthesizeSample = () => {
 
     const game = window.currentGame.gameId
 
@@ -1150,7 +1150,7 @@ generateVoiceButton.addEventListener("click", () => {
     if (generateVoiceButton.dataset.modelQuery && generateVoiceButton.dataset.modelQuery!="null") {
         window.loadModel()
     } else {
-        window.syntehsizeSample()
+        window.synthesizeSample()
     }
 })
 

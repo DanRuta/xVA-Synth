@@ -156,7 +156,7 @@ class FastPitch1_1(object):
 
 
 
-    def infer_batch(self, plugin_manager, linesBatch, outputJSON, vocoder, speaker_i, old_sequence=None):
+    def infer_batch(self, plugin_manager, linesBatch, outputJSON, vocoder, speaker_i, old_sequence=None, useSR=False, useCleanup=False):
         print(f'Inferring batch of {len(linesBatch)} lines')
 
         sigma_infer = 0.9
@@ -195,7 +195,32 @@ class FastPitch1_1(object):
                     audio = audio[:mel_lens[i].item() * stft_hop_length]
                     audio = audio/torch.max(torch.abs(audio))
                     output = linesBatch[i][4]
-                    write(output, sampling_rate, audio.cpu().numpy())
+                    audio = audio.cpu().numpy()
+                    if useCleanup:
+                        ffmpeg_path = f'{"./resources/app" if self.PROD else "."}/python/ffmpeg.exe'
+
+                        if useSR:
+                            write(output.replace(".wav", "_preSR.wav"), sampling_rate, audio)
+                        else:
+                            write(output.replace(".wav", "_preCleanupPreFFmpeg.wav"), sampling_rate, audio)
+                            stream = ffmpeg.input(output.replace(".wav", "_preCleanupPreFFmpeg.wav"))
+                            ffmpeg_options = {"ar": 48000}
+                            output_path = output.replace(".wav", "_preCleanup.wav")
+                            stream = ffmpeg.output(stream, output_path, **ffmpeg_options)
+                            out, err = (ffmpeg.run(stream, cmd=ffmpeg_path, capture_stdout=True, capture_stderr=True, overwrite_output=True))
+                            os.remove(output.replace(".wav", "_preCleanupPreFFmpeg.wav"))
+                    else:
+                        write(output.replace(".wav", "_preSR.wav") if useSR else output, sampling_rate, audio)
+
+                    if useSR:
+                        self.models_manager.init_model("nuwave2")
+                        self.models_manager.models("nuwave2").sr_audio(output.replace(".wav", "_preSR.wav"), output.replace(".wav", "_preCleanup.wav") if useCleanup else output)
+                        os.remove(output.replace(".wav", "_preSR.wav"))
+
+                    if useCleanup:
+                        self.models_manager.init_model("deepfilternet2")
+                        self.models_manager.models("deepfilternet2").cleanup_audio(output.replace(".wav", "_preCleanup.wav"), output)
+                        os.remove(output.replace(".wav", "_preCleanup.wav"))
                 del audios
             else:
                 self.models_manager.load_model("hifigan", f'{"./resources/app" if self.PROD else "."}/python/hifigan/hifi.pt' if vocoder=="qnd" else self.ckpt_path.replace(".pt", ".hg.pt"))
@@ -209,7 +234,33 @@ class FastPitch1_1(object):
                     audio = audio * 32768.0
                     audio = audio.astype('int16')
                     output = linesBatch[i][4]
-                    write(output, sampling_rate, audio)
+
+                    if useCleanup:
+                        ffmpeg_path = f'{"./resources/app" if self.PROD else "."}/python/ffmpeg.exe'
+
+                        if useSR:
+                            write(output.replace(".wav", "_preSR.wav"), sampling_rate, audio)
+                        else:
+                            write(output.replace(".wav", "_preCleanupPreFFmpeg.wav"), sampling_rate, audio)
+                            stream = ffmpeg.input(output.replace(".wav", "_preCleanupPreFFmpeg.wav"))
+                            ffmpeg_options = {"ar": 48000}
+                            output_path = output.replace(".wav", "_preCleanup.wav")
+                            stream = ffmpeg.output(stream, output_path, **ffmpeg_options)
+                            out, err = (ffmpeg.run(stream, cmd=ffmpeg_path, capture_stdout=True, capture_stderr=True, overwrite_output=True))
+                            os.remove(output.replace(".wav", "_preCleanupPreFFmpeg.wav"))
+                    else:
+                        write(output.replace(".wav", "_preSR.wav") if useSR else output, sampling_rate, audio)
+
+                    if useSR:
+                        self.models_manager.init_model("nuwave2")
+                        self.models_manager.models("nuwave2").sr_audio(output.replace(".wav", "_preSR.wav"), output.replace(".wav", "_preCleanup.wav") if useCleanup else output)
+                        os.remove(output.replace(".wav", "_preSR.wav"))
+
+                    if useCleanup:
+                        self.models_manager.init_model("deepfilternet2")
+                        self.models_manager.models("deepfilternet2").cleanup_audio(output.replace(".wav", "_preCleanup.wav"), output)
+                        os.remove(output.replace(".wav", "_preCleanup.wav"))
+
 
             if outputJSON:
                 for ri, record in enumerate(linesBatch):

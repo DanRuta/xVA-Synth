@@ -280,10 +280,12 @@ if __name__ == '__main__':
                     speaker_i = post_data["speaker_i"]
                     vocoder = post_data["vocoder"]
                     outputJSON = post_data["outputJSON"]
+                    useSR = post_data["useSR"]
+                    useCleanup = post_data["useCleanup"]
 
                     with torch.no_grad():
                         try:
-                            req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", "")).infer_batch(plugin_manager, linesBatch, outputJSON=outputJSON, vocoder=vocoder, speaker_i=speaker_i)
+                            req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", "")).infer_batch(plugin_manager, linesBatch, outputJSON=outputJSON, vocoder=vocoder, speaker_i=speaker_i, useSR=useSR, useCleanup=useCleanup)
                         except RuntimeError as e:
                             if "CUDA out of memory" in str(e):
                                 req_response = "CUDA OOM"
@@ -308,6 +310,7 @@ if __name__ == '__main__':
                     options = post_data["options"]
                     audio_out_path = post_data["audio_out_path"]
                     useSR = post_data["useSR"]
+                    useCleanup = post_data["useCleanup"]
 
                     removeNoise = post_data["removeNoise"]
                     removeNoiseStrength = post_data["removeNoiseStrength"]
@@ -318,7 +321,7 @@ if __name__ == '__main__':
                     models_manager.load_model("speaker_rep", f'{"./resources/app" if PROD else "."}/python/xvapitch/speaker_rep/speaker_rep.pt')
 
                     try:
-                        models_manager.models("xvapitch").run_speech_to_speech(final_path, audio_out_path.replace(".wav", "_tempS2S.wav"), style_emb, models_manager, plugin_manager, useSR=useSR)
+                        models_manager.models("xvapitch").run_speech_to_speech(final_path, audio_out_path.replace(".wav", "_tempS2S.wav"), style_emb, models_manager, plugin_manager, useSR=useSR, useCleanup=useCleanup)
 
                         data_out = ""
                         req_response = data_out
@@ -338,6 +341,7 @@ if __name__ == '__main__':
                     output_paths = post_data["output_paths"]
                     processes = post_data["processes"]
                     options = json.loads(post_data["options"])
+
                     # For plugins
                     extraInfo = {}
                     if "extraInfo" in post_data:

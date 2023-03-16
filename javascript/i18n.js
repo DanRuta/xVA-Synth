@@ -28,7 +28,9 @@ window.i18n.setEnglish = () => {
     window.i18n.AUTO_REGEN = "Auto regenerate"
     window.i18n.VOCODER = "Vocoder:"
     window.i18n.BASE_LANGUAGE_IS = "Base Language:"
+    window.i18n.USE_SR = "Use SR"
     window.i18n.USE_SR_IS = "Use SR:"
+    window.i18n.USE_CLEANUP = "Use Clean-up"
     window.i18n.USE_CLEANUP_IS = "Use Clean-up:"
     window.i18n.USE_SR_TITLE = "Super-resolution (Hz) - SLOW ON CPU"
     window.i18n.USE_SR_HINT = "Super-resolution improves the quality of your audio through Super-resolution of 22050Hz audio into 48000Hz audio. To be able to hear the difference, you need to make sure your ffmpeg settings don't then convert the audio back down to something low like 22050, in the post-processing. Keep the Hz setting to something higher like 48000 or 44100.<br><br>Also to note, this is a fairly slow process on the CPU, but it's pretty quick on the GPU, so I'd recommend switching on GPU usage if you have an NVIDIA card.<br><br>Hide this notice in the future?"
@@ -201,7 +203,7 @@ window.i18n.setEnglish = () => {
 
     window.i18n.BATCH_CLEAR_DIR = "Clear out the directory first"
     window.i18n.BATCH_SKIP = "Skip existing output"
-    window.i18n.BATCH_OUTPUTNUMERICALLY = "Output file names in numerical order only"
+    window.i18n.BATCH_OUTPUTNUMERICALLY = "Output file names in numerical order"
     window.i18n.BATCH_CURRENTLYDOING = "currently doing..."
     window.i18n.BATCH_SYNTHESIZE = "Synthesize Batch"
     window.i18n.BATCH_PAUSE = "Pause"
@@ -631,8 +633,10 @@ window.i18n.updateUI = () => {
     i18n_autoregen.innerHTML = window.i18n.AUTO_REGEN
     i18n_vocoder.innerHTML = window.i18n.VOCODER
     i18n_use_SR.innerHTML = window.i18n.USE_SR_IS
+    i18n_batch_useSR.innerHTML = window.i18n.USE_SR
     i18n_use_SR.title = window.i18n.USE_SR_TITLE
     i18n_use_cleanup.innerHTML = window.i18n.USE_CLEANUP_IS
+    i18n_batch_useCleanUp.innerHTML = window.i18n.USE_CLEANUP
     i18n_base_lang.innerHTML = window.i18n.BASE_LANGUAGE_IS
     i18n_style_emb_is.innerHTML = window.i18n.STYLE_EMB_IS
     default_opt_style_emb.innerHTML = window.i18n.DEFAULT
