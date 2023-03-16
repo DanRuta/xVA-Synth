@@ -100,6 +100,7 @@ window.startRecord = async () => {
 }
 
 window.outputS2SRecording = (outPath, callback) => {
+    toggleSpinnerButtons()
     doFetch(`http://localhost:8008/move_recorded_file`, {
         method: "Post",
         body: JSON.stringify({
@@ -129,7 +130,7 @@ window.useWavFileForspeech2speech = (fileName) => {
         wavesurferContainer.style.opacity = 0
     }
     window.tempFileLocation = `${__dirname.replace("/javascript", "").replace("\\javascript", "")}/output/temp-${tempFileNum}.wav`
-    toggleSpinnerButtons()
+
 
     const options = {
         hz: window.userSettings.audio.hz,
@@ -152,6 +153,7 @@ window.useWavFileForspeech2speech = (fileName) => {
         body: JSON.stringify({
             input_path: fileName,
             useSR: useSRCkbx.checked,
+            useCleanup: useCleanupCkbx.checked,
             isBatchMode: false,
 
             style_emb: window.currentModel.games[0].base_speaker_emb,

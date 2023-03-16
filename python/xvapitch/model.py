@@ -161,7 +161,18 @@ class xVAPitch(object):
 
         wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
         if useCleanup:
-            scipy.io.wavfile.write(audio_out_path.replace(".wav", "_preSR.wav") if useSR else audio_out_path.replace(".wav", "_preCleanup.wav"), 22050, wav_norm.astype(np.int16))
+            ffmpeg_path = f'{"./resources/app" if self.PROD else "."}/python/ffmpeg.exe'
+
+            if useSR:
+                scipy.io.wavfile.write(audio_out_path.replace(".wav", "_preSR.wav"), 22050, wav_norm.astype(np.int16))
+            else:
+                scipy.io.wavfile.write(audio_out_path.replace(".wav", "_preCleanupPreFFmpeg.wav"), 22050, wav_norm.astype(np.int16))
+                stream = ffmpeg.input(audio_out_path.replace(".wav", "_preCleanupPreFFmpeg.wav"))
+                ffmpeg_options = {"ar": 48000}
+                output_path = audio_out_path.replace(".wav", "_preCleanup.wav")
+                stream = ffmpeg.output(stream, output_path, **ffmpeg_options)
+                out, err = (ffmpeg.run(stream, cmd=ffmpeg_path, capture_stdout=True, capture_stderr=True, overwrite_output=True))
+                os.remove(audio_out_path.replace(".wav", "_preCleanupPreFFmpeg.wav"))
         else:
             scipy.io.wavfile.write(audio_out_path.replace(".wav", "_preSR.wav") if useSR else audio_out_path, 22050, wav_norm.astype(np.int16))
 
