@@ -55,11 +55,12 @@ def run_audio_post(PROD, logger, input, output, options=None):
 
         ffmpeg_options["af"].append(f'volume={options["amplitude"]}')
 
+        ffmpeg_options["af"].append("adeclip,adeclick")
+
         if "useNR" in options.keys() and options["useNR"]:
             ffmpeg_options["af"].append(f'afftdn=nr={options["nr"]}:nf={options["nf"]}:tn=0')
 
         ffmpeg_options["af"] = ",".join(ffmpeg_options["af"])
-
 
 
 
