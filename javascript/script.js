@@ -1297,7 +1297,8 @@ window.saveFile = (from, to, skipUIRecord=false) => {
                     console.log("res", res)
                     window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${window.i18n.INPUT}: ${from}<br>${window.i18n.OUTPUT}: ${to}<br><br>${res}`)
                 } else {
-                    if (window.userSettings.outputJSON) {
+                    // Skip the json if there's no editor data (it's a voice conversion sample)
+                    if (window.userSettings.outputJSON && window.sequenceEditor.letters.length) {
                         fs.writeFileSync(`${to}.${toExt}.json`, JSON.stringify(jsonDataOut, null, 4))
                     }
                     if (!skipUIRecord) {
@@ -1332,7 +1333,7 @@ window.saveFile = (from, to, skipUIRecord=false) => {
                         window.appLogger.log(`${window.i18n.OUT_DIR_NOT_EXIST}: ${toFolder}`)
                     }
                 } else {
-                    if (window.userSettings.outputJSON) {
+                    if (window.userSettings.outputJSON && window.sequenceEditor.letters.length) {
                         fs.writeFileSync(`${to}.${toExt}.json`, JSON.stringify(jsonDataOut, null, 4))
                     }
                     if (!skipUIRecord) {

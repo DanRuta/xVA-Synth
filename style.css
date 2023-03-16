@@ -333,6 +333,7 @@ a {
      display: flex;
      overflow: hidden;
      text-overflow: ellipsis;
+     justify-content: flex-end;
  }
 .sampleAudioControls {
     min-width: 330px;
