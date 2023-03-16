@@ -1077,7 +1077,8 @@ window.synthesizeSample = () => {
         }
 
 
-        if (window.userSettings.audio.ffmpeg && setting_audio_ffmpeg_preview.checked) {
+        // if (window.userSettings.audio.ffmpeg && setting_audio_ffmpeg_preview.checked) {
+        if (window.userSettings.audio.ffmpeg) {
             const options = {
                 hz: window.userSettings.audio.hz,
                 padStart: window.userSettings.audio.padStart,
@@ -1276,74 +1277,33 @@ window.saveFile = (from, to, skipUIRecord=false) => {
     to = `${to.split("/").reverse().slice(1,10000).reverse().join("/")}/${outputFileName}`
 
 
-    if (!setting_audio_ffmpeg_preview.checked && window.userSettings.audio.ffmpeg) {
-        spinnerModal(window.i18n.SAVING_AUDIO_FILE)
+    const allFiles = fs.readdirSync(`${path}/output`).filter(fname => fname.includes(from.split("/").reverse()[0].split(".")[0]))
+    const toFolder = to.split("/").reverse().slice(1, 1000).reverse().join("/")
 
-        window.appLogger.log(`${window.i18n.ABOUT_TO_SAVE_FROM_N1_TO_N2_WITH_OPTIONS}: ${JSON.stringify(options)}`.replace("_1", from).replace("_2", to))
 
-        doFetch(`http://localhost:8008/outputAudio`, {
-            method: "Post",
-            body: JSON.stringify({
-                input_path: from,
-                output_path: to,
-                pluginsContext: JSON.stringify(window.pluginsContext),
-                isBatchMode: false,
-                extraInfo: JSON.stringify(pluginData),
-                options: JSON.stringify(options)
-            })
-        }).then(r=>r.text()).then(res => {
-            closeModal(undefined, undefined, true).then(() => {
-                if (res.length && res!="-") {
-                    console.log("res", res)
-                    window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${window.i18n.INPUT}: ${from}<br>${window.i18n.OUTPUT}: ${to}<br><br>${res}`)
-                } else {
-                    // Skip the json if there's no editor data (it's a voice conversion sample)
-                    if (window.userSettings.outputJSON && window.sequenceEditor.letters.length) {
-                        fs.writeFileSync(`${to}.${toExt}.json`, JSON.stringify(jsonDataOut, null, 4))
-                    }
-                    if (!skipUIRecord) {
-                        refreshRecordsList(containerFolderPath)
-                    }
-                    dialogueInput.focus()
-                    window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["post"], event="post keep-sample", pluginData)
+    allFiles.forEach(fname => {
+        const ext = fname.split(".").reverse()[0]
+        fs.copyFile(`${path}/output/${fname}`, `${toFolder}/${outputFileName}.${ext}`, err => {
+            if (err) {
+                console.log(err)
+                window.appLogger.log(`Error in saveFile->outputAudio[no ffmpeg]: ${err}`)
+                if (!fs.existsSync(from)) {
+                    window.appLogger.log(`${window.i18n.TEMP_FILE_NOT_EXIST}: ${from}`)
                 }
-            })
-        }).catch(res => {
-            window.appLogger.log(`Error in saveFile->outputAudio[ffmpeg]: ${res}`)
-            closeModal(undefined, undefined, true).then(() => {
-                window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${window.i18n.INPUT}: ${from}<br>${window.i18n.OUTPUT}: ${to}<br><br>${res}`)
-            })
-        })
-    } else {
-
-        const allFiles = fs.readdirSync(`${path}/output`).filter(fname => fname.includes(from.split("/").reverse()[0].split(".")[0]))
-        const toFolder = to.split("/").reverse().slice(1, 1000).reverse().join("/")
-
-
-        allFiles.forEach(fname => {
-            const ext = fname.split(".").reverse()[0]
-            fs.copyFile(`${path}/output/${fname}`, `${toFolder}/${outputFileName}.${ext}`, err => {
-                if (err) {
-                    console.log(err)
-                    window.appLogger.log(`Error in saveFile->outputAudio[no ffmpeg]: ${err}`)
-                    if (!fs.existsSync(from)) {
-                        window.appLogger.log(`${window.i18n.TEMP_FILE_NOT_EXIST}: ${from}`)
-                    }
-                    if (!fs.existsSync(toFolder)) {
-                        window.appLogger.log(`${window.i18n.OUT_DIR_NOT_EXIST}: ${toFolder}`)
-                    }
-                } else {
-                    if (window.userSettings.outputJSON && window.sequenceEditor.letters.length) {
-                        fs.writeFileSync(`${to}.${toExt}.json`, JSON.stringify(jsonDataOut, null, 4))
-                    }
-                    if (!skipUIRecord) {
-                        refreshRecordsList(containerFolderPath)
-                    }
-                    window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["post"], event="post keep-sample", pluginData)
+                if (!fs.existsSync(toFolder)) {
+                    window.appLogger.log(`${window.i18n.OUT_DIR_NOT_EXIST}: ${toFolder}`)
                 }
-            })
+            } else {
+                if (window.userSettings.outputJSON && window.sequenceEditor.letters.length) {
+                    fs.writeFileSync(`${to}.${toExt}.json`, JSON.stringify(jsonDataOut, null, 4))
+                }
+                if (!skipUIRecord) {
+                    refreshRecordsList(containerFolderPath)
+                }
+                window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["post"], event="post keep-sample", pluginData)
+            }
         })
-    }
+    })
 }
 
 window.keepSampleFunction = shiftClick => {

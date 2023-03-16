@@ -89,9 +89,9 @@ if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.u
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("ffmpeg")) { // For backwards compatibility
     window.userSettings.audio.ffmpeg = true
 }
-if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("ffmpeg_preview")) { // For backwards compatibility
-    window.userSettings.audio.ffmpeg_preview = true
-}
+// if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("ffmpeg_preview")) { // For backwards compatibility
+//     window.userSettings.audio.ffmpeg_preview = true
+// }
 if (!Object.keys(window.userSettings).includes("audio") || !Object.keys(window.userSettings.audio).includes("useNR")) { // For backwards compatibility
     window.userSettings.audio.useNR = true
 }
@@ -255,7 +255,7 @@ const updateUIWithSettings = () => {
 
     setting_external_audio_editor.value = window.userSettings.externalAudioEditor
     setting_audio_ffmpeg.checked = window.userSettings.audio.ffmpeg
-    setting_audio_ffmpeg_preview.checked = window.userSettings.audio.ffmpeg && window.userSettings.audio.ffmpeg_preview
+    // setting_audio_ffmpeg_preview.checked = window.userSettings.audio.ffmpeg && window.userSettings.audio.ffmpeg_preview
     setting_audio_useNR.checked = window.userSettings.audio.ffmpeg && window.userSettings.audio.useNR
     setting_audio_format.value = window.userSettings.audio.format
     setting_audio_hz.value = window.userSettings.audio.hz
@@ -551,8 +551,8 @@ initMenuSetting(setting_external_audio_editor, "externalAudioEditor", "text")
 initFilePickerButton(setting_externalEditorButton, setting_external_audio_editor, "externalAudioEditor", ["openFile"])
 
 initMenuSetting(setting_audio_ffmpeg, "audio.ffmpeg", "checkbox", () => {
-    setting_audio_ffmpeg_preview.checked = window.userSettings.audio.ffmpeg && window.userSettings.audio.ffmpeg_preview
-    setting_audio_ffmpeg_preview.disabled = !window.userSettings.audio.ffmpeg
+    // setting_audio_ffmpeg_preview.checked = window.userSettings.audio.ffmpeg && window.userSettings.audio.ffmpeg_preview
+    // setting_audio_ffmpeg_preview.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_useNR.checked = window.userSettings.audio.ffmpeg && window.userSettings.audio.useNR
     setting_audio_useNR.disabled = !window.userSettings.audio.ffmpeg
     setting_audio_format.disabled = !window.userSettings.audio.ffmpeg
@@ -568,7 +568,7 @@ initMenuSetting(setting_audio_ffmpeg, "audio.ffmpeg", "checkbox", () => {
     setting_audio_amplitude.disabled = !window.userSettings.audio.ffmpeg
     setting_editor_audio_amplitude.disabled = !window.userSettings.audio.ffmpeg
 })
-initMenuSetting(setting_audio_ffmpeg_preview, "audio.ffmpeg_preview", "checkbox")
+// initMenuSetting(setting_audio_ffmpeg_preview, "audio.ffmpeg_preview", "checkbox")
 initMenuSetting(setting_audio_useNR, "audio.useNR", "checkbox")
 initMenuSetting(setting_audio_format, "audio.format", "text")
 initMenuSetting(setting_audio_hz, "audio.hz", "text", undefined, parseInt)
@@ -713,7 +713,7 @@ reset_settings_btn.addEventListener("click", () => {
             window.userSettings.audio.nr = 5
             window.userSettings.audio.nf = -20
             window.userSettings.audio.ffmpeg = true
-            window.userSettings.audio.ffmpeg_preview = true
+            // window.userSettings.audio.ffmpeg_preview = true
             window.userSettings.audio.useNR = true
             window.userSettings.audio.amplitude = 1
             window.userSettings.autoPlayGen = true

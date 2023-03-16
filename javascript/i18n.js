@@ -678,7 +678,7 @@ window.i18n.updateUI = () => {
     setting_btnShowTOTD.innerHTML = window.i18n.SHOW_NOW
     i18n_settings_unseenTOTD.innerHTML = window.i18n.TOTD_SHOW_UNSEEN
     i18n_settings_playChangedAudio.innerHTML = window.i18n.SETTINGS_PLAYCHANGEDAUDIO
-    i18n_setting_ffmpeg_preapply.innerHTML = window.i18n.SETTINGS_PREAPPLY_FFMPEG
+    // i18n_setting_ffmpeg_preapply.innerHTML = window.i18n.SETTINGS_PREAPPLY_FFMPEG
     i18n_setting_useNR.innerHTML = window.i18n.SETTINGS_USE_NR
     i18n_settings_doubleAmpDisplay.innerHTML = window.i18n.SETTINGS_DOUBLE_AMP_DISPLAY
     i18n_settings_csv_delimiter.innerHTML = window.i18n.SETTINGS_CSV_DELIMITER
