@@ -23,7 +23,7 @@ class DeepFilter2Model(object):
 
     def cleanup_audio (self, in_path, out_path):
         audio, _ = load_audio(in_path, sr=self.df_state.sr())
-        enhanced = enhance(self.model, self.df_state, audio)
+        enhanced = enhance(self.model, self.models_manager.device, self.df_state, audio)
         save_audio(out_path, enhanced, self.df_state.sr())
 
     def set_device (self, device):
