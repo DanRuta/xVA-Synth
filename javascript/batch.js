@@ -1055,9 +1055,10 @@ window.batchKickOffMPffmpegOutput = (records, tempPaths, outPaths, options, extr
                     window.addActionButtons(records, ri)
                 }
 
-                if (!window.userSettings.batch_fastMode) {
-                    window.batch_state.lineIndex += 1
-                }
+                // if (!window.userSettings.batch_fastMode) { // No more fast modde. TODO, remove completely
+                window.batch_state.lineIndex += 1
+                // }
+
                 window.batch_state.fastModeActuallyFinishedTasks += 1
 
             })
@@ -1231,7 +1232,7 @@ window.batchKickOffGeneration = () => {
                         voiceName: records.map(rec => rec[0].voiceName),
                         inputSequence: records.map(rec => rec[0].text)
                     }
-                    if (window.userSettings.batch_fastMode) {
+                    if (window.userSettings.batch_fastMode && false) { // No more fast mode. TODO, remove completely
                         window.batch_state.fastModeOutputPromises.push(window.batchKickOffMPffmpegOutput(records, tempPaths, outPaths, options, JSON.stringify(extraInfo)))
                         window.batch_state.lineIndex += records.length
                     } else {
@@ -1251,7 +1252,7 @@ window.batchKickOffGeneration = () => {
                                     letters: records[ri][0].text
                                 }
 
-                                if (window.userSettings.batch_fastMode) {
+                                if (window.userSettings.batch_fastMode && false) { // No more fast modde. TODO, remove completely
                                     window.batch_state.fastModeOutputPromises.push(window.batchKickOffFfmpegOutput(ri, linesBatch, records, tempFileLocation, JSON.stringify({
                                         input_path: tempFileLocation,
                                         output_path: outPath,
@@ -1360,7 +1361,7 @@ window.performSynthesis = async () => {
 
     if (window.batch_state.lineIndex==window.batch_state.lines.length) {
         // The end
-        if (window.userSettings.batch_fastMode) {
+        if (window.userSettings.batch_fastMode && false) { // No more fast modde. TODO, remove completely
             Promise.all(window.batch_state.fastModeOutputPromises).then(() => {
                 window.stopBatch()
                 batch_openDirBtn.style.display = "inline-block"
