@@ -125,6 +125,11 @@ a {
      color: black;
      background-color: rgba(0,0,0,0);
  }
+ input:disabled, select:disabled {
+    background-color: gray !important;
+    border: 1px gray !important;
+    color: black;
+ }
  #searchContainer {
     display: flex;
     justify-content: center;
