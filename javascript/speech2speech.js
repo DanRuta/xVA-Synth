@@ -265,6 +265,9 @@ window.stopRecord = (cancelled) => {
         mic_progress_SVG.style.animation = "spin 1.5s linear infinite"
         mic_progress_SVG_circle.style.stroke = "white"
         const fileName = `${__dirname.replace("\\javascript", "").replace(/\\/g,"/")}/output/recorded_file.wav`
+
+        window.sequenceEditor.clear()
+
         window.outputS2SRecording(fileName, () => {
             window.useWavFileForspeech2speech(fileName)
         })

@@ -6,29 +6,9 @@ class Editor {
     constructor () {
 
         this.isCreated = false
-        this.sliderBoxes = []
-        this.grabbers = []
-        this.energyGrabbers = []
-
-        // Data
-        this.letters = []
-        this.pitchNew = []
-        this.dursNew = []
-        this.energyNew = []
-        this.pacing = 1
-        this.ampFlatCounter = 0
 
         this.hasChanged = false
         this.autoInferTimer = null
-
-        this.inputSequence = undefined
-        this.currentVoice = undefined
-        this.letterFocus = []
-        this.lastSelected = 0
-        this.letterClasses = []
-        this.resetDurs = []
-        this.resetPitch = []
-        this.resetEnergy = []
 
         this.adjustedLetters = new Set()
 
@@ -50,6 +30,30 @@ class Editor {
         this.MAX_ENERGY = 4.35
         this.ENERGY_GRABBER_RADIUS = 8
 
+        this.clear() // And thus init
+    }
+
+    clear () {
+        this.sliderBoxes = []
+        this.grabbers = []
+        this.energyGrabbers = []
+
+        this.letters = []
+        this.pitchNew = []
+        this.dursNew = []
+        this.energyNew = []
+        this.pacing = 1
+        this.ampFlatCounter = 0
+
+        this.inputSequence = undefined
+        this.currentVoice = undefined
+        this.letterFocus = []
+        this.lastSelected = 0
+        this.letterClasses = []
+        this.resetDurs = []
+        this.resetPitch = []
+        this.resetEnergy = []
+
         this.multiLetterPitchDelta = undefined
         this.multiLetterStartPitchVals = []
         this.multiLetterStartDursVals = []
@@ -58,9 +62,7 @@ class Editor {
 
         this.multiLetterLengthDelta = undefined
         this.multiLetterStartLengthVals = []
-
     }
-
 
     init () {
 
