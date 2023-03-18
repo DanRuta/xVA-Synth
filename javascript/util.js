@@ -257,6 +257,18 @@ window.setTheme = (meta) => {
     }
 }
 
+window.getAudioPlayTriangleSVG = () => {
+    const div = createElem("div", `<svg class="renameSVG" version="1.0" xmlns="http://www.w3.org/2000/svg" width="770.000000pt" height="980.000000pt" viewBox="0 0 770.000000 980.000000"
+ preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,980.000000) scale(0.100000,-0.100000)"fill="#555555" stroke="none">
+        <path d="M26 9718 c-3 -46 -9 -2249 -12 -4897 -5 -4085 -4 -4813 8 -4809 8 3
+        389 244 848 535 459 291 1598 1013 2530 1603 2872 1819 3648 2311 4182 2656
+        60 38 108 75 108 81 0 55 -595 448 -2855 1886 -1259 801 -4552 2877 -4792
+        3020 -8 5 -13 -16 -17 -75z"/>
+        </g>
+        </svg>`)
+    return div
+}
+
 
 window.addEventListener("resize", e => {
     window.userSettings.customWindowSize = `${window.innerHeight},${window.innerWidth}`
