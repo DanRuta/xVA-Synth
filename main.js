@@ -2,6 +2,9 @@
 const PRODUCTION = process.mainModule.filename.includes("resources")
 const path = PRODUCTION ? "resources/app" : "."
 
+const remoteMain = require("@electron/remote/main")
+remoteMain.initialize()
+
 const fs = require("fs")
 const {shell, app, BrowserWindow, ipcMain, Menu} = require("electron")
 const {spawn} = require("child_process")
@@ -27,10 +30,16 @@ const createWindow = () => {
         frame: false,
         webPreferences: {
             nodeIntegration: true,
-            // contextIsolation: false
+            enableRemoteModule: true,
+            contextIsolation: false
         },
         icon: `${__dirname}/assets/x-icon.png`,
         // show: false,
+    })
+    remoteMain.enable(mainWindow.webContents)
+
+    app.on('browser-window-created', (_, window) => {
+        require("@electron/remote/main").enable(mainWindow.webContents)
     })
 
     mainWindow.loadFile("index.html")

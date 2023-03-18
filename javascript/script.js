@@ -24,7 +24,8 @@ const {Editor} = require("./javascript/editor.js")
 const {saveUserSettings, deleteFolderRecursive} = require("./javascript/settingsMenu.js")
 const xVASpeech = require("./javascript/speech2speech.js")
 require("./javascript/batch.js")
-window.electronBrowserWindow = require("electron").remote.getCurrentWindow()
+const er = require('@electron/remote')
+window.electronBrowserWindow = er.getCurrentWindow()
 const child = require("child_process").execFile
 const spawn = require("child_process").spawn
 

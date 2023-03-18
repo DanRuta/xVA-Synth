@@ -12,9 +12,10 @@
   "repository": "https://github.com/DanRuta/xVA-Synth",
   "author": "DanRuta",
   "devDependencies": {
-    "electron": "2.0.0"
+    "electron": "19.0.0"
   },
   "dependencies": {
+    "@electron/remote": "^2.0.9",
     "discord-rich-presence": "0.0.8",
     "fs-extra": "^9.1.0",
     "node-fetch": "^2.1.2",

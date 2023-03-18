@@ -1,6 +1,7 @@
 "use strict"
 
 const fs = require("fs")
+const er = require('@electron/remote')
 
 class PluginsManager {
 
@@ -517,7 +518,7 @@ class PluginsManager {
                     comment = comment.replace("$filepicker", "").replace("$folderpicker", "")
 
                     button.addEventListener("click", () => {
-                        let filePathInput = electron.remote.dialog.showOpenDialog({ properties: [openType]})
+                        let filePathInput = er.dialog.showOpenDialog({ properties: [openType]})
                         if (filePathInput) {
                             filePathInput = filePathInput[0].replace(/\\/g, "/")
                             input.value = filePathInput.replace(/\\/g, "/")

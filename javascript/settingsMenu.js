@@ -1,5 +1,6 @@
 "use strict"
 
+const er = require('@electron/remote')
 const saveUserSettings = () => localStorage.setItem("userSettings", JSON.stringify(window.userSettings))
 // const saveUserSettings = () => {}
 
@@ -470,7 +471,7 @@ const initMenuSetting = (elem, setting, type, callback=undefined, valFn=undefine
 window.initFilePickerButton = (button, input, setting, properties, filters=undefined, defaultPath=undefined, callback=undefined) => {
     button.addEventListener("click", () => {
         const defaultPath = input.value.replace(/\//g, "\\")
-        let filePath = electron.remote.dialog.showOpenDialog({ properties, filters, defaultPath})
+        let filePath = er.dialog.showOpenDialog({ properties, filters, defaultPath})
         if (filePath) {
             filePath = filePath[0].replace(/\\/g, "/")
             input.value = filePath.replace(/\\/g, "/")
@@ -864,9 +865,9 @@ searchSettingsInput.addEventListener("keyup", () => {
 })
 
 
-const currentWindow = require("electron").remote.getCurrentWindow()
+const currentWindow = er.getCurrentWindow()
 currentWindow.on("move", () => {
-    const bounds = remote.getCurrentWindow().webContents.getOwnerBrowserWindow().getBounds()
+    const bounds = er.getCurrentWindow().webContents.getOwnerBrowserWindow().getBounds()
     window.userSettings.customWindowPosition = `${bounds.x},${bounds.y}`
     saveUserSettings()
 })
