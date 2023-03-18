@@ -432,6 +432,8 @@ window.get_g2p = (text_to_g2p) => {
 
 const handleTextUpdate = (event) => {
 
+    window.shiftKeyIsPressed = event.shiftKey
+
     if (textEditorTooltip.style.display=="flex" && (event.type=="click" || (!window.shiftKeyIsPressed && event.key=="ArrowDown") || (!window.shiftKeyIsPressed && event.key=="ArrowRight"))) {
         event.stopPropagation()
         event.preventDefault()
@@ -444,7 +446,6 @@ const handleTextUpdate = (event) => {
         setHighlightedAutocomplete(-1)
         return
     }
-
 
 
     if (event.type!="click" && (event.key=="Shift" || event.key=="Control")) {
@@ -498,14 +499,16 @@ const handleTextUpdate = (event) => {
             hideAutocomplete()
         }
 
-        if (event.type!="click" && (event.key=="{" || event.key=="")) {
-            if (event.key!="") {
+        const ctrlSpace = event.ctrlKey && event.code=="Space"
+
+        if (event.type!="click" && (event.key=="{" || event.key=="") || ctrlSpace) {
+            if (!ctrlSpace && event.key!="") {
                 insertText(dialogueInput, "}", -1)
             }
 
             if (caretInARPAbet) {
                 showAutocomplete(ARPABET_SYMBOLS.map(v=>{return [v]}), option => {
-                    insertText(dialogueInput, option.slice(textWrittenSinceAutocompleteWasShown.length, option.length), 2)
+                    insertText(dialogueInput, option.slice(textWrittenSinceAutocompleteWasShown.length, option.length)+" ", 0)
                 })
             }
             if (event.key!="") {
