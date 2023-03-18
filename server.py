@@ -256,17 +256,24 @@ if __name__ == '__main__':
                         base_emb = post_data["base_emb"] if "base_emb" in post_data else None
                         pitch = post_data["pitch"] if "pitch" in post_data else None
                         energy = post_data["energy"] if "energy" in post_data else None
+                        emAngry = post_data["emAngry"] if "emAngry" in post_data else None
+                        emHappy = post_data["emHappy"] if "emHappy" in post_data else None
+                        emSad = post_data["emSad"] if "emSad" in post_data else None
+                        emSurprise = post_data["emSurprise"] if "emSurprise" in post_data else None
                         duration = post_data["duration"] if "duration" in post_data else None
                         speaker_i = post_data["speaker_i"] if "speaker_i" in post_data else None
                         useSR = post_data["useSR"] if "useSR" in post_data else None
                         useCleanup = post_data["useCleanup"] if "useCleanup" in post_data else None
                         vocoder = post_data["vocoder"]
                         globalAmplitudeModifier = float(post_data["globalAmplitudeModifier"]) if "globalAmplitudeModifier" in post_data else None
-                        pitch_data = [pitch, duration, energy]
+                        pitch_data = [pitch, duration, energy, emAngry, emHappy, emSad, emSurprise]
                         old_sequence = post_data["old_sequence"] if "old_sequence" in post_data else None
 
-                        req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", ""), instance_index=instance_index).infer(plugin_manager, text, out_path, vocoder=vocoder, \
-                            speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence, globalAmplitudeModifier=globalAmplitudeModifier, base_lang=base_lang, base_emb=base_emb, useSR=useSR, useCleanup=useCleanup)
+                        model = models_manager.models(modelType.lower().replace(".", "_").replace(" ", ""), instance_index=instance_index)
+                        req_response = model.infer(plugin_manager, text, out_path, vocoder=vocoder, \
+                            speaker_i=speaker_i, pitch_data=pitch_data, pace=pace, old_sequence=old_sequence, \
+                            globalAmplitudeModifier=globalAmplitudeModifier, base_lang=base_lang, base_emb=base_emb, useSR=useSR, useCleanup=useCleanup)
+
                         plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["post"], event="post synth-line", data=post_data)
 
 
@@ -285,7 +292,8 @@ if __name__ == '__main__':
 
                     with torch.no_grad():
                         try:
-                            req_response = models_manager.models(modelType.lower().replace(".", "_").replace(" ", "")).infer_batch(plugin_manager, linesBatch, outputJSON=outputJSON, vocoder=vocoder, speaker_i=speaker_i, useSR=useSR, useCleanup=useCleanup)
+                            model = models_manager.models(modelType.lower().replace(".", "_").replace(" ", ""))
+                            req_response = model.infer_batch(plugin_manager, linesBatch, outputJSON=outputJSON, vocoder=vocoder, speaker_i=speaker_i, useSR=useSR, useCleanup=useCleanup)
                         except RuntimeError as e:
                             if "CUDA out of memory" in str(e):
                                 req_response = "CUDA OOM"

@@ -29,6 +29,10 @@ class Editor {
         this.default_MAX_ENERGY = 4.35
         this.MAX_ENERGY = 4.35
         this.ENERGY_GRABBER_RADIUS = 8
+        this.EMOTION_GRABBER_RADIUS = 8
+
+        this.MIN_EMOTIONS = 0
+        this.MAX_EMOTIONS = 1.06
 
         this.clear() // And thus init
     }
@@ -37,11 +41,19 @@ class Editor {
         this.sliderBoxes = []
         this.grabbers = []
         this.energyGrabbers = []
+        this.emAngryGrabbers = []
+        this.emHappyGrabbers = []
+        this.emSadGrabbers = []
+        this.emSurpriseGrabbers = []
 
         this.letters = []
         this.pitchNew = []
         this.dursNew = []
         this.energyNew = []
+        this.emAngryNew = []
+        this.emHappyNew = []
+        this.emSadNew = []
+        this.emSurpriseNew = []
         this.pacing = 1
         this.ampFlatCounter = 0
 
@@ -53,12 +65,18 @@ class Editor {
         this.resetDurs = []
         this.resetPitch = []
         this.resetEnergy = []
+        this.resetEmAngry = []
+        this.resetEmHappy = []
+        this.resetEmSad = []
+        this.resetEmSurprise = []
 
         this.multiLetterPitchDelta = undefined
         this.multiLetterStartPitchVals = []
         this.multiLetterStartDursVals = []
         this.multiLetterEnergyDelta = undefined
         this.multiLetterStartEnergyVals = []
+        this.multiLetterEmotionDelta = undefined
+        this.multiLetterStartEmotionVals = []
 
         this.multiLetterLengthDelta = undefined
         this.multiLetterStartLengthVals = []
@@ -114,7 +132,22 @@ class Editor {
                 this.canvas.style.cursor = "row-resize"
                 return
             }
-            // Check grabber hover
+            // Check emotion grabber hover
+            const isHoveringOverEmotionGrabber = emotionGrabbers => {
+                return emotionGrabbers.find((eGrabber, egi) => {
+                    if (!this.enabled_disabled_items[egi]) return
+                    const grabberX = eGrabber.getXLeft()+eGrabber.sliderBox.width/2-this.EMOTION_GRABBER_RADIUS
+                    return (mouseX>grabberX && mouseX<grabberX+this.EMOTION_GRABBER_RADIUS*2+4) && (mouseY>eGrabber.topLeftY-this.EMOTION_GRABBER_RADIUS-2 && mouseY<eGrabber.topLeftY+this.EMOTION_GRABBER_RADIUS+2)
+                })
+            }
+            if (window.currentModel.modelType=="xVAPitch") {
+                const isOnEmGrabber = seq_edit_view_select.value.startsWith("em") && (isHoveringOverEmotionGrabber(this.emAngryGrabbers) || isHoveringOverEmotionGrabber(this.emHappyGrabbers) || isHoveringOverEmotionGrabber(this.emSadGrabbers) || isHoveringOverEmotionGrabber(this.emSurpriseGrabbers))
+                if (isOnEmGrabber && isOnEmGrabber!=undefined) {
+                    this.canvas.style.cursor = "row-resize"
+                    return
+                }
+            }
+            // Check pitch grabber hover
             const isOnGrabber = seq_edit_view_select.value.includes("pitch") && this.grabbers.find((grabber, gi) => {
                 if (!this.enabled_disabled_items[gi]) return
                 const grabberX = grabber.getXLeft()
@@ -152,6 +185,45 @@ class Editor {
             const mouseY = parseInt(event.offsetY)
             mouseDownStart.x = mouseX
             mouseDownStart.y = mouseY
+
+            // Check up-down emotion dragging
+            const findEmotionGrabber = emotionGrabbers => {
+                return emotionGrabbers.find((eGrabber, egi) => {
+                    if (!this.enabled_disabled_items[egi]) return
+                    const grabberX = eGrabber.getXLeft()+eGrabber.sliderBox.width/2-this.EMOTION_GRABBER_RADIUS
+                    return (mouseX>grabberX && mouseX<grabberX+this.EMOTION_GRABBER_RADIUS*2+4) && (mouseY>eGrabber.topLeftY-this.EMOTION_GRABBER_RADIUS-2 && mouseY<eGrabber.topLeftY+this.EMOTION_GRABBER_RADIUS+2)
+                })
+            }
+            const handleEmGrabber = (emGrabber, grabbersList) => {
+                if (this.letterFocus.length <= 1 || (!this.letterFocus.includes(emGrabber.index))) {
+                    this.setLetterFocus(grabbersList.indexOf(emGrabber), event.ctrlKey, event.shiftKey, event.altKey)
+                }
+                this.multiLetterEmotionDelta = emGrabber.topLeftY
+                this.multiLetterStartEmotionVals = grabbersList.map(emGrabber => emGrabber.topLeftY)
+                return emGrabber
+            }
+            if (window.currentModel.modelType=="xVAPitch") {
+                const isOnEmAngryGrabber = seq_edit_view_select.value=="emAngry" && findEmotionGrabber(this.emAngryGrabbers)
+                if (isOnEmAngryGrabber) {
+                    elemDragged = handleEmGrabber(isOnEmAngryGrabber, this.emAngryGrabbers)
+                    return
+                }
+                const isOnEmHappyGrabber = seq_edit_view_select.value=="emHappy" && findEmotionGrabber(this.emHappyGrabbers)
+                if (isOnEmHappyGrabber) {
+                    elemDragged = handleEmGrabber(isOnEmHappyGrabber, this.emHappyGrabbers)
+                    return
+                }
+                const isOnEmSadGrabber = seq_edit_view_select.value=="emSad" && findEmotionGrabber(this.emSadGrabbers)
+                if (isOnEmSadGrabber) {
+                    elemDragged = handleEmGrabber(isOnEmSadGrabber, this.emSadGrabbers)
+                    return
+                }
+                const isOnEmSurpriseGrabber = seq_edit_view_select.value=="emSurprise" && findEmotionGrabber(this.emSurpriseGrabbers)
+                if (isOnEmSurpriseGrabber) {
+                    elemDragged = handleEmGrabber(isOnEmSurpriseGrabber, this.emSurpriseGrabbers)
+                    return
+                }
+            }
 
             // Check up-down energy dragging
             const isOnEGrabber = seq_edit_view_select.value.includes("energy") && this.energyGrabbers.find((eGrabber, egi) => {
@@ -232,7 +304,7 @@ class Editor {
                 }
 
                 if (elemDragged) {
-                    if (elemDragged.type=="slider") {
+                    if (elemDragged.type=="slider") { // Pitch sliders, specifically
 
                         elemDragged.setValueFromCoords(parseInt(event.offsetY)-elemDragged.height/2)
 
@@ -248,7 +320,7 @@ class Editor {
                         }
 
 
-                    } else if (elemDragged.type=="box") {
+                    } else if (elemDragged.type=="box") { // Durations being dragged sideways
 
                         // If there's a multi-selection, update all of their values, otherwise update the numerical input
                         if (this.letterFocus.length>1) {
@@ -282,7 +354,7 @@ class Editor {
                         elemDragged.grabber.width = elemDragged.width-2
                         elemDragged.letter.centerX = elemDragged.leftX + elemDragged.width/2
 
-                    } else if (elemDragged.type="energy_slider") {
+                    } else if (elemDragged.type=="energy_slider") { // Energy sliders
 
                         elemDragged.setValueFromCoords(parseInt(event.offsetY)-elemDragged.height/2)
 
@@ -294,11 +366,40 @@ class Editor {
                                 }
                             })
                         } else {
-                            energyNumb.value = parseInt(this.energyNew[elemDragged.index]*100)/100
+                            letterEnergyNumb.value = parseInt(this.energyNew[elemDragged.index]*100)/100
                         }
 
-                    }
+                    } else if (elemDragged.type=="emotion_slider") { // Emotion sliders
 
+                        elemDragged.setValueFromCoords(parseInt(event.offsetY)-elemDragged.height/2)
+
+                        // If there's a multi-selection, update all of their values, otherwise update the numerical input
+                        if (this.letterFocus.length>1) {
+                            this.letterFocus.forEach(li => {
+                                if (li!=elemDragged.index) {
+                                    if (seq_edit_view_select.value=="emAngry") {
+                                        this.emAngryGrabbers[li].setValueFromCoords(this.multiLetterStartEmotionVals[li]+(elemDragged.topLeftY-this.multiLetterEmotionDelta))
+                                    } else if (seq_edit_view_select.value=="emHappy") {
+                                        this.emHappyGrabbers[li].setValueFromCoords(this.multiLetterStartEmotionVals[li]+(elemDragged.topLeftY-this.multiLetterEmotionDelta))
+                                    } else if (seq_edit_view_select.value=="emSad") {
+                                        this.emSadGrabbers[li].setValueFromCoords(this.multiLetterStartEmotionVals[li]+(elemDragged.topLeftY-this.multiLetterEmotionDelta))
+                                    } else if (seq_edit_view_select.value=="emSurprise") {
+                                        this.emSurpriseGrabbers[li].setValueFromCoords(this.multiLetterStartEmotionVals[li]+(elemDragged.topLeftY-this.multiLetterEmotionDelta))
+                                    }
+                                }
+                            })
+                        } else {
+                            if (seq_edit_view_select.value=="emAngry") {
+                                letterEmotionNumb.value = parseFloat(this.emAngryNew[elemDragged.index]*100)/100
+                            } else if (seq_edit_view_select.value=="emHappy") {
+                                letterEmotionNumb.value = parseFloat(this.emHappyNew[elemDragged.index]*100)/100
+                            } else if (seq_edit_view_select.value=="emSad") {
+                                letterEmotionNumb.value = parseFloat(this.emSadNew[elemDragged.index]*100)/100
+                            } else if (seq_edit_view_select.value=="emSurprise") {
+                                letterEmotionNumb.value = parseFloat(this.emSurpriseNew[elemDragged.index]*100)/100
+                            }
+                        }
+                    }
                 }
             }
         })
@@ -339,6 +440,36 @@ class Editor {
                     eGrabber.render()
                 })
             }
+            if (window.currentModel.modelType=="xVAPitch") {
+                if (seq_edit_view_select.value=="emAngry") {
+                    this.emAngryGrabbers.forEach((eGrabber, egi) => {
+                        if (this.letters[egi]=="<PAD>") return
+                        eGrabber.context = this.context
+                        eGrabber.render()
+                    })
+                }
+                if (seq_edit_view_select.value=="emHappy") {
+                    this.emHappyGrabbers.forEach((eGrabber, egi) => {
+                        if (this.letters[egi]=="<PAD>") return
+                        eGrabber.context = this.context
+                        eGrabber.render()
+                    })
+                }
+                if (seq_edit_view_select.value=="emSad") {
+                    this.emSadGrabbers.forEach((eGrabber, egi) => {
+                        if (this.letters[egi]=="<PAD>") return
+                        eGrabber.context = this.context
+                        eGrabber.render()
+                    })
+                }
+                if (seq_edit_view_select.value=="emSurprise") {
+                    this.emSurpriseGrabbers.forEach((eGrabber, egi) => {
+                        if (this.letters[egi]=="<PAD>") return
+                        eGrabber.context = this.context
+                        eGrabber.render()
+                    })
+                }
+            }
         }
         requestAnimationFrame(() => {this.render()})
     }
@@ -347,6 +478,8 @@ class Editor {
 
 
     update (modelType=undefined) {
+
+        self.modelType = modelType
 
         // Make model-specific adjustments
         if (modelType=="xVAPitch") {
@@ -369,6 +502,10 @@ class Editor {
         this.sliderBoxes = []
         this.grabbers = []
         this.energyGrabbers = []
+        this.emAngryGrabbers = []
+        this.emHappyGrabbers = []
+        this.emSadGrabbers = []
+        this.emSurpriseGrabbers = []
 
         this.enabled_disabled_items = []
 
@@ -424,9 +561,52 @@ class Editor {
                 energyPercent = Math.min(energyPercent, 1)
 
                 let topLeftY = (1 - energyPercent) * (this.EDITOR_HEIGHT-2-this.ENERGY_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
-                const energyGrabber = new EnergyGrabber(this.context, li, sliderBox, topLeftY, width-2, this.ENERGY_GRABBER_RADIUS, undefined, modelType)
+                const energyGrabber = new EnergyEmotionGrabber(this.context, li, sliderBox, topLeftY, width-2, this.ENERGY_GRABBER_RADIUS, undefined, modelType, this.ENERGY_GRABBER_RADIUS, "energy")
                 energyGrabber.render()
                 this.energyGrabbers.push(energyGrabber)
+            }
+
+            if (modelType=="xVAPitch") {
+                if (this.emAngryNew && this.emAngryNew.length) {
+                    let emotionPercent = ( (this.emAngryNew[li]-this.MIN_EMOTIONS) / (this.MAX_EMOTIONS-this.MIN_EMOTIONS)  )
+                    emotionPercent = Math.max(0, emotionPercent)
+                    emotionPercent = Math.min(emotionPercent, 1)
+
+                    let topLeftY = (1 - emotionPercent) * (this.EDITOR_HEIGHT-2-this.EMOTION_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
+                    const emAngryGrabber = new EnergyEmotionGrabber(this.context, li, sliderBox, topLeftY, width-2, this.EMOTION_GRABBER_RADIUS, undefined, modelType, this.EMOTION_GRABBER_RADIUS, "emotion")
+                    emAngryGrabber.render()
+                    this.emAngryGrabbers.push(emAngryGrabber)
+                }
+                if (this.emHappyNew && this.emHappyNew.length) {
+                    let emotionPercent = ( (this.emHappyNew[li]-this.MIN_EMOTIONS) / (this.MAX_EMOTIONS-this.MIN_EMOTIONS)  )
+                    emotionPercent = Math.max(0, emotionPercent)
+                    emotionPercent = Math.min(emotionPercent, 1)
+
+                    let topLeftY = (1 - emotionPercent) * (this.EDITOR_HEIGHT-2-this.EMOTION_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
+                    const emHappyGrabber = new EnergyEmotionGrabber(this.context, li, sliderBox, topLeftY, width-2, this.EMOTION_GRABBER_RADIUS, undefined, modelType, this.EMOTION_GRABBER_RADIUS, "emotion")
+                    emHappyGrabber.render()
+                    this.emHappyGrabbers.push(emHappyGrabber)
+                }
+                if (this.emSadNew && this.emSadNew.length) {
+                    let emotionPercent = ( (this.emSadNew[li]-this.MIN_EMOTIONS) / (this.MAX_EMOTIONS-this.MIN_EMOTIONS)  )
+                    emotionPercent = Math.max(0, emotionPercent)
+                    emotionPercent = Math.min(emotionPercent, 1)
+
+                    let topLeftY = (1 - emotionPercent) * (this.EDITOR_HEIGHT-2-this.EMOTION_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
+                    const emSadGrabber = new EnergyEmotionGrabber(this.context, li, sliderBox, topLeftY, width-2, this.EMOTION_GRABBER_RADIUS, undefined, modelType, this.EMOTION_GRABBER_RADIUS, "emotion")
+                    emSadGrabber.render()
+                    this.emSadGrabbers.push(emSadGrabber)
+                }
+                if (this.emSurpriseNew && this.emSurpriseNew.length) {
+                    let emotionPercent = ( (this.emSurpriseNew[li]-this.MIN_EMOTIONS) / (this.MAX_EMOTIONS-this.MIN_EMOTIONS)  )
+                    emotionPercent = Math.max(0, emotionPercent)
+                    emotionPercent = Math.min(emotionPercent, 1)
+
+                    let topLeftY = (1 - emotionPercent) * (this.EDITOR_HEIGHT-2-this.EMOTION_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
+                    const emSurpriseGrabber = new EnergyEmotionGrabber(this.context, li, sliderBox, topLeftY, width-2, this.EMOTION_GRABBER_RADIUS, undefined, modelType, this.EMOTION_GRABBER_RADIUS, "emotion")
+                    emSurpriseGrabber.render()
+                    this.emSurpriseGrabbers.push(emSurpriseGrabber)
+                }
             }
 
             sliderBox.letter = letterClass
@@ -506,16 +686,35 @@ class Editor {
 
         if (this.letterFocus.length==1) {
             if (this.energyNew.length) {
-                energyNumb.value = parseFloat(this.energyNew[this.letterFocus[0]])
+                letterEnergyNumb.value = parseFloat(this.energyNew[this.letterFocus[0]])
+                letterEnergyNumb.disabled = false
+            }
+            if (this.emAngryNew.length) {
+                letterEmotionNumb.value = parseFloat(this.emAngryNew[this.letterFocus[0]])
+                letterEmotionNumb.disabled = false
+            }
+            if (this.emHappyNew.length) {
+                letterEmotionNumb.value = parseFloat(this.emHappyNew[this.letterFocus[0]])
+                letterEmotionNumb.disabled = false
+            }
+            if (this.emSadNew.length) {
+                letterEmotionNumb.value = parseFloat(this.emSadNew[this.letterFocus[0]])
+                letterEmotionNumb.disabled = false
+            }
+            if (this.emSurpriseNew.length) {
+                letterEmotionNumb.value = parseFloat(this.emSurpriseNew[this.letterFocus[0]])
+                letterEmotionNumb.disabled = false
             }
             letterPitchNumb.value = parseInt(this.pitchNew[this.letterFocus[0]]*100)/100
             letterLengthNumb.value = parseInt(parseFloat(this.dursNew[this.letterFocus[0]])*100)/100
 
-            energyNumb.disabled = false
             letterPitchNumb.disabled = false
             letterLengthNumb.disabled = false
         } else {
-            energyNumb.disabled = true
+            letterEnergyNumb.disabled = true
+            letterEnergyNumb.value = ""
+            letterEmotionNumb.disabled = true
+            letterEmotionNumb.value = ""
             letterPitchNumb.disabled = true
             letterPitchNumb.value = ""
             letterLengthNumb.disabled = true
@@ -636,22 +835,22 @@ class SliderGrabber {
 }
 
 
-class EnergyGrabber extends SliderGrabber {
+class EnergyEmotionGrabber extends SliderGrabber {
 
-    constructor (context, index, sliderBox, topLeftY, width, height, sliderRange, modelType) {
+    constructor (context, index, sliderBox, topLeftY, width, height, sliderRange, modelType, radius, sliderType) {
         super(context, index, sliderBox, topLeftY, width, height, sliderRange)
-        this.type = "energy_slider"
+        this.type = `${sliderType}_slider`
         this.modelType = modelType
+        this.radius = radius
     }
 
     render () {
         this.context.fillStyle = this.fillStyle
         this.context.beginPath()
         this.context.lineWidth = 1
-        let radius = window.sequenceEditor.ENERGY_GRABBER_RADIUS
         let x = this.sliderBox.getXLeft()+1 + this.sliderBox.width/2 // Centered
         let y = this.topLeftY
-        this.context.arc(x, y, radius, 0, 2 * Math.PI)
+        this.context.arc(x, y, this.radius, 0, 2 * Math.PI)
         this.context.fill()
         this.context.stroke()
         this.context.lineWidth = 1
@@ -660,26 +859,46 @@ class EnergyGrabber extends SliderGrabber {
     setValueFromCoords (topLeftY) {
 
         this.topLeftY = topLeftY
-        this.topLeftY = Math.max(window.sequenceEditor.LETTERS_Y_OFFSET+window.sequenceEditor.ENERGY_GRABBER_RADIUS, this.topLeftY)
-        this.topLeftY = Math.min(this.topLeftY, window.sequenceEditor.LETTERS_Y_OFFSET+(window.sequenceEditor.EDITOR_HEIGHT-2-window.sequenceEditor.ENERGY_GRABBER_RADIUS/2))
+        this.topLeftY = Math.max(window.sequenceEditor.LETTERS_Y_OFFSET+this.radius, this.topLeftY)
+        this.topLeftY = Math.min(this.topLeftY, window.sequenceEditor.LETTERS_Y_OFFSET+(window.sequenceEditor.EDITOR_HEIGHT-2-this.radius/2))
 
-        if (this.modelType=="xVAPitch") {
-            this.percentUp = (this.topLeftY-window.sequenceEditor.LETTERS_Y_OFFSET)/(window.sequenceEditor.EDITOR_HEIGHT-window.sequenceEditor.ENERGY_GRABBER_RADIUS)
+        if (this.type=="energy_slider") {
+            if (this.modelType=="xVAPitch") {
+                this.percentUp = (this.topLeftY-window.sequenceEditor.LETTERS_Y_OFFSET)/(window.sequenceEditor.EDITOR_HEIGHT-this.radius)
+            } else {
+                this.percentUp = 1-(this.topLeftY-window.sequenceEditor.LETTERS_Y_OFFSET)/(window.sequenceEditor.EDITOR_HEIGHT-this.radius)
+            }
+            window.sequenceEditor.energyNew[this.index] = window.sequenceEditor.MAX_ENERGY - (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)*this.percentUp
         } else {
-            this.percentUp = 1-(this.topLeftY-window.sequenceEditor.LETTERS_Y_OFFSET)/(window.sequenceEditor.EDITOR_HEIGHT-window.sequenceEditor.ENERGY_GRABBER_RADIUS)
+            this.percentUp = (this.topLeftY-window.sequenceEditor.LETTERS_Y_OFFSET)/(window.sequenceEditor.EDITOR_HEIGHT-this.radius)
+            if (seq_edit_view_select.value=="emAngry") {
+                window.sequenceEditor.emAngryNew[this.index] = window.sequenceEditor.MAX_EMOTIONS - (window.sequenceEditor.MAX_EMOTIONS-window.sequenceEditor.MIN_ENERGY)*this.percentUp
+            } else if (seq_edit_view_select.value=="emHappy") {
+                window.sequenceEditor.emHappyNew[this.index] = window.sequenceEditor.MAX_EMOTIONS - (window.sequenceEditor.MAX_EMOTIONS-window.sequenceEditor.MIN_ENERGY)*this.percentUp
+            } else if (seq_edit_view_select.value=="emSad") {
+                window.sequenceEditor.emSadNew[this.index] = window.sequenceEditor.MAX_EMOTIONS - (window.sequenceEditor.MAX_EMOTIONS-window.sequenceEditor.MIN_ENERGY)*this.percentUp
+            } else if (seq_edit_view_select.value=="emSurprise") {
+                window.sequenceEditor.emSurpriseNew[this.index] = window.sequenceEditor.MAX_EMOTIONS - (window.sequenceEditor.MAX_EMOTIONS-window.sequenceEditor.MIN_ENERGY)*this.percentUp
+            }
         }
-        window.sequenceEditor.energyNew[this.index] = window.sequenceEditor.MAX_ENERGY - (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)*this.percentUp
     }
 
     setValueFromValue (value) {
-        value = Math.max(window.sequenceEditor.MIN_ENERGY, value)
-        value = Math.min(value, window.sequenceEditor.MAX_ENERGY)
-        if (this.modelType=="xVAPitch") {
-            this.percentUp = ( (value-window.sequenceEditor.MIN_ENERGY) / (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)  )
+        if (this.type=="energy_slider") {
+            value = Math.max(window.sequenceEditor.MIN_ENERGY, value)
+            value = Math.min(value, window.sequenceEditor.MAX_ENERGY)
+            if (this.modelType=="xVAPitch") {
+                this.percentUp = ( (value-window.sequenceEditor.MIN_ENERGY) / (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)  )
+            } else {
+                this.percentUp = 1 - ( (value-window.sequenceEditor.MIN_ENERGY) / (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)  )
+            }
         } else {
-            this.percentUp = 1 - ( (value-window.sequenceEditor.MIN_ENERGY) / (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)  )
+            value = Math.max(window.sequenceEditor.MIN_EMOTIONS, value)
+            value = Math.min(value, window.sequenceEditor.MAX_EMOTIONS)
+            this.percentUp = ( (value-window.sequenceEditor.MIN_EMOTIONS) / (window.sequenceEditor.MAX_EMOTIONS-window.sequenceEditor.MIN_EMOTIONS)  )
         }
-        this.topLeftY = (1 - this.percentUp) * (window.sequenceEditor.EDITOR_HEIGHT-2-window.sequenceEditor.ENERGY_GRABBER_RADIUS*2) + (window.sequenceEditor.LETTERS_Y_OFFSET+1)
+
+        this.topLeftY = (1 - this.percentUp) * (window.sequenceEditor.EDITOR_HEIGHT-2-this.radius*2) + (window.sequenceEditor.LETTERS_Y_OFFSET+1)
     }
 }
 
@@ -786,31 +1005,24 @@ right.addEventListener("click", event => {
     })
     window.sequenceEditor.letterFocus = []
 
-    energyNumb.disabled = true
-    energyNumb.value = ""
+    letterEnergyNumb.disabled = true
+    letterEnergyNumb.value = ""
     letterPitchNumb.disabled = true
     letterPitchNumb.value = ""
     letterLengthNumb.disabled = true
     letterLengthNumb.value = ""
+    letterEmotionNumb.disabled = true
+    letterEmotionNumb.value = ""
 })
 
-energyNumb.addEventListener("click", () => {
-    const lpnValue = parseFloat(energyNumb.value) || 0
+letterEnergyNumb.addEventListener("click", () => {
+    const lpnValue = parseFloat(letterEnergyNumb.value) || 0
     if (window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
         window.sequenceEditor.hasChanged = true
     }
 })
-energyNumb.addEventListener("input", () => {
-    const lpnValue = parseFloat(energyNumb.value) || 0
-    if (window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
-        window.sequenceEditor.hasChanged = true
-    }
-    window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]] = lpnValue
-    window.sequenceEditor.energyGrabbers[window.sequenceEditor.letterFocus[0]].setValueFromValue(lpnValue)
-    kickOffAutoInferTimer()
-})
-energyNumb.addEventListener("change", () => {
-    const lpnValue = parseFloat(energyNumb.value) || 0
+letterEnergyNumb.addEventListener("input", () => {
+    const lpnValue = parseFloat(letterEnergyNumb.value) || 0
     if (window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
         window.sequenceEditor.hasChanged = true
     }
@@ -818,6 +1030,45 @@ energyNumb.addEventListener("change", () => {
     window.sequenceEditor.energyGrabbers[window.sequenceEditor.letterFocus[0]].setValueFromValue(lpnValue)
     kickOffAutoInferTimer()
 })
+letterEnergyNumb.addEventListener("change", () => {
+    const lpnValue = parseFloat(letterEnergyNumb.value) || 0
+    if (window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
+        window.sequenceEditor.hasChanged = true
+    }
+    window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]] = lpnValue
+    window.sequenceEditor.energyGrabbers[window.sequenceEditor.letterFocus[0]].setValueFromValue(lpnValue)
+    kickOffAutoInferTimer()
+})
+
+letterEmotionNumb.addEventListener("click", () => {
+    const lpnValue = parseFloat(letterEmotionNumb.value) || 0
+    let data, grabbers = getSelectedEmotionDataAndGrabbers()
+    if (data[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
+        window.sequenceEditor.hasChanged = true
+    }
+})
+letterEmotionNumb.addEventListener("input", () => {
+    const lpnValue = parseFloat(letterEmotionNumb.value) || 0
+    let data, grabbers = getSelectedEmotionDataAndGrabbers()
+    if (window.sequenceEditor.data[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
+        window.sequenceEditor.hasChanged = true
+    }
+    window.sequenceEditor.data[window.sequenceEditor.letterFocus[0]] = lpnValue
+    grabbers[window.sequenceEditor.letterFocus[0]].setValueFromValue(lpnValue)
+    kickOffAutoInferTimer()
+})
+letterEmotionNumb.addEventListener("change", () => {
+    const lpnValue = parseFloat(letterEmotionNumb.value) || 0
+    let data, grabbers = getSelectedEmotionDataAndGrabbers()
+    if (data[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
+        window.sequenceEditor.hasChanged = true
+    }
+    data[window.sequenceEditor.letterFocus[0]] = lpnValue
+    grabbers[window.sequenceEditor.letterFocus[0]].setValueFromValue(lpnValue)
+    kickOffAutoInferTimer()
+})
+
+
 letterPitchNumb.addEventListener("click", () => {
     const lpnValue = parseFloat(letterPitchNumb.value) || 0
     if (window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
@@ -862,7 +1113,10 @@ resetLetter_btn.addEventListener("click", () => {
     if (window.sequenceEditor.letterFocus.length==1) {
         letterLengthNumb.value = parseFloat(window.sequenceEditor.dursNew[window.sequenceEditor.letterFocus[0]])
         letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
-        energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]])
+        letterEnergyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]])
+
+        let data, grabbers = getSelectedEmotionDataAndGrabbers()
+        letterEmotionNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]])
     }
 })
 const updateLetterLengthFromInput = () => {
@@ -884,19 +1138,38 @@ letterLengthNumb.addEventListener("change", () => {
 })
 
 // Reset button
-const resetEnergy = () => {
+window.resetEnergy = () => {
     window.sequenceEditor.energyNew = window.sequenceEditor.resetEnergy.map(v => v)
     window.sequenceEditor.energyGrabbers.forEach((slider, l) => {
         slider.setValueFromValue(window.sequenceEditor.energyNew[l])
     })
     if (window.sequenceEditor.letterFocus.length==1) {
-        energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
+        letterEnergyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
     }
     if (window.sequenceEditor.letterFocus.length==1) {
-        energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]])
+        letterEnergyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]])
     }
 }
-const resetPitch = () => {
+window.resetEmotion = () => {
+    window.sequenceEditor.emAngryNew = window.sequenceEditor.resetEmAngry.map(v => v)
+    window.sequenceEditor.emHappyNew = window.sequenceEditor.resetEmHappy.map(v => v)
+    window.sequenceEditor.emSadNew = window.sequenceEditor.resetEmSad.map(v => v)
+    window.sequenceEditor.emSurpriseNew = window.sequenceEditor.resetEmSurprise.map(v => v)
+
+    let data, grabbers = getSelectedEmotionDataAndGrabbers()
+    window.sequenceEditor.emAngryGrabbers.forEach((slider, l) => slider.setValueFromValue(window.sequenceEditor.emAngryNew[l]))
+    window.sequenceEditor.emHappyGrabbers.forEach((slider, l) => slider.setValueFromValue(window.sequenceEditor.emHappyNew[l]))
+    window.sequenceEditor.emSadGrabbers.forEach((slider, l) => slider.setValueFromValue(window.sequenceEditor.emSadNew[l]))
+    window.sequenceEditor.emSurpriseGrabbers.forEach((slider, l) => slider.setValueFromValue(window.sequenceEditor.emSurpriseNew[l]))
+
+    if (window.sequenceEditor.letterFocus.length==1) {
+        letterEmotionNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]]*100)/100
+    }
+    if (window.sequenceEditor.letterFocus.length==1) {
+        letterEmotionNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]])
+    }
+}
+window.resetPitch = () => {
     window.sequenceEditor.pitchNew = window.sequenceEditor.resetPitch.map(p=>p)
     // Update the editor pitch values
     window.sequenceEditor.grabbers.forEach((slider, i) => {
@@ -906,7 +1179,7 @@ const resetPitch = () => {
         letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
     }
 }
-const resetDursPace = () => {
+window.resetDursPace = () => {
 
     pace_slid.value = 1
     paceNumbInput.value = 1
@@ -932,7 +1205,12 @@ reset_btn.addEventListener("click", () => {
         } else if (seq_edit_edit_select.value=="pitch") {
             resetPitch()
             resetDursPace()
+
+        } else if (seq_edit_edit_select.value=="emotion") {
+            resetEmotion()
+            resetDursPace()
         }
+
         window.sequenceEditor.init()
     } else {
         reset_what_open_btn.click()
@@ -949,8 +1227,41 @@ reset_what_confirm_btn.addEventListener("click", () => {
     if (reset_what_duration.checked) {
         resetDursPace()
     }
+    if (reset_what_emotion.checked) {
+        resetEmotion()
+    }
     window.sequenceEditor.init()
 })
+
+const getSelectedEmotionDataAndGrabbers = () => {
+    let data, grabbers
+    if (seq_edit_view_select.value=="emAngry") {
+        data = window.sequenceEditor.emAngryNew
+        grabbers = window.sequenceEditor.emAngryGrabbers
+    } else if (seq_edit_view_select.value=="emHappy") {
+        data = window.sequenceEditor.emHappyNew
+        grabbers = window.sequenceEditor.emHappyGrabbers
+    } else if (seq_edit_view_select.value=="emSad") {
+        data = window.sequenceEditor.emSadNew
+        grabbers = window.sequenceEditor.emSadGrabbers
+    } else if (seq_edit_view_select.value=="emSurprise") {
+        data = window.sequenceEditor.emSurpriseNew
+        grabbers = window.sequenceEditor.emSurpriseGrabbers
+    }
+    return data, grabbers
+}
+const setNewDataToSelectedEmotion = (data) => {
+    if (seq_edit_view_select.value=="emAngry") {
+        window.sequenceEditor.emAngryNew = data
+    } else if (seq_edit_view_select.value=="emHappy") {
+        window.sequenceEditor.emHappyNew = data
+    } else if (seq_edit_view_select.value=="emSad") {
+        window.sequenceEditor.emSadNew = data
+    } else if (seq_edit_view_select.value=="emSurprise") {
+        window.sequenceEditor.emSurpriseNew = data
+    }
+}
+
 
 amplify_btn.addEventListener("click", () => {
     if (seq_edit_edit_select.value=="pitch") {
@@ -980,8 +1291,27 @@ amplify_btn.addEventListener("click", () => {
             slider.setValueFromValue(window.sequenceEditor.energyNew[l])
         })
         if (window.sequenceEditor.letterFocus.length==1) {
-            energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
+            letterEnergyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
         }
+    } else if (seq_edit_edit_select.value=="emotion") {
+
+        let data, grabbers = getSelectedEmotionDataAndGrabbers()
+
+        data = data.map((e, ei) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
+                return e
+            }
+            const distFromMiddle = (e-window.sequenceEditor.MIN_EMOTIONS) - (window.sequenceEditor.MAX_EMOTIONS-window.sequenceEditor.MIN_EMOTIONS)/2
+            const newVal = e + distFromMiddle*0.025
+            return newVal>0 ? Math.min(window.sequenceEditor.MAX_EMOTIONS, newVal) : Math.max(window.sequenceEditor.MIN_EMOTIONS, newVal)
+        })
+        grabbers.forEach((slider, l) => {
+            slider.setValueFromValue(data[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterEmotionNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
+        setNewDataToSelectedEmotion(data)
     }
     kickOffAutoInferTimer()
 })
@@ -1013,8 +1343,26 @@ flatten_btn.addEventListener("click", () => {
             slider.setValueFromValue(window.sequenceEditor.energyNew[l])
         })
         if (window.sequenceEditor.letterFocus.length==1) {
-            energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
+            letterEnergyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
         }
+    } else if (seq_edit_edit_select.value=="emotion") {
+        let data, grabbers = getSelectedEmotionDataAndGrabbers()
+
+        data = data.map((e,ei) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
+                return e
+            }
+            const distFromMiddle = (e-window.sequenceEditor.MIN_EMOTIONS) - (window.sequenceEditor.MAX_EMOTIONS-window.sequenceEditor.MIN_EMOTIONS)/2
+            const newVal = e + distFromMiddle*-0.025
+            return newVal>0 ? Math.min(window.sequenceEditor.MAX_EMOTIONS, newVal) : Math.max(window.sequenceEditor.MIN_EMOTIONS, newVal)
+        })
+        grabbers.forEach((slider, l) => {
+            slider.setValueFromValue(data[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterEmotionNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
+        setNewDataToSelectedEmotion(data)
     }
     kickOffAutoInferTimer()
 })
@@ -1054,8 +1402,25 @@ jitter_btn.addEventListener("click", () => {
             slider.setValueFromValue(window.sequenceEditor.energyNew[l])
         })
         if (window.sequenceEditor.letterFocus.length==1) {
-            energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
+            letterEnergyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
         }
+    } else if (seq_edit_edit_select.value=="emotion") {
+        let data, grabbers = getSelectedEmotionDataAndGrabbers()
+        data = data.map((e, ei) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
+                return e
+            }
+            const distFromMiddle = (e-window.sequenceEditor.MIN_EMOTIONS) - (window.sequenceEditor.MAX_EMOTIONS-window.sequenceEditor.MIN_EMOTIONS)/2
+            const newVal = e + distFromMiddle*(Math.random()*0.1+0.05) * ((Math.random()-0.5)>0 ? 1 : -1)
+            return newVal>0 ? Math.min(window.sequenceEditor.MAX_EMOTIONS, newVal) : Math.max(window.sequenceEditor.MIN_EMOTIONS, newVal)
+        })
+        grabbers.forEach((slider, l) => {
+            slider.setValueFromValue(data[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterEmotionNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
+        setNewDataToSelectedEmotion(data)
     }
     kickOffAutoInferTimer()
 })
@@ -1086,8 +1451,23 @@ increase_btn.addEventListener("click", () => {
             slider.setValueFromValue(window.sequenceEditor.energyNew[l])
         })
         if (window.sequenceEditor.letterFocus.length==1) {
-            energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
+            letterEnergyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
         }
+    } else if (seq_edit_edit_select.value=="emotion") {
+        let data, grabbers = getSelectedEmotionDataAndGrabbers()
+        data = data.map((e,ei) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
+                return e
+            }
+            return e-0.04
+        })
+        grabbers.forEach((slider, l) => {
+            slider.setValueFromValue(data[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterEmotionNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
+        setNewDataToSelectedEmotion(data)
     }
     kickOffAutoInferTimer()
 })
@@ -1116,8 +1496,23 @@ decrease_btn.addEventListener("click", () => {
             slider.setValueFromValue(window.sequenceEditor.energyNew[l])
         })
         if (window.sequenceEditor.letterFocus.length==1) {
-            energyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
+            letterEnergyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
         }
+    } else if (seq_edit_edit_select.value=="emotion") {
+        let data, grabbers = getSelectedEmotionDataAndGrabbers()
+        data = data.map((e,ei) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
+                return e
+            }
+            return e+0.04
+        })
+        grabbers.forEach((slider, l) => {
+            slider.setValueFromValue(data[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterEmotionNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
+        setNewDataToSelectedEmotion(data)
     }
     kickOffAutoInferTimer()
 })

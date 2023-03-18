@@ -14,6 +14,7 @@ window.i18n.setEnglish = () => {
     window.i18n.PITCH_AND_ENERGY = "Pitch+Energy"
     window.i18n.PITCH = "Pitch"
     window.i18n.ENERGY = "Energy"
+    window.i18n.EMOTION = "Emotion"
     window.i18n.DURATIONS = "Durations"
     window.i18n.MANAGE = "Manage"
     window.i18n.DEFAULT = "Default"
@@ -22,7 +23,14 @@ window.i18n.setEnglish = () => {
     window.i18n.DESCRIPTION = "Description"
 
     window.i18n.VIEW_IS = "View:"
+    window.i18n.PITCH_IS = "Pitch:"
     window.i18n.ENERGY_IS = "Energy:"
+    window.i18n.EMOTION_IS_ANGRY = "Emotion: Angry"
+    window.i18n.EMOTION_IS_HAPPY = "Emotion: Happy"
+    window.i18n.EMOTION_IS_SAD = "Emotion: Sad"
+    window.i18n.EMOTION_IS_SURPRISE = "Emotion: Surprise"
+    window.i18n.DURATION_IS = "Duration:"
+    window.i18n.EMOTION_IS = "Emotion:"
     window.i18n.LENGTH = "Length:"
     window.i18n.RESET_LETTER = "Reset Letter"
     window.i18n.AUTO_REGEN = "Auto regenerate"
@@ -620,12 +628,21 @@ window.i18n.updateUI = () => {
 
     i18n_seq_edit_edit.innerHTML = window.i18n.EDIT_IS
     i18n_seq_edit_view.innerHTML = window.i18n.VIEW_IS
+    i18n_pitch.innerHTML = window.i18n.PITCH_IS
     i18n_energy.innerHTML = window.i18n.ENERGY_IS
+    i18n_duration.innerHTML = window.i18n.DURATION_IS
+    i18n_emotion.innerHTML = window.i18n.EMOTION_IS
+    i18n_emotion_is.innerHTML = window.i18n.EMOTION_IS
     seq_edit_view_pitch_energy.innerHTML = window.i18n.PITCH_AND_ENERGY
     seq_edit_view_pitch.innerHTML = window.i18n.PITCH
     seq_edit_view_energy.innerHTML = window.i18n.ENERGY
+    seq_edit_view_emAngry.innerHTML = window.i18n.EMOTION_IS_ANGRY
+    seq_edit_view_emHappy.innerHTML = window.i18n.EMOTION_IS_HAPPY
+    seq_edit_view_emSad.innerHTML = window.i18n.EMOTION_IS_SAD
+    seq_edit_view_emSurprise.innerHTML = window.i18n.EMOTION_IS_SURPRISE
     seq_edit_edit_pitch.innerHTML = window.i18n.PITCH
     seq_edit_edit_energy.innerHTML = window.i18n.ENERGY
+    seq_edit_edit_emotion.innerHTML = window.i18n.EMOTION
 
     i18n_vramUsage.innerHTML = window.i18n.VRAM_USAGE
     i18n_length.innerHTML = window.i18n.LENGTH

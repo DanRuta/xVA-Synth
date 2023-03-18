@@ -56,11 +56,19 @@ class xVAPitch(object):
         self.language_id_mapping = {name: i for i, name in enumerate(sorted(list(lang_names.keys())))}
 
 
-        self.pitch_emb_values = torch.tensor(np.load(f'{"./resources/app" if self.PROD else "."}/python/xvapitch/pitch_emb.npy')).unsqueeze(0).unsqueeze(-1)
+        self.pitch_emb_values = torch.tensor(np.load(f'{"./resources/app" if self.PROD else "."}/python/xvapitch/embs/pitch_emb.npy')).unsqueeze(0).unsqueeze(-1)
+        self.angry_emb_values = torch.tensor(np.load(f'{"./resources/app" if self.PROD else "."}/python/xvapitch/embs/angry.npy')).unsqueeze(0).unsqueeze(-1)
+        self.happy_emb_values = torch.tensor(np.load(f'{"./resources/app" if self.PROD else "."}/python/xvapitch/embs/happy.npy')).unsqueeze(0).unsqueeze(-1)
+        self.sad_emb_values = torch.tensor(np.load(f'{"./resources/app" if self.PROD else "."}/python/xvapitch/embs/sad.npy')).unsqueeze(0).unsqueeze(-1)
+        self.surprise_emb_values = torch.tensor(np.load(f'{"./resources/app" if self.PROD else "."}/python/xvapitch/embs/surprise.npy')).unsqueeze(0).unsqueeze(-1)
 
         self.base_lang = "en"
         self.init_model()
         self.model.pitch_emb_values = self.pitch_emb_values.to(self.models_manager.device)
+        self.model.angry_emb_values = self.angry_emb_values.to(self.models_manager.device)
+        self.model.happy_emb_values = self.happy_emb_values.to(self.models_manager.device)
+        self.model.sad_emb_values = self.sad_emb_values.to(self.models_manager.device)
+        self.model.surprise_emb_values = self.surprise_emb_values.to(self.models_manager.device)
         self.isReady = True
 
 
@@ -376,7 +384,6 @@ class xVAPitch(object):
         if base_lang not in self.lang_tp.keys():
             self.lang_tp[base_lang] = get_text_preprocessor(base_lang, self.base_dir, logger=self.logger)
 
-        sampling_rate = 22050
         try:
             sequence, cleaned_text = self.lang_tp[base_lang].text_to_sequence(text)
         except ValueError as e:
@@ -438,7 +445,9 @@ class xVAPitch(object):
             if isinstance(out, str):
                 return f'ERR:{out}'
             else:
-                output_wav, dur_pred, pitch_pred, energy_pred, start_index, end_index, wav_mult = out
+                output_wav, dur_pred, pitch_pred, energy_pred, em_pred, start_index, end_index, wav_mult = out
+
+                [em_angry_pred, em_happy_pred, em_sad_pred, em_surprise_pred] = em_pred
 
                 wav = output_wav.squeeze().cpu().detach().numpy()
                 wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
@@ -473,11 +482,25 @@ class xVAPitch(object):
 
 
 
-        [pitch, durations, energy] = [pitch_pred.squeeze().cpu().detach().numpy(), dur_pred.squeeze().cpu().detach().numpy(), energy_pred.cpu().detach().numpy() if energy_pred is not None else []]
-        pitch_durations_energy_text = ",".join([str(v) for v in pitch]) + "\n" + ",".join([str(v) for v in durations]) + "\n" + ",".join([str(v) for v in energy])
+        [pitch, durations, energy, em_angry, em_happy, em_sad, em_surprise] = [
+            pitch_pred.squeeze().cpu().detach().numpy(),
+            dur_pred.squeeze().cpu().detach().numpy(),
+            energy_pred.cpu().detach().numpy() if energy_pred is not None else [],
+            em_angry_pred.squeeze().cpu().detach().numpy() if em_angry_pred is not None else [],
+            em_happy_pred.squeeze().cpu().detach().numpy() if em_happy_pred is not None else [],
+            em_sad_pred.squeeze().cpu().detach().numpy() if em_sad_pred is not None else [],
+            em_surprise_pred.squeeze().cpu().detach().numpy() if em_surprise_pred is not None else [],
+        ]
+        editor_values_text = ",".join([str(v) for v in pitch]) + "\n" + \
+                             ",".join([str(v) for v in durations]) + "\n" + \
+                             ",".join([str(v) for v in energy]) + "\n" + \
+                             ",".join([str(v) for v in em_angry]) + "\n" + \
+                             ",".join([str(v) for v in em_happy]) + "\n" + \
+                             ",".join([str(v) for v in em_sad]) + "\n" + \
+                             ",".join([str(v) for v in em_surprise])
 
-        del pitch_pred, dur_pred, energy_pred, text, sequence
-        return pitch_durations_energy_text +"\n"+cleaned_text +"\n"+ f'{start_index}\n{end_index}'
+        del pitch_pred, dur_pred, energy_pred, em_angry, em_happy, em_sad, em_surprise, text, sequence
+        return editor_values_text +"\n"+cleaned_text +"\n"+ f'{start_index}\n{end_index}'
 
     def set_device (self, device):
         self.device = device

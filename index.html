@@ -129,19 +129,27 @@
                                     <option id="seq_edit_view_pitch_energy" value="pitch_energy">Pitch+Energy</option>
                                     <option id="seq_edit_view_pitch" value="pitch">Pitch</option>
                                     <option id="seq_edit_view_energy" value="energy">Energy</option>
+                                    <option id="seq_edit_view_emAngry" value="emAngry">Emotion: Angry</option>
+                                    <option id="seq_edit_view_emHappy" value="emHappy">Emotion: Happy</option>
+                                    <option id="seq_edit_view_emSad" value="emSad">Emotion: Sad</option>
+                                    <option id="seq_edit_view_emSurprise" value="emSurprise">Emotion: Surprise</option>
                                 </select>
                             </div>
                             <div>
                                 <span id="i18n_energy">Energy:</span>
-                                <input id="energyNumb" disabled="true" type="number" name="energyNum" min="3.6" step="0.01" max="4.3">
+                                <input id="letterEnergyNumb" disabled="true" type="number" name="energyNum" min="3.6" step="0.01" max="4.3">
                             </div>
                             <div>
                                 <span id="i18n_length">Length:</span>
                                 <input id="letterLengthNumb" disabled="true" type="number" name="lengthNum" min="0.1" step="0.1" max="15">
                             </div>
                             <div>
-                                <span>Pitch:</span>
+                                <span id="i18n_pitch">Pitch:</span>
                                 <input id="letterPitchNumb" disabled="true" type="number" name="lengthNum" min="-3" step="0.025" max="3">
+                            </div>
+                            <div>
+                                <span id="i18n_emotion_is">Emotion:</span>
+                                <input id="letterEmotionNumb" disabled="true" type="number" name="lengthNum" min="0" step="0.05" max="1">
                             </div>
                             <button id="resetLetter_btn">Reset Letter</button>
                             <div id="vocoder_options_container" style="display: none;">
@@ -161,6 +169,7 @@
                                 <select id="seq_edit_edit_select">
                                     <option id="seq_edit_edit_pitch" value="pitch">Pitch</option>
                                     <option id="seq_edit_edit_energy" value="energy">Energy</option>
+                                    <option id="seq_edit_edit_emotion" value="emotion">Emotion</option>
                                 </select>
                             </div>
                             <div id="editor_amplitude_options">
@@ -1780,7 +1789,7 @@
 
 
         <div id="resetContainer" style="display: none;">
-            <div class="modal" style="height: 10vh;min-width: 500px;width: 30vw;min-height: 300px;">
+            <div class="modal" style="height: 10vh;min-width: 500px;width: 30vw;min-height: 400px;">
                 <h2><span id="i18n_reset_what_prompt">What would you like to reset?</span> <span id="totd_counter"></span></h2>
                 <div id="i18n_reset_what_tip">Shift+click the Reset button to reset all 3.</div>
 
@@ -1796,6 +1805,10 @@
                     <div>
                         <div id="i18n_duration">Duration</div>
                         <div><input type="checkbox" id="reset_what_duration" checked></div>
+                    </div>
+                    <div>
+                        <div id="i18n_emotion">Emotion</div>
+                        <div><input type="checkbox" id="reset_what_emotion" checked></div>
                     </div>
                 </div>
 

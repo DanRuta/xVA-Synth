@@ -893,6 +893,10 @@ window.synthesizeSample = () => {
     let pitch = []
     let duration = []
     let energy = []
+    let emAngry = []
+    let emHappy = []
+    let emSad = []
+    let emSurprise = []
     let isFreshRegen = true
     let old_sequence = undefined
 
@@ -915,6 +919,12 @@ window.synthesizeSample = () => {
         pitch = window.sequenceEditor.pitchNew.map(v=> v==undefined?0:v)
         duration = window.sequenceEditor.dursNew.map(v => v*pace_slid.value).map(v=> v==undefined?0:v)
         energy = window.sequenceEditor.energyNew ? window.sequenceEditor.energyNew.map(v => v==undefined?0:v).filter(v => !isNaN(v)) : []
+        if (window.currentModel.modelType=="xVAPitch") {
+            emAngry = window.sequenceEditor.emAngryNew ? window.sequenceEditor.emAngryNew.map(v => v==undefined?0:v).filter(v => !isNaN(v)) : []
+            emHappy = window.sequenceEditor.emHappyNew ? window.sequenceEditor.emHappyNew.map(v => v==undefined?0:v).filter(v => !isNaN(v)) : []
+            emSad = window.sequenceEditor.emSadNew ? window.sequenceEditor.emSadNew.map(v => v==undefined?0:v).filter(v => !isNaN(v)) : []
+            emSurprise = window.sequenceEditor.emSurpriseNew ? window.sequenceEditor.emSurpriseNew.map(v => v==undefined?0:v).filter(v => !isNaN(v)) : []
+        }
         isFreshRegen = false
     }
     window.arpabetMenuState.hasChangedARPAbet = false
@@ -929,7 +939,7 @@ window.synthesizeSample = () => {
     doFetch(`http://localhost:8008/synthesize`, {
         method: "Post",
         body: JSON.stringify({
-            sequence, pitch, duration, energy, speaker_i, pace,
+            sequence, pitch, duration, energy, emAngry, emHappy, emSad, emSurprise, speaker_i, pace,
             base_lang: base_lang_select.value,
             base_emb: style_emb_select.value||"",
             modelType: window.currentModel.modelType,
@@ -971,9 +981,13 @@ window.synthesizeSample = () => {
         let pitchData = res[0]
         let durationsData = res[1]
         let energyData = res[2]
-        let cleanedSequence = res[3].split("|").map(c=>c.replaceAll("{", "").replaceAll("}", "").replace(/\s/g, "_"))
-        const start_index = res[4]
-        const end_index = res[5]
+        let em_angryData = res[3]
+        let em_happyData = res[4]
+        let em_sadData = res[5]
+        let em_surpriseData = res[6]
+        let cleanedSequence = res[7].split("|").map(c=>c.replaceAll("{", "").replaceAll("}", "").replace(/\s/g, "_"))
+        const start_index = res[8]
+        const end_index = res[9]
         pitchData = pitchData.split(",").map(v => parseFloat(v))
 
         // For use in adjusting editor range
@@ -983,6 +997,11 @@ window.synthesizeSample = () => {
         } else {
             window.sequenceEditor.pitchSliderRange = window.sequenceEditor.default_pitchSliderRange
         }
+
+        em_angryData = em_angryData.length ? em_angryData.split(",").map(v => parseFloat(v)).filter(v => !isNaN(v)) : []
+        em_happyData = em_happyData.length ? em_happyData.split(",").map(v => parseFloat(v)).filter(v => !isNaN(v)) : []
+        em_sadData = em_sadData.length ? em_sadData.split(",").map(v => parseFloat(v)).filter(v => !isNaN(v)) : []
+        em_surpriseData = em_surpriseData.length ? em_surpriseData.split(",").map(v => parseFloat(v)).filter(v => !isNaN(v)) : []
 
         if (energyData.length) {
             energyData = energyData.split(",").map(v => parseFloat(v)).filter(v => !isNaN(v))
@@ -1016,12 +1035,20 @@ window.synthesizeSample = () => {
                 window.sequenceEditor.resetPitch = pitchData
                 window.sequenceEditor.resetDurs = durationsData
                 window.sequenceEditor.resetEnergy = energyData
+                window.sequenceEditor.resetEmAngry = em_angryData
+                window.sequenceEditor.resetEmHappy = em_happyData
+                window.sequenceEditor.resetEmSad = em_sadData
+                window.sequenceEditor.resetEmSurprise = em_surpriseData
             }
 
             window.sequenceEditor.letters = cleanedSequence
             window.sequenceEditor.pitchNew = pitchData.map(p=>p)
             window.sequenceEditor.dursNew = durationsData.map(v=>v)
             window.sequenceEditor.energyNew = energyData.map(v=>v)
+            window.sequenceEditor.emAngryNew = em_angryData.map(v=>v)
+            window.sequenceEditor.emHappyNew = em_happyData.map(v=>v)
+            window.sequenceEditor.emSadNew = em_sadData.map(v=>v)
+            window.sequenceEditor.emSurpriseNew = em_surpriseData.map(v=>v)
             window.sequenceEditor.init()
             window.sequenceEditor.update(window.currentModel.modelType)
 
@@ -1103,6 +1130,10 @@ window.synthesizeSample = () => {
                 letters: cleanedSequence,
                 pitch: pitchData.map(p=>p),
                 energy: energyData.map(p=>p),
+                em_angry: em_angryData.map(p=>p),
+                em_happy: em_happyData.map(p=>p),
+                em_sad: em_sadData.map(p=>p),
+                em_surprise: em_surpriseData.map(p=>p),
                 durations: durationsData.map(v=>v)
             }
 

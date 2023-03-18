@@ -160,7 +160,7 @@ class xVAPitch(nn.Module):
     def infer_advanced (self, logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace=1.0, editor_data=None, old_sequence=None, pitch_amp=None):
 
         if (editor_data is not None) and ((editor_data[0] is not None and len(editor_data[0])) or (editor_data[1] is not None and len(editor_data[1]))):
-            pitch_pred, dur_pred, energy_pred = editor_data
+            pitch_pred, dur_pred, energy_pred, em_angry_pred, em_happy_pred, em_sad_pred, em_surprise_pred = editor_data
             # TODO, use energy_pred
             dur_pred = torch.tensor(dur_pred)
             dur_pred = dur_pred.view((1, dur_pred.shape[0])).float().to(self.device)
@@ -169,31 +169,66 @@ class xVAPitch(nn.Module):
             energy_pred = torch.tensor(energy_pred)
             energy_pred = energy_pred.view((1, energy_pred.shape[0])).float().to(self.device)
 
+            em_angry_pred = torch.tensor(em_angry_pred)
+            em_angry_pred = em_angry_pred.view((1, em_angry_pred.shape[0])).float().to(self.device)
+            em_happy_pred = torch.tensor(em_happy_pred)
+            em_happy_pred = em_happy_pred.view((1, em_happy_pred.shape[0])).float().to(self.device)
+            em_sad_pred = torch.tensor(em_sad_pred)
+            em_sad_pred = em_sad_pred.view((1, em_sad_pred.shape[0])).float().to(self.device)
+            em_surprise_pred = torch.tensor(em_surprise_pred)
+            em_surprise_pred = em_surprise_pred.view((1, em_surprise_pred.shape[0])).float().to(self.device)
+
+            # Pitch speaker embedding deltas
             if not self.USE_PITCH_COND and pitch_pred.shape[1]==speaker_embs.shape[2]:
                 pitch_delta = self.pitch_emb_values.to(pitch_pred.device) * pitch_pred
                 speaker_embs = speaker_embs + pitch_delta.float()
 
+            # Emotion speaker embedding deltas
+            emotions_strength = 0.00003 # Global scaling
+
+            if em_angry_pred.shape[1]==speaker_embs.shape[2]:
+                em_angry_delta = self.angry_emb_values.to(em_angry_pred.device) * em_angry_pred * emotions_strength
+                speaker_embs = speaker_embs + em_angry_delta.float()
+            if em_happy_pred.shape[1]==speaker_embs.shape[2]:
+                em_happy_delta = self.happy_emb_values.to(em_happy_pred.device) * em_happy_pred * emotions_strength
+                speaker_embs = speaker_embs + em_happy_delta.float()
+            if em_sad_pred.shape[1]==speaker_embs.shape[2]:
+                em_sad_delta = self.sad_emb_values.to(em_sad_pred.device) * em_sad_pred * emotions_strength
+                speaker_embs = speaker_embs + em_sad_delta.float()
+            if em_surprise_pred.shape[1]==speaker_embs.shape[2]:
+                em_surprise_delta = self.surprise_emb_values.to(em_surprise_pred.device) * em_surprise_pred * emotions_strength
+                speaker_embs = speaker_embs + em_surprise_delta.float()
+
             try:
-                wav, dur_pred, pitch_pred_out, energy_pred, start_index, end_index, wav_mult = self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace, dur_pred_existing=dur_pred, pitch_pred_existing=pitch_pred, energy_pred_existing=energy_pred, old_sequence=old_sequence, new_sequence=text, pitch_amp=pitch_amp)
-                if not self.USE_PITCH_COND and pitch_pred.shape[1]==speaker_embs.shape[2]:
-                    pitch_pred_out = pitch_pred
-                return wav, dur_pred, pitch_pred_out, energy_pred, start_index, end_index, wav_mult
+                wav, dur_pred, pitch_pred_out, energy_pred, em_pred_out, start_index, end_index, wav_mult = self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, \
+                    speaker_embs, pace, dur_pred_existing=dur_pred, pitch_pred_existing=pitch_pred, energy_pred_existing=energy_pred, em_pred_existing=[em_angry_pred, em_happy_pred, em_sad_pred, em_surprise_pred], old_sequence=old_sequence, new_sequence=text, pitch_amp=pitch_amp)
+
+                [em_angry_pred_out, em_happy_pred_out, em_sad_pred_out, em_surprise_pred_out] = em_pred_out
+                pitch_pred_out = pitch_pred
+                em_angry_pred_out = em_angry_pred
+                em_happy_pred_out = em_happy_pred
+                em_sad_pred_out = em_sad_pred
+                em_surprise_pred_out = em_surprise_pred
+
+                return wav, dur_pred, pitch_pred_out, energy_pred, [em_angry_pred_out, em_happy_pred_out, em_sad_pred_out, em_surprise_pred_out], start_index, end_index, wav_mult
             except:
                 print(traceback.format_exc())
                 logger.info(traceback.format_exc())
-                return traceback.format_exc()
-                return self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace, None, None, None, None, None, pitch_amp=pitch_amp)
+                # return traceback.format_exc()
+                return self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace, None, None, None, None, None, None, pitch_amp=pitch_amp)
 
         else:
-            return self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace, None, None, None, None, None, pitch_amp=pitch_amp)
+            return self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace, None, None, None, None, None, None, pitch_amp=pitch_amp)
 
 
 
 
-    def infer_using_vals (self, logger, plugin_manager, cleaned_text, sequence, lang_embs, speaker_embs, pace, dur_pred_existing, pitch_pred_existing, energy_pred_existing, old_sequence, new_sequence, pitch_amp=None):
+    def infer_using_vals (self, logger, plugin_manager, cleaned_text, sequence, lang_embs, speaker_embs, pace, dur_pred_existing, pitch_pred_existing, energy_pred_existing, em_pred_existing, old_sequence, new_sequence, pitch_amp=None):
 
         start_index = None
         end_index = None
+
+        [em_angry_pred_existing, em_happy_pred_existing, em_sad_pred_existing, em_surprise_pred_existing] = em_pred_existing if em_pred_existing is not None else [None, None, None, None]
 
         # Calculate text splicing bounds, if needed
         if old_sequence is not None:
@@ -235,6 +270,7 @@ class xVAPitch(nn.Module):
             new_sequence_np.reverse()
 
 
+
         # cleaned_text is the actual text phonemes
         input_symbols = sequence
         x_lengths = torch.where(input_symbols > 0, torch.ones_like(input_symbols), torch.zeros_like(input_symbols)).sum(dim=1)
@@ -272,64 +308,77 @@ class xVAPitch(nn.Module):
         y_lengths = torch.clamp_min(torch.sum(torch.round(dur_pred), [1, 2]), 1).long()
         y_mask = sequence_mask(y_lengths, None).to(x_mask.dtype)
 
-        # if False and dur_pred.shape[0]>1:
         if dur_pred.shape[0]>1:
             attn_all = []
             m_p_all = []
             logs_p_all = []
-            pitch_pred_all = []
             for b in range(dur_pred.shape[0]):
                 attn_mask = torch.unsqueeze(x_mask[b,:].unsqueeze(0), 2) * torch.unsqueeze(y_mask[b,:].unsqueeze(0), -1)
                 attn_all.append(generate_path(dur_pred.squeeze(1)[b,:].unsqueeze(0), attn_mask.squeeze(0).transpose(1, 2)))
                 m_p_all.append(torch.matmul(attn_all[-1].transpose(1, 2), m_p[b,:].unsqueeze(0).transpose(1, 2)).transpose(1, 2))
                 logs_p_all.append(torch.matmul(attn_all[-1].transpose(1, 2), logs_p[b,:].unsqueeze(0).transpose(1, 2)).transpose(1, 2))
-                if self.USE_PITCH_COND:
-                    pitch_pred_all.append(self.pitch_predictor(x[b,:].unsqueeze(0).permute(0, 2, 1), x_lengths[b].unsqueeze(0), speaker_emb=speaker_embs[b,:].unsqueeze(0), stats=False))
             del attn_all
             m_p = torch.stack(m_p_all, dim=1).squeeze(dim=0)
             logs_p = torch.stack(logs_p_all, dim=1).squeeze(dim=0)
-            if self.USE_PITCH_COND:
-                pitch_pred = torch.stack(pitch_pred_all, dim=1).squeeze(dim=0)
-            else:
-                pitch_pred = torch.zeros((x.shape[0], x.shape[0], x.shape[2])).to(x)
+            pitch_pred = torch.zeros((x.shape[0], x.shape[0], x.shape[2])).to(x)
+
         else:
             attn_mask = torch.unsqueeze(x_mask, 2) * torch.unsqueeze(y_mask, -1)
             attn = generate_path(dur_pred.squeeze(1), attn_mask.squeeze(0).transpose(1, 2))
             m_p = torch.matmul(attn.transpose(1, 2), m_p.transpose(1, 2)).transpose(1, 2)
             logs_p = torch.matmul(attn.transpose(1, 2), logs_p.transpose(1, 2)).transpose(1, 2)
+            pitch_pred = torch.zeros((x.shape[0], x.shape[0], x.shape[2])).to(x)
 
 
-            if self.USE_PITCH_COND:
-                if (pitch_pred_existing is None or pitch_pred_existing.shape[1]==0) or old_sequence is not None:
-                    # Pitch over chars
-                    pitch_pred = self.pitch_predictor(x.permute(0, 2, 1), x_lengths, speaker_emb=speaker_embs, stats=False)
-                else:
-                    pitch_pred = pitch_pred_existing.unsqueeze(1)#.unsqueeze(1)
-            else:
-                pitch_pred = torch.zeros((x.shape[0], x.shape[0], x.shape[2])).to(x)
 
+
+        emAngry_pred = torch.zeros((x.shape[0], x.shape[0], x.shape[2])).to(x)
+        emHappy_pred = torch.zeros((x.shape[0], x.shape[0], x.shape[2])).to(x)
+        emSad_pred = torch.zeros((x.shape[0], x.shape[0], x.shape[2])).to(x)
+        emSurprise_pred = torch.zeros((x.shape[0], x.shape[0], x.shape[2])).to(x)
 
         # Splice/replace pitch/duration values from the old input if simulating only a partial re-generation
         if start_index is not None or end_index is not None:
             dur_pred_np = list(dur_pred.cpu().detach().numpy())[0]
             pitch_pred_np = list(pitch_pred.cpu().detach().numpy())[0][0]
+            emAngry_pred_np = list(emAngry_pred.cpu().detach().numpy())[0][0]
+            emHappy_pred_np = list(emHappy_pred.cpu().detach().numpy())[0][0]
+            emSad_pred_np = list(emSad_pred.cpu().detach().numpy())[0][0]
+            emSurprise_pred_np = list(emSurprise_pred.cpu().detach().numpy())[0][0]
+
             dur_pred_existing_np = list(dur_pred_existing.cpu().detach().numpy())[0]
             pitch_pred_existing_np = list(pitch_pred_existing.cpu().detach().numpy())[0]
+            emAngry_pred_existing_np = list(em_angry_pred_existing.cpu().detach().numpy())[0]
+            emHappy_pred_existing_np = list(em_happy_pred_existing.cpu().detach().numpy())[0]
+            emSad_pred_existing_np = list(em_sad_pred_existing.cpu().detach().numpy())[0]
+            emSurprise_pred_existing_np = list(em_sad_pred_existing.cpu().detach().numpy())[0]
 
             if start_index is not None: # Replace starting values
 
                 for i in range(start_index+1):
                     dur_pred_np[i] = dur_pred_existing_np[i]
                     pitch_pred_np[i] = pitch_pred_existing_np[i]
+                    emAngry_pred_np[i] = emAngry_pred_existing_np[i]
+                    emHappy_pred_np[i] = emHappy_pred_existing_np[i]
+                    emSad_pred_np[i] = emSad_pred_existing_np[i]
+                    emSurprise_pred_np[i] = emSurprise_pred_existing_np[i]
 
             if end_index is not None: # Replace end values
 
                 for i in range(len(old_sequence_np)-end_index):
                     dur_pred_np[-i-1] = dur_pred_existing_np[-i-1]
                     pitch_pred_np[-i-1] = pitch_pred_existing_np[-i-1]
+                    emAngry_pred_np[-i-1] = emAngry_pred_existing_np[-i-1]
+                    emHappy_pred_np[-i-1] = emHappy_pred_existing_np[-i-1]
+                    emSad_pred_np[-i-1] = emSad_pred_existing_np[-i-1]
+                    emSurprise_pred_np[-i-1] = emSurprise_pred_existing_np[-i-1]
 
             dur_pred = torch.tensor(dur_pred_np).to(self.device).unsqueeze(0)
             pitch_pred = torch.tensor(pitch_pred_np).to(self.device).unsqueeze(0).unsqueeze(0)
+            emAngry_pred = torch.tensor(emAngry_pred_np).to(self.device).unsqueeze(0).unsqueeze(0)
+            emHappy_pred = torch.tensor(emHappy_pred_np).to(self.device).unsqueeze(0).unsqueeze(0)
+            emSad_pred = torch.tensor(emSad_pred_np).to(self.device).unsqueeze(0).unsqueeze(0)
+            emSurprise_pred = torch.tensor(emSurprise_pred_np).to(self.device).unsqueeze(0).unsqueeze(0)
 
 
         if pitch_amp is not None:
@@ -341,6 +390,10 @@ class xVAPitch(nn.Module):
             plugin_data = {
                 "duration": dur_pred.cpu().detach().numpy(),
                 "pitch": pitch_pred.reshape((pitch_pred.shape[0],pitch_pred.shape[2])),
+                "emAngry": emAngry_pred.reshape((emAngry_pred.shape[0],emAngry_pred.shape[2])),
+                "emHappy": emHappy_pred.reshape((emHappy_pred.shape[0],emHappy_pred.shape[2])),
+                "emSad": emSad_pred.reshape((emSad_pred.shape[0],emSad_pred.shape[2])),
+                "emSurprise": emSurprise_pred.reshape((emSurprise_pred.shape[0],emSurprise_pred.shape[2])),
                 "text": [val.split("|") for val in cleaned_text],
                 "is_fresh_synth": pitch_pred_existing is None and dur_pred_existing is None,
 
@@ -350,17 +403,16 @@ class xVAPitch(nn.Module):
 
             dur_pred = torch.tensor(plugin_data["duration"]).to(self.device)
             pitch_pred = torch.tensor(plugin_data["pitch"]).unsqueeze(1).to(self.device)
-
-        if self.USE_PITCH_COND:
-            pitch_emb = self.pitch_emb(self.expand_pitch_energy(pitch_pred, dur_pred, logger=logger))
-            m_p += pitch_emb * self.args.pe_scaling
-
+            emAngry_pred = torch.tensor(plugin_data["emAngry"]).unsqueeze(1).to(self.device)
+            emHappy_pred = torch.tensor(plugin_data["emHappy"]).unsqueeze(1).to(self.device)
+            emSad_pred = torch.tensor(plugin_data["emSad"]).unsqueeze(1).to(self.device)
+            emSurprise_pred = torch.tensor(plugin_data["emSurprise"]).unsqueeze(1).to(self.device)
 
         # TODO, incorporate some sort of control for this
-        self.inference_noise_scale = 0
-        for flow in self.flow.flows:
-            flow.logger = logger
-            flow.enc.logger = logger
+        # self.inference_noise_scale = 0
+        # for flow in self.flow.flows:
+        #     flow.logger = logger
+        #     flow.enc.logger = logger
 
         z_p = m_p + torch.randn_like(m_p) * torch.exp(logs_p) * self.inference_noise_scale
         z = self.flow(z_p, y_mask, g=speaker_embs, reverse=True)
@@ -383,7 +435,7 @@ class xVAPitch(nn.Module):
         # Apply volume adjustments
         stretched_energy_mult = None
         if energy_pred_existing is not None and pitch_pred_existing is not None:
-            energy_mult = self.expand_pitch_energy(energy_pred_existing.unsqueeze(0), dur_pred, logger=logger)
+            energy_mult = self.expand_vals_by_durations(energy_pred_existing.unsqueeze(0), dur_pred, logger=logger)
             stretched_energy_mult = torch.nn.functional.interpolate(energy_mult.unsqueeze(0).unsqueeze(0), (1,1,wav.shape[2])).squeeze()
             stretched_energy_mult = stretched_energy_mult.cpu().detach().numpy()
             energy_pred = energy_pred_existing.squeeze()
@@ -391,7 +443,9 @@ class xVAPitch(nn.Module):
             energy_pred = [1.0 for _ in range(pitch_pred.shape[-1])]
             energy_pred = torch.tensor(energy_pred)
 
-        return wav, dur_pred, pitch_pred, energy_pred, start_index, end_index, stretched_energy_mult
+        # energy_pred = energy_pred.squeeze()
+        em_pred_out = [emAngry_pred, emHappy_pred, emSad_pred, emSurprise_pred]
+        return wav, dur_pred, pitch_pred, energy_pred, em_pred_out, start_index, end_index, stretched_energy_mult
 
 
 
@@ -433,7 +487,7 @@ class xVAPitch(nn.Module):
 
 
     # Opposite of average_pitch; Repeat per-symbol values by durations, to get sequence-wide values
-    def expand_pitch_energy (self, vals, durations, logger=None):
+    def expand_vals_by_durations (self, vals, durations, logger=None):
 
         vals = vals.view((vals.shape[0], vals.shape[2]))
 
