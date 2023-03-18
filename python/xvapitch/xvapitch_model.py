@@ -283,8 +283,12 @@ class xVAPitch(nn.Module):
         # TODO, store a bank of trained 31 language embeds, to use for interpolating
         lang_emb = self.emb_l(lang_embs).unsqueeze(-1)
 
-        x, x_emb, x_mask = self.text_encoder(input_symbols, x_lengths, lang_emb=lang_emb, stats=False, lang_emb_full=lang_emb_full)
-        m_p, logs_p = self.text_encoder(x, x_lengths, lang_emb=lang_emb, stats=True, x_mask=x_mask)
+        lang_emb_full = lang_emb.transpose(2, 1).squeeze(1).unsqueeze(0)
+
+        x, x_emb, x_mask = self.text_encoder(input_symbols, x_lengths, lang_emb=None, stats=False, lang_emb_full=lang_emb_full)
+        m_p, logs_p = self.text_encoder(x, x_lengths, lang_emb=None, lang_emb_full=lang_emb_full, stats=True, x_mask=x_mask)
+
+        lang_emb_full = lang_emb_full.reshape(lang_emb_full.shape[0],lang_emb_full.shape[2],lang_emb_full.shape[1])
 
 
         self.inference_noise_scale_dp = 0 # TEMP DEBUGGING. REMOVE - or should I? It seems to make it worse, the higher it is
@@ -293,7 +297,7 @@ class xVAPitch(nn.Module):
         if (dur_pred_existing is None or dur_pred_existing.shape[1]==0) or old_sequence is not None:
             # Predict durations
             self.duration_predictor.logger = logger
-            logw = self.duration_predictor(x, x_mask, g=speaker_embs, reverse=True, noise_scale=self.inference_noise_scale_dp, lang_emb=lang_emb)
+            logw = self.duration_predictor(x, x_mask, g=speaker_embs, reverse=True, noise_scale=self.inference_noise_scale_dp, lang_emb=lang_emb_full)
 
             w = torch.exp(logw) * x_mask * self.length_scale
             w = w * 1.3 # The model seems to generate quite fast speech, so I'm gonna just globally adjust that

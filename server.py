@@ -227,6 +227,15 @@ if __name__ == '__main__':
                     if modelType=="fastpitch1_1":
                         models_manager.models_bank["fastpitch1_1"][instance_index].init_arpabet_dicts()
 
+                if self.path == "/getG2P":
+                    text = post_data["text"]
+                    base_lang = post_data["base_lang"]
+
+                    model = models_manager.models("xVAPitch", instance_index=0)
+                    returnString = model.getG2P(text, base_lang)
+                    req_response = returnString
+
+
                 if self.path == "/synthesize":
                     logger.info("POST {}".format(self.path))
                     post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])

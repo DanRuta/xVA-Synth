@@ -437,10 +437,68 @@ class xVAPitch(object):
 
         return subSequences
 
+
+    def getG2P (self, text, base_lang):
+
+        sequenceSplitByLanguage = self.preprocess_prompt_language(text, base_lang)
+
+        # Make sure all languages' text processors are initialized
+        for subSequence in sequenceSplitByLanguage:
+            langCode = list(subSequence.keys())[0]
+            if langCode not in self.lang_tp.keys():
+                self.lang_tp[langCode] = get_text_preprocessor(langCode, self.base_dir, logger=self.logger)
+
+        returnString = "{"
+        langs_stack = [base_lang]
+
+        last_lang = base_lang
+        for subSequence in sequenceSplitByLanguage:
+            langCode = list(subSequence.keys())[0]
+            subSeq = subSequence[langCode]
+            sequence, cleaned_text = self.lang_tp[langCode].text_to_sequence(subSeq)
+
+            if langCode != last_lang:
+                last_lang = langCode
+
+                if len(langs_stack)>1 and langs_stack[-2]==langCode:
+                    langs_stack.pop()
+                    if returnString[-1]=="}":
+                        returnString = returnString[:-1]
+                    returnString += "]}"
+                else:
+                    langs_stack.append(langCode)
+
+                    if returnString[-1]=="{":
+                        returnString = returnString[:-1]
+                    returnString += f'\\lang[{langCode}][' + "{"
+
+            returnString += " ".join([symb for symb in cleaned_text.split("|") if symb != "<PAD>"]).replace("_", "} {")
+
+
+        if returnString[-1]=="{":
+            returnString = returnString[:-1]
+        else:
+            returnString = returnString+"}"
+
+
+        returnString = returnString.replace(".}", "}.")
+        returnString = returnString.replace(",}", "},")
+        returnString = returnString.replace("!}", "}!")
+        returnString = returnString.replace("?}", "}?")
+        returnString = returnString.replace("]}", "}]")
+        returnString = returnString.replace("}]}", "}]")
+        returnString = returnString.replace("{"+"}", "")
+        returnString = returnString.replace("}"+"}", "}")
+        returnString = returnString.replace("{"+"{", "{")
+
+        return returnString
+
+
     def infer(self, plugin_manager, text, out_path, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang="en", base_emb=None, useSR=False, useCleanup=False):
 
         sequenceSplitByLanguage = self.preprocess_prompt_language(text, base_lang)
 
+        # Make sure all languages' text processors are initialized
         for subSequence in sequenceSplitByLanguage:
             langCode = list(subSequence.keys())[0]
             if langCode not in self.lang_tp.keys():

@@ -420,18 +420,13 @@ dialogueInput.addEventListener("keydown", event => {
 })
 
 let is_doing_gp2 = false
-const fake_g2p = (text_to_g2p) => {
-
+window.get_g2p = (text_to_g2p) => {
     return new Promise(resolve => {
-
-        setTimeout(() => {
+        doFetch("http://localhost:8008/getG2P", {method: "Post", body: JSON.stringify({base_lang: base_lang_select.value, text: text_to_g2p})})
+        .then(r=>r.text()).then(res => {
             is_doing_gp2 = false
-            if (text_to_g2p=="arpabet") {
-                resolve("AA0 R P AA0 B EH0 T")
-            } else if (text_to_g2p=="word") {
-                resolve("W ER1 D")
-            }
-        }, 1000)
+            resolve(res)
+        })
     })
 }
 
@@ -477,12 +472,7 @@ const handleTextUpdate = (event) => {
             const text_to_g2p = dialogueInput.value.slice(dialogueInput.selectionStart, dialogueInput.selectionEnd)
             is_doing_gp2 = true
 
-            console.log("kicking off fake_g2p")
-            fake_g2p(text_to_g2p).then(phonemes => {
-
-                console.log("phonemes", phonemes)
-
-                phonemes = "{" + phonemes + "}"
+            get_g2p(text_to_g2p).then(phonemes => {
                 const initialStart = dialogueInput.selectionStart
                 dialogueInput.value = dialogueInput.value.slice(0, dialogueInput.selectionStart) + dialogueInput.value.slice(dialogueInput.selectionEnd, dialogueInput.value.length)
 
