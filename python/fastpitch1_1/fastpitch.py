@@ -499,7 +499,7 @@ class FastPitch(nn.Module):
         enc_out, enc_mask = self.encoder(inputs, conditioning=spk_emb)
 
         if (pitch_data is not None) and ((pitch_data[0] is not None and len(pitch_data[0])) or (pitch_data[1] is not None and len(pitch_data[1]))):
-            pitch_pred, dur_pred, energy_pred = pitch_data
+            pitch_pred, dur_pred, energy_pred, _, _, _, _ = pitch_data
             dur_pred = torch.tensor(dur_pred)
             dur_pred = dur_pred.view((1, dur_pred.shape[0])).float().to(self.device)
             pitch_pred = torch.tensor(pitch_pred)

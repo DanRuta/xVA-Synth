@@ -265,7 +265,15 @@ class FastPitch(object):
             del mel, mel_lens
 
         [pitch, durations] = [pitch_pred.cpu().detach().numpy()[0], dur_pred.cpu().detach().numpy()[0]]
-        pitch_durations_text = ",".join([str(v) for v in pitch])+"\n"+",".join([str(v) for v in durations]) + "\n"
+
+        [energy, em_angry, em_happy, em_sad, em_surprise] = [[], [],[],[],[]]
+        pitch_durations_text = ",".join([str(v) for v in pitch]) + "\n" + \
+                               ",".join([str(v) for v in durations]) + "\n" + \
+                               ",".join([str(v) for v in energy]) + "\n" + \
+                               ",".join([str(v) for v in em_angry]) + "\n" + \
+                               ",".join([str(v) for v in em_happy]) + "\n" + \
+                               ",".join([str(v) for v in em_sad]) + "\n" + \
+                               ",".join([str(v) for v in em_surprise])
 
 
         del pitch_pred, dur_pred, text, sequence

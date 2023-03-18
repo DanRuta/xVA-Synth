@@ -367,7 +367,15 @@ class FastPitch1_1(object):
             del mel, mel_lens
 
         [pitch, durations, energy] = [pitch_pred.squeeze().cpu().detach().numpy(), dur_pred.cpu().detach().numpy()[0], energy_pred.cpu().detach().numpy()[0] if energy_pred is not None else []]
-        pitch_durations_energy_text = ",".join([str(v) for v in pitch]) + "\n" + ",".join([str(v) for v in durations]) + "\n" + ",".join([str(v) for v in energy])
+
+        [em_angry, em_happy, em_sad, em_surprise] = [[],[],[],[]]
+        pitch_durations_energy_text = ",".join([str(v) for v in pitch]) + "\n" + \
+                                      ",".join([str(v) for v in durations]) + "\n" + \
+                                      ",".join([str(v) for v in energy]) + "\n" + \
+                                      ",".join([str(v) for v in em_angry]) + "\n" + \
+                                      ",".join([str(v) for v in em_happy]) + "\n" + \
+                                      ",".join([str(v) for v in em_sad]) + "\n" + \
+                                      ",".join([str(v) for v in em_surprise])
 
         del pitch_pred, dur_pred, energy_pred, text, sequence
         return pitch_durations_energy_text +"\n"+cleaned_text +"\n"+ f'{start_index}\n{end_index}'
