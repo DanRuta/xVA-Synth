@@ -259,7 +259,8 @@ class StochasticDurationPredictor(nn.Module):
             x = x + cond
 
         if lang_emb is not None:
-            x = x + self.cond_lang(lang_emb)
+            lang_cond = self.cond_lang(lang_emb)
+            x = x + lang_cond
 
         x = self.convs(x, x_mask)
         x = self.proj(x) * x_mask

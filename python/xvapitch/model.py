@@ -379,13 +379,91 @@ class xVAPitch(object):
 
         return ""
 
+
+
+    # Split words by space, while also breaking out the \land[code][text] formatting
+    def splitWords (self, sequence, addSpace=False):
+        words = []
+        for word in sequence:
+            if word.startswith("\\lang["):
+                words.append(word.split("][")[0]+"][")
+                word = word.split("][")[1]
+            for char in ["}","]","[","{"]:
+                if word.startswith(char):
+                    words.append(char)
+                    word = word[1:]
+            end_extras = []
+            for char in ["}","]","[","{"]:
+                if word.endswith(char):
+                    end_extras.append(char)
+                    word = word[:-1]
+
+            words.append(word)
+            end_extras.reverse()
+            for extra in end_extras:
+                words.append(extra)
+
+            if addSpace:
+                words.append(" ")
+        return words
+
+    def preprocess_prompt_language (self, sequence, base_lang):
+
+        # Prepare the input sequence for processing. Do a few times to catch edge cases
+        sequence = self.splitWords(sequence.split(" "), True)
+        sequence = self.splitWords(sequence)
+        sequence = self.splitWords(sequence)
+        sequence = self.splitWords(sequence)
+
+        subSequences = []
+
+        openedLangs = 0
+        langs_stack = [base_lang]
+        for word in sequence:
+            skip_word = False
+            if word.startswith("\\lang["):
+                openedLangs += 1
+                langs_stack.append(word.split("lang[")[1].split("]")[0])
+                skip_word = True
+
+            if word.endswith("]"):
+                openedLangs -= 1
+                langs_stack.pop()
+                skip_word = True
+
+            # Add the word to the list if not skipping it, if it's not empty, or it's not a second space in a row
+            if not skip_word and len(word) and (word!=" " or len(subSequences)==0 or subSequences[-1][list(subSequences[-1].keys())[0]]!=" "):
+                subSequences.append({langs_stack[-1]: word})
+
+        return subSequences
+
     def infer(self, plugin_manager, text, out_path, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang="en", base_emb=None, useSR=False, useCleanup=False):
 
-        if base_lang not in self.lang_tp.keys():
-            self.lang_tp[base_lang] = get_text_preprocessor(base_lang, self.base_dir, logger=self.logger)
+        sequenceSplitByLanguage = self.preprocess_prompt_language(text, base_lang)
+
+        for subSequence in sequenceSplitByLanguage:
+            langCode = list(subSequence.keys())[0]
+            if langCode not in self.lang_tp.keys():
+                self.lang_tp[langCode] = get_text_preprocessor(langCode, self.base_dir, logger=self.logger)
 
         try:
-            sequence, cleaned_text = self.lang_tp[base_lang].text_to_sequence(text)
+            all_sequence = []
+            all_cleaned_text = []
+            all_text = []
+            all_lang_ids = []
+
+            for subSequence in sequenceSplitByLanguage:
+                langCode = list(subSequence.keys())[0]
+                subSeq = subSequence[langCode]
+                sequence, cleaned_text = self.lang_tp[langCode].text_to_sequence(subSeq)
+
+                all_sequence.append(sequence)
+                all_cleaned_text += cleaned_text
+                all_text.append(torch.LongTensor(sequence))
+
+                language_id = self.language_id_mapping[langCode]
+                all_lang_ids += [language_id for _ in range(len(sequence))]
+
         except ValueError as e:
             self.logger.info("====")
             self.logger.info(str(e))
@@ -394,8 +472,9 @@ class xVAPitch(object):
                 symbol_not_in_list = str(e).split("is not in list")[0].split("ValueError:")[-1].replace("'", "").strip()
                 return f'ERR: ARPABET_NOT_IN_LIST: {symbol_not_in_list}'
 
+        all_cleaned_text = "".join(all_cleaned_text)
 
-        text = torch.LongTensor(sequence)
+        text = torch.cat(all_text, dim=0)
         text = pad_sequence([text], batch_first=True).to(self.models_manager.device)
 
         with torch.no_grad():
@@ -407,13 +486,8 @@ class xVAPitch(object):
                 old_sequence = torch.LongTensor(old_sequence)
                 old_sequence = pad_sequence([old_sequence], batch_first=True).to(self.models_manager.device)
 
+            lang_ids = torch.tensor(all_lang_ids).to(self.models_manager.device)
 
-            # ==== TODO, make editable
-            language_id = self.language_id_mapping[base_lang]
-            lang_ids = [language_id for _ in range(text.shape[1])]
-            lang_ids = [language_id] # TODO, add per-symbol support
-            lang_ids = torch.tensor(lang_ids).to(self.models_manager.device)
-            # ====
 
             # ==== TODO, make editable
             # self.logger.info(f'self.base_emb: {self.base_emb}')
@@ -441,7 +515,7 @@ class xVAPitch(object):
 
 
             editor_data = pitch_data # TODO, propagate rename
-            out = self.model.infer_advanced(self.logger, plugin_manager, [cleaned_text], text, lang_embs=lang_embs, speaker_embs=speaker_embs, pace=pace, editor_data=editor_data, old_sequence=old_sequence)
+            out = self.model.infer_advanced(self.logger, plugin_manager, [all_cleaned_text], text, lang_embs=lang_embs, speaker_embs=speaker_embs, pace=pace, editor_data=editor_data, old_sequence=old_sequence)
             if isinstance(out, str):
                 return f'ERR:{out}'
             else:
@@ -500,7 +574,7 @@ class xVAPitch(object):
                              ",".join([str(v) for v in em_surprise])
 
         del pitch_pred, dur_pred, energy_pred, em_angry, em_happy, em_sad, em_surprise, text, sequence
-        return editor_values_text +"\n"+cleaned_text +"\n"+ f'{start_index}\n{end_index}'
+        return editor_values_text +"\n"+all_cleaned_text +"\n"+ f'{start_index}\n{end_index}'
 
     def set_device (self, device):
         self.device = device
