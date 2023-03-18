@@ -486,13 +486,13 @@ window.initFilePickerButton = (button, input, setting, properties, filters=undef
 }
 
 const setPromptTheme = () => {
-    if (window.userSettings.darkPrompt) {
-        dialogueInput.style.backgroundColor = "rgba(25,25,25,0.9)"
-        dialogueInput.style.color = "white"
-    } else {
-        dialogueInput.style.backgroundColor = "rgba(255,255,255,0.9)"
-        dialogueInput.style.color = "black"
-    }
+    // if (window.userSettings.darkPrompt) {
+    //     dialogueInput.style.backgroundColor = "rgba(25,25,25,0.9)"
+    //     dialogueInput.style.color = "white"
+    // } else {
+    //     dialogueInput.style.backgroundColor = "rgba(255,255,255,0.9)"
+    //     dialogueInput.style.color = "black"
+    // }
 }
 const updateDiscord = () => {
     let gameName = undefined

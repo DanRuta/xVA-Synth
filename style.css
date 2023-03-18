@@ -261,7 +261,7 @@ a {
      margin-right: 6px;
      margin-top: 9px;
      overflow-x: hidden;
-     text-align: center;
+     /*text-align: center;*/
  }
  #buttonContainer {
      display: flex;
