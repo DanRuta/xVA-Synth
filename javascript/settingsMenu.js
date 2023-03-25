@@ -649,6 +649,37 @@ openDiscord.addEventListener("click", () => {
 })
 
 
+setting_models_path_input.addEventListener("change", () => {
+    const gameFolder = window.currentGame.gameId
+
+    setting_models_path_input.value = setting_models_path_input.value.replace(/\/\//g, "/").replace(/\\/g,"/")
+    window.userSettings[`modelspath_${gameFolder}`] = setting_models_path_input.value
+    window.saveUserSettings()
+    window.loadAllModels().then(() => {
+        window.changeGame(window.currentGame)
+    })
+
+    if (!window.watchedModelsDirs.includes(setting_models_path_input.value)) {
+        window.watchedModelsDirs.push(setting_models_path_input.value)
+        fs.watch(setting_models_path_input.value, {recursive: false, persistent: true}, (eventType, filename) => {
+            window.changeGame(window.currentGame)
+        })
+    }
+    window.updateGameList()
+
+    // Gather the model paths to send to the server
+    const modelsPaths = {}
+    Object.keys(window.userSettings).filter(key => key.includes("modelspath_")).forEach(key => {
+        modelsPaths[key.split("_")[1]] = window.userSettings[key]
+    })
+    doFetch(`http://localhost:8008/setAvailableVoices`, {
+        method: "Post",
+        body: JSON.stringify({
+            modelsPaths: JSON.stringify(modelsPaths)
+        })
+    })
+})
+
 
 // Output path
 fs.readdir(`${window.path}/models`, (err, gameDirs) => {
@@ -656,7 +687,7 @@ fs.readdir(`${window.path}/models`, (err, gameDirs) => {
         // Initialize the default output directory setting for this game
         if (!Object.keys(window.userSettings).includes(`outpath_${gameFolder}`)) {
             window.userSettings[`outpath_${gameFolder}`] = `${__dirname.replace(/\\/g,"/")}/output/${gameFolder}`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
-            saveUserSettings()
+            window.saveUserSettings()
         }
     })
 })

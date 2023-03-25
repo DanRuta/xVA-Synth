@@ -1632,4 +1632,61 @@ ipcRenderer.on('context-menu-command', (e, command) => {
 })
 
 
+// Audio player
+window.initWaveSurfer = (src) => {
+    if (window.wavesurfer) {
+        window.wavesurfer.stop()
+        wavesurferContainer.innerHTML = ""
+    } else {
+        window.wavesurfer = WaveSurfer.create({
+            container: '#wavesurferContainer',
+            backend: 'MediaElement',
+            waveColor: `#${window.currentGame.themeColourPrimary}`,
+            height: 100,
+            progressColor: 'white',
+            responsive: true,
+        })
+    }
+    try {
+        window.wavesurfer.setSinkId(window.userSettings.base_speaker)
+    } catch (e) {
+        console.log("Can't set sinkId")
+    }
+    if (src) {
+        window.wavesurfer.load(src)
+    }
+    window.wavesurfer.on("finish", () => {
+        samplePlayPause.innerHTML = window.i18n.PLAY
+    })
+    window.wavesurfer.on("seek", event => {
+        if (event!=0) {
+            window.wavesurfer.play()
+            samplePlayPause.innerHTML = window.i18n.PAUSE
+        }
+    })
+}
+window.samplePlayPauseHandler = event => {
+    if (window.wavesurfer) {
+        if (event.ctrlKey) {
+            if (window.wavesurfer.sink_id!=window.userSettings.alt_speaker) {
+                window.wavesurfer.setSinkId(window.userSettings.alt_speaker)
+            }
+        } else {
+            if (window.wavesurfer.sink_id!=window.userSettings.base_speaker) {
+                window.wavesurfer.setSinkId(window.userSettings.base_speaker)
+            }
+        }
+    }
+
+    if (window.wavesurfer.isPlaying()) {
+        samplePlayPause.innerHTML = window.i18n.PLAY
+        window.wavesurfer.playPause()
+    } else {
+        samplePlayPause.innerHTML = window.i18n.PAUSE
+        window.wavesurfer.playPause()
+    }
+}
+samplePlayPause.addEventListener("click", window.samplePlayPauseHandler)
+
+
 exports.Editor = Editor
