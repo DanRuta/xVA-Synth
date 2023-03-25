@@ -607,6 +607,7 @@ a {
  input[type=checkbox] {
      height: 20px;
      width: 20px;
+     cursor: pointer;
  }
 
  #editorContainer {

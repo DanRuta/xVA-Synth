@@ -200,6 +200,8 @@ window.setTheme = (meta) => {
     Array.from(document.querySelectorAll("button:not(.fixedColour)")).forEach(e => e.style.background = `#${primaryColour}`)
     Array.from(document.querySelectorAll(".voiceType")).forEach(e => e.style.background = `#${primaryColour}`)
     Array.from(document.querySelectorAll(".spinner")).forEach(e => e.style.borderLeftColor = `#${primaryColour}`)
+    Array.from(document.querySelectorAll(".checkbox")).forEach(e => e.style.accentColor = `#${primaryColour}`)
+    Array.from(document.querySelectorAll(".input[type=range]")).forEach(e => e.style.accentColor = `#${primaryColour}`)
 
     if (secondaryColour) {
         Array.from(document.querySelectorAll("button:not(.fixedColour)")).forEach(e => e.style.color = `#${secondaryColour}`)
@@ -234,6 +236,7 @@ window.setTheme = (meta) => {
     .slider::-webkit-slider-thumb {
         background-color: #${primaryColour} !important;
     }
+    input[type=checkbox], input[type=range] {accent-color: #${primaryColour} !important;}
     a {color: #${primaryColour}};
     #batchRecordsHeader > div {background-color: #${primaryColour} !important;}
     #pluginsRecordsHeader > div {background-color: #${primaryColour} !important;}
