@@ -904,7 +904,107 @@ a {
 
 
 
+#textEditorContainer {
+    display: flex;
+    flex-direction: column;
+}
+#textEditorElem {
+    height: 60px;
+    width: calc(95vw - 330px) !important;
+    /*margin-left: 1vw;*/
+}
+#textEditorContainer {
+    border: 1px solid black;
+    padding-top: 1px;
+    height: 60px;
+    width: calc(95vw - 300px) !important;
+}
+#dialogueInput:focus {
+    /*border: 1px solid white;*/
+    border: none;
+    outline: none;
+}
+#dialogueInput {
+    border: 1px solid white;
+    height: 60px;
+    width: calc(95vw - 330px) !important;
+    /*margin-left: 1vw;*/
+    padding: 0;
+    margin-top: -60px;
+    /*margin-left: 15px;*/
+    /*margin-top: -40px;*/
 
+    background-color: none !important;
+
+    margin-left: 0;
+    resize: none;
+
+    color: transparent;
+    background: transparent;
+    caret-color: black;
+}
+#textEditorElem, #dialogueInput {
+    font-size: 15pt;
+    font-family: monospace !important;
+    line-height: 20pt;
+    overflow-y: hidden;
+    background-color: white;
+    text-align: center;
+}
+#dialogueInput {
+    background: none !important;
+    background-color: none !important;
+    margin-left: -7px;
+    border: none;
+}
+#textEditorTooltip {
+    display: none;
+    position: absolute;
+    height: 25px;
+    /*margin-top: -45px;*/
+    background: rgba(0,0,0,0.7);
+    font-size: 12pt;
+    color: white;
+    font-weight: normal;
+    border-radius: 5px;
+    z-index: 100;
+    padding: 4px;
+    max-width: 400px;
+    overflow-x: auto;
+    padding-left: 5px;
+    overflow-y: hidden;
+}
+.autocomplete_option {
+    cursor: pointer;
+    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 1px;
+    padding: 3px;
+    padding-bottom: 5px;
+    margin-right: 2px;
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    text-shadow: 1px 1px black;
+    font-family: Helvetica;
+}
+.autocomplete_option_active {
+    border: 2px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.3);
+}
+.manyWhitespace {
+    white-space: break-spaces;
+}
+#textEditorTooltip::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+#textEditorTooltip::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+#textEditorTooltip::-webkit-scrollbar-thumb {
+    background: rgba(204,204,204, 0.5) !important;
+}
 
 
 /*Speech to speech*/
