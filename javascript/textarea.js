@@ -542,7 +542,7 @@ refreshText()
 setTimeout(window.refreshText, 500)
 
 window.addEventListener("click", event => {
-    if (event.target!=textEditorTooltip && !event.target.className.includes("autocomplete_option")) {
+    if (event.target && event.target!=textEditorTooltip && event.target.className && event.target.className.includes && !event.target.className.includes("autocomplete_option")) {
         hideAutocomplete()
     }
 })

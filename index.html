@@ -345,9 +345,18 @@
                 <div style="display: flex;align-items: center;margin-left: 10px;margin-right: 6px;margin-top: 10px;height: 35px;">
                     <div style="flex-grow: 1;display: flex;margin-right: 5px;">
                         <input id="voiceSamplesSearch" placeholder="Search output file names..." style="height: 30px;font-size: 14pt;margin-right: 2px;">
-                        <input id="voiceSamplesSearchPrompt" placeholder="Search output file prompts..." style="height: 30px;font-size: 14pt;">
+                        <input id="voiceSamplesSearchPrompt" placeholder="Search prompts..." style="height: 30px;font-size: 14pt;">
                     </div>
-                    <div style="width: 350px;display: flex;align-items: center;justify-content: flex-end;">
+                    <div style="width: 650px;display: flex;align-items: center;justify-content: flex-end;">
+
+                        <button id="main_paginationPrev" style="margin-right: 5px;">Previous</button>
+                        <div style="display: flex;align-items: center;">
+                            <div id="i18n_page_main">Page:</div>
+                            <input id="main_pageNum" type="number" min="1" step="1" style="height: 25px;width: 50px;margin: 10px;">
+                            <div id="main_total_pages" style="margin-right: 10px;">of 100</div>
+                        </div>
+                        <button id="main_paginationNext" style="margin-right: 5px;">Next</button>
+
                         <button id="voiceRecordsDeleteAllButton" style="margin-right: 10px;">Delete all</button>
                         <div id="i18n_sortByOutput" style="text-shadow: 0px 0px 1px rgba(255,255,255,0.4);font-weight: bold;margin-right: 5px;">Sort by:</div>
                         <button id="voiceRecordsOrderByButton" style="margin-left: 5px;margin-right: 5px;">Name</button>
@@ -537,6 +546,12 @@
                         <div style="flex-direction: row">
                             <input id="setting_do_model_version_highlight" type="checkbox">
                             <input id="setting_model_version_highlight" style="margin-right: 25px;" type="number" min="1" step="0.1" value="2">
+                        </div>
+                    </div>
+                    <div>
+                        <div id="i18n_setting_output_files_pagination_size">Output records pagination size</div>
+                        <div>
+                            <input id="setting_output_files_pagination_size" type="number" value="25">
                         </div>
                     </div>
 

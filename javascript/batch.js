@@ -1514,7 +1514,7 @@ setting_batch_paginationSize.addEventListener("change", () => {
     const numPages = Math.ceil(window.batch_state.lines.length/window.userSettings.batch_paginationSize)
     batch_pageNum.value = Math.max(1, Math.min(parseInt(batch_pageNum.value), numPages))
     window.batch_state.paginationIndex = batch_pageNum.value-1
-    batch_total_pages.innerHTML = `of ${numPages}`
+    batch_total_pages.innerHTML = window.i18n.PAGINATION_TOTAL_OF.replace("_1", numPages)
 
     window.refreshBatchRecordsList()
 })

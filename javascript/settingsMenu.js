@@ -227,6 +227,9 @@ if (!Object.keys(window.userSettings).includes("bigwaveglow_path")) { // For bac
 if (!Object.keys(window.userSettings).includes("arpabet_paginationSize")) { // For backwards compatibility
     window.userSettings.arpabet_paginationSize = 200
 }
+if (!Object.keys(window.userSettings).includes("output_files_pagination_size")) { // For backwards compatibility
+    window.userSettings.output_files_pagination_size = 25
+}
 
 const updateUIWithSettings = () => {
     useGPUCbx.checked = window.userSettings.useGPU
@@ -296,6 +299,7 @@ const updateUIWithSettings = () => {
     setting_bigwaveglow_path.value = window.userSettings.bigwaveglow_path
 
     setting_arpabet_paginationSize.value = window.userSettings.arpabet_paginationSize
+    setting_output_files_pagination_size.value = window.userSettings.output_files_pagination_size
     setting_max_filename_chars.value = window.userSettings.max_filename_chars
     setting_clear_text_after_synth.checked = window.userSettings.clear_text_after_synth
     setting_do_model_version_highlight.checked = window.userSettings.do_model_version_highlight
@@ -621,6 +625,10 @@ initFilePickerButton(setting_outPathButton, setting_out_path_input, ()=>`outpath
     }
 })
 initMenuSetting(setting_arpabet_paginationSize, "arpabet_paginationSize", "number", undefined, parseInt)
+initMenuSetting(setting_output_files_pagination_size, "output_files_pagination_size", "number", () => {
+    window.resetPagination()
+    window.refreshRecordsList()
+}, parseInt)
 initMenuSetting(setting_max_filename_chars, "max_filename_chars", "number", undefined, parseInt)
 initMenuSetting(setting_clear_text_after_synth, "clear_text_after_synth", "checkbox")
 initMenuSetting(setting_do_model_version_highlight, "do_model_version_highlight", "checkbox", ()=>window.changeGame(window.currentGame))
@@ -785,6 +793,7 @@ reset_settings_btn.addEventListener("click", () => {
             window.userSettings.model_version_highlight = 2.0
             window.userSettings.keepPaceOnNew = true
             window.userSettings.arpabet_paginationSize = 200
+            window.userSettings.output_files_pagination_size = 25
 
             window.userSettings.batch_clearDirFirst = false
             window.userSettings.batch_fastMode = false

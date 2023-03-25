@@ -1,5 +1,70 @@
 "use strict"
 
+window.outputFilesState = {
+    paginationIndex: 0,
+    records: [],
+    totalPages: 0
+}
+
+window.initMainPagePagination = (directory) => {
+    window.outputFilesState.records = []
+    window.outputFilesState.totalPages = 0
+    window.resetPagination()
+
+    if (!fs.existsSync(directory)) {
+        return
+    }
+
+    const records = []
+    const files = fs.readdirSync(directory)
+    files.forEach(file => {
+        if (!["wav", "mp3", "ogg", "opus", "wma", "xwm"].includes(file.split(".").reverse()[0].toLowerCase())) {
+            return
+        }
+
+        let jsonData
+
+        if (fs.existsSync(`${directory}/${file}.json`)) {
+            try {
+                const lineMeta = fs.readFileSync(`${directory}/${file}.json`, "utf8")
+                jsonData = JSON.parse(lineMeta)
+            } catch (e) {
+                // console.log(e)
+            }
+        }
+
+        const record = {}
+        record.fileName = file
+        record.lastChanged = fs.statSync(`${directory}/${file}`).mtime
+        record.jsonPath = `${directory}/${file}`
+        records.push([record, jsonData])
+    })
+
+    window.outputFilesState.records = records
+    window.reOrderMainPageRecords()
+}
+window.resetPagination = () => {
+    window.outputFilesState.paginationIndex = 0
+    const numPages = Math.ceil(window.outputFilesState.records.length/window.userSettings.output_files_pagination_size)
+    main_total_pages.innerHTML = window.i18n.PAGINATION_TOTAL_OF.replace("_1", numPages)
+    window.outputFilesState.totalPages = numPages
+    main_pageNum.value = 1
+}
+window.reOrderMainPageRecords = () => {
+    const reverse = window.userSettings.voiceRecordsOrderByOrder=="ascending"
+    const sortBy = window.userSettings.voiceRecordsOrderBy
+
+    window.outputFilesState.records = window.outputFilesState.records.sort((a,b) => {
+        if (sortBy=="name") {
+            return a[0].fileName.toLowerCase()<b[0].fileName.toLowerCase() ? (reverse?-1:1) : (reverse?1:-1)
+        } else if (sortBy=="time") {
+            return a[0].lastChanged<b[0].lastChanged ? (reverse?-1:1) : (reverse?1:-1)
+        } else {
+            console.warn("sort by type not recognised", sortBy)
+        }
+    })
+}
+
 window.makeSample = (src, newSample) => {
     const fileName = src.split("/").reverse()[0].split("%20").join(" ")
     const fileFormat = fileName.split(".").reverse()[0]
@@ -179,60 +244,45 @@ window.makeSample = (src, newSample) => {
 }
 
 
-window.refreshRecordsList = (directory) => {
+window.refreshRecordsList = () => {
+    voiceSamples.innerHTML = ""
+    const outputFilesPaginationSize = window.userSettings.output_files_pagination_size
 
-    if (!fs.existsSync(directory)) {
-        return
-    }
 
-    const records = []
-    const reverse = window.userSettings.voiceRecordsOrderByOrder=="ascending"
-    const sortBy = window.userSettings.voiceRecordsOrderBy//"name"
-
-    const files = fs.readdirSync(directory)
-    files.forEach(file => {
-        if (file.endsWith(".json") || file.endsWith(".lip") || file.endsWith(".fuz")) {
+    const filteredRecords = window.outputFilesState.records.filter(recordAndJson => {
+        if (!recordAndJson[0].fileName.toLowerCase().includes(voiceSamplesSearch.value.toLowerCase().trim())) {
             return
         }
-        const record = {}
-
-        if (!file.toLowerCase().includes(voiceSamplesSearch.value.toLowerCase().trim())) {
-            return
-        }
-
         if (voiceSamplesSearchPrompt.value.length) {
-            if (fs.existsSync(`${directory}/${file}.json`)) {
-                try {
-                    const lineMeta = fs.readFileSync(`${directory}/${file}.json`, "utf8")
-
-                    if (!JSON.parse(lineMeta).inputSequence.toLowerCase().includes(voiceSamplesSearchPrompt.value.toLowerCase().trim())) {
-                        return
-                    }
-                } catch (e) {
-                    // console.log(e)
-                }
+            if (!recordAndJson[1] || !recordAndJson[1].inputSequence.toLowerCase().includes(voiceSamplesSearchPrompt.value.toLowerCase().trim())) {
+                return
             }
         }
-
-        record.fileName = file
-        record.lastChanged = fs.statSync(`${directory}/${file}`).mtime
-        record.jsonPath = `${directory}/${file}`
-        records.push(record)
+        return recordAndJson
     })
 
-    voiceSamples.innerHTML = ""
-    records.sort((a,b) => {
-        if (sortBy=="name") {
-            return a.fileName.toLowerCase()<b.fileName.toLowerCase() ? (reverse?-1:1) : (reverse?1:-1)
-        } else if (sortBy=="time") {
-            return a.lastChanged<b.lastChanged ? (reverse?-1:1) : (reverse?1:-1)
-        } else {
-            console.warn("sort by type not recognised", sortBy)
-        }
-    }).forEach(record => {
-        voiceSamples.appendChild(window.makeSample(record.jsonPath))
-    })
+
+    const startIndex = (window.outputFilesState.paginationIndex*outputFilesPaginationSize)
+    const endIndex = Math.min(startIndex+outputFilesPaginationSize, filteredRecords.length)
+
+    for (let ri=startIndex; ri<endIndex; ri++) {
+        voiceSamples.appendChild(window.makeSample(filteredRecords[ri][0].jsonPath))
+    }
+    const numPages = Math.ceil(filteredRecords.length/outputFilesPaginationSize)
+    main_total_pages.innerHTML = window.i18n.PAGINATION_TOTAL_OF.replace("_1", numPages)
+    window.outputFilesState.totalPages = numPages
 }
+main_paginationPrev.addEventListener("click", () => {
+    main_pageNum.value = Math.max(1, parseInt(main_pageNum.value)-1)
+    window.outputFilesState.paginationIndex = main_pageNum.value-1
+    window.refreshRecordsList()
+})
+main_paginationNext.addEventListener("click", () => {
+    main_pageNum.value = Math.min(parseInt(main_pageNum.value)+1, window.outputFilesState.totalPages)
+    window.outputFilesState.paginationIndex = main_pageNum.value-1
+    window.refreshRecordsList()
+})
+
 
 // Delete all output files for a voice
 voiceRecordsDeleteAllButton.addEventListener("click", () => {
@@ -244,7 +294,8 @@ voiceRecordsDeleteAllButton.addEventListener("click", () => {
             window.confirmModal(window.i18n.DELETE_ALL_FILES_CONFIRM.replace("_1", files.length).replace("_2", outDir)).then(resp => {
                 if (resp) {
                     window.deleteFolderRecursive(outDir, true)
-                    window.refreshRecordsList(outDir)
+                    window.initMainPagePagination(outDir)
+                    window.refreshRecordsList()
                 }
             })
         } else {
@@ -263,7 +314,8 @@ voiceRecordsOrderByButton.addEventListener("click", () => {
     voiceRecordsOrderByButton.innerHTML = labels[window.userSettings.voiceRecordsOrderBy]
     if (window.currentModel) {
         const voiceRecordsList = window.userSettings[`outpath_${window.currentGame.gameId}`]+`/${window.currentModel.voiceId}`
-        window.refreshRecordsList(voiceRecordsList)
+        window.reOrderMainPageRecords()
+        window.refreshRecordsList()
     }
 })
 voiceRecordsOrderByOrderButton.addEventListener("click", () => {
@@ -276,19 +328,24 @@ voiceRecordsOrderByOrderButton.addEventListener("click", () => {
     voiceRecordsOrderByOrderButton.innerHTML = labels[window.userSettings.voiceRecordsOrderByOrder]
     if (window.currentModel) {
         const voiceRecordsList = window.userSettings[`outpath_${window.currentGame.gameId}`]+`/${window.currentModel.voiceId}`
-        window.refreshRecordsList(voiceRecordsList)
+        window.reOrderMainPageRecords()
+        window.refreshRecordsList()
     }
 })
 voiceSamplesSearch.addEventListener("keyup", () => {
     if (window.currentModel) {
+        window.outputFilesState.paginationIndex = 0
+        main_pageNum.value = 1
         const voiceRecordsList = window.userSettings[`outpath_${window.currentGame.gameId}`]+`/${window.currentModel.voiceId}`
-        window.refreshRecordsList(voiceRecordsList)
+        window.refreshRecordsList()
     }
 })
 voiceSamplesSearchPrompt.addEventListener("keyup", () => {
     if (window.currentModel) {
+        window.outputFilesState.paginationIndex = 0
+        main_pageNum.value = 1
         const voiceRecordsList = window.userSettings[`outpath_${window.currentGame.gameId}`]+`/${window.currentModel.voiceId}`
-        window.refreshRecordsList(voiceRecordsList)
+        window.refreshRecordsList()
     }
 })
 

@@ -416,113 +416,117 @@ window.changeGame = (meta) => {
             audioPreview.setSinkId(window.userSettings.base_speaker)
         })
 
-        button.addEventListener("click", event => {
-
-            // Just for easier packaging of the voice models for publishing - yes, lazy
-            if (event.ctrlKey && event.shiftKey) {
-                window.packageVoice(event.altKey, variants, {modelsPath, gameId})
-            }
-
-            variant_select.innerHTML = ""
-            oldVariantSelection = undefined
-            if (variants.length==1) {
-                variantElements.style.display = "none"
-            } else {
-                variantElements.style.display = "flex"
-                variants.forEach(variant => {
-                    const option = createElem("option", {value: variant.variantName})
-                    option.innerHTML = variant.variantName
-                    variant_select.appendChild(option)
-                    if (!oldVariantSelection) {
-                        oldVariantSelection = variant.variantName
-                    }
-                })
-            }
-
-
-            if (hifi) {
-                // Remove the bespoke hifi option if there was one already there
-                Array.from(vocoder_select.children).forEach(opt => {
-                    if (opt.innerHTML=="Bespoke HiFi GAN") {
-                        vocoder_select.removeChild(opt)
-                    }
-                })
-                bespoke_hifi_bolt.style.opacity = 1
-                const option = createElem("option", "Bespoke HiFi GAN")
-                option.value = `${gameId}/${voiceId}.hg.pt`
-                vocoder_select.appendChild(option)
-            } else {
-                bespoke_hifi_bolt.style.opacity = 0
-                // Set the vocoder select to quick-and-dirty if bespoke hifi-gan was selected
-                if (vocoder_select.value.includes(".hg.")) {
-                    vocoder_select.value = "qnd"
-                    window.changeVocoder("qnd")
-                }
-                // Remove the bespoke hifi option if there was one already there
-                Array.from(vocoder_select.children).forEach(opt => {
-                    if (opt.innerHTML=="Bespoke HiFi GAN") {
-                        vocoder_select.removeChild(opt)
-                    }
-                })
-            }
-
-            window.currentModel = model
-            window.currentModel.voiceId = voiceId
-            window.currentModel.voiceName = button.innerHTML
-            window.currentModel.hifi = hifi
-            window.currentModel.audioPreviewPath = audioPreviewPath
-            window.currentModelButton = button
-
-
-            generateVoiceButton.dataset.modelQuery = null
-
-            // The model is already loaded. Don't re-load it.
-            if (generateVoiceButton.dataset.modelIDLoaded == voiceId) {
-                generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
-                generateVoiceButton.dataset.modelQuery = "null"
-
-            } else {
-                generateVoiceButton.innerHTML = window.i18n.LOAD_MODEL
-                const modelGameFolder = audioPreviewPath.split("/")[0]
-
-                generateVoiceButton.dataset.modelQuery = JSON.stringify({
-                    outputs: parseInt(model.outputs),
-                    model: `${modelsPath}/${voiceId}`,
-                    modelType: model.modelType,
-                    version: model.version,
-                    model_speakers: model.emb_size,
-                    cmudict: model.cmudict,
-                    base_lang: model.lang || "en"
-                })
-                generateVoiceButton.dataset.modelIDToLoad = voiceId
-            }
-            generateVoiceButton.disabled = false
-
-            titleName.innerHTML = button.innerHTML
-            titleInfo.style.display = "flex"
-            titleInfoName.innerHTML = window.currentModel.voiceName
-            titleInfoVoiceID.innerHTML = voiceId
-            titleInfoGender.innerHTML = window.currentModel.games[0].gender || "?"
-            titleInfoAppVersion.innerHTML = window.currentModel.version || "?"
-            titleInfoModelVersion.innerHTML = window.currentModel.modelVersion || "?"
-            titleInfoModelType.innerHTML = window.currentModel.modelType || "?"
-            titleInfoLanguage.innerHTML = window.currentModel.lang || window.currentModel.games[0].lang || "en"
-            titleInfoAuthor.innerHTML = window.currentModel.author || "?"
-
-            title.dataset.modelId = voiceId
-            keepSampleButton.style.display = "none"
-            samplePlayPause.style.display = "none"
-
-            // Voice samples
-            voiceSamples.innerHTML = ""
-            refreshRecordsList(`${window.userSettings[`outpath_${meta.gameId}`]}/${button.dataset.modelId}`)
-        })
+        button.addEventListener("click", event => window.selectVoice(event, variants, hifi, gameId, voiceId, model, button, audioPreviewPath, modelsPath, meta))
         buttons.push(button)
     })
 
     buttons.sort((a,b) => a.innerHTML.toLowerCase()<b.innerHTML.toLowerCase()?-1:1)
         .forEach(button => voiceTypeContainer.appendChild(button))
 
+}
+
+
+window.selectVoice = (event, variants, hifi, gameId, voiceId, model, button, audioPreviewPath, modelsPath, meta) => {
+    // Just for easier packaging of the voice models for publishing - yes, lazy
+    if (event.ctrlKey && event.shiftKey) {
+        window.packageVoice(event.altKey, variants, {modelsPath, gameId})
+    }
+
+    variant_select.innerHTML = ""
+    oldVariantSelection = undefined
+    if (variants.length==1) {
+        variantElements.style.display = "none"
+    } else {
+        variantElements.style.display = "flex"
+        variants.forEach(variant => {
+            const option = createElem("option", {value: variant.variantName})
+            option.innerHTML = variant.variantName
+            variant_select.appendChild(option)
+            if (!oldVariantSelection) {
+                oldVariantSelection = variant.variantName
+            }
+        })
+    }
+
+
+    if (hifi) {
+        // Remove the bespoke hifi option if there was one already there
+        Array.from(vocoder_select.children).forEach(opt => {
+            if (opt.innerHTML=="Bespoke HiFi GAN") {
+                vocoder_select.removeChild(opt)
+            }
+        })
+        bespoke_hifi_bolt.style.opacity = 1
+        const option = createElem("option", "Bespoke HiFi GAN")
+        option.value = `${gameId}/${voiceId}.hg.pt`
+        vocoder_select.appendChild(option)
+    } else {
+        bespoke_hifi_bolt.style.opacity = 0
+        // Set the vocoder select to quick-and-dirty if bespoke hifi-gan was selected
+        if (vocoder_select.value.includes(".hg.")) {
+            vocoder_select.value = "qnd"
+            window.changeVocoder("qnd")
+        }
+        // Remove the bespoke hifi option if there was one already there
+        Array.from(vocoder_select.children).forEach(opt => {
+            if (opt.innerHTML=="Bespoke HiFi GAN") {
+                vocoder_select.removeChild(opt)
+            }
+        })
+    }
+
+    window.currentModel = model
+    window.currentModel.voiceId = voiceId
+    window.currentModel.voiceName = button.innerHTML
+    window.currentModel.hifi = hifi
+    window.currentModel.audioPreviewPath = audioPreviewPath
+    window.currentModelButton = button
+
+
+    generateVoiceButton.dataset.modelQuery = null
+
+    // The model is already loaded. Don't re-load it.
+    if (generateVoiceButton.dataset.modelIDLoaded == voiceId) {
+        generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
+        generateVoiceButton.dataset.modelQuery = "null"
+
+    } else {
+        generateVoiceButton.innerHTML = window.i18n.LOAD_MODEL
+        const modelGameFolder = audioPreviewPath.split("/")[0]
+
+        generateVoiceButton.dataset.modelQuery = JSON.stringify({
+            outputs: parseInt(model.outputs),
+            model: `${modelsPath}/${voiceId}`,
+            modelType: model.modelType,
+            version: model.version,
+            model_speakers: model.emb_size,
+            cmudict: model.cmudict,
+            base_lang: model.lang || "en"
+        })
+        generateVoiceButton.dataset.modelIDToLoad = voiceId
+    }
+    generateVoiceButton.disabled = false
+
+    titleName.innerHTML = button.innerHTML
+    titleInfo.style.display = "flex"
+    titleInfoName.innerHTML = window.currentModel.voiceName
+    titleInfoVoiceID.innerHTML = voiceId
+    titleInfoGender.innerHTML = window.currentModel.games[0].gender || "?"
+    titleInfoAppVersion.innerHTML = window.currentModel.version || "?"
+    titleInfoModelVersion.innerHTML = window.currentModel.modelVersion || "?"
+    titleInfoModelType.innerHTML = window.currentModel.modelType || "?"
+    titleInfoLanguage.innerHTML = window.currentModel.lang || window.currentModel.games[0].lang || "en"
+    titleInfoAuthor.innerHTML = window.currentModel.author || "?"
+
+    title.dataset.modelId = voiceId
+    keepSampleButton.style.display = "none"
+    samplePlayPause.style.display = "none"
+
+    // Voice samples
+    voiceSamples.innerHTML = ""
+
+    window.initMainPagePagination(`${window.userSettings[`outpath_${meta.gameId}`]}/${button.dataset.modelId}`)
+    window.refreshRecordsList()
 }
 
 
@@ -1023,7 +1027,7 @@ window.saveFile = (from, to, skipUIRecord=false) => {
                     fs.writeFileSync(`${to}.${toExt}.json`, JSON.stringify(jsonDataOut, null, 4))
                 }
                 if (!skipUIRecord) {
-                    refreshRecordsList(containerFolderPath)
+                    window.refreshRecordsList()
                 }
                 window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["post"], event="post keep-sample", pluginData)
             }

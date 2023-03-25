@@ -467,10 +467,11 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_GROUP_VOICEID = "Group voices by voiceId and vocoder in preprocessing to minimize model switching"
     window.i18n.SETTINGS_GROUP_VOCODER = "Also do a secondary group by the vocoder - can take long to do with big files (100k+ lines)"
     window.i18n.SETTING_HIGHLIGHT_ONLY_MODELS_V = "Highlight only models with at least this version"
+    window.i18n.SETTING_OUTPUTFILES_PAGINATION = "Output records pagination size"
 
 
     window.i18n.SEARCH_OUTPUT = "Search output file names..."
-    window.i18n.SEARCH_OUTPUT_PROMPT = "Search output file prompts..."
+    window.i18n.SEARCH_OUTPUT_PROMPT = "Search prompts..."
     window.i18n.DELETE = "Delete"
     window.i18n.DELETE_ALL = "Delete all"
     window.i18n.DELETE_ALL_FILES_CONFIRM = "Are you sure you'd like to delete all files for this voice? This will delete all _1 files in the following output directory:<br>_2"
@@ -556,6 +557,7 @@ window.i18n.setEnglish = () => {
 
     window.i18n.BATCH_CHANGE_DELIMITER = "The .csv delimiter is not found in the data. The delimiter in the settings is '_1', but the one in the .csv file is potentially '_2'. Do you want to change the delimiter used, and try again using this?"
     window.i18n.BATCH_TOCSV_DONE = "Saved all lines to csv file at:"
+    window.i18n.PAGINATION_TOTAL_OF = "of _1"
 
     // Useful during developing, to see if there are any strings left un-i18n-ed
     // Object.keys(window.i18n).forEach(key => {
@@ -660,8 +662,11 @@ window.i18n.updateUI = () => {
     style_emb_manage_btn.innerHTML = window.i18n.MANAGE
 
     batch_paginationPrev.innerHTML = window.i18n.PREVIOUS
+    main_paginationPrev.innerHTML = window.i18n.PREVIOUS
     batch_paginationNext.innerHTML = window.i18n.NEXT
+    main_paginationNext.innerHTML = window.i18n.NEXT
     i18n_page.innerHTML = window.i18n.PAGE
+    i18n_page_main.innerHTML = window.i18n.PAGE
     i18n_batchLPS.innerHTML = window.i18n.LINES_PER_SECOND
     i18n_etaFinished.innerHTML = window.i18n.ETA_FINISHED
     nexusNameDisplay.innerHTML = window.i18n.LOGGED_IN_AS
@@ -935,6 +940,7 @@ window.i18n.updateUI = () => {
 
     s2s_voiceId_selected_label.innerHTML = window.i18n.VC_ONLY_FOR_V3
     i18n_settings_model_version_highlight.innerHTML = window.i18n.SETTING_HIGHLIGHT_ONLY_MODELS_V
+    i18n_setting_output_files_pagination_size.innerHTML = window.i18n.SETTING_OUTPUTFILES_PAGINATION
 
     openDiscord.innerHTML = window.i18n.JOIN_DISCORD
 
