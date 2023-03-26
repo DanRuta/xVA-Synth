@@ -351,12 +351,6 @@ window.changeGame = (meta) => {
     titleName.innerHTML = window.i18n.SELECT_VOICE_TYPE
     if (window.games[window.currentGame.gameId] == undefined) {
         titleName.innerHTML = `${window.i18n.NO_MODELS_IN}: ${window.userSettings[`modelspath_${window.currentGame.gameId}`]}`
-    } else if (titleID) {
-        document.title = `${titleID}VA Synth`
-        dragBar.innerHTML = `${titleID}VA Synth`
-    } else {
-        document.title = `xVA Synth`
-        dragBar.innerHTML = `xVA Synth`
     }
 
     const gameFolder = meta.gameId
