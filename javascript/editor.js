@@ -29,10 +29,13 @@ class Editor {
         this.default_MAX_ENERGY = 4.35
         this.MAX_ENERGY = 4.35
         this.ENERGY_GRABBER_RADIUS = 8
-        this.EMOTION_GRABBER_RADIUS = 8
+        this.EMOTION_STYLE_GRABBER_RADIUS = 8
 
         this.MIN_EMOTIONS = 0
         this.MAX_EMOTIONS = 1.06
+
+        this.MIN_STYLES = 0
+        this.MAX_STYLES = 1.06
 
         this.clear() // And thus init
     }
@@ -45,6 +48,12 @@ class Editor {
         this.emHappyGrabbers = []
         this.emSadGrabbers = []
         this.emSurpriseGrabbers = []
+
+        this.styleGrabbers = {}
+        this.styleValuesNew = {}
+        this.styleValuesReset = {}
+        this.multiLetterStyleDelta = {}
+        this.multiLetterStartStyleVals = {}
 
         this.letters = []
         this.pitchNew = []
@@ -80,6 +89,20 @@ class Editor {
 
         this.multiLetterLengthDelta = undefined
         this.multiLetterStartLengthVals = []
+    }
+
+    loadStylesData (editorStyles) {
+        this.registeredStyleKeys = []
+        Object.keys(window.appState.currentModelEmbeddings).forEach(styleKey => {
+            if (styleKey=="default") return
+            this.registeredStyleKeys.push(styleKey)
+
+            this.styleGrabbers[styleKey] = []
+            this.styleValuesReset[styleKey] = this.resetPitch.map(v=>0)
+            this.styleValuesNew[styleKey] = (editorStyles&&editorStyles[styleKey]&&editorStyles[styleKey].sliders) ? editorStyles[styleKey].sliders : this.resetPitch.map(v=>0)
+            this.multiLetterStyleDelta[styleKey] = undefined
+            this.multiLetterStartStyleVals[styleKey] = []
+        })
     }
 
     init () {
@@ -136,8 +159,8 @@ class Editor {
             const isHoveringOverEmotionGrabber = emotionGrabbers => {
                 return emotionGrabbers.find((eGrabber, egi) => {
                     if (!this.enabled_disabled_items[egi]) return
-                    const grabberX = eGrabber.getXLeft()+eGrabber.sliderBox.width/2-this.EMOTION_GRABBER_RADIUS
-                    return (mouseX>grabberX && mouseX<grabberX+this.EMOTION_GRABBER_RADIUS*2+4) && (mouseY>eGrabber.topLeftY-this.EMOTION_GRABBER_RADIUS-2 && mouseY<eGrabber.topLeftY+this.EMOTION_GRABBER_RADIUS+2)
+                    const grabberX = eGrabber.getXLeft()+eGrabber.sliderBox.width/2-this.EMOTION_STYLE_GRABBER_RADIUS
+                    return (mouseX>grabberX && mouseX<grabberX+this.EMOTION_STYLE_GRABBER_RADIUS*2+4) && (mouseY>eGrabber.topLeftY-this.EMOTION_STYLE_GRABBER_RADIUS-2 && mouseY<eGrabber.topLeftY+this.EMOTION_STYLE_GRABBER_RADIUS+2)
                 })
             }
             if (window.currentModel.modelType=="xVAPitch") {
@@ -157,6 +180,26 @@ class Editor {
                 this.canvas.style.cursor = "n-resize"
                 return
             }
+
+            // Check styles grabbers
+            if (this.registeredStyleKeys && this.registeredStyleKeys.length) {
+                let isOnStyleGrabber
+                this.registeredStyleKeys.forEach(styleKey => {
+                    if (isOnStyleGrabber) return // Skip unnecessary work if already found
+                    if (seq_edit_view_select.value.startsWith("style_") && seq_edit_view_select.value.includes(styleKey)) {
+                        isOnStyleGrabber = this.styleGrabbers[styleKey].find((grabber, gi) => {
+                            if (!this.enabled_disabled_items[gi]) return
+                            const grabberX = grabber.getXLeft()
+                            return (mouseX>grabberX && mouseX<grabberX+grabber.width) && (mouseY>grabber.topLeftY && mouseY<grabber.topLeftY+grabber.height)
+                        })
+                        if (isOnStyleGrabber) {
+                            this.canvas.style.cursor = "row-resize"
+                            return
+                        }
+                    }
+                })
+            }
+
             // Check letter hover
             const isOnLetter = this.letterClasses.find((letter, l) => {
                 if (!this.enabled_disabled_items[l]) return
@@ -187,11 +230,11 @@ class Editor {
             mouseDownStart.y = mouseY
 
             // Check up-down emotion dragging
-            const findEmotionGrabber = emotionGrabbers => {
+            const findGrabber = emotionGrabbers => {
                 return emotionGrabbers.find((eGrabber, egi) => {
                     if (!this.enabled_disabled_items[egi]) return
-                    const grabberX = eGrabber.getXLeft()+eGrabber.sliderBox.width/2-this.EMOTION_GRABBER_RADIUS
-                    return (mouseX>grabberX && mouseX<grabberX+this.EMOTION_GRABBER_RADIUS*2+4) && (mouseY>eGrabber.topLeftY-this.EMOTION_GRABBER_RADIUS-2 && mouseY<eGrabber.topLeftY+this.EMOTION_GRABBER_RADIUS+2)
+                    const grabberX = eGrabber.getXLeft()+eGrabber.sliderBox.width/2-this.EMOTION_STYLE_GRABBER_RADIUS
+                    return (mouseX>grabberX && mouseX<grabberX+this.EMOTION_STYLE_GRABBER_RADIUS*2+4) && (mouseY>eGrabber.topLeftY-this.EMOTION_STYLE_GRABBER_RADIUS-2 && mouseY<eGrabber.topLeftY+this.EMOTION_STYLE_GRABBER_RADIUS+2)
                 })
             }
             const handleEmGrabber = (emGrabber, grabbersList) => {
@@ -200,29 +243,50 @@ class Editor {
                 }
                 this.multiLetterEmotionDelta = emGrabber.topLeftY
                 this.multiLetterStartEmotionVals = grabbersList.map(emGrabber => emGrabber.topLeftY)
+
                 return emGrabber
             }
+            const handleStyleGrabber = (styleGrabber, grabbersList, styleKey) => {
+                if (this.letterFocus.length <= 1 || (!this.letterFocus.includes(styleGrabber.index))) {
+                    this.setLetterFocus(grabbersList.indexOf(styleGrabber), event.ctrlKey, event.shiftKey, event.altKey)
+                }
+                this.multiLetterStyleDelta[styleKey] = styleGrabber.topLeftY
+                this.multiLetterStartStyleVals[styleKey] = grabbersList.map(styleGrabber => styleGrabber.topLeftY)
+                return styleGrabber
+            }
             if (window.currentModel.modelType=="xVAPitch") {
-                const isOnEmAngryGrabber = seq_edit_view_select.value=="emAngry" && findEmotionGrabber(this.emAngryGrabbers)
+                if (seq_edit_view_select.value.startsWith("style_") && this.registeredStyleKeys.length) {
+                    this.registeredStyleKeys.forEach(styleKey => {
+                        if (seq_edit_view_select.value.includes(styleKey)) {
+                            const isOnStyleGrabber = findGrabber(this.styleGrabbers[styleKey])
+                            if (isOnStyleGrabber) {
+                                elemDragged = handleStyleGrabber(isOnStyleGrabber, this.styleGrabbers[styleKey], styleKey)
+                                return
+                            }
+                        }
+                    })
+                }
+                const isOnEmAngryGrabber = seq_edit_view_select.value=="emAngry" && findGrabber(this.emAngryGrabbers)
                 if (isOnEmAngryGrabber) {
                     elemDragged = handleEmGrabber(isOnEmAngryGrabber, this.emAngryGrabbers)
                     return
                 }
-                const isOnEmHappyGrabber = seq_edit_view_select.value=="emHappy" && findEmotionGrabber(this.emHappyGrabbers)
+                const isOnEmHappyGrabber = seq_edit_view_select.value=="emHappy" && findGrabber(this.emHappyGrabbers)
                 if (isOnEmHappyGrabber) {
                     elemDragged = handleEmGrabber(isOnEmHappyGrabber, this.emHappyGrabbers)
                     return
                 }
-                const isOnEmSadGrabber = seq_edit_view_select.value=="emSad" && findEmotionGrabber(this.emSadGrabbers)
+                const isOnEmSadGrabber = seq_edit_view_select.value=="emSad" && findGrabber(this.emSadGrabbers)
                 if (isOnEmSadGrabber) {
                     elemDragged = handleEmGrabber(isOnEmSadGrabber, this.emSadGrabbers)
                     return
                 }
-                const isOnEmSurpriseGrabber = seq_edit_view_select.value=="emSurprise" && findEmotionGrabber(this.emSurpriseGrabbers)
+                const isOnEmSurpriseGrabber = seq_edit_view_select.value=="emSurprise" && findGrabber(this.emSurpriseGrabbers)
                 if (isOnEmSurpriseGrabber) {
                     elemDragged = handleEmGrabber(isOnEmSurpriseGrabber, this.emSurpriseGrabbers)
                     return
                 }
+
             }
 
             // Check up-down energy dragging
@@ -399,6 +463,26 @@ class Editor {
                                 letterEmotionNumb.value = parseFloat(this.emSurpriseNew[elemDragged.index]*100)/100
                             }
                         }
+                    } else if (elemDragged.type=="style_slider") { // Style sliders
+
+                        elemDragged.setValueFromCoords(parseInt(event.offsetY)-elemDragged.height/2)
+
+                        if (this.registeredStyleKeys.length) {
+                            this.registeredStyleKeys.forEach(styleKey => {
+                                if (seq_edit_view_select.value.startsWith("style_") && seq_edit_view_select.value.includes(styleKey)) {
+                                    // If there's a multi-selection, update all of their values, otherwise update the numerical input
+                                    if (this.letterFocus.length>1) {
+                                        this.letterFocus.forEach(li => {
+                                            if (li!=elemDragged.index) {
+                                                this.styleGrabbers[styleKey][li].setValueFromCoords(this.multiLetterStartStyleVals[styleKey][li]+(elemDragged.topLeftY-this.multiLetterStyleDelta[styleKey]))
+                                            }
+                                        })
+                                    } else {
+                                        letterStyleNumb.value = parseInt(this.styleValuesNew[styleKey][elemDragged.index]*100)/100
+                                    }
+                                }
+                            })
+                        }
                     }
                 }
             }
@@ -469,6 +553,17 @@ class Editor {
                         eGrabber.render()
                     })
                 }
+                if (this.registeredStyleKeys && this.registeredStyleKeys.length) {
+                    this.registeredStyleKeys.forEach(styleKey => {
+                        if (seq_edit_view_select.value.startsWith("style_") && seq_edit_view_select.value.includes(styleKey)) {
+                            this.styleGrabbers[styleKey].forEach((styleGrabber, sgi) => {
+                                if (this.letters[sgi]=="<PAD>") return
+                                styleGrabber.context = this.context
+                                styleGrabber.render()
+                            })
+                        }
+                    })
+                }
             }
         }
         requestAnimationFrame(() => {this.render()})
@@ -491,6 +586,12 @@ class Editor {
             this.MIN_ENERGY = 0
             this.default_MAX_ENERGY = 1.07
             this.MAX_ENERGY = 1.07
+
+            this.styleGrabbers = {}
+            this.registeredStyleKeys.forEach(styleKey => {
+                this.styleGrabbers[styleKey] = []
+            })
+
         } else {
             this.default_pitchSliderRange = 4
             this.pitchSliderRange = 4
@@ -572,8 +673,8 @@ class Editor {
                     emotionPercent = Math.max(0, emotionPercent)
                     emotionPercent = Math.min(emotionPercent, 1)
 
-                    let topLeftY = (1 - emotionPercent) * (this.EDITOR_HEIGHT-2-this.EMOTION_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
-                    const emAngryGrabber = new EnergyEmotionGrabber(this.context, li, sliderBox, topLeftY, width-2, this.EMOTION_GRABBER_RADIUS, undefined, modelType, this.EMOTION_GRABBER_RADIUS, "emotion")
+                    let topLeftY = (1 - emotionPercent) * (this.EDITOR_HEIGHT-2-this.EMOTION_STYLE_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
+                    const emAngryGrabber = new EnergyEmotionGrabber(this.context, li, sliderBox, topLeftY, width-2, this.EMOTION_STYLE_GRABBER_RADIUS, undefined, modelType, this.EMOTION_STYLE_GRABBER_RADIUS, "emotion")
                     emAngryGrabber.render()
                     this.emAngryGrabbers.push(emAngryGrabber)
                 }
@@ -582,8 +683,8 @@ class Editor {
                     emotionPercent = Math.max(0, emotionPercent)
                     emotionPercent = Math.min(emotionPercent, 1)
 
-                    let topLeftY = (1 - emotionPercent) * (this.EDITOR_HEIGHT-2-this.EMOTION_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
-                    const emHappyGrabber = new EnergyEmotionGrabber(this.context, li, sliderBox, topLeftY, width-2, this.EMOTION_GRABBER_RADIUS, undefined, modelType, this.EMOTION_GRABBER_RADIUS, "emotion")
+                    let topLeftY = (1 - emotionPercent) * (this.EDITOR_HEIGHT-2-this.EMOTION_STYLE_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
+                    const emHappyGrabber = new EnergyEmotionGrabber(this.context, li, sliderBox, topLeftY, width-2, this.EMOTION_STYLE_GRABBER_RADIUS, undefined, modelType, this.EMOTION_STYLE_GRABBER_RADIUS, "emotion")
                     emHappyGrabber.render()
                     this.emHappyGrabbers.push(emHappyGrabber)
                 }
@@ -592,8 +693,8 @@ class Editor {
                     emotionPercent = Math.max(0, emotionPercent)
                     emotionPercent = Math.min(emotionPercent, 1)
 
-                    let topLeftY = (1 - emotionPercent) * (this.EDITOR_HEIGHT-2-this.EMOTION_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
-                    const emSadGrabber = new EnergyEmotionGrabber(this.context, li, sliderBox, topLeftY, width-2, this.EMOTION_GRABBER_RADIUS, undefined, modelType, this.EMOTION_GRABBER_RADIUS, "emotion")
+                    let topLeftY = (1 - emotionPercent) * (this.EDITOR_HEIGHT-2-this.EMOTION_STYLE_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
+                    const emSadGrabber = new EnergyEmotionGrabber(this.context, li, sliderBox, topLeftY, width-2, this.EMOTION_STYLE_GRABBER_RADIUS, undefined, modelType, this.EMOTION_STYLE_GRABBER_RADIUS, "emotion")
                     emSadGrabber.render()
                     this.emSadGrabbers.push(emSadGrabber)
                 }
@@ -602,11 +703,23 @@ class Editor {
                     emotionPercent = Math.max(0, emotionPercent)
                     emotionPercent = Math.min(emotionPercent, 1)
 
-                    let topLeftY = (1 - emotionPercent) * (this.EDITOR_HEIGHT-2-this.EMOTION_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
-                    const emSurpriseGrabber = new EnergyEmotionGrabber(this.context, li, sliderBox, topLeftY, width-2, this.EMOTION_GRABBER_RADIUS, undefined, modelType, this.EMOTION_GRABBER_RADIUS, "emotion")
+                    let topLeftY = (1 - emotionPercent) * (this.EDITOR_HEIGHT-2-this.EMOTION_STYLE_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
+                    const emSurpriseGrabber = new EnergyEmotionGrabber(this.context, li, sliderBox, topLeftY, width-2, this.EMOTION_STYLE_GRABBER_RADIUS, undefined, modelType, this.EMOTION_STYLE_GRABBER_RADIUS, "emotion")
                     emSurpriseGrabber.render()
                     this.emSurpriseGrabbers.push(emSurpriseGrabber)
                 }
+
+                // Initialize grabbers dynamically for every style
+                this.registeredStyleKeys.forEach(styleKey => {
+                    let stylePercent = ( (this.styleValuesNew[styleKey][li]-this.MIN_STYLES) / (this.MAX_STYLES-this.MIN_STYLES)  )
+                    stylePercent = Math.max(0, stylePercent)
+                    stylePercent = Math.min(stylePercent, 1)
+
+                    let topLeftY = (1 - stylePercent) * (this.EDITOR_HEIGHT-2-this.EMOTION_STYLE_GRABBER_RADIUS) + (this.LETTERS_Y_OFFSET)
+                    const styleGrabber = new EnergyEmotionGrabber(this.context, li, sliderBox, topLeftY, width-2, this.EMOTION_STYLE_GRABBER_RADIUS, undefined, modelType, this.EMOTION_STYLE_GRABBER_RADIUS, "style")
+                    styleGrabber.render()
+                    this.styleGrabbers[styleKey].push(styleGrabber)
+                })
             }
 
             sliderBox.letter = letterClass
@@ -684,6 +797,8 @@ class Editor {
         })
 
 
+        letterStyleNumb.value = ""
+        letterStyleNumb.disabled = true
         if (this.letterFocus.length==1) {
             if (this.energyNew.length) {
                 letterEnergyNumb.value = parseFloat(this.energyNew[this.letterFocus[0]])
@@ -705,6 +820,12 @@ class Editor {
                 letterEmotionNumb.value = parseFloat(this.emSurpriseNew[this.letterFocus[0]])
                 letterEmotionNumb.disabled = false
             }
+            this.registeredStyleKeys.forEach(styleKey => {
+                if (seq_edit_view_select.value.startsWith("style_") && seq_edit_view_select.value.includes(styleKey)) {
+                    letterStyleNumb.value = parseFloat(this.styleValuesNew[styleKey][this.letterFocus[0]])
+                    letterStyleNumb.disabled = false
+                }
+            })
             letterPitchNumb.value = parseInt(this.pitchNew[this.letterFocus[0]]*100)/100
             letterLengthNumb.value = parseInt(parseFloat(this.dursNew[this.letterFocus[0]])*100)/100
 
@@ -869,6 +990,16 @@ class EnergyEmotionGrabber extends SliderGrabber {
                 this.percentUp = 1-(this.topLeftY-window.sequenceEditor.LETTERS_Y_OFFSET)/(window.sequenceEditor.EDITOR_HEIGHT-this.radius)
             }
             window.sequenceEditor.energyNew[this.index] = window.sequenceEditor.MAX_ENERGY - (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)*this.percentUp
+        } else if (this.type=="style_slider") {
+
+            this.percentUp = (this.topLeftY-window.sequenceEditor.LETTERS_Y_OFFSET)/(window.sequenceEditor.EDITOR_HEIGHT-this.radius)
+
+            window.sequenceEditor.registeredStyleKeys.forEach(styleKey => {
+                if (seq_edit_view_select.value.startsWith("style_") && seq_edit_view_select.value.includes(styleKey)) {
+                    window.sequenceEditor.styleValuesNew[styleKey][this.index] = window.sequenceEditor.MAX_STYLES - (window.sequenceEditor.MAX_STYLES-window.sequenceEditor.MIN_STYLES)*this.percentUp
+                }
+            })
+
         } else {
             this.percentUp = (this.topLeftY-window.sequenceEditor.LETTERS_Y_OFFSET)/(window.sequenceEditor.EDITOR_HEIGHT-this.radius)
             if (seq_edit_view_select.value=="emAngry") {
@@ -892,6 +1023,10 @@ class EnergyEmotionGrabber extends SliderGrabber {
             } else {
                 this.percentUp = 1 - ( (value-window.sequenceEditor.MIN_ENERGY) / (window.sequenceEditor.MAX_ENERGY-window.sequenceEditor.MIN_ENERGY)  )
             }
+        } else if (this.type=="style_slider") {
+            value = Math.max(window.sequenceEditor.MIN_STYLES, value)
+            value = Math.min(value, window.sequenceEditor.MAX_STYLES)
+            this.percentUp = ( (value-window.sequenceEditor.MIN_STYLES) / (window.sequenceEditor.MAX_STYLES-window.sequenceEditor.MIN_STYLES)  )
         } else {
             value = Math.max(window.sequenceEditor.MIN_EMOTIONS, value)
             value = Math.min(value, window.sequenceEditor.MAX_EMOTIONS)
@@ -1013,6 +1148,8 @@ right.addEventListener("click", event => {
     letterLengthNumb.value = ""
     letterEmotionNumb.disabled = true
     letterEmotionNumb.value = ""
+    letterStyleNumb.disabled = true
+    letterStyleNumb.value = ""
 })
 
 letterEnergyNumb.addEventListener("click", () => {
@@ -1042,14 +1179,14 @@ letterEnergyNumb.addEventListener("change", () => {
 
 letterEmotionNumb.addEventListener("click", () => {
     const lpnValue = parseFloat(letterEmotionNumb.value) || 0
-    let data, grabbers = getSelectedEmotionDataAndGrabbers()
+    let [data, grabbers] = getSelectedEmotionDataAndGrabbers()
     if (data[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
         window.sequenceEditor.hasChanged = true
     }
 })
 letterEmotionNumb.addEventListener("input", () => {
     const lpnValue = parseFloat(letterEmotionNumb.value) || 0
-    let data, grabbers = getSelectedEmotionDataAndGrabbers()
+    let [data, grabbers] = getSelectedEmotionDataAndGrabbers()
     if (window.sequenceEditor.data[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
         window.sequenceEditor.hasChanged = true
     }
@@ -1059,12 +1196,53 @@ letterEmotionNumb.addEventListener("input", () => {
 })
 letterEmotionNumb.addEventListener("change", () => {
     const lpnValue = parseFloat(letterEmotionNumb.value) || 0
-    let data, grabbers = getSelectedEmotionDataAndGrabbers()
+    let [data, grabbers] = getSelectedEmotionDataAndGrabbers()
     if (data[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
         window.sequenceEditor.hasChanged = true
     }
     data[window.sequenceEditor.letterFocus[0]] = lpnValue
     grabbers[window.sequenceEditor.letterFocus[0]].setValueFromValue(lpnValue)
+    kickOffAutoInferTimer()
+})
+
+const getSelectedStyleDataAndGrabbers = () => {
+    let data, grabbers
+    window.sequenceEditor.registeredStyleKeys.forEach(styleKey => {
+        if (seq_edit_view_select.value.startsWith("style_") && seq_edit_view_select.value.includes(styleKey)) {
+            data = window.sequenceEditor.styleValuesNew[styleKey]
+            grabbers = window.sequenceEditor.styleGrabbers[styleKey]
+        }
+    })
+    return [data, grabbers]
+}
+
+letterStyleNumb.addEventListener("click", () => {
+    const lpnValue = parseFloat(letterStyleNumb.value) || 0
+    let [data, grabbers] = getSelectedStyleDataAndGrabbers()
+    if (data && data[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
+        window.sequenceEditor.hasChanged = true
+    }
+})
+letterStyleNumb.addEventListener("input", () => {
+    const lpnValue = parseFloat(letterStyleNumb.value) || 0
+    let [data, grabbers] = getSelectedStyleDataAndGrabbers()
+    if (data[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
+        window.sequenceEditor.hasChanged = true
+    }
+    data[window.sequenceEditor.letterFocus[0]] = lpnValue
+    grabbers[window.sequenceEditor.letterFocus[0]].setValueFromValue(lpnValue)
+    setNewDataToSelectedStyle(data)
+    kickOffAutoInferTimer()
+})
+letterStyleNumb.addEventListener("change", () => {
+    const lpnValue = parseFloat(letterStyleNumb.value) || 0
+    let [data, grabbers] = getSelectedStyleDataAndGrabbers()
+    if (data[window.sequenceEditor.letterFocus[0]]!=lpnValue) {
+        window.sequenceEditor.hasChanged = true
+    }
+    data[window.sequenceEditor.letterFocus[0]] = lpnValue
+    grabbers[window.sequenceEditor.letterFocus[0]].setValueFromValue(lpnValue)
+    setNewDataToSelectedStyle(data)
     kickOffAutoInferTimer()
 })
 
@@ -1115,8 +1293,30 @@ resetLetter_btn.addEventListener("click", () => {
         letterPitchNumb.value = parseInt(window.sequenceEditor.pitchNew[window.sequenceEditor.letterFocus[0]]*100)/100
         letterEnergyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]])
 
-        let data, grabbers = getSelectedEmotionDataAndGrabbers()
-        letterEmotionNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]])
+        let [data, grabbers] = getSelectedEmotionDataAndGrabbers()
+
+        window.sequenceEditor.emAngryNew[window.sequenceEditor.letterFocus[0]] = window.sequenceEditor.resetEmAngry[window.sequenceEditor.letterFocus[0]]
+        window.sequenceEditor.emAngryGrabbers[window.sequenceEditor.letterFocus[0]].setValueFromValue(window.sequenceEditor.emAngryNew[window.sequenceEditor.letterFocus[0]])
+        window.sequenceEditor.emHappyNew[window.sequenceEditor.letterFocus[0]] = window.sequenceEditor.resetEmHappy[window.sequenceEditor.letterFocus[0]]
+        window.sequenceEditor.emHappyGrabbers[window.sequenceEditor.letterFocus[0]].setValueFromValue(window.sequenceEditor.emHappyNew[window.sequenceEditor.letterFocus[0]])
+        window.sequenceEditor.emSadNew[window.sequenceEditor.letterFocus[0]] = window.sequenceEditor.resetEmSad[window.sequenceEditor.letterFocus[0]]
+        window.sequenceEditor.emSadGrabbers[window.sequenceEditor.letterFocus[0]].setValueFromValue(window.sequenceEditor.emSadNew[window.sequenceEditor.letterFocus[0]])
+        window.sequenceEditor.emSurpriseNew[window.sequenceEditor.letterFocus[0]] = window.sequenceEditor.resetEmSurprise[window.sequenceEditor.letterFocus[0]]
+        window.sequenceEditor.emSurpriseGrabbers[window.sequenceEditor.letterFocus[0]].setValueFromValue(window.sequenceEditor.emSurpriseNew[window.sequenceEditor.letterFocus[0]])
+
+        if (data) {
+            letterEmotionNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]])
+        }
+
+        window.sequenceEditor.registeredStyleKeys.forEach(styleKey => {
+            window.sequenceEditor.styleValuesNew[styleKey][window.sequenceEditor.letterFocus[0]] = window.sequenceEditor.styleValuesReset[styleKey][window.sequenceEditor.letterFocus[0]]
+            window.sequenceEditor.styleGrabbers[styleKey][window.sequenceEditor.letterFocus[0]].setValueFromValue(window.sequenceEditor.styleValuesNew[styleKey][window.sequenceEditor.letterFocus[0]])
+        })
+
+        let [styleData, styleGrabbers] = getSelectedStyleDataAndGrabbers()
+        if (styleData) {
+            letterStyleNumb.value = parseInt(styleData[window.sequenceEditor.letterFocus[0]])
+        }
     }
 })
 const updateLetterLengthFromInput = () => {
@@ -1150,23 +1350,37 @@ window.resetEnergy = () => {
         letterEnergyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]])
     }
 }
+window.resetStyle = () => {
+    window.sequenceEditor.registeredStyleKeys.forEach(styleKey => {
+        window.sequenceEditor.styleValuesNew[styleKey] = window.sequenceEditor.styleValuesReset[styleKey].map(v => v)
+        window.sequenceEditor.styleGrabbers[styleKey].forEach((slider, l) => slider.setValueFromValue(window.sequenceEditor.styleValuesNew[styleKey][l]))
+
+    })
+    let [data, grabbers] = getSelectedStyleDataAndGrabbers()
+    if (data) {
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterStyleNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterStyleNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]])
+        }
+    }
+}
 window.resetEmotion = () => {
     window.sequenceEditor.emAngryNew = window.sequenceEditor.resetEmAngry.map(v => v)
     window.sequenceEditor.emHappyNew = window.sequenceEditor.resetEmHappy.map(v => v)
     window.sequenceEditor.emSadNew = window.sequenceEditor.resetEmSad.map(v => v)
     window.sequenceEditor.emSurpriseNew = window.sequenceEditor.resetEmSurprise.map(v => v)
 
-    let data, grabbers = getSelectedEmotionDataAndGrabbers()
+    let [data, grabbers] = getSelectedEmotionDataAndGrabbers()
+
     window.sequenceEditor.emAngryGrabbers.forEach((slider, l) => slider.setValueFromValue(window.sequenceEditor.emAngryNew[l]))
     window.sequenceEditor.emHappyGrabbers.forEach((slider, l) => slider.setValueFromValue(window.sequenceEditor.emHappyNew[l]))
     window.sequenceEditor.emSadGrabbers.forEach((slider, l) => slider.setValueFromValue(window.sequenceEditor.emSadNew[l]))
     window.sequenceEditor.emSurpriseGrabbers.forEach((slider, l) => slider.setValueFromValue(window.sequenceEditor.emSurpriseNew[l]))
 
-    if (window.sequenceEditor.letterFocus.length==1) {
-        letterEmotionNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]]*100)/100
-    }
-    if (window.sequenceEditor.letterFocus.length==1) {
-        letterEmotionNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]])
+    if (data && window.sequenceEditor.letterFocus.length==1) {
+        letterEmotionNumb.value = parseFloat(data[window.sequenceEditor.letterFocus[0]])
     }
 }
 window.resetPitch = () => {
@@ -1209,6 +1423,10 @@ reset_btn.addEventListener("click", () => {
         } else if (seq_edit_edit_select.value=="emotion") {
             resetEmotion()
             resetDursPace()
+
+        } else if (seq_edit_edit_select.value=="style") {
+            resetStyle()
+            resetDursPace()
         }
 
         window.sequenceEditor.init()
@@ -1230,6 +1448,9 @@ reset_what_confirm_btn.addEventListener("click", () => {
     if (reset_what_emotion.checked) {
         resetEmotion()
     }
+    if (reset_what_style.checked) {
+        resetStyle()
+    }
     window.sequenceEditor.init()
 })
 
@@ -1248,7 +1469,7 @@ const getSelectedEmotionDataAndGrabbers = () => {
         data = window.sequenceEditor.emSurpriseNew
         grabbers = window.sequenceEditor.emSurpriseGrabbers
     }
-    return data, grabbers
+    return [data, grabbers]
 }
 const setNewDataToSelectedEmotion = (data) => {
     if (seq_edit_view_select.value=="emAngry") {
@@ -1261,7 +1482,13 @@ const setNewDataToSelectedEmotion = (data) => {
         window.sequenceEditor.emSurpriseNew = data
     }
 }
-
+const setNewDataToSelectedStyle = (data) => {
+    window.sequenceEditor.registeredStyleKeys.forEach(styleKey => {
+        if (seq_edit_view_select.value.startsWith("style_") && seq_edit_view_select.value.includes(styleKey)) {
+            window.sequenceEditor.styleValuesNew[styleKey] = data
+        }
+    })
+}
 
 amplify_btn.addEventListener("click", () => {
     if (seq_edit_edit_select.value=="pitch") {
@@ -1293,9 +1520,29 @@ amplify_btn.addEventListener("click", () => {
         if (window.sequenceEditor.letterFocus.length==1) {
             letterEnergyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
         }
+    } else if (seq_edit_view_select.value.startsWith("style_")) {
+
+        let [data, grabbers] = getSelectedStyleDataAndGrabbers()
+
+        data = data.map((e, ei) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
+                return e
+            }
+            const distFromMiddle = (e-window.sequenceEditor.MIN_STYLES) - (window.sequenceEditor.MAX_STYLES-window.sequenceEditor.MIN_STYLES)/2
+            const newVal = e + distFromMiddle*0.025
+            return newVal>0 ? Math.min(window.sequenceEditor.MAX_STYLES, newVal) : Math.max(window.sequenceEditor.MIN_STYLES, newVal)
+        })
+        grabbers.forEach((slider, l) => {
+            slider.setValueFromValue(data[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterStyleNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
+        setNewDataToSelectedStyle(data)
+
     } else if (seq_edit_edit_select.value=="emotion") {
 
-        let data, grabbers = getSelectedEmotionDataAndGrabbers()
+        let [data, grabbers] = getSelectedEmotionDataAndGrabbers()
 
         data = data.map((e, ei) => {
             if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
@@ -1345,8 +1592,29 @@ flatten_btn.addEventListener("click", () => {
         if (window.sequenceEditor.letterFocus.length==1) {
             letterEnergyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
         }
+    } else if (seq_edit_view_select.value.startsWith("style_")) {
+
+        let [data, grabbers] = getSelectedStyleDataAndGrabbers()
+
+        data = data.map((e,ei) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
+                return e
+            }
+            const distFromMiddle = (e-window.sequenceEditor.MIN_STYLES) - (window.sequenceEditor.MAX_STYLES-window.sequenceEditor.MIN_STYLES)/2
+            const newVal = e + distFromMiddle*-0.025
+            return newVal>0 ? Math.min(window.sequenceEditor.MAX_STYLES, newVal) : Math.max(window.sequenceEditor.MIN_STYLES, newVal)
+        })
+        grabbers.forEach((slider, l) => {
+            slider.setValueFromValue(data[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterStyleNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
+        setNewDataToSelectedStyle(data)
+
+
     } else if (seq_edit_edit_select.value=="emotion") {
-        let data, grabbers = getSelectedEmotionDataAndGrabbers()
+        let [data, grabbers] = getSelectedEmotionDataAndGrabbers()
 
         data = data.map((e,ei) => {
             if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
@@ -1404,8 +1672,27 @@ jitter_btn.addEventListener("click", () => {
         if (window.sequenceEditor.letterFocus.length==1) {
             letterEnergyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
         }
+    } else if (seq_edit_view_select.value.startsWith("style_")) {
+
+        let [data, grabbers] = getSelectedStyleDataAndGrabbers()
+        data = data.map((e, ei) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
+                return e
+            }
+            const distFromMiddle = (e-window.sequenceEditor.MIN_STYLES) - (window.sequenceEditor.MAX_STYLES-window.sequenceEditor.MIN_STYLES)/2
+            const newVal = e + distFromMiddle*(Math.random()*0.1+0.05) * ((Math.random()-0.5)>0 ? 1 : -1)
+            return newVal>0 ? Math.min(window.sequenceEditor.MAX_STYLES, newVal) : Math.max(window.sequenceEditor.MIN_STYLES, newVal)
+        })
+        grabbers.forEach((slider, l) => {
+            slider.setValueFromValue(data[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterStyleNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
+        setNewDataToSelectedStyle(data)
+
     } else if (seq_edit_edit_select.value=="emotion") {
-        let data, grabbers = getSelectedEmotionDataAndGrabbers()
+        let [data, grabbers] = getSelectedEmotionDataAndGrabbers()
         data = data.map((e, ei) => {
             if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
                 return e
@@ -1453,8 +1740,27 @@ increase_btn.addEventListener("click", () => {
         if (window.sequenceEditor.letterFocus.length==1) {
             letterEnergyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
         }
+
+    } else if (seq_edit_view_select.value.startsWith("style_")) {
+
+        let [data, grabbers] = getSelectedStyleDataAndGrabbers()
+        data = data.map((e,ei) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
+                return e
+            }
+            return e-0.04
+        })
+        grabbers.forEach((slider, l) => {
+            slider.setValueFromValue(data[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterStyleNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
+        setNewDataToSelectedStyle(data)
+
+
     } else if (seq_edit_edit_select.value=="emotion") {
-        let data, grabbers = getSelectedEmotionDataAndGrabbers()
+        let [data, grabbers] = getSelectedEmotionDataAndGrabbers()
         data = data.map((e,ei) => {
             if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
                 return e
@@ -1498,8 +1804,27 @@ decrease_btn.addEventListener("click", () => {
         if (window.sequenceEditor.letterFocus.length==1) {
             letterEnergyNumb.value = parseInt(window.sequenceEditor.energyNew[window.sequenceEditor.letterFocus[0]]*100)/100
         }
+
+    } else if (seq_edit_view_select.value.startsWith("style_")) {
+
+        let [data, grabbers] = getSelectedStyleDataAndGrabbers()
+        data = data.map((e,ei) => {
+            if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
+                return e
+            }
+            return e+0.04
+        })
+        grabbers.forEach((slider, l) => {
+            slider.setValueFromValue(data[l])
+        })
+        if (window.sequenceEditor.letterFocus.length==1) {
+            letterStyleNumb.value = parseInt(data[window.sequenceEditor.letterFocus[0]]*100)/100
+        }
+        setNewDataToSelectedStyle(data)
+
+
     } else if (seq_edit_edit_select.value=="emotion") {
-        let data, grabbers = getSelectedEmotionDataAndGrabbers()
+        let [data, grabbers] = getSelectedEmotionDataAndGrabbers()
         data = data.map((e,ei) => {
             if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
                 return e

@@ -191,7 +191,7 @@ class FastPitch(object):
 
         return ""
 
-    def infer(self, plugin_manager, text, output, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang=None, base_emb=None, useSR=False, useCleanup=False):
+    def infer(self, plugin_manager, text, output, vocoder, speaker_i, pace=1.0, editor_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang=None, base_emb=None, useSR=False, useCleanup=False):
 
         self.logger.info(f'Inferring: "{text}" ({len(text)})')
 
@@ -214,7 +214,7 @@ class FastPitch(object):
                 old_sequence = torch.LongTensor(old_sequence)
                 old_sequence = pad_sequence([old_sequence], batch_first=True).to(self.models_manager.device)
 
-            mel, mel_lens, dur_pred, pitch_pred, start_index, end_index = self.model.infer_advanced(self.logger, plugin_manager, [cleaned_text], text, speaker_i=speaker_i, pace=pace, pitch_data=pitch_data, old_sequence=old_sequence)
+            mel, mel_lens, dur_pred, pitch_pred, start_index, end_index = self.model.infer_advanced(self.logger, plugin_manager, [cleaned_text], text, speaker_i=speaker_i, pace=pace, pitch_data=editor_data, old_sequence=old_sequence)
 
             if "waveglow" in vocoder:
 
@@ -273,7 +273,7 @@ class FastPitch(object):
                                ",".join([str(v) for v in em_angry]) + "\n" + \
                                ",".join([str(v) for v in em_happy]) + "\n" + \
                                ",".join([str(v) for v in em_sad]) + "\n" + \
-                               ",".join([str(v) for v in em_surprise])
+                               ",".join([str(v) for v in em_surprise]) + "\n" + "{"+"}"
 
 
         del pitch_pred, dur_pred, text, sequence

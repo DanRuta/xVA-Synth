@@ -242,6 +242,30 @@ window.loadStyleEmbsForVoice = (currentModel) => {
         opt.value = embeddings[key][1].join(",")
         style_emb_select.appendChild(opt)
     })
+
+
+    // First remove all existing styles from the dropdown
+    Array.from(seq_edit_view_select.children).forEach(elem => {
+        if (elem.value.startsWith("style")) {
+            seq_edit_view_select.removeChild(elem)
+        }
+    })
+
+    // Add every option (except Default) to the sliders viewing/editing dropdowns
+    Object.keys(embeddings).forEach(key => {
+        if (key=="default") {
+            return
+        }
+        const opt = createElem("option", `${window.i18n.STYLE_EMB_IS} ${embeddings[key][0]}`)
+        opt.value = `style_${key}`
+        seq_edit_view_select.appendChild(opt)
+
+        const opt2 = createElem("option", `${window.i18n.STYLE_EMB_IS} ${embeddings[key][0]}`)
+        opt2.value = `style_${key}`
+        seq_edit_edit_select.appendChild(opt2)
+    })
+
+    window.appState.currentModelEmbeddings = embeddings
 }
 style_emb_select.addEventListener("change", () => window.styleEmbsMenuState.hasChangedEmb)
 

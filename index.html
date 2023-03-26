@@ -172,6 +172,10 @@
                                 <span id="i18n_emotion_is">Emotion:</span>
                                 <input id="letterEmotionNumb" disabled="true" type="number" name="lengthNum" min="0" step="0.05" max="1">
                             </div>
+                            <div>
+                                <span id="i18n_style_emb_is">Style:</span>
+                                <input id="letterStyleNumb" disabled="true" type="number" name="lengthNum" min="0" step="0.05" max="1">
+                            </div>
                             <button id="resetLetter_btn">Reset Letter</button>
                             <div id="vocoder_options_container" style="display: none;">
                                 <span id="i18n_vocoder">Vocoder:</span>
@@ -216,7 +220,7 @@
 
                         <div>
                             <div id="style_embedding_dropdown_container">
-                                <span id="i18n_style_emb_is">Style:</span>
+                                <span id="i18n_base_style_emb_is">Base Style:</span>
                                 <select id="style_emb_select" style="width: 200px;" disabled="true">
                                     <option id="default_opt_style_emb"></option>
                                 </select>
@@ -1732,7 +1736,7 @@
 
         <div id="styleEmbeddingsContainer" style="display: none;">
             <div class="modal" style="height: 60vh;min-width: 700px;width: 95vw;">
-                <h2><span id="i18n_embeddings">Style Embeddings</span></h2>
+                <h2><span id="i18n_embeddings" style="margin-top: 5vh;margin-bottom: -5vh;">Style Embeddings</span></h2>
 
                 <div style="display: flex;justify-content: center;align-items: center;height: 100%;margin: 5vw;width: 100%">
 
@@ -1845,6 +1849,10 @@
                     <div>
                         <div id="i18n_emotion">Emotion</div>
                         <div><input type="checkbox" id="reset_what_emotion" checked></div>
+                    </div>
+                    <div>
+                        <div id="i18n_style">Style</div>
+                        <div><input type="checkbox" id="reset_what_style" checked></div>
                     </div>
                 </div>
 

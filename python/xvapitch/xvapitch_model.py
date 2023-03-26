@@ -160,7 +160,7 @@ class xVAPitch(nn.Module):
     def infer_advanced (self, logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace=1.0, editor_data=None, old_sequence=None, pitch_amp=None):
 
         if (editor_data is not None) and ((editor_data[0] is not None and len(editor_data[0])) or (editor_data[1] is not None and len(editor_data[1]))):
-            pitch_pred, dur_pred, energy_pred, em_angry_pred, em_happy_pred, em_sad_pred, em_surprise_pred = editor_data
+            pitch_pred, dur_pred, energy_pred, em_angry_pred, em_happy_pred, em_sad_pred, em_surprise_pred, _ = editor_data
             # TODO, use energy_pred
             dur_pred = torch.tensor(dur_pred)
             dur_pred = dur_pred.view((1, dur_pred.shape[0])).float().to(self.device)

@@ -12,7 +12,7 @@ const doFetch = require("node-fetch")
 const {xVAAppLogger} = require("./javascript/appLogger.js")
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 process.on(`uncaughtException`, (data, origin) => {window.appLogger.log(`uncaughtException: ${data}`);window.appLogger.log(`uncaughtException: ${origin}`)})
-window.onerror = (err, url, lineNum) => window.appLogger.log(`onerror: ${err.stack}`)
+window.onerror = (err, url, lineNum) => {window.appLogger.log(`onerror: ${err.stack}`)}
 require("./javascript/i18n.js")
 require("./javascript/util.js")
 require("./javascript/nexus.js")
@@ -31,6 +31,10 @@ const er = require('@electron/remote')
 window.electronBrowserWindow = er.getCurrentWindow()
 const child = require("child_process").execFile
 const spawn = require("child_process").spawn
+
+// Newly introduced in v3. I will slowly start moving global context variables into this, and update code throughout to reference this
+// instead of old variables such as window.games, window.currentModel, etc.
+window.appState = {}
 
 
 // Start the server
@@ -578,6 +582,7 @@ window.loadModel = () => {
             generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
 
             // Set the editor pitch/energy dropdowns to pitch, and freeze them, if energy is not supported by the model
+            window.appState.currentModelEmbeddings = {}
             if (window.currentModel.modelType.toLowerCase()=="xvapitch" && !window.currentModel.isBaseModel) {
                 vocoder_options_container.style.display = "none"
                 base_lang_select.disabled = false
@@ -667,6 +672,7 @@ window.synthesizeSample = () => {
     let emHappy = []
     let emSad = []
     let emSurprise = []
+    let editorStyles = {}
     let isFreshRegen = true
     let old_sequence = undefined
 
@@ -694,6 +700,13 @@ window.synthesizeSample = () => {
             emHappy = window.sequenceEditor.emHappyNew ? window.sequenceEditor.emHappyNew.map(v => v==undefined?0:v).filter(v => !isNaN(v)) : []
             emSad = window.sequenceEditor.emSadNew ? window.sequenceEditor.emSadNew.map(v => v==undefined?0:v).filter(v => !isNaN(v)) : []
             emSurprise = window.sequenceEditor.emSurpriseNew ? window.sequenceEditor.emSurpriseNew.map(v => v==undefined?0:v).filter(v => !isNaN(v)) : []
+
+            window.sequenceEditor.registeredStyleKeys.forEach(styleKey => {
+                editorStyles[styleKey] = {
+                    embedding: window.appState.currentModelEmbeddings[styleKey][1],
+                    sliders: window.sequenceEditor.styleValuesNew[styleKey].map(v => v==undefined?0:v).filter(v => !isNaN(v))// : []
+                }
+            })
         }
         isFreshRegen = false
     }
@@ -709,7 +722,7 @@ window.synthesizeSample = () => {
     doFetch(`http://localhost:8008/synthesize`, {
         method: "Post",
         body: JSON.stringify({
-            sequence, pitch, duration, energy, emAngry, emHappy, emSad, emSurprise, speaker_i, pace,
+            sequence, pitch, duration, energy, emAngry, emHappy, emSad, emSurprise, editorStyles, speaker_i, pace,
             base_lang: base_lang_select.value,
             base_emb: style_emb_select.value||"",
             modelType: window.currentModel.modelType,
@@ -725,6 +738,7 @@ window.synthesizeSample = () => {
     }).then(r=>r.text()).then(res => {
 
         if (res=="ENOENT" || res.startsWith("ERR:")) {
+            console.log(res)
             if (res.startsWith("ERR:")) {
                 if (res.includes("ARPABET_NOT_IN_LIST")) {
                     const symbolNotInList = res.split(":").reverse()[0]
@@ -755,9 +769,10 @@ window.synthesizeSample = () => {
         let em_happyData = res[4]
         let em_sadData = res[5]
         let em_surpriseData = res[6]
-        let cleanedSequence = res[7].split("|").map(c=>c.replaceAll("{", "").replaceAll("}", "").replace(/\s/g, "_"))
-        const start_index = res[8]
-        const end_index = res[9]
+        const editorStyles = res[7]&&res[7].length ? JSON.parse(res[7]) : undefined
+        let cleanedSequence = res[8].split("|").map(c=>c.replaceAll("{", "").replaceAll("}", "").replace(/\s/g, "_"))
+        const start_index = res[9]
+        const end_index = res[10]
         pitchData = pitchData.split(",").map(v => parseFloat(v))
 
         // For use in adjusting editor range
@@ -814,11 +829,14 @@ window.synthesizeSample = () => {
             window.sequenceEditor.letters = cleanedSequence
             window.sequenceEditor.pitchNew = pitchData.map(p=>p)
             window.sequenceEditor.dursNew = durationsData.map(v=>v)
-            window.sequenceEditor.energyNew = energyData.map(v=>v)
-            window.sequenceEditor.emAngryNew = em_angryData.map(v=>v)
-            window.sequenceEditor.emHappyNew = em_happyData.map(v=>v)
-            window.sequenceEditor.emSadNew = em_sadData.map(v=>v)
-            window.sequenceEditor.emSurpriseNew = em_surpriseData.map(v=>v)
+            if (window.currentModel.modelType=="xVAPitch") {
+                window.sequenceEditor.energyNew = energyData.map(v=>v)
+                window.sequenceEditor.emAngryNew = em_angryData.map(v=>v)
+                window.sequenceEditor.emHappyNew = em_happyData.map(v=>v)
+                window.sequenceEditor.emSadNew = em_sadData.map(v=>v)
+                window.sequenceEditor.emSurpriseNew = em_surpriseData.map(v=>v)
+                window.sequenceEditor.loadStylesData(editorStyles)
+            }
             window.sequenceEditor.init()
             window.sequenceEditor.update(window.currentModel.modelType)
 
@@ -925,6 +943,7 @@ window.synthesizeSample = () => {
                     doTheRest()
                 }
             }).catch(res => {
+                console.log(res)
                 window.appLogger.log(`outputAudio error: ${res}`)
                 // closeModal().then(() => {
                     window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>${res}`)
@@ -1005,12 +1024,22 @@ window.saveFile = (from, to, skipUIRecord=false) => {
         resetEnergy: window.sequenceEditor.resetEnergy,
         resetPitch: window.sequenceEditor.resetPitch,
         resetDurs: window.sequenceEditor.resetDurs,
+        resetEmAngry: window.sequenceEditor.resetEmAngry,
+        resetEmHappy: window.sequenceEditor.resetEmHappy,
+        resetEmSad: window.sequenceEditor.resetEmSad,
+        resetEmSurprise: window.sequenceEditor.resetEmSurprise,
+        styleValuesReset: window.sequenceEditor.styleValuesReset,
         ampFlatCounter: window.sequenceEditor.ampFlatCounter,
         inputSequence: window.sequenceEditor.inputSequence,
         sequence: window.sequenceEditor.sequence,
         pitchNew: window.sequenceEditor.pitchNew,
         energyNew: window.sequenceEditor.energyNew,
         dursNew: window.sequenceEditor.dursNew,
+        emAngryNew: window.sequenceEditor.emAngryNew,
+        emHappyNew: window.sequenceEditor.emHappyNew,
+        emSadNew: window.sequenceEditor.emSadNew,
+        emSurpriseNew: window.sequenceEditor.emSurpriseNew,
+        styleValuesNew: window.sequenceEditor.styleValuesNew,
     }
 
     let outputFileName = to.split("/").reverse()[0].split(".").reverse().slice(1, 1000)
@@ -1045,6 +1074,7 @@ window.saveFile = (from, to, skipUIRecord=false) => {
                     fs.writeFileSync(`${to}.${toExt}.json`, JSON.stringify(jsonDataOut, null, 4))
                 }
                 if (!skipUIRecord) {
+                    window.initMainPagePagination(`${window.userSettings[`outpath_${window.currentGame.gameId}`]}/${window.currentModel.voiceId}`)
                     window.refreshRecordsList()
                 }
                 window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["post"], event="post keep-sample", pluginData)

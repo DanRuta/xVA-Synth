@@ -488,7 +488,7 @@ class xVAPitch(object):
         return returnString
 
 
-    def infer(self, plugin_manager, text, out_path, vocoder, speaker_i, pace=1.0, pitch_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang="en", base_emb=None, useSR=False, useCleanup=False):
+    def infer(self, plugin_manager, text, out_path, vocoder, speaker_i, pace=1.0, editor_data=None, old_sequence=None, globalAmplitudeModifier=None, base_lang="en", base_emb=None, useSR=False, useCleanup=False):
 
         sequenceSplitByLanguage = self.preprocess_prompt_language(text, base_lang)
 
@@ -533,40 +533,45 @@ class xVAPitch(object):
 
             if old_sequence is not None:
                 old_sequence = re.sub(r'[^a-zA-Z\s\(\)\[\]0-9\?\.\,\!\'\{\}\_\@]+', '', old_sequence)
-                # old_sequence = text_to_sequence(old_sequence, "english_basic", ['english_cleaners'])
                 old_sequence, clean_old_sequence = self.lang_tp[base_lang].text_to_sequence(old_sequence)#, "english_basic", ['english_cleaners'])
                 old_sequence = torch.LongTensor(old_sequence)
                 old_sequence = pad_sequence([old_sequence], batch_first=True).to(self.models_manager.device)
 
             lang_ids = torch.tensor(all_lang_ids).to(self.models_manager.device)
 
-
-            # ==== TODO, make editable
-            # self.logger.info(f'self.base_emb: {self.base_emb}')
-            # speaker_embs = [torch.tensor(self.base_emb).unsqueeze(dim=0)[0].unsqueeze(-1) for _ in range(text.shape[1])]
-            # TODO, add per-symbol support
+            num_embs = text.shape[1]
             base_emb = [float(val) for val in base_emb.split(",")] if "," in base_emb else self.base_emb
             speaker_embs = [torch.tensor(base_emb).unsqueeze(dim=0)[0].unsqueeze(-1)]
             speaker_embs = torch.stack(speaker_embs, dim=0).to(self.models_manager.device)#.unsqueeze(-1)
+            speaker_embs = speaker_embs.repeat(1,1,num_embs)
+
+            editorStyles = editor_data[-1]
+            # Do interpolations of speaker style embeddings
+            if editorStyles is not None:
+                # normalizing_scales = np.array([float(1) for _ in range(num_embs)])
+                style_keys = list(editorStyles.keys())
+                for style_key in style_keys:
+                    emb = editorStyles[style_key]["embedding"]
+                    sliders_vals = editorStyles[style_key]["sliders"]
+                    # normalizing_scales += np.array(sliders_vals)
+
+                    style_embs = [torch.tensor(emb).unsqueeze(dim=0)[0].unsqueeze(-1)]
+                    style_embs = torch.stack(style_embs, dim=0).to(self.models_manager.device)#.unsqueeze(-1)
+                    style_embs = style_embs.repeat(1,1,num_embs)
+                    sliders_vals = torch.tensor(sliders_vals).to(self.models_manager.device)
+                    speaker_embs = speaker_embs*(1-sliders_vals) + sliders_vals*style_embs
+
+                # speaker_embs = speaker_embs / torch.tensor(normalizing_scales).to(self.models_manager.device)
+
+            speaker_embs = speaker_embs.float()
 
 
-            if not self.model.USE_PITCH_COND:
-                speaker_embs = speaker_embs.repeat(1,1,text.shape[1])
 
-
-
-            # g = F.normalize(speaker_embs[0])
-            # if g.ndim == 2:
-            #     g = g.unsqueeze_(0)
-
-
-            # ====
 
             lang_embs = lang_ids # TODO, use pre-extracted trained language embeddings, for interpolation
 
 
 
-            editor_data = pitch_data # TODO, propagate rename
             out = self.model.infer_advanced(self.logger, plugin_manager, [all_cleaned_text], text, lang_embs=lang_embs, speaker_embs=speaker_embs, pace=pace, editor_data=editor_data, old_sequence=old_sequence)
             if isinstance(out, str):
                 return f'ERR:{out}'
@@ -623,7 +628,8 @@ class xVAPitch(object):
                              ",".join([str(v) for v in em_angry]) + "\n" + \
                              ",".join([str(v) for v in em_happy]) + "\n" + \
                              ",".join([str(v) for v in em_sad]) + "\n" + \
-                             ",".join([str(v) for v in em_surprise])
+                             ",".join([str(v) for v in em_surprise]) + "\n" + \
+                             json.dumps(editorStyles)
 
         del pitch_pred, dur_pred, energy_pred, em_angry, em_happy, em_sad, em_surprise, text, sequence
         return editor_values_text +"\n"+all_cleaned_text +"\n"+ f'{start_index}\n{end_index}'
