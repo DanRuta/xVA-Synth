@@ -200,37 +200,6 @@ class NuWave2(pl.LightningModule):
                                weight_decay=self.hparams.train.weight_decay)
         return opt
 
-    def train_dataloader(self):
-        return dataloader.create_vctk_dataloader(self.hparams, 0)
-
-    def val_dataloader(self):
-        return dataloader.create_vctk_dataloader(self.hparams, 1)
-
-    def test_dataloader(self, sr):
-        return dataloader.create_vctk_dataloader(self.hparams, 2, sr)
-
-# from utils.stft import STFTMag
-class STFTMag(nn.Module):
-    def __init__(self,
-                 nfft=1024,
-                 hop=256):
-        super().__init__()
-        self.nfft = nfft
-        self.hop = hop
-        self.register_buffer('window', torch.hann_window(nfft), False)
-
-    #x: [B,T] or [T]
-    def forward(self, x):
-        with torch.no_grad():
-            T = x.shape[-1]
-            stft = torch.stft(x,
-                              self.nfft,
-                              self.hop,
-                              window=self.window,
-                              )#return_complex=False)  #[B, F, TT,2]
-            mag = torch.norm(stft, p=2, dim =-1) #[B, F, TT]
-        return mag
-
 
 class Nuwave2Model(object):
     def __init__(self, logger, PROD, device, models_manager):
@@ -250,7 +219,6 @@ class Nuwave2Model(object):
 
         self.model = NuWave2(self.hparams)
         self.model.eval()
-        stft = STFTMag()
         ckpt = torch.load(f'{self.path}/python/nuwave2/nuwave2_02_16_13_epoch=629.ckpt', map_location='cpu')
         self.model.load_state_dict(ckpt['state_dict'])
 
