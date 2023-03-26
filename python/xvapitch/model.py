@@ -510,7 +510,7 @@ class xVAPitch(object):
                 sequence, cleaned_text = self.lang_tp[langCode].text_to_sequence(subSeq)
 
                 all_sequence.append(sequence)
-                all_cleaned_text += cleaned_text
+                all_cleaned_text += ("|"+cleaned_text) if len(all_cleaned_text) else cleaned_text
                 all_text.append(torch.LongTensor(sequence))
 
                 language_id = self.language_id_mapping[langCode]
