@@ -31,6 +31,7 @@ window.toggleSpinnerButtons = () => {
     samplePlayPause.style.display = spinnerVisible ? "flex" : "none"
 }
 
+window.infoModal = message => new Promise(resolve => resolve(createModal("info", message)))
 window.confirmModal = message => new Promise(resolve => resolve(createModal("confirm", message)))
 window.spinnerModal = message => new Promise(resolve => resolve(createModal("spinner", message)))
 window.errorModal = message => {
@@ -74,7 +75,7 @@ window.createModal = (type, message) => {
                     resolve(false)
                 })
             })
-        } else if (type=="error") {
+        } else if (type=="error" || type=="info") {
             const closeButton = createElem("button", {style: {background: `#${themeColour}`}})
             closeButton.innerHTML = window.i18n.CLOSE
             modal.appendChild(createElem("div", closeButton))
@@ -114,7 +115,7 @@ window.closeModal = (container=undefined, notThisOne=undefined, skipIfErrorOpen=
             return resolve()
         }
         window.errorModalHasOpened = false
-        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, pluginsContainer, modalContainer, nexusContainer, embeddingsContainer, totdContainer, nexusReposContainer, EULAContainer, arpabetContainer, styleEmbeddingsContainer]
+        const allContainers = [batchGenerationContainer, gameSelectionContainer, updatesContainer, infoContainer, settingsContainer, patreonContainer, pluginsContainer, modalContainer, nexusContainer, embeddingsContainer, totdContainer, nexusReposContainer, EULAContainer, arpabetContainer, styleEmbeddingsContainer, workbenchContainer]
         const containers = container==undefined ? allContainers : (Array.isArray(container) ? container.filter(c=>c!=undefined) : [container])
 
         notThisOne = Array.isArray(notThisOne) ? notThisOne : (notThisOne==undefined ? [] : [notThisOne])
@@ -320,7 +321,6 @@ window.addEventListener("keydown", event => {
 
     // CTRL-S: Keep sample
     if (key=="s" && event.ctrlKey && !event.shiftKey) {
-        console.log("here")
         keepSampleFunction(false)
     }
     // CTRL-SHIFT-S: Keep sample (but with rename prompt)
@@ -329,7 +329,7 @@ window.addEventListener("keydown", event => {
     }
 
     // Disable keyboard controls while in a text input
-    if (event.target.tagName=="INPUT" && event.target.tagName!=dialogueInput) {
+    if (event.target.tagName=="INPUT" && event.target.tagName!=dialogueInput || event.target.tagName=="TEXTAREA") {
         return
     }
 
@@ -673,3 +673,22 @@ if (missingAssetFiles.length) {
 }
 
 
+window.getSpeakerEmbeddingFromFilePath = (filePath) => {
+    spinnerModal(`${window.i18n.GETTING_SPEAKER_EMBEDDING}`)
+
+    return new Promise(resolve => {
+        doFetch(`http://localhost:8008/getWavV3StyleEmb`, {
+            method: "Post",
+            body: JSON.stringify({wav_path: filePath})
+        }).then(r=>r.text()).then(v => {
+            closeModal(undefined, [styleEmbeddingsContainer, workbenchContainer])
+            if (v=="ENOENT") {
+                window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>ENOENT`)
+            } else {
+                resolve(v)
+            }
+        }).catch(() => {
+            window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}`)
+        })
+    })
+}

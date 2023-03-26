@@ -236,6 +236,20 @@ if __name__ == '__main__':
                     req_response = returnString
 
 
+                if self.path == "/synthesizeSimple":
+                    logger.info("POST {}".format(self.path))
+                    text = post_data["sequence"]
+                    instance_index = post_data["instance_index"] if "instance_index" in post_data else 0
+                    out_path = post_data["outfile"]
+                    base_lang = post_data["base_lang"] if "base_lang" in post_data else None
+                    base_emb = post_data["base_emb"] if "base_emb" in post_data else None
+                    useCleanup = post_data["useCleanup"] if "useCleanup" in post_data else None
+
+                    model = models_manager.models("xvapitch", instance_index=instance_index)
+                    req_response = model.infer(plugin_manager, text, out_path, vocoder=None, \
+                        speaker_i=None, pitch_data=None, pace=None, old_sequence=None, \
+                        globalAmplitudeModifier=None, base_lang=base_lang, base_emb=base_emb, useSR=False, useCleanup=useCleanup)
+
                 if self.path == "/synthesize":
                     logger.info("POST {}".format(self.path))
                     post_data["pluginsContext"] = json.loads(post_data["pluginsContext"])

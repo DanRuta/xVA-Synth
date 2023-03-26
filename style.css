@@ -126,7 +126,7 @@ a {
      background-color: rgba(0,0,0,0);
  }
  input:disabled, select:disabled {
-    background-color: gray !important;
+    background-color: #bbb !important;
     border: 1px gray !important;
     color: black;
  }
@@ -423,7 +423,7 @@ a {
  }
 
 
- #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer, #EULAContainer, #patreonContainer, #pluginsContainer, #nexusContainer, #nexusReposContainer, #embeddingsContainer, #totdContainer, #arpabetContainer, #styleEmbeddingsContainer, #resetContainer, .modelContainer {
+ #modalContainer, #settingsContainer, #updatesContainer, #infoContainer, #gameSelectionContainer, #batchGenerationContainer, #EULAContainer, #patreonContainer, #pluginsContainer, #nexusContainer, #nexusReposContainer, #embeddingsContainer, #totdContainer, #arpabetContainer, #styleEmbeddingsContainer, #resetContainer, #workbenchContainer, .modelContainer {
      display: flex;
      justify-content: center;
      align-items: center;
@@ -478,7 +478,7 @@ a {
      width: 25vw;
      text-align: center;
  }
- #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal, #patreonContainer > .modal, #pluginsContainer > .modal, #nexusContainer > .modal, #nexusReposContainer > .modal, #embeddingsContainer > .modal, #totdContainer > .modal, #arpabetContainer > .modal, #styleEmbeddingsContainer > .modal, #resetContainer > .modal, .modelContainer > .modal {
+ #settingsContainer > .modal, #infoContainer > .modal, #updatesContainer > .modal, #patreonContainer > .modal, #pluginsContainer > .modal, #nexusContainer > .modal, #nexusReposContainer > .modal, #embeddingsContainer > .modal, #totdContainer > .modal, #arpabetContainer > .modal, #styleEmbeddingsContainer > .modal, #resetContainer > .modal, #workbenchContainer > .modal, .modelContainer > .modal {
      height: 65vh;
      width: 50vw;
      min-height: 500px;
@@ -798,7 +798,7 @@ a {
      width: 20px;
  }
 
- #settingsCog, #patreonIcon, #updatesIcon, #infoIcon, #batchIcon, #pluginsIcon, #embeddingsIcon, #arpabetIcon {
+ #settingsCog, #patreonIcon, #updatesIcon, #infoIcon, #batchIcon, #pluginsIcon, #embeddingsIcon, #arpabetIcon, #workbenchIcon {
      display: flex;
      position: fixed;
      z-index: 1000;
@@ -830,6 +830,10 @@ a {
     right: 220px;
     top: 41px;
  }
+ #workbenchIcon {
+    right: 265px;
+    top: 41px;
+ }
  #updatesContainer > div {
      height: 40vh;
  }
@@ -853,7 +857,7 @@ a {
     height: 30px !important;
     width: 30px;
  }
- #settingsCog > svg, #patreonIcon > img, #updatesIcon > svg, #infoIcon > svg, #batchIcon > svg, #pluginsIcon > svg, #embeddingsIcon > svg, #arpabetIcon > svg {
+ #settingsCog > svg, #patreonIcon > img, #updatesIcon > svg, #infoIcon > svg, #batchIcon > svg, #pluginsIcon > svg, #embeddingsIcon > svg, #arpabetIcon > svg, #workbenchIcon > svg {
      height: 25px;
      cursor: pointer;
      filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7))

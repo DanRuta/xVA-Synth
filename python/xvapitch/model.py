@@ -98,16 +98,10 @@ class xVAPitch(object):
         self.base_lang = base_lang
         self.ckpt_path = ckpt_path
 
-        with open(ckpt_path.replace(".pt", ".json"), "r") as f:
-            data = json.load(f)
-
-            # TODO -  figure out a good way to handle variants, instead of just 0, the first
-            self.base_emb = data["games"][0]["base_speaker_emb"]
-            # self.base_emb = torch.tensor(self.base_emb)
-
-            # if "symbols_alphabet" in data.keys() and data["symbols_alphabet"]!=self.symbols_alphabet:
-            #     self.logger.info(f'Changing symbols_alphabet from {self.symbols_alphabet} to {data["symbols_alphabet"]}')
-            #     self.init_model(data["symbols_alphabet"])
+        if os.path.exists(ckpt_path.replace(".pt", ".json")):
+            with open(ckpt_path.replace(".pt", ".json"), "r") as f:
+                data = json.load(f)
+                self.base_emb = data["games"][0]["base_speaker_emb"]
 
         if 'model' in ckpt:
             ckpt = ckpt['model']

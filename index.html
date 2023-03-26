@@ -250,7 +250,7 @@
                         <div style="display: flex;align-items: center;">
                             <div id="i18n_page_main">Page:</div>
                             <input id="main_pageNum" type="number" min="1" step="1" style="height: 25px;width: 50px;margin: 10px;">
-                            <div id="main_total_pages" style="margin-right: 10px;">of 100</div>
+                            <div id="main_total_pages" style="margin-right: 10px;"></div>
                         </div>
                         <button id="main_paginationNext" style="margin-right: 5px;">Next</button>
 
@@ -1874,8 +1874,184 @@
             </div>
         </div>
 
+        <div id="workbenchContainer" style="display:none">
+            <div class="modal" style="height: calc(80vh + 30px);width: calc(81vw);">
+                <h2 id="i18n_workbench">Voice Crafting Workbench</h2>
+
+                <div style="display:flex;height: 75vh;width: 80vw;">
+                    <!-- Left panel -->
+                    <div id="voiceWorkbenchVoicesList" style="height: 100%;width: 300px;background: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.05) 35px, rgba(255,255,255,.05) 70px), linear-gradient(0deg, #444 0, rgba(0,0,0,0)), gray;overflow-y: auto;overflow-x: hidden;}"></div>
+                    <!-- Main panel -->
+                    <div style="width: calc(80vw - 310px);height: 100%;margin-left: 10px;overflow-y: auto;overflow-x: hidden;">
+
+
+                        <!-- Loaded -->
+                        <div id="voiceWorkbenchLoadedContent" style="display: none;flex-direction: column;">
+                            <div style="display: flex;align-items: center;">
+                                <textarea id="voiceWorkbenchInputTextArea" style="width: 50%;" placeholder="Enter a sentence to use for generating preview samples of your crafted voice with the current embedding and proposed delta change" value=""></textarea>
+                                <button id="voiceWorkbenchGenerateSampleButton" disabled>Generate</button>
+                                <div style="display: flex;flex-direction: column;">
+                                    <div id="voiceWorkbenchAudioCurrent" style="display: flex;align-items: center;">
+                                        <div id="i18n_vw_current" style="width: 100px">Current</div>
+                                        <div><button id="voiceWorkbenchAudioCurrentPlayPauseBtn" disabled>Play</button></div>
+                                        <div><button id="voiceWorkbenchAudioCurrentSaveBtn" disabled>Save</button></div>
+                                    </div>
+                                    <div id="voiceWorkbenchAudioNew" style="display: flex;align-items: center;">
+                                        <div style="width: 100px">New</div>
+                                        <div id="voiceWorkbenchAudioNewAudioContainer"></div>
+                                        <div><button id="voiceWorkbenchAudioNewPlayBtn" disabled>Play</button></div>
+                                        <div><button id="voiceWorkbenchAudioNewSaveBtn" disabled>Save</button></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flexTable">
+                                <div id="voiceWorkbenchCurrentEmbeddingDropzone">
+                                    <div id="i18n_vw_current_emb">Current Embedding</div>
+                                    <div>
+                                        <input id="voiceWorkbenchCurrentEmbeddingInput" value="" placeholder="Drag and drop .wav file">
+                                    </div>
+                                </div>
+                                <div>
+                                    <div id="i18n_vw_current_delta">Current Delta</div>
+                                    <div>
+                                        <input id="voiceWorkbenchCurrentDeltaInput" value="" disabled>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div id="i18n_vw_strength">Strength</div>
+                                    <div style="display: flex;flex-direction: row;padding: 0px 25px;max-width: calc(50% - 50px);">
+                                        <input id="voiceWorkbenchStrengthSlider" type="range" value="0.5" min="0" max="1" step="0.1" style="margin-right: 0 25px;">
+                                        <input id="voiceWorkbenchStrengthInput" type="number" min="0" value="0.5" step="0.1">
+                                    </div>
+                                </div>
+                                <div>
+                                    <button id="voiceWorkshopApplyDeltaButton" style="margin: auto;" disabled>Apply delta</button>
+                                </div>
+                            </div>
+                            <hr style="width:100%">
+                            <div class="flexTable">
+                                <div id="voiceWorkbenchRefADropzone">
+                                    <div id="i18n_refAF_a">Reference Audio File A:</div>
+                                    <div>
+                                        <span id="voiceWorkbenchRefAFilePath" style="margin-bottom: 5px;color: rgb(200,200,200);font-style: italic;line-break: anywhere;">From file: (Drag and drop a .wav file)</span>
+                                        <input id="voiceWorkbenchRefAInput" value="" placeholder="Use for delta from current" disabled>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <hr style="width:100%">
+                            <div class="flexTable">
+                                <div id="voiceWorkbenchRefBDropzone">
+                                    <div id="i18n_refAF_b">Reference Audio File B:</div>
+                                    <div>
+                                        <span id="voiceWorkbenchRefBFilePath" style="margin-bottom: 5px;color: rgb(200,200,200);font-style: italic;line-break: anywhere;">From file: (Drag and drop a .wav file)</span>
+                                        <input id="voiceWorkbenchRefBInput" value="" placeholder="Use together with A for delta from A to B" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr style="width:100%">
+
+                        </div>
+
+                        <!-- Start-up -->
+                        <div id="voiceWorkbenchStartupContent" class="flexTable" style=""> <!-- width: 50%;margin-left: 25%; -->
+                            <div>
+                                <div id="i18n_vw_basemodel">Base Model (v3 models only)</div>
+                                <div>
+                                    <select id="voiceWorkbenchModelDropdown">
+                                        <option value="<base>/base_v1.0">Base xVAPitch Model (v1.0)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <div id="i18n_vw_game">Game</div>
+                                <div>
+                                    <select id="voiceWorkbenchGamesDropdown">
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <div id="i18n_vw_voicename">Voice Name</div>
+                                <div>
+                                    <input id="voiceWorkbenchVoiceNameInput" placeholder="Name of your voice">
+                                </div>
+                            </div>
+                            <div>
+                                <div id="i18n_vw_voiceid">Voice ID</div>
+                                <div>
+                                    <input id="voiceWorkbenchVoiceIDInput" placeholder="A unique identifier for your voice (eg: f4_nate)">
+                                </div>
+                            </div>
+                            <div>
+                                <div id="i18n_vw_gender">Gender</div>
+                                <div>
+                                    <select id="voiceWorkbenchGenderDropdown">
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <div id="i18n_vw_author">Author</div>
+                                <div>
+                                    <input id="voiceWorkbenchAuthorInput" placeholder="Your name for credits">
+                                </div>
+                            </div>
+                            <div>
+                                <div id="i18n_vw_baselang">Base Language</div>
+                                <div>
+                                    <select id="voiceWorkbenchLanguageDropdown"></select>
+                                </div>
+                            </div>
+                            <div style="display: flex;justify-content: center;">
+                                <button id="voiceWorkbenchStartButton">Start</button>
+                            </div>
+                        </div>
+
+                        <div id="voiceWorkbenchLoadedContent2" style="display: none;flex-direction: column;">
+                            <div>
+                                <button id="voiceWorkbenchCancelButton">Cancel</button>
+                                <button id="voiceWorkbenchDeleteButton" disabled>Delete</button>
+                                <button id="voiceWorkbenchSaveButton">Save</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
         <div id="modalContainer" style="display:none"></div>
     </div>
+</div>
+
+<div id="workbenchIcon" title="Workbench">
+    <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+     width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
+     preserveAspectRatio="xMidYMid meet">
+    <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+    fill="white" stroke="none">
+    <path d="M1780 4309 c-14 -5 -36 -20 -48 -32 -43 -40 -52 -70 -52 -176 l0
+    -101 -749 -2 c-739 -3 -750 -3 -777 -24 -15 -11 -37 -33 -48 -48 -20 -26 -21
+    -41 -24 -394 -2 -365 -2 -367 21 -407 14 -26 37 -48 67 -62 43 -22 53 -23 337
+    -23 l293 0 2 -1067 3 -1068 23 -33 c70 -97 219 -86 271 22 20 40 21 59 21 334
+    l0 292 1320 0 1320 0 0 -297 c0 -290 1 -299 23 -337 63 -112 227 -105 278 10
+    19 41 19 85 19 1092 l0 1050 98 4 c164 6 204 47 210 216 l4 102 79 0 79 0 0
+    -372 c0 -355 1 -374 21 -414 39 -81 131 -112 208 -72 89 46 86 27 89 467 l3
+    387 42 11 c25 7 56 26 76 47 30 31 35 44 39 96 4 52 1 66 -21 99 -26 39 -78
+    71 -116 71 -20 0 -21 5 -21 104 0 90 -3 107 -22 136 -39 57 -72 75 -138 75
+    -111 0 -160 -68 -160 -222 l0 -93 -80 0 -80 0 0 93 c0 108 -19 161 -71 198
+    l-34 24 -420 5 -420 5 -5 110 c-6 123 -16 147 -81 184 -71 40 -166 15 -209
+    -54 -18 -29 -23 -56 -28 -140 l-5 -105 -558 0 -559 0 0 93 c0 108 -19 161 -70
+    197 -37 26 -111 36 -150 19z m2290 -789 l0 -160 -1835 0 -1835 0 0 160 0 160
+    1835 0 1835 0 0 -160z m-310 -755 l0 -275 -1320 0 -1320 0 0 275 0 275 1320 0
+    1320 0 0 -275z m-1520 -760 l0 -165 -560 0 -560 0 0 165 0 165 560 0 560 0 0
+    -165z m1520 0 l0 -165 -600 0 -600 0 0 165 0 165 600 0 600 0 0 -165z"/>
+    </g>
+    </svg>
 </div>
 
 <div id="arpabetIcon" title="ARPAbet">

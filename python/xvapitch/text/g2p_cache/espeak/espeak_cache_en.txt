@@ -1997,6 +1997,7 @@ ahq|ˈɑː k
 ahraan|ˈɑː ɹ ɑː n
 ahrk|ˈɑː ə k
 ahst|ˈɑː s t
+ahzero|ɐ ˈeɪ tʃ z ˈiə ɹ oʊ
 ahzidal|ˈɑː z ɪ d əl
 ah…|ˈɑː
 ai|ˌeɪ ˈaɪ
@@ -9089,6 +9090,7 @@ doriyaane|d ˈoː ɹ ɪ j ˌɑː n
 dormers|d ˈoːɹ m ɚ z
 dormitiloo|d ˈoːɹ m ɪ t ˌɪ l uː
 dorne|d ˈoːɹ n
+doroste|d ˈoː ɹ ɑː s t
 dorothy|d ˈɔː ɹ ə θ i
 dorpidity|d oːɹ p ˈɪ d ᵻ ɾ i
 dorren|d ˈɔ ɹ ə n
@@ -9635,6 +9637,7 @@ egyptian|ɪ dʒ ˈɪ p ʃ ə n
 egyptian's|ɪ dʒ ˈɪ p ʃ ə n z
 eh|ˈeɪ
 ehh|ˈeɪ
+ehone|ˈiː h ˈoʊ n
 ehr|ˈeɪ ɚ
 ehrm|ˈeɪ ə m
 ei|ˈaɪ
@@ -11102,6 +11105,7 @@ fineness|f ˈaɪ n n ə s
 finerat|f ˈaɪ n ɹ æ t
 finessing|f ɪ n ˈɛ s ɪ ŋ
 finette|f aɪ n ˈɛ t
+finetuning|f ˈaɪ n t uː n ɪ ŋ
 finger|f ˈɪ ŋ ɡ ɚ
 finger's|f ˈɪ ŋ ɡ ɚ z
 fingered|f ˈɪ ŋ ɡ ɚ d
@@ -13060,6 +13064,7 @@ grummites|ɡ ɹ ˈʌ m aɪ t s
 grunting|ɡ ɹ ˈʌ n t ɪ ŋ
 grâce|ɡ ɹ ˈeɪ s
 gs/ds|dʒ ˌiː  ˈɛ s s l ˈæ ʃ d ˌiː  ˈɛ s
+gtwop|dʒ ˈiː t w ˈɑː p
 guadiana|ɡ w ˌɑː d i  ˈɑː n ə
 guar|ɡ w ˈɑː ɚ
 guard|ɡ ˈɑːɹ d
@@ -14707,6 +14712,7 @@ ignored|ɪ ɡ n ˈoːɹ d
 ignores|ɪ ɡ n ˈoːɹ z
 igor|ˈiː ɡ oːɹ
 igor's|ˈiː ɡ oːɹ z
+ihone|aɪ h ˈoʊ n
 ii|ɹ ˌoʊ m ə n  t ˈuː
 iii|ɹ ˌoʊ m ə n  θ ɹ ˈiː
 iiz|ˈɪ  ɪ z
@@ -16921,6 +16927,7 @@ lane|l ˈeɪ n
 lanedane|l ˈeɪ n d eɪ n
 lanee|l ˈæ n iː
 langeni|l ˈæ n dʒ ɛ n i
+langroaceasta|l ˈæ ŋ ɡ ɹ oʊ ɐ s ˈiː s t ə
 language|l ˈæ ŋ ɡ w ɪ dʒ
 languages|l ˈæ ŋ ɡ w ɪ dʒ ᵻ z
 languidly|l ˈæ ŋ ɡ w ɪ d l i
@@ -20992,6 +20999,7 @@ nezhaabe|n ˈɛ ʒ ɑː b
 nezibaaru|n ˌɛ z ɪ b ˈɑːɹ ɹ uː
 nfifty|ˈɛ n f ˈɪ f t i
 ngh|ˌɛ n dʒ ˌiː  ˈeɪ tʃ
+nglish|ˈɛ ŋ ɡ l ˈɪ ʃ
 nibblin'|n ˈɪ b l ɪ n
 niben|n ˈaɪ b ə n
 nibenean|n ˈaɪ b n iə n
@@ -23518,6 +23526,7 @@ proportioned|p ɹ ə p ˈoːɹ ʃ ə n d
 propose|p ɹ ə p ˈoʊ z
 proposition|p ɹ ˌɑː p ə z ˈɪ ʃ ə n
 propositioning|p ɹ ˌɑː p ə z ˈɪ ʃ ə n ɪ ŋ
+propoziie|p ɹ ə p ˈoʊ z ɪ  i
 propozitie|p ɹ ə p ˈɑː z ɪ ɾ i
 proprieties|p ɹ ə p ɹ ˈaɪə ɾ ɪ z
 proprietress|p ɹ ə p ɹ ˈaɪə t ɹ ə s
@@ -25480,6 +25489,7 @@ romeo|ɹ ˈoʊ m ɪ  ˌoʊ
 romilly|ɹ ˈɑː m ɪ l i
 romish|ɹ ˈɑː m ɪ ʃ
 romlyn|ɹ ˈɑː m l ɪ n
+romn|ɹ ˈɑː m
 romped|ɹ ˈɑː m p t
 romps|ɹ ˈɑː m p s
 ronaaledo|ɹ ˌɑː n ɑː l ˈiː d oʊ
@@ -25524,6 +25534,7 @@ roses|ɹ ˈoʊ z ᵻ z
 rosethorn|ɹ ˈoʊ z θ ɔːɹ n
 rosinante|ɹ ˌɑː s ɪ n ˈɑː n t eɪ
 rosiness|ɹ ˈoʊ z i n ə s
+rostit|ɹ ˈɑː s t ɪ t
 rostita|ɹ ə s t ˈiː ɾ ə
 rosy|ɹ ˈoʊ z i
 rot|ɹ ˈɑː t
@@ -27105,6 +27116,7 @@ shawaa|ʃ ˈæ w ɑː
 shawaarobite|ʃ æ w ˈɑːɹ ɹ ə b ˌaɪ t
 shawl|ʃ ˈɔː l
 shawling|ʃ ˈɔː l ɪ ŋ
+shche|ˌɛ s ˈeɪ tʃ tʃ ˈiː
 she|ʃ ˈiː
 she'd|ʃ ˈiː d
 she'll|ʃ ˈiː l

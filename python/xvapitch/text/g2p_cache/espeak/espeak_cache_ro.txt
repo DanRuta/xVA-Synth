@@ -1,3 +1,4 @@
+\langro|l ˈa ŋ ɡ  r o
 a|ˈa
 abandona|ˌa b a n d ˈo n a
 abandonate|ˌa b a n d o n ˈa t e
@@ -6557,6 +6558,7 @@ lagărul|l ˈa ɡ ə r u l
 laiță|l ˈaɪ ts ə
 lambu|l ˈa m b u
 lamentabil|l ˌa m e n t ˈa b i l
+language|l a ŋ ɡ w ˈa dʒ e
 lansa|l a n s ˈa
 lansare|l a n s ˈa ɾ e
 lansate|l a n s ˈa t e
@@ -8037,6 +8039,7 @@ nespus|n ˈe s p u s
 nespusă|n e s p ˈu s ə
 nespălat|n ˌe s p ə l ˈa t
 nespălată|n ˌe s p ə l ˈa t ə
+nested|n e s t ˈe d
 nestrăbătute|n ˌe s t  r ə b ə t ˈu t e
 nestrămutat|n ˌe s t  r ə m u t ˈa t
 nesuferit|n ˌe s u f e ɾ ˈi t
@@ -8127,6 +8130,7 @@ nimănuia|n ˌi m ə n u j ˈa
 ninu|n ˈi n u
 nisam|n i s ˈa m
 nishani|n i ʃ ˈa nʲʲ
+niste|n ˈi s t e
 nitam|n i t ˈa m
 nivelul|n i v ˈe l u l
 niveluri|n ˌi v e l ˈu rʲ

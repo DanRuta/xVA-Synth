@@ -26,6 +26,7 @@ const {saveUserSettings, deleteFolderRecursive} = require("./javascript/settings
 const xVASpeech = require("./javascript/speech2speech.js")
 require("./javascript/batch.js")
 require("./javascript/outputFiles.js")
+require("./javascript/workbench.js")
 const er = require('@electron/remote')
 window.electronBrowserWindow = er.getCurrentWindow()
 const child = require("child_process").execFile
@@ -159,6 +160,7 @@ window.registerModel = (modelsPath, gameFolder, model, {gameId, voiceId, voiceNa
             gameId,
             modelsPath,
             voiceName,
+            embOverABaseModel: model.embOverABaseModel,
             variants: []
         }
         window.games[gameId].models.push(modelData)
@@ -388,13 +390,16 @@ window.changeGame = (meta) => {
         return
     }
 
-    (window.games[meta.gameId] ? window.games[meta.gameId].models : []).forEach(({modelsPath, audioPreviewPath, gameId, variants, voiceName}) => {
+    (window.games[meta.gameId] ? window.games[meta.gameId].models : []).forEach(({modelsPath, audioPreviewPath, gameId, variants, voiceName, embOverABaseModel}) => {
 
         const {voiceId, voiceDescription, hifi, model} = variants[0]
         const modelVersion = variants[0].version
 
         const button = createElem("div.voiceType", voiceName)
         button.style.background = `#${themeColour}`
+        if (embOverABaseModel) {
+            button.style.fontStyle = "italic"
+        }
         if (window.userSettings.do_model_version_highlight && parseFloat(modelVersion)<window.userSettings.model_version_highlight) {
             button.style.border =  `2px solid #${themeColour}`
             button.style.padding =  "0"
@@ -416,7 +421,19 @@ window.changeGame = (meta) => {
             audioPreview.setSinkId(window.userSettings.base_speaker)
         })
 
-        button.addEventListener("click", event => window.selectVoice(event, variants, hifi, gameId, voiceId, model, button, audioPreviewPath, modelsPath, meta))
+        if (embOverABaseModel) {
+            const gameOfBaseModel = embOverABaseModel.split("/")[0]
+            if (gameOfBaseModel=="<base>") {
+                // For included base v3 models
+                modelsPath = `${window.path}/python/xvapitch/${embOverABaseModel.split("/")[1]}`
+            } else {
+                // For any other model
+                const gameModelsPath = `${window.userSettings[`outpath_${gameOfBaseModel}`]}`
+                modelsPath = `${gameModelsPath}/${embOverABaseModel.split("/")[1]}`
+            }
+        }
+
+        button.addEventListener("click", event => window.selectVoice(event, variants, hifi, gameId, voiceId, model, button, audioPreviewPath, modelsPath, meta, embOverABaseModel))
         buttons.push(button)
     })
 
@@ -426,7 +443,7 @@ window.changeGame = (meta) => {
 }
 
 
-window.selectVoice = (event, variants, hifi, gameId, voiceId, model, button, audioPreviewPath, modelsPath, meta) => {
+window.selectVoice = (event, variants, hifi, gameId, voiceId, model, button, audioPreviewPath, modelsPath, meta, embOverABaseModel) => {
     // Just for easier packaging of the voice models for publishing - yes, lazy
     if (event.ctrlKey && event.shiftKey) {
         window.packageVoice(event.altKey, variants, {modelsPath, gameId})
@@ -496,7 +513,7 @@ window.selectVoice = (event, variants, hifi, gameId, voiceId, model, button, aud
 
         generateVoiceButton.dataset.modelQuery = JSON.stringify({
             outputs: parseInt(model.outputs),
-            model: `${modelsPath}/${voiceId}`,
+            model: embOverABaseModel ? modelsPath : `${modelsPath}/${voiceId}`,
             modelType: model.modelType,
             version: model.version,
             model_speakers: model.emb_size,
@@ -532,76 +549,80 @@ window.selectVoice = (event, variants, hifi, gameId, voiceId, model, button, aud
 
 
 window.loadModel = () => {
-    if (window.batch_state.state) {
-        window.errorModal(window.i18n.BATCH_ERR_IN_PROGRESS)
-        return
-    }
-
-    const body = JSON.parse(generateVoiceButton.dataset.modelQuery)
-
-    const appVersionOk = window.checkVersionRequirements(body.version, appVersion)
-    if (!appVersionOk) {
-        window.errorModal(`${window.i18n.MODEL_REQUIRES_VERSION} v${body.version}<br><br>${window.i18n.THIS_APP_VERSION}: ${window.appVersion}`)
-        return
-    }
-
-
-    window.appLogger.log(`${window.i18n.LOADING_VOICE}: ${JSON.parse(generateVoiceButton.dataset.modelQuery).model}`)
-    window.batch_state.lastModel = JSON.parse(generateVoiceButton.dataset.modelQuery).model.split("/").reverse()[0]
-
-    body["pluginsContext"] = JSON.stringify(window.pluginsContext)
-
-    spinnerModal(`${window.i18n.LOADING_VOICE}`)
-    doFetch(`http://localhost:8008/loadModel`, {
-        method: "Post",
-        body: JSON.stringify(body)
-    }).then(r=>r.text()).then(res => {
-
-        window.currentModel.loaded = true
-        generateVoiceButton.dataset.modelQuery = null
-        generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
-        generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
-
-        // Set the editor pitch/energy dropdowns to pitch, and freeze them, if energy is not supported by the model
-        if (window.currentModel.modelType.toLowerCase()=="xvapitch") {
-            vocoder_options_container.style.display = "none"
-            base_lang_select.disabled = false
-            style_emb_select.disabled = false
-            window.loadStyleEmbsForVoice(window.currentModel)
-            mic_SVG.children[0].style.fill = "white"
-            base_lang_select.value = window.currentModel.lang
-        } else {
-            vocoder_options_container.style.display = "inline-block"
-            base_lang_select.disabled = true
-            style_emb_select.disabled = true
-            mic_SVG.children[0].style.fill = "grey"
-        }
-        if (window.currentModel.modelType.toLowerCase()=="fastpitch") {
-            seq_edit_view_select.value = "pitch"
-            seq_edit_edit_select.value = "pitch"
-            seq_edit_view_select.disabled = true
-            seq_edit_edit_select.disabled = true
-        } else {
-            seq_edit_view_select.value = "pitch_energy"
-            seq_edit_view_select.disabled = false
-            seq_edit_edit_select.disabled = false
+    return new Promise(resolve => {
+        if (window.batch_state.state) {
+            window.errorModal(window.i18n.BATCH_ERR_IN_PROGRESS)
+            return
         }
 
-        if (window.userSettings.defaultToHiFi && window.currentModel.hifi) {
-            vocoder_select.value = Array.from(vocoder_select.children).find(opt => opt.innerHTML=="Bespoke HiFi GAN").value
-            window.changeVocoder(vocoder_select.value).then(() => dialogueInput.focus())
-        } else if (window.userSettings.vocoder.includes(".hg.pt")) {
-            window.changeVocoder("qnd").then(() => dialogueInput.focus())
-        } else {
-            closeModal().then(() => dialogueInput.focus())
+        const body = JSON.parse(generateVoiceButton.dataset.modelQuery)
+
+        const appVersionOk = window.checkVersionRequirements(body.version, appVersion)
+        if (!appVersionOk) {
+            window.errorModal(`${window.i18n.MODEL_REQUIRES_VERSION} v${body.version}<br><br>${window.i18n.THIS_APP_VERSION}: ${window.appVersion}`)
+            return
         }
-    }).catch(e => {
-        console.log(e)
-        if (e.code =="ENOENT") {
-            closeModal(null, modalContainer).then(() => {
-                window.errorModal(window.i18n.ERR_SERVER)
-            })
-        }
+
+
+        window.appLogger.log(`${window.i18n.LOADING_VOICE}: ${JSON.parse(generateVoiceButton.dataset.modelQuery).model}`)
+        window.batch_state.lastModel = JSON.parse(generateVoiceButton.dataset.modelQuery).model.split("/").reverse()[0]
+
+        body["pluginsContext"] = JSON.stringify(window.pluginsContext)
+
+        spinnerModal(`${window.i18n.LOADING_VOICE}`)
+        doFetch(`http://localhost:8008/loadModel`, {
+            method: "Post",
+            body: JSON.stringify(body)
+        }).then(r=>r.text()).then(res => {
+
+            window.currentModel.loaded = true
+            generateVoiceButton.dataset.modelQuery = null
+            generateVoiceButton.innerHTML = window.i18n.GENERATE_VOICE
+            generateVoiceButton.dataset.modelIDLoaded = generateVoiceButton.dataset.modelIDToLoad
+
+            // Set the editor pitch/energy dropdowns to pitch, and freeze them, if energy is not supported by the model
+            if (window.currentModel.modelType.toLowerCase()=="xvapitch" && !window.currentModel.isBaseModel) {
+                vocoder_options_container.style.display = "none"
+                base_lang_select.disabled = false
+                style_emb_select.disabled = false
+                window.loadStyleEmbsForVoice(window.currentModel)
+                mic_SVG.children[0].style.fill = "white"
+                base_lang_select.value = window.currentModel.lang
+            } else {
+                vocoder_options_container.style.display = "inline-block"
+                base_lang_select.disabled = true
+                style_emb_select.disabled = true
+                mic_SVG.children[0].style.fill = "grey"
+            }
+            if (window.currentModel.modelType.toLowerCase()=="fastpitch") {
+                seq_edit_view_select.value = "pitch"
+                seq_edit_edit_select.value = "pitch"
+                seq_edit_view_select.disabled = true
+                seq_edit_edit_select.disabled = true
+            } else {
+                seq_edit_view_select.value = "pitch_energy"
+                seq_edit_view_select.disabled = false
+                seq_edit_edit_select.disabled = false
+            }
+
+            if (window.userSettings.defaultToHiFi && window.currentModel.hifi) {
+                vocoder_select.value = Array.from(vocoder_select.children).find(opt => opt.innerHTML=="Bespoke HiFi GAN").value
+                window.changeVocoder(vocoder_select.value).then(() => dialogueInput.focus())
+            } else if (window.userSettings.vocoder.includes(".hg.pt")) {
+                window.changeVocoder("qnd").then(() => dialogueInput.focus())
+            } else {
+                closeModal(null, [workbenchContainer]).then(() => dialogueInput.focus())
+            }
+            resolve()
+        }).catch(e => {
+            console.log(e)
+            if (e.code =="ENOENT") {
+                closeModal(null, [modalContainer, workbenchContainer]).then(() => {
+                    window.errorModal(window.i18n.ERR_SERVER)
+                    resolve()
+                })
+            }
+        })
     })
 }
 
@@ -1313,6 +1334,9 @@ ipcRenderer.on('context-menu-command', (e, command) => {
 })
 
 
+window.setupModal(workbenchIcon, workbenchContainer, () => window.initVoiceWorkbench())
+
+
 // Info
 // ====
 window.setupModal(infoIcon, infoContainer)
@@ -1634,6 +1658,6 @@ document.querySelectorAll('a[href^="http"]').forEach(a => a.addEventListener("cl
 
 // TEMP - pre-alpha builds
 setInterval(() => {
-    dragBar.innerHTML = "xVASynth ALPHA v3.0.0a8 PREVIEW"
+    dragBar.innerHTML = "xVASynth ALPHA v3.0.0a9 PREVIEW"
     dragBar.style.backgroundColor = "red"
 }, 1000)

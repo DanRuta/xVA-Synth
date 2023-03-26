@@ -287,20 +287,11 @@ wavFileDragDropArea.addEventListener("dragover", event => window.dragDropWavForE
 wavFileDragDropArea.addEventListener("drop", event => window.dragDropWavForEmbComputeFilepathInput("drop", event), false)
 
 
-
-getStyleEmbeddingBtn.addEventListener("click", () => {
+getStyleEmbeddingBtn.addEventListener("click", async () => {
     if (!wavFilepathForEmbComputeInput.value.trim().length) {
         window.errorModal(window.i18n.ERROR_NEED_WAV_FILE)
     } else {
-        doFetch(`http://localhost:8008/getWavV3StyleEmb`, {
-            method: "Post",
-            body: JSON.stringify({wav_path: wavFilepathForEmbComputeInput.value})
-        }).then(r=>r.text()).then(v => {
-            if (v=="ENOENT") {
-                window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}<br><br>ENOENT`)
-            } else {
-                styleEmbValuesInput.value = v
-            }
-        }).catch(console.log)
+        const embedding = await window.getSpeakerEmbeddingFromFilePath(wavFilepathForEmbComputeInput.value)
+        styleEmbValuesInput.value = embedding
     }
 })

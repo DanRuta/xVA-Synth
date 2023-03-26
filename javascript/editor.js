@@ -1595,6 +1595,10 @@ Object.keys(window.supportedLanguages).sort((a,b)=>window.supportedLanguages[a]<
     const opt = createElem("option", window.supportedLanguages[key])
     opt.value = key
     base_lang_select.appendChild(opt)
+
+    const opt2 = createElem("option", window.supportedLanguages[key])
+    opt2.value = key
+    voiceWorkbenchLanguageDropdown.appendChild(opt2)
 })
 base_lang_select.value = "en"
 

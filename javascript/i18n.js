@@ -7,6 +7,7 @@ window.i18n.setEnglish = () => {
     window.i18n.SELECT_VOICE = "Select voice"
     window.i18n.SELECT_VOICE_TYPE = "Select Voice Type"
     window.i18n.KEEP_SAMPLE = "Keep Sample"
+    window.i18n.GENERATE = "Generate"
     window.i18n.GENERATE_VOICE = "Generate Voice"
     window.i18n.RENAME_THE_FILE = "Rename the file"
     window.i18n.DELETE_FILE = "Delete file"
@@ -35,6 +36,7 @@ window.i18n.setEnglish = () => {
     window.i18n.RESET_LETTER = "Reset Letter"
     window.i18n.AUTO_REGEN = "Auto regenerate"
     window.i18n.VOCODER = "Vocoder:"
+    window.i18n.BASE_LANGUAGE = "Base Language"
     window.i18n.BASE_LANGUAGE_IS = "Base Language:"
     window.i18n.USE_SR = "Use SR"
     window.i18n.USE_SR_IS = "Use SR:"
@@ -226,6 +228,22 @@ window.i18n.setEnglish = () => {
     window.i18n.VC_ONLY_FOR_V3 = "Voice conversion only available for v3 models."
 
 
+    window.i18n.VW_INPUT_TEXTAREA_PLACEHOLDER = "Enter a sentence to use for generating preview samples of your crafted voice with the current embedding and proposed delta change"
+    window.i18n.CURRENT = "Current"
+    window.i18n.CURRENT_EMB = "Current Embedding"
+    window.i18n.CURRENT_DELTA = "Current Delta"
+    window.i18n.STRENGTH = "Strength"
+    window.i18n.APPLY_DELTA = "Apply Delta"
+    window.i18n.VW_REF_FILE_A = "Reference Audio File A:"
+    window.i18n.VW_REF_FILE_B = "Reference Audio File B:"
+    window.i18n.VW_BASE_MODEL = "Base Model (v3 models only)"
+    window.i18n.NAME_OF_YOUR_VOICE = "Name of your voice"
+    window.i18n.UNIQUE_ID_FOR_VOICE = "A unique identifier for your voice (eg: f4_nate)"
+    window.i18n.YOUR_NAME_FOR_CREDITS = "Your name for credits"
+
+
+
+
 
     // Dynamic
     window.i18n.SOMETHING_WENT_WRONG = "Something went wrong"
@@ -263,6 +281,13 @@ window.i18n.setEnglish = () => {
     window.i18n.ERR_LOADING_MODELS_FOR_GAME_WITH_FILENAME = "ERROR loading models for game _1 with filename:"
     window.i18n.ERR_XVASPEECH_MODEL_VERSION = `This xVASpeech model needs minimum app version _1. Your app version:`
     window.i18n.ERR_ARPABET_NOT_EXIST = `The following ARPAbet symbol does not exist: _1`
+
+    window.i18n.ENTER_VOICE_NAME = "Please enter a voice name"
+    window.i18n.ENTER_VOICE_ID = "Please enter a voice ID"
+    window.i18n.VOICE_CREATED_AT = "Voice successfully saved at the following location:<br><br>_1"
+    window.i18n.CONFIRM_DELETE_CRAFTED_VOICE = "Are you sure you'd like to delete the crafted voice '_1' at the following location?<br><br>_2"
+    window.i18n.SUCCESSFULLY_DELETED_CRAFTED_VOICE = "Successfully deleted the crafted voice model."
+    window.i18n.ENTER_VOICE_CRAFTING_STARTING_EMB = "Please provide a starting embedding. Drag and drop a .wav audio file over the 'Current Embedding' field below."
 
     window.i18n.CHANGING_MODELS = "Changing models..."
     window.i18n.CHANGING_DEVICE = "Changing device..."
@@ -424,6 +449,7 @@ window.i18n.setEnglish = () => {
     window.i18n.PREVIEW = "Preview"
     window.i18n.LOAD = "Load"
 
+    window.i18n.VOICE_NAME = "Voice Name"
     window.i18n.VOICE_NAME_IS = "Voice Name:"
 
     window.i18n.VEMB_INSTR_1 = "Left click drag to rotate"
@@ -518,6 +544,7 @@ window.i18n.setEnglish = () => {
     window.i18n.ONLY_ENABLED = "Only enabled"
 
     window.i18n.DICTIONARIES = "Dictionaries"
+    window.i18n.CANCEL = "Cancel"
     window.i18n.SAVE = "Save"
     window.i18n.WORDS = "Words"
     window.i18n.WORD_IS = "Word:"
@@ -553,6 +580,14 @@ window.i18n.setEnglish = () => {
 
     window.i18n.YOU_MUST_BE_LOGGED_IN = "You must be logged in to check what voices there are available on the nexus."
     window.i18n.JOIN_DISCORD = "Join xVASynth server"
+
+    window.i18n.GETTING_SPEAKER_EMBEDDING = "Getting speaker embedding..."
+
+    window.i18n.INFO = "Info"
+    window.i18n.VOICE_CRAFTING_WORKBENCH = "Voice Crafting Workbench"
+    window.i18n.WORKBENCH = "Workbench"
+    window.i18n.FROM_FILE_IS_DRAG_N_DROP = "From file: (Drag and drop a .wav file)"
+    window.i18n.FROM_FILE_IS_FILEPATH = "From file: _1"
 
 
     window.i18n.BATCH_CHANGE_DELIMITER = "The .csv delimiter is not found in the data. The delimiter in the settings is '_1', but the one in the .csv file is potentially '_2'. Do you want to change the delimiter used, and try again using this?"
@@ -944,6 +979,42 @@ window.i18n.updateUI = () => {
 
     openDiscord.innerHTML = window.i18n.JOIN_DISCORD
 
+    i18n_workbench.innerHTML = window.i18n.VOICE_CRAFTING_WORKBENCH
+    voiceWorkbenchRefAFilePath.innerHTML = window.i18n.FROM_FILE_IS_DRAG_N_DROP
+    voiceWorkbenchRefBFilePath.innerHTML = window.i18n.FROM_FILE_IS_DRAG_N_DROP
+
+    voiceWorkbenchInputTextArea.innerHTML = window.i18n.VW_INPUT_TEXTAREA_PLACEHOLDER
+
+    voiceWorkbenchGenerateSampleButton.innerHTML = window.i18n.GENERATE
+    i18n_vw_current.innerHTML = window.i18n.CURRENT
+    voiceWorkbenchAudioCurrentPlayPauseBtn.innerHTML = window.i18n.PLAY
+    voiceWorkbenchAudioCurrentSaveBtn.innerHTML = window.i18n.SAVE
+    voiceWorkbenchAudioNewPlayBtn.innerHTML = window.i18n.PLAY
+    voiceWorkbenchAudioNewSaveBtn.innerHTML = window.i18n.SAVE
+
+    i18n_vw_current_emb.innerHTML = window.i18n.CURRENT_EMB
+    i18n_vw_current_delta.innerHTML = window.i18n.CURRENT_DELTA
+    i18n_vw_strength.innerHTML = window.i18n.STRENGTH
+    voiceWorkshopApplyDeltaButton.innerHTML = window.i18n.APPLY_DELTA
+    i18n_refAF_a.innerHTML = window.i18n.VW_REF_FILE_A
+    i18n_refAF_b.innerHTML = window.i18n.VW_REF_FILE_B
+
+    i18n_vw_basemodel.innerHTML = window.i18n.VW_BASE_MODEL
+    i18n_vw_game.innerHTML = window.i18n.GAME
+    i18n_vw_voicename.innerHTML = window.i18n.VOICE_NAME
+    i18n_vw_voiceid.innerHTML = window.i18n.VOICE_ID
+    voiceWorkbenchVoiceNameInput.placeholder = window.i18n.NAME_OF_YOUR_VOICE
+    voiceWorkbenchVoiceIDInput.placeholder = window.i18n.UNIQUE_ID_FOR_VOICE
+    i18n_vw_gender.innerHTML = window.i18n.GENDER
+    i18n_vw_author.innerHTML = window.i18n.AUTHOR
+
+    voiceWorkbenchAuthorInput.placeholder = window.i18n.YOUR_NAME_FOR_CREDITS
+
+    i18n_vw_baselang.innerHTML = window.i18n.BASE_LANGUAGE
+    voiceWorkbenchStartButton.innerHTML = window.i18n.SAVE
+    voiceWorkbenchCancelButton.innerHTML = window.i18n.CANCEL
+    voiceWorkbenchDeleteButton.innerHTML = window.i18n.DELETE
+    voiceWorkbenchSaveButton.innerHTML = window.i18n.SAVE
 
 
     i18n_variant.innerHTML = window.i18n.VARIANT_IS
@@ -959,12 +1030,13 @@ window.i18n.updateUI = () => {
 
     arpabetIcon.title = "ARPAbet"
     embeddingsIcon.title = "Embeddings visualiser"
-    pluginsIcon.title = "Plugins"
+    pluginsIcon.title = window.i18n.PLUGINS
     batchIcon.title = "Batch mode"
     updatesIcon.title = "Changelog"
     patreonIcon.title = "Patreon"
-    infoIcon.title = "Info"
+    infoIcon.title = window.i18n.INFO
     settingsCog.title = "Settings"
+    workbenchIcon.title = window.i18n.WORKBENCH
 
 }
 
