@@ -220,7 +220,7 @@ def normalize_audio (input_path, output_path):
 import pyaudio
 import wave
 
-def start_microphone_recording (logger, root_folder):
+def start_microphone_recording (logger, models_manager, root_folder):
     logger.info(f'start_microphone_recording')
 
     CHUNK = 1024
@@ -229,6 +229,9 @@ def start_microphone_recording (logger, root_folder):
     RATE = 44100 #sample rate
     RECORD_SECONDS = 15
     WAVE_OUTPUT_FILENAME = f'{root_folder}/output/recorded_file.wav'
+
+    if os.path.exists(WAVE_OUTPUT_FILENAME):
+        os.remove(WAVE_OUTPUT_FILENAME)
 
     p = pyaudio.PyAudio()
 
@@ -268,13 +271,18 @@ def start_microphone_recording (logger, root_folder):
     wf.writeframes(b''.join(frames))
     wf.close()
 
-def move_recorded_file(PROD, logger, root_folder, file_path):
+
+
+
+def move_recorded_file(PROD, logger, models_manager, root_folder, file_path):
     if not os.path.exists(f'{root_folder}/output/recorded_file.wav'):
         logger.info("Not found audio file")
         import time
         time.sleep(5)
     try:
-        # shutil.copyfile(f'{root_folder}/output/recorded_file.wav', file_path)
+
+        models_manager.init_model("deepfilternet2")
+        models_manager.models("deepfilternet2").cleanup_audio(f'{root_folder}/output/recorded_file.wav', f'{root_folder}/output/recorded_file_preCleanup.wav')
 
         # Do audio normalization also
         ffmpeg_path = f'{"./resources/app" if PROD else "."}/python/ffmpeg.exe'
@@ -305,7 +313,7 @@ def move_recorded_file(PROD, logger, root_folder, file_path):
                 ffmpeg_exe=ffmpeg_path
             )
         ffmpeg_normalize.ffmpeg_exe = ffmpeg_path
-        ffmpeg_normalize.add_media_file(f'{root_folder}/output/recorded_file.wav', file_path)
+        ffmpeg_normalize.add_media_file(f'{root_folder}/output/recorded_file_preCleanup.wav', file_path)
         ffmpeg_normalize.run_normalization()
 
     except shutil.SameFileError:

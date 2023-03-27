@@ -453,12 +453,12 @@ if __name__ == '__main__':
                         models_manager.models_bank["fastpitch1_1"].refresh_arpabet_dicts()
 
                 if self.path == "/start_microphone_recording":
-                    start_microphone_recording(logger, f'{"./resources/app" if PROD else "."}')
+                    start_microphone_recording(logger, models_manager, f'{"./resources/app" if PROD else "."}')
                     req_response = ""
 
                 if self.path == "/move_recorded_file":
                     file_path = post_data["file_path"]
-                    move_recorded_file(PROD, logger, f'{"./resources/app" if PROD else "."}', file_path)
+                    move_recorded_file(PROD, logger, models_manager, f'{"./resources/app" if PROD else "."}', file_path)
 
                 self._set_response()
                 self.wfile.write(req_response.encode("utf-8"))
