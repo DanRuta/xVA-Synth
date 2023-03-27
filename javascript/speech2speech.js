@@ -73,7 +73,7 @@ const animateRecordingProgress = () => {
 }
 
 
-const clearProgress = (percent=0) => {
+window.clearVCMicSpinnerProgress = (percent=0) => {
     const circle = mic_progress_SVG_circle
     circle.style.stroke = "transparent"
     const radius = circle.r.baseVal.value
@@ -84,7 +84,7 @@ const clearProgress = (percent=0) => {
     circle.style.strokeDashoffset = circumference
     circle.style.strokeDashoffset = Math.floor(offset)
 }
-window.clearProgress = clearProgress
+window.clearVCMicSpinnerProgress = clearVCMicSpinnerProgress
 
 window.startRecord = async () => {
 
@@ -94,7 +94,7 @@ window.startRecord = async () => {
 
     window.speech2speechState.isReadingMic = true
     window.speech2speechState.elapsedRecording = Date.now()
-    clearProgress()
+    window.clearVCMicSpinnerProgress()
     mic_progress_SVG_circle.style.stroke = "red"
     requestAnimationFrame(animateRecordingProgress)
 }
@@ -192,7 +192,7 @@ window.useWavFileForspeech2speech = (fileName) => {
 
             window.speech2speechState.s2s_running = true
             mic_progress_SVG.style.animation = "none"
-            clearProgress()
+            window.clearVCMicSpinnerProgress()
 
             if (res.includes("Traceback")) {
                 window.errorModal(`<h3>${window.i18n.SOMETHING_WENT_WRONG}</h3>${res.replaceAll("\n", "<br>")}`)
@@ -264,7 +264,7 @@ window.stopRecord = (cancelled) => {
     fs.writeFileSync(`${window.path}/python/temp_stop_recording`, "")
 
     if (!cancelled) {
-        clearProgress(0.35)
+        window.clearVCMicSpinnerProgress(0.35)
         mic_progress_SVG.style.animation = "spin 1.5s linear infinite"
         mic_progress_SVG_circle.style.stroke = "white"
         const fileName = `${__dirname.replace("\\javascript", "").replace(/\\/g,"/")}/output/recorded_file.wav`
@@ -278,7 +278,7 @@ window.stopRecord = (cancelled) => {
 
     window.speech2speechState.isReadingMic = false
     window.speech2speechState.elapsedRecording = 0
-    clearProgress()
+    window.clearVCMicSpinnerProgress()
 }
 
 window.micClickHandler = (ctrlKey) => {
@@ -313,7 +313,7 @@ mic_SVG.addEventListener("contextmenu", () => {
         audioPreview.setSinkId(window.userSettings.base_speaker)
     }
 })
-clearProgress()
+window.clearVCMicSpinnerProgress()
 
 
 
@@ -321,11 +321,11 @@ clearProgress()
 window.uploadS2SFile = (eType, event) => {
 
     if (["dragenter", "dragover"].includes(eType)) {
-        clearProgress(1)
+        clearVCMicSpinnerProgress(1)
         mic_progress_SVG_circle.style.stroke = "white"
     }
     if (["dragleave", "drop"].includes(eType)) {
-        clearProgress()
+        window.clearVCMicSpinnerProgress()
     }
 
     event.preventDefault()
@@ -342,7 +342,7 @@ window.uploadS2SFile = (eType, event) => {
                 return
             }
 
-            clearProgress(0.35)
+            clearVCMicSpinnerProgress(0.35)
             // mic_progress_SVG.style.animation = "spin 1.5s linear infinite"
             // mic_progress_SVG_circle.style.stroke = "white"
 

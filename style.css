@@ -488,18 +488,18 @@ audio {
     height: 40px;
     width: 40px;
     margin-left: 40px;
-    margin-top: 16px;
-    margin-bottom: 2px;
+    margin-top: 20px;
+    margin-bottom: 16px;
     filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 1));
     cursor: pointer;
 }
 
 #mic_progress_SVG {
     filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, .3));
-    margin-top: -50px;
-    margin-top: -61px;
+    position: absolute;
     pointer-events: none;
-    margin-left: 23px;
+    margin-top: 4px;
+    margin-left: -57px;
 }
 
 #mic_progress_SVG_circle {
@@ -1125,18 +1125,15 @@ input[type=checkbox] {
 #textEditorElem {
     height: 60px;
     width: calc(95vw - 330px) !important;
-    /*margin-left: 1vw;*/
 }
 
 #textEditorContainer {
-    border: 1px solid black;
     padding-top: 1px;
     height: 60px;
     width: calc(95vw - 300px) !important;
 }
 
 #dialogueInput:focus {
-    /*border: 1px solid white;*/
     border: none;
     outline: none;
 }
