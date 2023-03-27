@@ -182,11 +182,12 @@ window.useWavFileForspeech2speech = (fileName) => {
                 return
             }
             // window.wavesurfer = undefined
-            tempFileLocation = tempFileLocation.replaceAll(/\\/, "/")
+            tempFileLocation = tempFileLocation.replaceAll(/\\/g, "/")
             tempFileLocation = tempFileLocation.replaceAll('/resources/app/resources/app', "/resources/app")
             tempFileLocation = tempFileLocation.replaceAll('/resources/app', "")
 
             dialogueInput.value = ""
+            textEditorElem.innerHTML = ""
             window.isGenerating = false
 
             window.speech2speechState.s2s_running = true
@@ -342,11 +343,13 @@ window.uploadS2SFile = (eType, event) => {
             }
 
             clearProgress(0.35)
-            mic_progress_SVG.style.animation = "spin 1.5s linear infinite"
-            mic_progress_SVG_circle.style.stroke = "white"
+            // mic_progress_SVG.style.animation = "spin 1.5s linear infinite"
+            // mic_progress_SVG_circle.style.stroke = "white"
 
             const fileName = `${__dirname.replace("\\javascript", "").replace(/\\/g,"/")}/output/recorded_file.wav`
             fs.copyFileSync(file.path, fileName)
+            window.sequenceEditor.clear()
+            toggleSpinnerButtons()
             window.useWavFileForspeech2speech(fileName)
         } else {
             window.errorModal(window.i18n.LOAD_TARGET_MODEL)

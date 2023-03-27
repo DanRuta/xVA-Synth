@@ -317,7 +317,7 @@ variant_select.addEventListener("change", () => {
 
     generateVoiceButton.dataset.modelQuery = JSON.stringify({
         outputs: parseInt(model.outputs),
-        model: `${model.modelsPath}/${variant.voiceId}`,
+        model: model.embOverABaseModel ? window.userSettings[`modelspath_${model.embOverABaseModel.split("/")[0]}`]+`/${model.embOverABaseModel.split("/")[1]}` : `${model.modelsPath}/${variant.voiceId}`,
         modelType: variant.modelType,
         version: variant.version,
         model_speakers: model.num_speakers,
@@ -511,7 +511,7 @@ window.selectVoice = (event, variants, hifi, gameId, voiceId, model, button, aud
 
         generateVoiceButton.dataset.modelQuery = JSON.stringify({
             outputs: parseInt(model.outputs),
-            model: embOverABaseModel ? modelsPath : `${modelsPath}/${voiceId}`,
+            model: model.embOverABaseModel ? window.userSettings[`modelspath_${model.embOverABaseModel.split("/")[0]}`]+`/${model.embOverABaseModel.split("/")[1]}` : `${model.modelsPath}/${model.voiceId}`,
             modelType: model.modelType,
             version: model.version,
             model_speakers: model.emb_size,
