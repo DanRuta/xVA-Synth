@@ -545,7 +545,11 @@ window.selectVoice = (event, variants, hifi, gameId, voiceId, model, button, aud
 }
 
 titleInfo.addEventListener("click", () => titleDetails.style.display = titleDetails.style.display=="none" ? "block" : "none")
-window.addEventListener("click", event => event.target!=titleInfo && event.target!=titleDetails && event.target.parentNode!=titleDetails && event.target.parentNode.parentNode!=titleDetails && (titleDetails.style.display = "none"))
+window.addEventListener("click", event => {
+    if (event.target!=titleInfo && event.target!=titleDetails && event.target.parentNode && event.target.parentNode!=titleDetails && event.target.parentNode.parentNode!=titleDetails) {
+        titleDetails.style.display = "none"
+    }
+})
 titleDetails.style.display = "none"
 
 

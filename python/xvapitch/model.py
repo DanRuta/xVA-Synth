@@ -429,7 +429,34 @@ class xVAPitch(object):
             if not skip_word and len(word) and (word!=" " or len(subSequences)==0 or subSequences[-1][list(subSequences[-1].keys())[0]]!=" "):
                 subSequences.append({langs_stack[-1]: word})
 
-        return subSequences
+
+        subSequences_collapsed = []
+        current_open_arpabet = []
+        last_lang = None
+        is_in_arpabet = False
+        # Collapse groups of inlined ARPABet symbols, to have them treated as such
+        for subSequence in subSequences:
+            ss_lang = list(subSequence.keys())[0]
+            ss_val = subSequence[ss_lang]
+            if ss_lang is not last_lang:
+                if len(current_open_arpabet):
+                    subSequences_collapsed.append({ss_lang: "{"+" ".join(current_open_arpabet).replace("  "," ")+"}"})
+                    current_open_arpabet = []
+                last_lang = ss_lang
+
+            if ss_val.strip()=="{":
+                is_in_arpabet = True
+            elif ss_val.strip()=="}":
+                subSequences_collapsed.append({ss_lang: "{"+" ".join(current_open_arpabet).replace("  "," ")+"}"})
+                current_open_arpabet = []
+                is_in_arpabet = False
+            else:
+                if is_in_arpabet:
+                    current_open_arpabet.append(ss_val)
+                else:
+                    subSequences_collapsed.append({ss_lang: ss_val})
+
+        return subSequences_collapsed
 
 
     def getG2P (self, text, base_lang):
