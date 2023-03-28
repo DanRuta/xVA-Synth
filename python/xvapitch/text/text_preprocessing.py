@@ -521,6 +521,12 @@ class TextPreprocessor():
         sequence = [ALL_SYMBOLS.index(phone) for phone in phonemes]
         return sequence
 
+    def sequence_to_text (self, sequence): # Used in debugging
+        text = []
+        for ind in sequence[0]:
+            text.append(ALL_SYMBOLS[ind])
+        return text
+
 
 
 

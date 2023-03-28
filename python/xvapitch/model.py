@@ -526,15 +526,19 @@ class xVAPitch(object):
                 self.lang_tp[langCode] = get_text_preprocessor(langCode, self.base_dir, logger=self.logger)
 
         try:
+            pad_symb = len(ALL_SYMBOLS)-2
             all_sequence = []
             all_cleaned_text = []
             all_text = []
             all_lang_ids = []
 
-            for subSequence in sequenceSplitByLanguage:
+            for ssi, subSequence in enumerate(sequenceSplitByLanguage):
                 langCode = list(subSequence.keys())[0]
                 subSeq = subSequence[langCode]
                 sequence, cleaned_text = self.lang_tp[langCode].text_to_sequence(subSeq)
+
+                if ssi<len(sequenceSplitByLanguage)-1:
+                    sequence = sequence + [pad_symb]
 
                 all_sequence.append(sequence)
                 all_cleaned_text += ("|"+cleaned_text) if len(all_cleaned_text) else cleaned_text

@@ -118,7 +118,7 @@ if (!Object.keys(window.userSettings).includes("do_model_version_highlight")) { 
     window.userSettings.do_model_version_highlight = false
 }
 if (!Object.keys(window.userSettings).includes("model_version_highlight")) { // For backwards compatibility
-    window.userSettings.model_version_highlight = 2.0
+    window.userSettings.model_version_highlight = 3.0
 }
 
 if (!Object.keys(window.userSettings).includes("keepPaceOnNew")) { // For backwards compatibility
@@ -790,7 +790,7 @@ reset_settings_btn.addEventListener("click", () => {
             window.userSettings.max_filename_chars = 70
             window.userSettings.clear_text_after_synth = false
             window.userSettings.do_model_version_highlight = false
-            window.userSettings.model_version_highlight = 2.0
+            window.userSettings.model_version_highlight = 3.0
             window.userSettings.keepPaceOnNew = true
             window.userSettings.arpabet_paginationSize = 200
             window.userSettings.output_files_pagination_size = 25
