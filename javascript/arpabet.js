@@ -202,6 +202,134 @@ window.saveARPAbetDict = (dictId) => {
     fs.writeFileSync(`${window.path}/arpabet/${dictId}.json`, JSON.stringify(dataOut, null, 4))
 }
 
+
+
+
+window.refreshARPABETReferenceDisplay = () => {
+
+    const V2 = [2]
+    const V3 = [3]
+    const V2_3 = [2,3]
+
+    const data = [
+        // Min model version, symbols, examples
+        [V2, "AA0, AA1, AA2", "b<b>al</b>m, b<b>o</b>t, c<b>o</b>t"],
+        [V3, "AA, AA0, AA1, AA2", "b<b>al</b>m, b<b>o</b>t, c<b>o</b>t"],
+
+        [V2, "AE0, AE1, AE2", "b<b>a</b>t, f<b>a</b>st"],
+        [V3, "AE, AE0, AE1, AE2", "b<b>a</b>t, f<b>a</b>st"],
+
+        [V2, "AH0, AH1, AH2", "b<b>u</b>tt"],
+        [V3, "AH, AH0, AH1, AH2", "b<b>u</b>tt"],
+
+        [V2, "AO0, AO1, AO2", "st<b>o</b>ry"],
+        [V3, "AO, AO0, AO1, AO2", "st<b>o</b>ry"],
+
+        [V2, "AW0, AW1, AW2", "b<b>ou</b>t"],
+        [V3, "AW, AW0, AW1, AW2", "b<b>ou</b>t"],
+
+        [V3, "AX", "    "],
+        [V3, "AXR", "    "],
+
+        [V2, "AY0, AY1, AY2", "b<b>i</b>te"],
+        [V3, "AY, AY0, AY1, AY2", "b<b>i</b>te"],
+
+        [V2_3, "B", "<b>b</b>uy"],
+
+        [V3, "BR", "    "],
+
+        [V2_3, "CH", "<b>ch</b>ina"],
+        [V2_3, "D", "<b>d</b>ie"],
+        [V3, "DX", "    "],
+        [V2_3, "DH", "<b>th</b>y"],
+        [V2, "EH0, EH1, EH2", "b<b>e</b>t"],
+        [V3, "EH,EH0, EH1, EH2", "b<b>e</b>t"],
+
+        [V3, "EL", "    "],
+        [V3, "EM", "    "],
+        [V3, "EN, EN0, EN1, EN2", "    "],
+
+        [V2, "ER0, ER1, ER2", "b<b>i</b>rd"],
+        [V3, "ER, ER0, ER1, ER2", "b<b>i</b>rd"],
+
+        [V2, "EY0, EY1, EY2", "b<b>ai</b>t"],
+        [V3, "EY, EY0, EY1, EY2", "b<b>ai</b>t"],
+
+        [V2_3, "F", "<b>f</b>ight"],
+        [V2_3, "G", "<b>g</b>uy"],
+        [V2_3, "HH", "<b>h</b>igh"],
+        [V3, "HJ", "    "],
+        [V3, "HR", "    "],
+        [V2, "IH0, IH1, IH2", "b<b>i</b>t"],
+        [V3, "IH, IH0, IH1, IH2", "b<b>i</b>t"],
+        [V3, "IX", "    "],
+
+        [V2, "IY0, IY1, IY2", "b<b>ea</b>t"],
+        [V3, "IY, IY0, IY1, IY2", "b<b>ea</b>t"],
+
+        [V2_3, "JH", "<b>j</b>ive"],
+        [V2_3, "K", "<b>k</b>ite"],
+        [V3, "KH", "    "],
+        [V2_3, "L", "<b>l</b>ie"],
+        [V2_3, "M", "<b>m</b>y"],
+        [V2_3, "N", "<b>n</b>igh"],
+        [V2_3, "NG", "si<b>ng</b>"],
+        [V3, "NX", "    "],
+
+        [V3, "OE", "    "],
+        [V3, "OO", "    "],
+        [V2, "OW0, OW1, OW2", "b<b>oa</b>t"],
+        [V3, "OW, OW0, OW1, OW2", "b<b>oa</b>t"],
+
+        [V2, "OY0, OY1, OY2", "b<b>oy</b>"],
+        [V3, "OY, OY0, OY1, OY2", "b<b>oy</b>"],
+
+        [V2_3, "P", "<b>p</b>ie"],
+        [V3, "Q", "    "],
+        [V2_3, "R", "<b>r</b>ye"],
+        [V3, "RH", "    "],
+        [V3, "RR", "    "],
+        [V3, "RRR", "    "],
+        [V2_3, "S", "<b>s</b>igh"],
+        [V3, "SJ", "    "],
+        [V2_3, "SH", "<b>sh</b>y"],
+        [V2_3, "T", "<b>t</b>ie"],
+        [V2_3, "TH", "<b>th</b>igh"],
+        [V3, "TS", "    "],
+        [V2, "UH0, UH1, UH2", "b<b>oo</b>k"],
+        [V3, "UH, UH0, UH1, UH2", "b<b>oo</b>k"],
+        [V3, "UU", "    "],
+
+        [V2, "UW0, UW1, UW2", "b<b>oo</b>t"],
+        [V3, "UW, UW0, UW1, UW2", "b<b>oo</b>t"],
+        [V3, "UX", "    "],
+        [V3, "WH", "    "],
+
+        [V2_3, "V", "<b>v</b>ie"],
+        [V2_3, "W", "<b>w</b>ise"],
+        [V2_3, "Y", "<b>y</b>acht"],
+        [V2_3, "Z", "<b>z</b>oo"],
+        [V2_3, "ZH", "plea<b>s</b>ure"],
+    ]
+    arpabetReferenceList.innerHTML = ""
+    data.forEach(item => {
+        if (item[0].includes(parseInt(arpabetMenuModelDropdown.value))) {
+            const div = createElem("div")
+            div.appendChild(createElem("div", item[1]))
+
+            const exampleDiv = createElem("div")
+            exampleDiv.appendChild(createElem("div",item[2]))
+            div.appendChild(exampleDiv)
+
+            arpabetReferenceList.appendChild(div)
+        }
+    })
+}
+arpabetMenuModelDropdown.value = "3"
+window.refreshARPABETReferenceDisplay()
+arpabetMenuModelDropdown.addEventListener("click", window.refreshARPABETReferenceDisplay)
+
+
 arpabet_save.addEventListener("click", () => {
     const word = arpabet_word_input.value.trim().toLowerCase()
     const arpabet = arpabet_arpabet_input.value.trim().toUpperCase().replace(/\s{2,}/g, " ")

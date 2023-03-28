@@ -2187,7 +2187,7 @@ input[type=checkbox] {
 
 #arpabetMenu_left {
     width: 250px;
-    height: calc(75vh - 150px);
+    height: calc(90vh - 100px);
 }
 
 #arpabet_dicts_list {
@@ -2201,10 +2201,10 @@ input[type=checkbox] {
 }
 
 #arpabetMenu_middle {
-    width: calc(95vw - 250px - 525px - 100px);
-    height: calc(75vh - 150px);
-    margin-right: 25px;
-    margin-left: 25px;
+    width: calc(95vw - 250px - 525px - 140px);
+    height: calc(90vh - 100px);
+    margin-right: 10px;
+    margin-left: 10px;
     min-width: 400px;
 }
 
@@ -2216,8 +2216,8 @@ input[type=checkbox] {
 
 #arpabetMenu_right {
     width: calc(90vw - 250px - 400px);
-    max-width: 550px;
-    height: calc(75vh - 150px);
+    max-width: 650px;
+    height: calc(90vh - 100px);
 }
 
 #arpabetReferenceList>div>div>div>b {
@@ -2225,7 +2225,7 @@ input[type=checkbox] {
 }
 
 #arpabetReferenceList {
-    height: calc(75vh - 150px);
+    height: calc(90vh - 100px);
     flex-direction: row;
     justify-content: space-around;
     flex-wrap: wrap;
@@ -2233,7 +2233,7 @@ input[type=checkbox] {
 }
 
 #arpabetReferenceList>div {
-    width: 170px;
+    width: 150px;
     margin-bottom: 10px;
     background: rgba(0, 0, 0, 0.1);
     margin-right: 2px;
@@ -2259,8 +2259,8 @@ input[type=checkbox] {
 
 #arpabetWordsListHeader>div:nth-child(1),
 #arpabetWordsListContainer>div>div:nth-child(1) {
-    min-width: 50px;
-    max-width: 50px;
+    min-width: 30px;
+    max-width: 20px;
 }
 
 #arpabetWordsListHeader>div:nth-child(2),
