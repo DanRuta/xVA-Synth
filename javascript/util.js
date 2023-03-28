@@ -290,6 +290,17 @@ window.addEventListener("keyup", event => {
     }
 })
 
+dialogueInput.addEventListener("keydown", event => {
+    if (event.target==dialogueInput || event.target==letterPitchNumb || event.target==letterLengthNumb) {
+        // Enter: Generate sample
+        if (event.key=="Enter") {
+            generateVoiceButton.click()
+            event.preventDefault()
+        }
+        return
+    }
+})
+
 window.addEventListener("keydown", event => {
 
     if (event.ctrlKey) {
