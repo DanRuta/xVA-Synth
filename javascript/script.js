@@ -692,7 +692,8 @@ window.synthesizeSample = () => {
     }
 
     // Check if editing an existing line (otherwise it's a fresh new line)
-    if (!window.arpabetMenuState.hasChangedARPAbet && !window.styleEmbsMenuState.hasChangedEmb &&
+    const languageHasChanged = window.sequenceEditor.base_lang && window.sequenceEditor.base_lang != base_lang_select.value
+    if (!languageHasChanged && !window.arpabetMenuState.hasChangedARPAbet && !window.styleEmbsMenuState.hasChangedEmb &&
         (speech2speechState.s2s_autogenerate || (editorContainer.innerHTML && editorContainer.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice)))) {
 
         speech2speechState.s2s_autogenerate = false
@@ -714,6 +715,7 @@ window.synthesizeSample = () => {
         }
         isFreshRegen = false
     }
+
     window.arpabetMenuState.hasChangedARPAbet = false
     window.styleEmbsMenuState.hasChangedEmb = false
     window.sequenceEditor.currentVoice = generateVoiceButton.dataset.modelIDLoaded
@@ -817,6 +819,7 @@ window.synthesizeSample = () => {
 
         const doTheRest = () => {
 
+            window.sequenceEditor.base_lang = base_lang_select.value
             window.sequenceEditor.inputSequence = sequence
             window.sequenceEditor.sequence = cleanedSequence
 
