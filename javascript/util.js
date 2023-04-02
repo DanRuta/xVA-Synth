@@ -364,11 +364,12 @@ window.addEventListener("keydown", event => {
     // Create selection for all of the editor letters
     if (key=="a" && event.ctrlKey && !event.shiftKey) {
         window.sequenceEditor.letterFocus = []
-        window.sequenceEditor.dursNew.forEach((_,i) => {
+        window.sequenceEditor.letterClasses.forEach((_,i) => {
             window.sequenceEditor.letterFocus.push(i)
             window.sequenceEditor.setLetterFocus(i, true)
         })
         event.preventDefault()
+        return
     }
     // Y/N for prompt modals
     if (key=="y" || key=="n" || key==" ") {
