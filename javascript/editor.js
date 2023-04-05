@@ -844,7 +844,6 @@ class Editor {
     }
 
 
-
     getChangedTimeStamps (startI, endI, audioSDuration) {
 
         const adjustedLetters = Array.from(this.adjustedLetters)

@@ -542,6 +542,8 @@ class xVAPitch(object):
 
                 all_sequence.append(sequence)
                 all_cleaned_text += ("|"+cleaned_text) if len(all_cleaned_text) else cleaned_text
+                if ssi<len(sequenceSplitByLanguage)-1:
+                    all_cleaned_text = all_cleaned_text + ["|<PAD>"]
                 all_text.append(torch.LongTensor(sequence))
 
                 language_id = self.language_id_mapping[langCode]
@@ -639,8 +641,6 @@ class xVAPitch(object):
                 if useCleanup:
                     self.models_manager.init_model("deepfilternet2")
                     self.models_manager.models("deepfilternet2").cleanup_audio(out_path.replace(".wav", "_preCleanup.wav"), out_path)
-
-
 
 
 
