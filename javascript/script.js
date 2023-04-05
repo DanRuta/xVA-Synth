@@ -693,7 +693,8 @@ window.synthesizeSample = () => {
 
     // Check if editing an existing line (otherwise it's a fresh new line)
     const languageHasChanged = window.sequenceEditor.base_lang && window.sequenceEditor.base_lang != base_lang_select.value
-    if (!languageHasChanged && !window.arpabetMenuState.hasChangedARPAbet && !window.styleEmbsMenuState.hasChangedEmb &&
+    const promptHasChanged = !window.sequenceEditor.historyState.length || window.sequenceEditor.historyState.at(-1)!=sequence
+    if (!promptHasChanged && !languageHasChanged && !window.arpabetMenuState.hasChangedARPAbet && !window.styleEmbsMenuState.hasChangedEmb &&
         (speech2speechState.s2s_autogenerate || (editorContainer.innerHTML && editorContainer.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice)))) {
 
         speech2speechState.s2s_autogenerate = false
@@ -761,6 +762,7 @@ window.synthesizeSample = () => {
         }
 
         dialogueInput.focus()
+        window.sequenceEditor.historyState.push(sequence)
 
         if (window.userSettings.clear_text_after_synth) {
             dialogueInput.value = ""

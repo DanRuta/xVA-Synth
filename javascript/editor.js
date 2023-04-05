@@ -38,6 +38,8 @@ class Editor {
         this.MAX_STYLES = 1.06
 
         this.clear() // And thus init
+
+        this.historyState = [] // TODO, add support for undo/redo across all editor functions
     }
 
     clear () {
