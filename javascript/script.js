@@ -735,6 +735,7 @@ window.synthesizeSample = () => {
             modelType: window.currentModel.modelType,
             old_sequence, // For partial re-generation
             device: window.userSettings.installation=="cpu"?"cpu":(window.userSettings.useGPU?"cuda:0":"cpu"),
+            // device: window.userSettings.useGPU?"gpu":"cpu",   // Switch to this once DirectML is installed
             useSR: useSRCkbx.checked,
             useCleanup: useCleanupCkbx.checked,
             outfile: tempFileLocation,

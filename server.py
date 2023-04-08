@@ -3,6 +3,8 @@ import sys
 import traceback
 import multiprocessing
 
+torch_dml_device = None
+
 if __name__ == '__main__':
     multiprocessing.freeze_support()
 
@@ -50,6 +52,16 @@ if __name__ == '__main__':
             f.write(traceback.format_exc())
     # ================
     CPU_ONLY = not torch.cuda.is_available()
+    if CPU_ONLY:
+        try:
+            import torch_directml
+            torch_dml_device = torch_directml.device()
+        except:
+            # I've implemented support for DirectML, but at the time of writing (08/04/2023, v0.1.13.1.dev230301), it's hella broken...
+            # Not a single model can successfully .forward() when switching to DirectML device from cpu. I'm leaving in the code however,
+            # as I'd still like to add support for it once things are more stable. This try/catch should run ok when it's installed
+            torch_dml_device = torch.device("cpu")
+            pass
 
     try:
         logger = logging.getLogger('serverLog')
@@ -205,8 +217,8 @@ if __name__ == '__main__':
                 if self.path == "/setDevice":
                     logger.info("POST {}".format(self.path))
                     logger.info(post_data)
-                    use_gpu = post_data["device"]=="gpu" or "cuda" in post_data["device"]
-                    models_manager.set_device('cuda' if use_gpu else 'cpu')
+                    device = torch.device("cpu") if post_data["device"]=="cpu" else (torch_dml_device if CPU_ONLY else torch.device("cuda:0"))
+                    models_manager.set_device(device)
 
                 if self.path == "/loadModel":
                     logger.info("POST {}".format(self.path))
@@ -265,6 +277,7 @@ if __name__ == '__main__':
                             continue_synth = False
 
                     device = post_data["device"] if "device" in post_data else models_manager.device_label
+                    device = torch.device("cpu") if device=="cpu" else (torch_dml_device if CPU_ONLY else torch.device("cuda:0"))
                     models_manager.set_device(device, instance_index=instance_index)
 
                     if continue_synth:
@@ -443,9 +456,9 @@ if __name__ == '__main__':
                     req_response = embs
 
                 if self.path == "/checkReady":
-                    use_gpu = post_data["device"]=="gpu"
                     modelsPaths = json.loads(post_data["modelsPaths"])
-                    models_manager.set_device('cuda' if use_gpu else 'cpu')
+                    device = torch.device("cpu") if post_data["device"]=="cpu" else (torch_dml_device if CPU_ONLY else torch.device("cuda:0"))
+                    models_manager.set_device(device)
                     req_response = "ready"
 
                 if self.path == "/updateARPABet":
