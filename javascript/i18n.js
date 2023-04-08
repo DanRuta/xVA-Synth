@@ -838,7 +838,7 @@ window.i18n.updateUI = () => {
     // i18n_setting_tooltip.innerHTML = window.i18n.SETTINGS_TOOLTIP
 
     i18n_showDiscordStatus.innerHTML = window.i18n.SETTINGS_SHOW_DISCORD
-    i18n_setting_darkmode.innerHTML = window.i18n.SETTINGS_DARKMODE
+    // i18n_setting_darkmode.innerHTML = window.i18n.SETTINGS_DARKMODE
     i18n_setting_promptfontsize.innerHTML = window.i18n.SETTINGS_PROMPTSIZE
     i18n_setting_bg_fade.innerHTML = window.i18n.SETTINGS_BG_FADE
     i18n_setting_autoreloadvoices.innerHTML = window.i18n.SETTINGS_AUTORELOADVOICES

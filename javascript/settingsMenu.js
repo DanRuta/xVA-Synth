@@ -48,9 +48,9 @@ if (!Object.keys(window.userSettings).includes("audio")) { // For backwards comp
 if (!Object.keys(window.userSettings).includes("sliderTooltip")) { // For backwards compatibility
     window.userSettings.sliderTooltip = true
 }
-if (!Object.keys(window.userSettings).includes("darkPrompt")) { // For backwards compatibility
-    window.userSettings.darkPrompt = false
-}
+// if (!Object.keys(window.userSettings).includes("darkPrompt")) { // For backwards compatibility
+//     window.userSettings.darkPrompt = false
+// }
 if (!Object.keys(window.userSettings).includes("showDiscordStatus")) { // For backwards compatibility
     window.userSettings.showDiscordStatus = true
 }
@@ -238,7 +238,7 @@ const updateUIWithSettings = () => {
     setting_defaultToHiFi.checked = window.userSettings.defaultToHiFi
     setting_keepPaceOnNew.checked = window.userSettings.keepPaceOnNew
     setting_autoplaygenCbx.checked = window.userSettings.autoPlayGen
-    setting_darkprompt.checked = window.userSettings.darkPrompt
+    // setting_darkprompt.checked = window.userSettings.darkPrompt
     setting_show_discord_status.checked = window.userSettings.showDiscordStatus
     setting_prompt_fontSize.value = window.userSettings.prompt_fontSize
     setting_bg_gradient_opacity.value = window.userSettings.bg_gradient_opacity
@@ -528,7 +528,7 @@ initMenuSetting(setting_output_json, "outputJSON", "checkbox")
 initMenuSetting(setting_keepEditorOnVoiceChange, "keepEditorOnVoiceChange", "checkbox")
 initMenuSetting(setting_output_num_seq, "filenameNumericalSeq", "checkbox")
 initMenuSetting(setting_space_padding, "spacePadding", "checkbox")
-initMenuSetting(setting_darkprompt, "darkPrompt", "checkbox", setPromptTheme)
+// initMenuSetting(setting_darkprompt, "darkPrompt", "checkbox", setPromptTheme)
 initMenuSetting(setting_show_discord_status, "showDiscordStatus", "checkbox", updateDiscord)
 initMenuSetting(setting_prompt_fontSize, "prompt_fontSize", "number", setPromptFontSize)
 initMenuSetting(setting_bg_gradient_opacity, "bg_gradient_opacity", "number", updateBackground)
@@ -759,7 +759,7 @@ reset_settings_btn.addEventListener("click", () => {
             window.userSettings.autoPlayGen = true
             window.userSettings.autoReloadVoices = false
             window.userSettings.autoplay = true
-            window.userSettings.darkPrompt = false
+            // window.userSettings.darkPrompt = false
             window.userSettings.showDiscordStatus = true
             window.userSettings.prompt_fontSize = 15
             window.userSettings.bg_gradient_opacity = 13
