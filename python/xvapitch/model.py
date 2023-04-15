@@ -103,8 +103,15 @@ class xVAPitch(object):
                 data = json.load(f)
                 self.base_emb = data["games"][0]["base_speaker_emb"]
 
+
         if 'model' in ckpt:
             ckpt = ckpt['model']
+
+        if ckpt["emb_l.weight"].shape[0]==31:
+            self.model.emb_l = nn.Embedding(31, self.model.embedded_language_dim).to(self.models_manager.device)
+        elif ckpt["emb_l.weight"].shape[0]==50:
+            num_languages = 50
+            self.model.emb_l = nn.Embedding(num_languages, self.model.embedded_language_dim).to(self.models_manager.device)
 
         self.model.load_state_dict(ckpt, strict=False)
         self.model = self.model.float()

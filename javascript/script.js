@@ -1695,6 +1695,6 @@ document.querySelectorAll('a[href^="http"]').forEach(a => a.addEventListener("cl
 
 // TEMP - pre-alpha builds
 setInterval(() => {
-    dragBar.innerHTML = "xVASynth ALPHA v3.0.0a9 PREVIEW"
+    dragBar.innerHTML = "xVASynth BETA v3.0.0b1 PREVIEW"
     dragBar.style.backgroundColor = "red"
 }, 1000)
