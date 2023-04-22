@@ -413,6 +413,23 @@ class xVAPitch(object):
 
     def preprocess_prompt_language (self, sequence, base_lang):
 
+        # Separate the ARPAbet brackets from punctuation
+        sequence = sequence.replace("}.", "} .")
+        sequence = sequence.replace("}!", "} !")
+        sequence = sequence.replace("}?", "} ?")
+        sequence = sequence.replace("},", "} ,")
+        sequence = sequence.replace("}\"", "} \"")
+        sequence = sequence.replace("}'", "} '")
+        sequence = sequence.replace("}-", "} -")
+
+        sequence = sequence.replace(".{", ". {")
+        sequence = sequence.replace("!{", "! {")
+        sequence = sequence.replace("?{", "? {")
+        sequence = sequence.replace(",{", ", {")
+        sequence = sequence.replace("\"{", "\" {")
+        sequence = sequence.replace("'{", "' {")
+        sequence = sequence.replace("-{", "- {")
+
         # Prepare the input sequence for processing. Do a few times to catch edge cases
         sequence = self.splitWords(sequence.split(" "), True)
         sequence = self.splitWords(sequence)

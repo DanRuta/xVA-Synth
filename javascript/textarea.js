@@ -100,7 +100,7 @@ window.ARPABET_SYMBOLS_v3 = ARPABET_SYMBOLS.concat(extra_arpabet_symbols).concat
 const preprocess = (caretStart) => {
 
     const defaultLang = "en"
-    const text = dialogueInput.value
+    let text = dialogueInput.value
 
     const finishedParts = []
     // const parts = text.split(/\\lang\{[a-z]{0,2}\}\{/gi)
@@ -266,7 +266,23 @@ dialogueInput.addEventListener("keydown", event => {
 const splitWords = (sequence, addSpace) => {
     const words = []
 
+    // const sequenceProcessed = sequence
+    const sequenceProcessed = [] // Do further processing to also split on { } symbols, not just spaces
     sequence.forEach(word => {
+        if (word.includes("{")) {
+            word.split("{").forEach((w, wi) => {
+                sequenceProcessed.push(wi ? ["{"+w, addSpace] : [w, false])
+            })
+        } else if (word.includes("}")) {
+            word.split("}").forEach((w, wi) => {
+                sequenceProcessed.push(wi ? [w, addSpace] : [w+"}", false])
+            })
+        } else {
+            sequenceProcessed.push([word, addSpace])
+        }
+    })
+
+    sequenceProcessed.forEach(([word, addSpace]) => {
 
         if (word.startsWith("\\lang[")) {
             words.push(word.split("][")[0]+"][")
@@ -311,7 +327,6 @@ const splitWords = (sequence, addSpace) => {
 
 window.refreshText = () => {
     let all_text = dialogueInput.value
-    // console.log("all_text", all_text)
     textEditorElem.innerHTML = ""
 
     let openedCurlys = 0
