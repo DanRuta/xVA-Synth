@@ -1,5 +1,6 @@
 "use strict"
 
+const unzipper = require('unzipper')
 const er = require('@electron/remote')
 
 /**
@@ -707,4 +708,21 @@ window.getSpeakerEmbeddingFromFilePath = (filePath) => {
             window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}`)
         })
     })
+}
+
+window.unzipFileTo = (zipPath, outputFolder) => {
+    return fs.createReadStream(zipPath).pipe(unzipper.Parse()).on("entry", entry => {
+        const fileName = entry.path
+        const dirOrFile = entry.type
+
+        if (/\/$/.test(fileName)) { // It's a directory
+            return
+        }
+
+        let fileContainerFolderPath = fileName.split("/").reverse()
+        const justFileName = fileContainerFolderPath[0]
+
+        entry.pipe(fs.createWriteStream(`${outputFolder}/${justFileName}`))
+    })
+    .promise()
 }

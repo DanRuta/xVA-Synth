@@ -598,6 +598,10 @@ window.i18n.setEnglish = () => {
 
     window.i18n.VC_TOO_SHORT = "Recorded sample is too short and/or empty"
 
+    window.i18n.MODEL_INSTALL_DRAGDROP_INCOMPLETE = "Some of the loose files given were not complete models. Each model needs at least a .json file and a .pt file. Loose model files not complete:<br><br>_1"
+    window.i18n.MODEL_INSTALL_DRAGDROP_SUCCESS = "_1 models installed successfully. "
+    window.i18n.MODEL_INSTALL_DRAGDROP_FAILED = "_1 models failed to install:<br><br>_2"
+
     // Useful during developing, to see if there are any strings left un-i18n-ed
     // Object.keys(window.i18n).forEach(key => {
     //     if (!["setEnglish", "updateUI"].includes(key)) {

@@ -2006,14 +2006,14 @@ window.samplePlayPauseHandler = event => {
                 window.wavesurfer.setSinkId(window.userSettings.base_speaker)
             }
         }
-    }
 
-    if (window.wavesurfer.isPlaying()) {
-        samplePlayPause.innerHTML = window.i18n.PLAY
-        window.wavesurfer.playPause()
-    } else {
-        samplePlayPause.innerHTML = window.i18n.PAUSE
-        window.wavesurfer.playPause()
+        if (window.wavesurfer.isPlaying()) {
+            samplePlayPause.innerHTML = window.i18n.PLAY
+            window.wavesurfer.playPause()
+        } else {
+            samplePlayPause.innerHTML = window.i18n.PAUSE
+            window.wavesurfer.playPause()
+        }
     }
 }
 samplePlayPause.addEventListener("click", window.samplePlayPauseHandler)

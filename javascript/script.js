@@ -16,6 +16,7 @@ window.onerror = (err, url, lineNum) => {window.appLogger.log(`onerror: ${err.st
 require("./javascript/i18n.js")
 require("./javascript/util.js")
 require("./javascript/nexus.js")
+require("./javascript/dragdrop_model_install.js")
 require("./javascript/embeddings.js")
 require("./javascript/totd.js")
 require("./javascript/arpabet.js")
@@ -654,7 +655,11 @@ window.synthesizeSample = () => {
     window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["generate-voice"]["pre"], event="pre generate-voice")
 
     if (window.wavesurfer) {
-        window.wavesurfer.stop()
+        try {
+            window.wavesurfer.stop()
+        } catch (e) {
+            console.log(e)
+        }
         wavesurferContainer.style.opacity = 0
     }
     toggleSpinnerButtons()
@@ -1693,6 +1698,6 @@ document.querySelectorAll('a[href^="http"]').forEach(a => a.addEventListener("cl
 
 // TEMP - pre-alpha builds
 setInterval(() => {
-    dragBar.innerHTML = "xVASynth BETA v3.0.0b1 PREVIEW"
+    dragBar.innerHTML = "xVASynth BETA v3.0.0b2 PREVIEW"
     dragBar.style.backgroundColor = "red"
 }, 1000)
