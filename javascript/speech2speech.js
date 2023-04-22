@@ -156,7 +156,7 @@ window.useWavFileForspeech2speech = (fileName) => {
             useCleanup: useCleanupCkbx.checked,
             isBatchMode: false,
 
-            style_emb: window.currentModel.games[0].base_speaker_emb,
+            style_emb: style_emb_select.value=="default" ? window.currentModel.games[0].base_speaker_emb : style_emb_select.value.split(",").map(v=>parseFloat(v)),
             audio_out_path: tempFileLocation,
 
             doPitchShift: window.userSettings.s2s_prePitchShift,

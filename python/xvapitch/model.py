@@ -139,11 +139,11 @@ class xVAPitch(object):
     def run_speech_to_speech (self, audiopath, audio_out_path, style_emb, models_manager, plugin_manager, useSR=False, useCleanup=False):
 
         if ".wav" in style_emb:
-            style_emb = models_manager.models("speaker_rep").compute_embedding(style_emb).squeeze()
             self.logger.info(f'Getting style emb from: {style_emb}')
+            style_emb = models_manager.models("speaker_rep").compute_embedding(style_emb).squeeze()
         else:
+            self.logger.info(f'Given style emb')
             style_emb = torch.tensor(style_emb).squeeze()
-            self.logger.info(f'Getting style emb from json')
 
         content_emb = models_manager.models("speaker_rep").compute_embedding(audiopath).squeeze()
         style_emb = F.normalize(style_emb.unsqueeze(0), dim=1).unsqueeze(-1).to(self.models_manager.device)
