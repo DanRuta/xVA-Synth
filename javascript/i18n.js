@@ -595,6 +595,9 @@ window.i18n.setEnglish = () => {
     window.i18n.BATCH_TOCSV_DONE = "Saved all lines to csv file at:"
     window.i18n.PAGINATION_TOTAL_OF = "of _1"
 
+
+    window.i18n.VC_TOO_SHORT = "Recorded sample is too short and/or empty"
+
     // Useful during developing, to see if there are any strings left un-i18n-ed
     // Object.keys(window.i18n).forEach(key => {
     //     if (!["setEnglish", "updateUI"].includes(key)) {

@@ -23,8 +23,12 @@ if (!String.prototype.replaceAll) {
 }
 
 
-window.toggleSpinnerButtons = () => {
-    const spinnerVisible = window.getComputedStyle(spinner).display == "block"
+window.toggleSpinnerButtons = (spinnerVisible=undefined) => {
+
+    if (spinnerVisible===undefined) {
+        spinnerVisible = window.getComputedStyle(spinner).display == "block"
+    }
+
     spinner.style.display = spinnerVisible ? "none" : "block"
     keepSampleButton.style.display = spinnerVisible ? "block" : "none"
     generateVoiceButton.style.display = spinnerVisible ? "block" : "none"

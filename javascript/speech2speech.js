@@ -148,6 +148,7 @@ window.useWavFileForspeech2speech = (fileName) => {
         useCleanup: useCleanupCkbx.checked
     }
 
+
     doFetch(`http://localhost:8008/runSpeechToSpeech`, {
         method: "Post",
         body: JSON.stringify({
@@ -172,10 +173,19 @@ window.useWavFileForspeech2speech = (fileName) => {
         // This block of code sometimes gets called before the audio file has actually finished flushing to file
         // I need a better way to make sure that this doesn't get called until it IS finished, but "for now",
         // I've set up some recursive re-attempts, below doTheRest
+        window.clearVCMicSpinnerProgress()
+        mic_progress_SVG.style.animation = "none"
 
+        if (res=="TOO_SHORT") {
+            window.toggleSpinnerButtons(true)
+            window.errorModal(`<h3>${window.i18n.VC_TOO_SHORT}</h3>`)
+            return
+        }
+
+        generateVoiceButton.disabled = true
         let hasLoaded = false
         let numRetries = 0
-        toggleSpinnerButtons()
+        window.toggleSpinnerButtons(true)
 
         const doTheRest = () => {
             if (hasLoaded) {
@@ -191,8 +201,8 @@ window.useWavFileForspeech2speech = (fileName) => {
             window.isGenerating = false
 
             window.speech2speechState.s2s_running = true
-            mic_progress_SVG.style.animation = "none"
-            window.clearVCMicSpinnerProgress()
+
+
 
             if (res.includes("Traceback")) {
                 window.errorModal(`<h3>${window.i18n.SOMETHING_WENT_WRONG}</h3>${res.replaceAll("\n", "<br>")}`)
@@ -255,6 +265,7 @@ window.useWavFileForspeech2speech = (fileName) => {
         doTheRest()
     }).catch(e => {
         console.log(e)
+        window.toggleSpinnerButtons(true)
         window.errorModal(`<h3>${window.i18n.SOMETHING_WENT_WRONG}</h3>`)
         mic_progress_SVG.style.animation = "none"
     })

@@ -145,7 +145,10 @@ class xVAPitch(object):
             self.logger.info(f'Given style emb')
             style_emb = torch.tensor(style_emb).squeeze()
 
-        content_emb = models_manager.models("speaker_rep").compute_embedding(audiopath).squeeze()
+        try:
+            content_emb = models_manager.models("speaker_rep").compute_embedding(audiopath).squeeze()
+        except:
+            return "TOO_SHORT"
         style_emb = F.normalize(style_emb.unsqueeze(0), dim=1).unsqueeze(-1).to(self.models_manager.device)
         content_emb = F.normalize(content_emb.unsqueeze(0), dim=1).unsqueeze(-1).to(self.models_manager.device)
 

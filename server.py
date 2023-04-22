@@ -366,18 +366,28 @@ if __name__ == '__main__':
                     models_manager.load_model("speaker_rep", f'{"./resources/app" if PROD else "."}/python/xvapitch/speaker_rep/speaker_rep.pt')
 
                     try:
-                        models_manager.models("xvapitch").run_speech_to_speech(final_path, audio_out_path.replace(".wav", "_tempS2S.wav"), style_emb, models_manager, plugin_manager, useSR=useSR, useCleanup=useCleanup)
+                        out = models_manager.models("xvapitch").run_speech_to_speech(final_path, audio_out_path.replace(".wav", "_tempS2S.wav"), style_emb, models_manager, plugin_manager, useSR=useSR, useCleanup=useCleanup)
+                        if out=="TOO_SHORT":
+                            req_response = "TOO_SHORT"
+                        else:
+                            data_out = ""
+                            req_response = data_out
 
-                        data_out = ""
-                        req_response = data_out
+                            # For use by /outputAudio
+                            post_data["input_path"] = audio_out_path.replace(".wav", "_tempS2S.wav")
+                            post_data["output_path"] = audio_out_path
 
-                        # For use by /outputAudio
-                        post_data["input_path"] = audio_out_path.replace(".wav", "_tempS2S.wav")
-                        post_data["output_path"] = audio_out_path
 
+                    except ValueError:
+                        req_response = traceback.format_exc()
+                        logger.info(req_response)
                     except RuntimeError:
                         req_response = traceback.format_exc()
                         logger.info(req_response)
+                    except Exception as e:
+                        req_response = traceback.format_exc()
+                        logger.info(req_response)
+                        logger.info(repr(e))
 
 
 
@@ -403,7 +413,7 @@ if __name__ == '__main__':
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["mp-output-audio"]["post"], event="post mp-output-audio", data=extraInfo)
 
 
-                if self.path == "/outputAudio" or self.path == "/runSpeechToSpeech":
+                if self.path == "/outputAudio" or (self.path == "/runSpeechToSpeech" and req_response==""):
                     isBatchMode = post_data["isBatchMode"]
                     if not isBatchMode:
                         logger.info("POST /outputAudio")

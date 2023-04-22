@@ -395,6 +395,9 @@ const insertText = (inputTextArea, textToInsert, caretOffset=0) => {
 }
 
 dialogueInput.addEventListener("keydown", event => {
+
+    generateVoiceButton.disabled = !dialogueInput.value.length
+
     if (event.key=="Enter") {
         event.stopPropagation()
         event.preventDefault()
@@ -437,6 +440,7 @@ window.get_g2p = (text_to_g2p) => {
 }
 
 const handleTextUpdate = (event) => {
+    generateVoiceButton.disabled = !dialogueInput.value.length
 
     window.shiftKeyIsPressed = event.shiftKey
 
