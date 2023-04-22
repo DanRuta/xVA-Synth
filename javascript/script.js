@@ -507,8 +507,6 @@ window.selectVoice = (event, variants, hifi, gameId, voiceId, model, button, aud
 
     } else {
         generateVoiceButton.innerHTML = window.i18n.LOAD_MODEL
-        const modelGameFolder = audioPreviewPath.split("/")[0]
-
         generateVoiceButton.dataset.modelQuery = JSON.stringify({
             outputs: parseInt(model.outputs),
             model: model.embOverABaseModel ? window.userSettings[`modelspath_${model.embOverABaseModel.split("/")[0]}`]+`/${model.embOverABaseModel.split("/")[1]}` : `${modelsPath}/${model.voiceId}`,
