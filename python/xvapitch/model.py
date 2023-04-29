@@ -559,17 +559,32 @@ class xVAPitch(object):
             all_text = []
             all_lang_ids = []
 
+            # Collapse same-language words into phrases, so that heteronyms can still be detected
+            sequenceSplitByLanguage_grouped = []
+            last_lang_group = None
+            group = ""
             for ssi, subSequence in enumerate(sequenceSplitByLanguage):
+                if list(subSequence.keys())[0]!=last_lang_group:
+                    if last_lang_group is not None:
+                        sequenceSplitByLanguage_grouped.append({last_lang_group: group})
+                        group = ""
+                    last_lang_group = list(subSequence.keys())[0]
+                group += subSequence[last_lang_group]
+            if len(group):
+                sequenceSplitByLanguage_grouped.append({last_lang_group: group})
+
+
+            for ssi, subSequence in enumerate(sequenceSplitByLanguage_grouped):
                 langCode = list(subSequence.keys())[0]
                 subSeq = subSequence[langCode]
                 sequence, cleaned_text = self.lang_tp[langCode].text_to_sequence(subSeq)
 
-                if ssi<len(sequenceSplitByLanguage)-1:
+                if ssi<len(sequenceSplitByLanguage_grouped)-1:
                     sequence = sequence + [pad_symb]
 
                 all_sequence.append(sequence)
                 all_cleaned_text += ("|"+cleaned_text) if len(all_cleaned_text) else cleaned_text
-                if ssi<len(sequenceSplitByLanguage)-1:
+                if ssi<len(sequenceSplitByLanguage_grouped)-1:
                     all_cleaned_text = all_cleaned_text + ["|<PAD>"]
                 all_text.append(torch.LongTensor(sequence))
 
