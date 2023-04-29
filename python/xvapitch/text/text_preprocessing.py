@@ -132,6 +132,10 @@ class TextPreprocessor():
     def clean_numbers(self, text):
         return text
 
+    # Override - language specific
+    def clean_am_pm(self, text):
+        return text
+
     def clean_abbreviations(self, text):
         for regex, replacement in self.re_abbreviations:
             text = re.sub(regex, replacement, text)
@@ -449,6 +453,7 @@ class TextPreprocessor():
     def text_to_phonemes (self, text):
         text = self.clean_special_chars(text)
         text = self.collapse_whitespace(text).replace(" }", "}").replace("{ ", "{")
+        text = self.clean_am_pm(text)
         text = self.clean_numbers(text)
         # print(f'clean_numbers: |{text}|')
         text = self.clean_abbreviations(text)
@@ -598,6 +603,29 @@ class EnglishTextPreprocessor(TextPreprocessor):
 
             pron_dict[word] = phonemes
         return pron_dict
+
+    def clean_am_pm (self, text):
+        words_out = []
+        numerals = ["0","1","2","3","4","5","6","7","8","9"]
+        spelled_out = ["teen","one", "two", "three", "four", "five", "six", "seven", "eight", "nine","ten","twenty","thirty","forty","fivty","o'clock"]
+
+        text = text.lower()
+
+        words = text.split(" ")
+        for word in words:
+            if word[:2].strip()=="am":
+                finishes_with_spelled_out_numeral = False
+                for spelled_out_n in spelled_out:
+                    if len(words_out) and words_out[-1].endswith(spelled_out_n):
+                        finishes_with_spelled_out_numeral = True
+                        break
+
+                if len(words_out) and words_out[-1][-1] in numerals or finishes_with_spelled_out_numeral:
+                    word = "{EY0 IH0} {EH0 M}"+word[2:]
+            words_out.append(word)
+
+        return " ".join(words_out)
+
 
     def clean_numbers (self, text):
         # This (inflect code) also does things like currency, magnitudes, etc
