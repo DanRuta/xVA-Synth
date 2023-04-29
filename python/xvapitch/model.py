@@ -421,6 +421,7 @@ class xVAPitch(object):
         sequence = sequence.replace("}\"", "} \"")
         sequence = sequence.replace("}'", "} '")
         sequence = sequence.replace("}-", "} -")
+        sequence = sequence.replace("})", "} )")
 
         sequence = sequence.replace(".{", ". {")
         sequence = sequence.replace("!{", "! {")
@@ -429,6 +430,7 @@ class xVAPitch(object):
         sequence = sequence.replace("\"{", "\" {")
         sequence = sequence.replace("'{", "' {")
         sequence = sequence.replace("-{", "- {")
+        sequence = sequence.replace("({", "( {")
 
         # Prepare the input sequence for processing. Do a few times to catch edge cases
         sequence = self.splitWords(sequence.split(" "), True)
