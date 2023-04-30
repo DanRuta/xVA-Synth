@@ -178,7 +178,8 @@ batch_generateSample.addEventListener("click", () => {
         fs.mkdirSync(out_directory)
     }
     fs.writeFileSync(`${out_directory}/sample.csv`, csv.join("\n"))
-    shell.showItemInFolder(`${out_directory}/sample.csv`)
+    // shell.showItemInFolder(`${out_directory}/sample.csv`)
+    spawn(`explorer`, [out_directory], {stdio: "ignore"})
 })
 
 window.readFileTxt = (file) => {
@@ -1489,7 +1490,8 @@ window.adjustETA = () => {
 
 
 const openOutput = () => {
-    shell.showItemInFolder(window.userSettings.batchOutFolder+"/dummy.txt")
+    // shell.showItemInFolder(window.userSettings.batchOutFolder+"/dummy.txt")
+    spawn(`explorer`, [window.userSettings.batchOutFolder], {stdio: "ignore"})
 }
 
 

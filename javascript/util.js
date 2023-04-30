@@ -685,7 +685,8 @@ const missingAssetFiles = jsonFiles.filter(jsonFile => !(assetFiles.includes(jso
 if (missingAssetFiles.length) {
     noAssetFilesFoundMessage.style.display = "block"
     assetDirLink.addEventListener("click", () => {
-        shell.showItemInFolder((require("path")).resolve(`${window.path}/assets/other.jpg`))
+        // shell.showItemInFolder((require("path")).resolve(`${window.path}/assets/other.jpg`))
+        spawn(`explorer`, [(require("path")).resolve(`${window.path}/assets`], {stdio: "ignore"})
     })
 }
 
