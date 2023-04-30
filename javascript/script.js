@@ -1476,7 +1476,8 @@ window.updateGameList = (doLoadAllModels=true) => {
     let totalGames = new Set()
 
     const itemsToSort = []
-    const gameIDs = doLoadAllModels ? fileNames.filter(fn=>fn.endsWith(".json")) : Object.keys(window.games).map(gID => gID+".json")
+    // const gameIDs = doLoadAllModels ? fileNames.filter(fn=>fn.endsWith(".json")) : Object.keys(window.games).map(gID => gID+".json")
+    const gameIDs = fileNames.filter(fn=>fn.endsWith(".json"))
 
     gameIDs.forEach(gameId => {
 
