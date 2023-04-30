@@ -22,6 +22,7 @@ window.i18n.setEnglish = () => {
     window.i18n.ENABLED = "Enabled"
     window.i18n.ACTIONS = "Actions"
     window.i18n.DESCRIPTION = "Description"
+    window.i18n.UNKNOWN = "Unknown"
 
     window.i18n.VIEW_IS = "View:"
     window.i18n.PITCH_IS = "Pitch:"
@@ -575,6 +576,7 @@ window.i18n.setEnglish = () => {
     window.i18n.MODEL_TYPE_IS = "Model type:"
     window.i18n.LANGUAGE_IS = "Language:"
     window.i18n.TRAINED_BY_IS = "Trained by:"
+    window.i18n.LICENSE_IS = "License:"
 
     window.i18n.X_WORKSHOP_VOICES_INSTALLED = "_1 workshop voices installed"
     window.i18n.WORKSHOP_GAMES_NOT_RECOGNISED = "The following workshop games were not recognised. Do you have the asset file installed?<i>_1</i>"
@@ -623,6 +625,7 @@ window.i18n.updateUI = () => {
     i18n_voiceInfo_modelType.innerHTML = window.i18n.MODEL_TYPE_IS
     i18n_voiceInfo_lang.innerHTML = window.i18n.LANGUAGE_IS
     i18n_voiceInfo_author.innerHTML = window.i18n.TRAINED_BY_IS
+    i18n_voiceInfo_license.innerHTML = window.i18n.LICENSE_IS
 
 
     i18n_nexusRepos_mod_name.innerHTML = window.i18n.MOD_NAME

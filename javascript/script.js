@@ -531,6 +531,7 @@ window.selectVoice = (event, variants, hifi, gameId, voiceId, model, button, aud
     titleInfoModelType.innerHTML = window.currentModel.modelType || "?"
     titleInfoLanguage.innerHTML = window.currentModel.lang || window.currentModel.games[0].lang || "en"
     titleInfoAuthor.innerHTML = window.currentModel.author || "?"
+    titleInfoLicense.innerHTML = window.currentModel.license || window.i18n.UNKNOWN
 
     title.dataset.modelId = voiceId
     keepSampleButton.style.display = "none"
