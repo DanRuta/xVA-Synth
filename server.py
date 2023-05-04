@@ -259,7 +259,7 @@ if __name__ == '__main__':
 
                     model = models_manager.models("xvapitch", instance_index=instance_index)
                     req_response = model.infer(plugin_manager, text, out_path, vocoder=None, \
-                        speaker_i=None, pitch_data=None, pace=None, old_sequence=None, \
+                        speaker_i=None, editor_data=None, pace=None, old_sequence=None, \
                         globalAmplitudeModifier=None, base_lang=base_lang, base_emb=base_emb, useSR=False, useCleanup=useCleanup)
 
                 if self.path == "/synthesize":

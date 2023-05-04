@@ -26,15 +26,17 @@ window.initVoiceWorkbench = () => {
 window.refreshExistingCraftedVoices = () => {
     voiceWorkbenchVoicesList.innerHTML = ""
     Object.keys(window.games).sort((a,b)=>a>b?1:-1).forEach(gameId => {
-        const themeColour = window.gameAssets[gameId].themeColourPrimary
-        window.games[gameId].models.forEach(model => {
-            if (model.embOverABaseModel) {
-                const button = createElem("div.voiceType", model.voiceName)
-                button.style.background = `#${themeColour}`
-                button.addEventListener("click", () => window.voiceWorkbenchLoadOrResetCraftedVoice(model))
-                voiceWorkbenchVoicesList.appendChild(button)
-            }
-        })
+        if (Object.keys(window.gameAssets).includes(gameId)) {
+            const themeColour = window.gameAssets[gameId].themeColourPrimary
+            window.games[gameId].models.forEach(model => {
+                if (model.embOverABaseModel) {
+                    const button = createElem("div.voiceType", model.voiceName)
+                    button.style.background = `#${themeColour}`
+                    button.addEventListener("click", () => window.voiceWorkbenchLoadOrResetCraftedVoice(model))
+                    voiceWorkbenchVoicesList.appendChild(button)
+                }
+            })
+        }
     })
 }
 
@@ -163,28 +165,32 @@ window.initDropdowns = () => {
     // Games dropdown
     Object.keys(window.games).sort((a,b)=>a>b?1:-1).forEach(gameId => {
         if (gameId!="other") {
-            const gameName = window.games[gameId].gameTheme.gameName
-            const option = createElem("option", gameName)
-            option.value = gameId
-            voiceWorkbenchGamesDropdown.appendChild(option)
+            if (Object.keys(window.gameAssets).includes(gameId)) {
+                const gameName = window.games[gameId].gameTheme.gameName
+                const option = createElem("option", gameName)
+                option.value = gameId
+                voiceWorkbenchGamesDropdown.appendChild(option)
+            }
         }
     })
 
     // Models dropdown
     Object.keys(window.games).forEach(gameId => {
-        const gameName = window.games[gameId].gameTheme.gameName
-        window.games[gameId].models.forEach(modelMeta => {
-            const voiceName = modelMeta.voiceName
-            const voiceId = modelMeta.variants[0].voiceId
+        if (window.games[gameId].gameTheme) {
+            const gameName = window.games[gameId].gameTheme.gameName
+            window.games[gameId].models.forEach(modelMeta => {
+                const voiceName = modelMeta.voiceName
+                const voiceId = modelMeta.variants[0].voiceId
 
-            // Variants are not supported by v3 models, so pick the first one only. Also, filter out crafted voices
-            if (modelMeta.variants[0].modelType=="xVAPitch" && !modelMeta.embOverABaseModel) {
+                // Variants are not supported by v3 models, so pick the first one only. Also, filter out crafted voices
+                if (modelMeta.variants[0].modelType=="xVAPitch" && !modelMeta.embOverABaseModel) {
 
-                const option = createElem("option", `[${gameName}] ${voiceName}`)
-                option.value = `${gameId}/${voiceId}`
-                voiceWorkbenchModelDropdown.appendChild(option)
-            }
-        })
+                    const option = createElem("option", `[${gameName}] ${voiceName}`)
+                    option.value = `${gameId}/${voiceId}`
+                    voiceWorkbenchModelDropdown.appendChild(option)
+                }
+            })
+        }
     })
 }
 
@@ -200,11 +206,14 @@ voiceWorkbenchStartButton.addEventListener("click", () => {
     let voiceId = voiceWorkbenchModelDropdown.value.split("/").at(-1)
     if (voiceId.includes("Base xVAPitch Model")) {
     } else {
-        const baseModelData = window.games[voiceWorkbenchModelDropdown.value.split("/")[0]].models.filter(model => {
-            return model.variants[0].voiceId == voiceWorkbenchModelDropdown.value.split("/").at(-1)
-        })[0]
-        voiceWorkbenchCurrentEmbeddingInput.value = baseModelData.variants[0].base_speaker_emb.join(",")
-        window.voiceWorkbenchState.currentEmb = baseModelData.variants[0].base_speaker_emb
+        const gameId = voiceWorkbenchModelDropdown.value.split("/")[0]
+        if (Object.keys(window.games).includes(gameId)) {
+            const baseModelData = window.games[gameId].models.filter(model => {
+                return model.variants[0].voiceId == voiceWorkbenchModelDropdown.value.split("/").at(-1)
+            })[0]
+            voiceWorkbenchCurrentEmbeddingInput.value = baseModelData.variants[0].base_speaker_emb.join(",")
+            window.voiceWorkbenchState.currentEmb = baseModelData.variants[0].base_speaker_emb
+        }
     }
 })
 
