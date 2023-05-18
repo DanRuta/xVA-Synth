@@ -622,23 +622,21 @@ class xVAPitch(object):
             speaker_embs = torch.stack(speaker_embs, dim=0).to(self.models_manager.device)#.unsqueeze(-1)
             speaker_embs = speaker_embs.repeat(1,1,num_embs)
 
-            editorStyles = editor_data[-1]
             # Do interpolations of speaker style embeddings
-            if editorStyles is not None:
-                # normalizing_scales = np.array([float(1) for _ in range(num_embs)])
-                style_keys = list(editorStyles.keys())
-                for style_key in style_keys:
-                    emb = editorStyles[style_key]["embedding"]
-                    sliders_vals = editorStyles[style_key]["sliders"]
-                    # normalizing_scales += np.array(sliders_vals)
+            if editor_data is not None:
+                editorStyles = editor_data[-1]
+                if editorStyles is not None:
+                    style_keys = list(editorStyles.keys())
+                    for style_key in style_keys:
+                        emb = editorStyles[style_key]["embedding"]
+                        sliders_vals = editorStyles[style_key]["sliders"]
 
-                    style_embs = [torch.tensor(emb).unsqueeze(dim=0)[0].unsqueeze(-1)]
-                    style_embs = torch.stack(style_embs, dim=0).to(self.models_manager.device)#.unsqueeze(-1)
-                    style_embs = style_embs.repeat(1,1,num_embs)
-                    sliders_vals = torch.tensor(sliders_vals).to(self.models_manager.device)
-                    speaker_embs = speaker_embs*(1-sliders_vals) + sliders_vals*style_embs
+                        style_embs = [torch.tensor(emb).unsqueeze(dim=0)[0].unsqueeze(-1)]
+                        style_embs = torch.stack(style_embs, dim=0).to(self.models_manager.device)#.unsqueeze(-1)
+                        style_embs = style_embs.repeat(1,1,num_embs)
+                        sliders_vals = torch.tensor(sliders_vals).to(self.models_manager.device)
+                        speaker_embs = speaker_embs*(1-sliders_vals) + sliders_vals*style_embs
 
-                # speaker_embs = speaker_embs / torch.tensor(normalizing_scales).to(self.models_manager.device)
 
             speaker_embs = speaker_embs.float()
 
