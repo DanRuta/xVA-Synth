@@ -609,11 +609,9 @@ class EnglishTextPreprocessor(TextPreprocessor):
         numerals = ["0","1","2","3","4","5","6","7","8","9"]
         spelled_out = ["teen","one", "two", "three", "four", "five", "six", "seven", "eight", "nine","ten","twenty","thirty","forty","fivty","o'clock"]
 
-        text = text.lower()
-
         words = text.split(" ")
         for word in words:
-            if word[:2].strip()=="am":
+            if word[:2].lower().strip()=="am":
                 finishes_with_spelled_out_numeral = False
                 for spelled_out_n in spelled_out:
                     if len(words_out) and words_out[-1].endswith(spelled_out_n):
