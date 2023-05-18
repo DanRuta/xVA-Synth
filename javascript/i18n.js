@@ -547,6 +547,7 @@ window.i18n.setEnglish = () => {
 
     window.i18n.DICTIONARIES = "Dictionaries"
     window.i18n.CANCEL = "Cancel"
+    window.i18n.START = "Start"
     window.i18n.SAVE = "Save"
     window.i18n.WORDS = "Words"
     window.i18n.WORD_IS = "Word:"
@@ -1024,7 +1025,7 @@ window.i18n.updateUI = () => {
     voiceWorkbenchAuthorInput.placeholder = window.i18n.YOUR_NAME_FOR_CREDITS
 
     i18n_vw_baselang.innerHTML = window.i18n.BASE_LANGUAGE
-    voiceWorkbenchStartButton.innerHTML = window.i18n.SAVE
+    voiceWorkbenchStartButton.innerHTML = window.i18n.START
     voiceWorkbenchCancelButton.innerHTML = window.i18n.CANCEL
     voiceWorkbenchDeleteButton.innerHTML = window.i18n.DELETE
     voiceWorkbenchSaveButton.innerHTML = window.i18n.SAVE
