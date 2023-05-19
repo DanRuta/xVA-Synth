@@ -218,6 +218,9 @@ if (!Object.keys(window.userSettings).includes("s2s_removeNoise")) { // For back
 if (!Object.keys(window.userSettings).includes("s2s_noiseRemStrength")) { // For backwards compatibility
     window.userSettings.s2s_noiseRemStrength = 0.25
 }
+if (!Object.keys(window.userSettings).includes("vc_strength")) { // For backwards compatibility
+    window.userSettings.vc_strength = 2
+}
 if (!Object.keys(window.userSettings).includes("waveglow_path")) { // For backwards compatibility
     window.userSettings.waveglow_path = `${__dirname.replace(/\\/g,"/")}/models/waveglow_256channels_universal_v4.pt`.replace(/\/\//g, "/").replace("resources/app/resources/app", "resources/app").replace("/javascript", "")
 }
@@ -280,6 +283,7 @@ const updateUIWithSettings = () => {
     // setting_s2s_prePitchShift.checked = window.userSettings.s2s_prePitchShift
     setting_s2s_removeNoise.checked = window.userSettings.s2s_removeNoise
     setting_s2s_noiseRemStrength.value = window.userSettings.s2s_noiseRemStrength
+    setting_s2s_vcstrength.value = window.userSettings.vc_strength
 
     setting_batch_json.checked = window.userSettings.batch_json
     // setting_batch_fastmode.checked = window.userSettings.batch_fastMode // No more fast modde. TODO, remove completely
@@ -613,6 +617,7 @@ initMenuSetting(setting_batch_paginationSize, "batch_paginationSize", "number", 
 // initMenuSetting(setting_s2s_prePitchShift, "s2s_prePitchShift", "checkbox")
 initMenuSetting(setting_s2s_removeNoise, "s2s_removeNoise", "checkbox")
 initMenuSetting(setting_s2s_noiseRemStrength, "s2s_noiseRemStrength", "number", undefined, parseFloat)
+initMenuSetting(setting_s2s_vcstrength, "vc_strength", "number", undefined, parseFloat)
 
 initMenuSetting(setting_256waveglow_path, "waveglow_path", "text")
 initFilePickerButton(setting_waveglowPathButton, setting_256waveglow_path, "waveglow_path", ["openFile"], [{name: "Pytorch checkpoint", extensions: ["pt"]}])
@@ -781,6 +786,7 @@ reset_settings_btn.addEventListener("click", () => {
             window.userSettings.s2s_prePitchShift = false // TODO, remove
             window.userSettings.s2s_removeNoise = false // TODO, remove
             window.userSettings.s2s_noiseRemStrength = 0.25 // TODO, remove
+            window.userSettings.vc_strength = 2
 
             window.userSettings.defaultToHiFi = true
             window.userSettings.keepPaceOnNew = true

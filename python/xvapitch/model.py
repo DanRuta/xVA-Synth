@@ -136,7 +136,7 @@ class xVAPitch(object):
                         self.arpabet_dict[word] = json_data["data"][word]["arpabet"]
 
 
-    def run_speech_to_speech (self, audiopath, audio_out_path, style_emb, models_manager, plugin_manager, useSR=False, useCleanup=False):
+    def run_speech_to_speech (self, audiopath, audio_out_path, style_emb, models_manager, plugin_manager, vc_strength=1, useSR=False, useCleanup=False):
 
         if ".wav" in style_emb:
             self.logger.info(f'Getting style emb from: {style_emb}')
@@ -151,6 +151,8 @@ class xVAPitch(object):
             return "TOO_SHORT"
         style_emb = F.normalize(style_emb.unsqueeze(0), dim=1).unsqueeze(-1).to(self.models_manager.device)
         content_emb = F.normalize(content_emb.unsqueeze(0), dim=1).unsqueeze(-1).to(self.models_manager.device)
+
+        content_emb = content_emb + (-(vc_strength-1) * (style_emb - content_emb))
 
         y, sr = librosa.load(audiopath, sr=22050)
         D = librosa.stft(

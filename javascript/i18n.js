@@ -107,6 +107,7 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_S2S_BGNOISE = "Remove background noise from microphone. You need to record a background noise clip first. (requires sox >= v14.4.2) "
     window.i18n.SETTINGS_S2S_RECNOISE = "Record noise"
     window.i18n.SETTINGS_S2S_BGNOISE_STRENGTH = "Noise removal strength (0.2-0.3 recommended)"
+    window.i18n.SETTINGS_VC_STRENGTH = "Voice Conversion strength (1-2 recommended)"
     window.i18n.SETTINGS_MODELS_PATH = "models path"
     window.i18n.SETTINGS_OUTPUT_PATH = "output path"
     window.i18n.SETTINGS_RESET_SETTINGS = "Reset Settings"
@@ -882,6 +883,7 @@ window.i18n.updateUI = () => {
     i18n_setting_s2s_bgnoise.innerHTML = window.i18n.SETTINGS_S2S_BGNOISE
     s2s_settingsRecNoiseBtn.innerHTML = window.i18n.SETTINGS_S2S_RECNOISE
     i18n_setting_s2s_bgnoise_strength.innerHTML = window.i18n.SETTINGS_S2S_BGNOISE_STRENGTH
+    i18n_vc_strength.innerHTML = window.i18n.SETTINGS_VC_STRENGTH
     reset_settings_btn.innerHTML = window.i18n.SETTINGS_RESET_SETTINGS
     reset_paths_btn.innerHTML = window.i18n.SETTINGS_RESET_PATHS
 

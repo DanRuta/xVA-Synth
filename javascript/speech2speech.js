@@ -163,6 +163,7 @@ window.useWavFileForspeech2speech = (fileName) => {
             doPitchShift: window.userSettings.s2s_prePitchShift,
             removeNoise: window.userSettings.s2s_removeNoise,
             removeNoiseStrength: window.userSettings.s2s_noiseRemStrength,
+            vc_strength: window.userSettings.vc_strength,
             n_speakers: undefined,
             modelPath: undefined,
             voiceId: undefined,
