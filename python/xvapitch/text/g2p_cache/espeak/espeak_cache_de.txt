@@ -8918,6 +8918,7 @@ baronessen|b ˈɑ r oː n ˌɛ s ə n
 baronin|b ˈɑ r oː n ˌɪ n
 barons|b ˈɑ r oː n s
 baroth|b ˈɑ r ɔ t
+barra|b ˈa r ɑː
 barragu|b ˈa r a ɡ ˌuː
 barren|b ˈa r ə n
 barriere|b ˌa r ɪ  ˈeː r ə
@@ -15651,6 +15652,7 @@ calomnie|k ˌɑ l ɔ m n ˈiː
 calus|k ˈɑ l ʊ s
 calvin|k ˈa l v ɪ n
 calzolaio|k ˈa l ts oː l ˌaɪ oː
+cambiar|k ˈa m b iː ˌɑː ɾ
 cambridge|(en) k ˈeɪ m b ɹ ɪ dʒ (de)
 camden|k ˈa m d ə n
 cameraden|k ˈɑ m eː r ˌɑː d ə n
@@ -17457,6 +17459,7 @@ des|d ˈɛ s
 desan|d eː z ˈɑː n
 desaster|d ˈeː z a s t ɜ
 desbluthändigene|d ˈɛ s b l ʊ t ˌɛ n d ɪ ɡ ə n ə
+desde|d ˈɛ s d ə
 desdemona|d ˈɛ s d eː m ˌoː n ɑː
 deserteur|d ˌeː z ɜ t ˈøː ɾ
 deserteure|d ˌeː z ɜ t ˈøː r ə
@@ -17475,6 +17478,7 @@ desjenigen|d ˈɛ s j eː n ˌɪ ɡ ə n
 despektierlich|d ˌɛ s p ɛ k t ˈiː ɾ l ɪ ç
 despektierlichen|d ˌɛ s p ɛ k t ˈiː ɾ l ɪ ç ə n
 despektirlichen|d ˈɛ s p ɛ k t ˌiː ɾ l ɪ ç ə n
+desplegable|d ˌɛ s p l eː ɡ ˈɑː b l ə
 despot|d ˈɛ s p oː t
 despoten|d ˈɛ s p oː t ə n
 despotenidee|d ˈɛ s p oː t ˌeː n iː d ˌeː
@@ -22269,7 +22273,7 @@ emanzipatorischer|ˌeː m a n ts ˌiː p a t ˈoː r ɪ ʃ ɜ
 emblemen|ɛ m b l ˈeː m ə n
 embry|ˈɛ m b ɾ iː
 embryo|ˈɛ m b ɾ yː ˌoː
-embs| ˈɛ m p s
+embs|ˈɛ m p s
 emer|ˈeː m ɜ
 emeuten|ˈeː m ɔø t ə n
 emfrid|ɛ m f r ˈiː t
@@ -40806,6 +40810,7 @@ herolds|h eː r ˈoː l ts
 heros|h eː r ˈoː s
 herostratisches|h eː r oː s t ɾ ˈɑː t ɪ ʃ ə s
 herr|h ˈɛ ɾ
+herramientas|h ˈɛ r a m ˌiː n t ɑː s
 herrchen|h ˈɛ ɾ ç ə n
 herreden|h ˈɛ r eː d ə n
 herreise|h ˈɛ r aɪ z ə
@@ -45030,6 +45035,7 @@ identitäten|ˌiː d ə n t iː t ˈɛː t ə n
 idgrod|ˈɪ d ɡ ɾ oː t
 idgrods|ˈɪ d ɡ ɾ ɔ ts
 idiom|ˈiː d ɪ  ˌoː m
+idioma| ˈiː d ɪ  ˌoː m ɑː
 idiosynkrasie|ˌiː d ɪ  ˌoː z y ŋ k ɾ a z ˈiː
 idioten|ˈiː d ɪ  ˌoː t ə n
 idiotensicher|ˈiː d ɪ  ˌoː t ɛ n z ˌɪ ç ɜ
@@ -45053,6 +45059,7 @@ idyllischen|iː d ˈy l ɪ ʃ ə n
 idyllischer|iː d ˈy l ɪ ʃ ɜ
 ie|ˈiː
 iel|ˈiː l
+if|ˈiː f
 ifrid|ɪ f r ˈiː t
 ift|ˈɪ f t
 ig|ˈiː k
@@ -62960,6 +62967,7 @@ originalgröße|ˈoː r ɪ ɡ ˌiː n a l ɡ ɾ ˌøː s ə
 originalität|ˌoː r ɪ ɡ iː n ˈɑː l iː t ˈɛː t
 originalkochrezept|ˌoː r ɪ ɡ ˌiː n a l k ˌɔ x r eː ts ˈɛ p t
 originalschriften|ˈoː r ɪ ɡ ˌiː n a l ʃ r ˌɪ f t ə n
+originalsprache| ˈoː r ɪ ɡ ˌiː n a l ʃ p ɾ ˌɑː x ə
 originalwerk|ˈoː r ɪ ɡ ˌiː n a l v ˌɛ ɾ k
 originell|ˌoː r ɪ ɡ iː n ˈɛ l
 originelle|ˌoː r ɪ ɡ iː n ˈɛ l ə
@@ -66132,6 +66140,7 @@ puderbüchsen|p ˈuː d ɜ b ˌy k s ə n
 puderdose|p ˈuː d ɜ d ˌoː z ə
 pudern|p ˈuː d ɜ n
 pudica|p ˈuː d iː k ˌɑː
+puede|p uː ˈeː d ə
 puff|p ˈʊ f
 puffen|p ˈʊ f ə n
 puffend|p ˈʊ f ə n t
@@ -82879,6 +82888,7 @@ trainieren|t ɾ ɛ n ˈiː r ə n
 trainiert|t ɾ ɛ n ˈiː ɾ t
 training|t ɾ ˈɛ n ɪ ŋ
 trainings|t ɾ ˈɛ n ɪ ŋ s
+trainingsdaten|t ɾ ˌɛ n ɪ ŋ s d ˈɑː t ə n
 trainingsgelände|t ɾ ˈɛ n ɪ ŋ s ɡ ˌɛ l ɛ n d ə
 trainingsgewohnheiten|t ɾ ˈɛ n ɪ ŋ s ɡ ˌeː v oː n h ˌaɪ t ə n
 trainingslager|t ɾ ˈɛ n ɪ ŋ s l ˌɑː ɡ ɜ
@@ -97038,6 +97048,7 @@ worcestersauce|v ˈɔ ɾ k ɛ s t ɜ z ˌaʊ k ə
 worden|v ˈɔ ɾ d ə n
 wordt|v ˈɔ ɾ t
 worin|v oː r ˈɪ n
+works|w ˈɜː k s
 world|v ˈɔ ɾ l t
 worms|v ˈɔ ɾ m s
 wornach|v ˈɔ ɾ n a x

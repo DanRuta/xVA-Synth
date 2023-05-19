@@ -1696,10 +1696,3 @@ document.querySelectorAll('a[href^="http"]').forEach(a => a.addEventListener("cl
     event.preventDefault()
     shell.openExternal(a.href)
 }))
-
-
-// TEMP - pre-alpha builds
-setInterval(() => {
-    dragBar.innerHTML = "xVASynth BETA v3.0.0b3 PREVIEW"
-    dragBar.style.backgroundColor = "red"
-}, 1000)

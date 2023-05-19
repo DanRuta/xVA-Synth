@@ -42634,7 +42634,7 @@ mulush|(en) m j ˈʊ l ʌ ʃ (fr)
 mulâtre|m y l ˈaː t ʁ
 mulâtres|m y l ˈaː t ʁ
 mulâtresses|m y l a t ʁ ˈɛ s
-mumbling| m ˈʌ m b l ɪ ŋ 
+mumbling|m ˈʌ m b l ɪ ŋ
 mumuse|m y m ˈy z
 munda|m œ̃ d ˈa
 mundus|m œ̃ d ˈy
@@ -59856,6 +59856,7 @@ secundina|s ə k œ̃ d i n ˈa
 sedisposait|s ə d i s p o z ˈɛ
 seditionem|s ə d i s j o n ˈɛ m
 sedor|s ə d ˈɔ ʁ
+see| s ˈiː 
 seed|(en) s ˈiː d (fr)
 segard|s ə ɡ ˈa ʁ
 segment|s ɛ ɡ m ˈɑ̃
@@ -64575,7 +64576,7 @@ test|t ˈɛ s t
 testament|t ɛ s t ˈa m
 tester|t ɛ s t ˈe
 testez|t ɛ s t ˈe
-testing| t ˈɛ s t ɪ ŋ 
+testing|t ˈɛ s t ɪ ŋ
 testostérone|t ɛ s t ɔ s t e ʁ ˈɔ n
 tests|t ˈɛ s t
 testées|t ɛ s t ˈe
@@ -68544,6 +68545,7 @@ wolverène|(en) w ˈʊ l v ə ɹ ˌɛ n (fr)
 wolvérènes|(en) w ˈʊ l v eɪ ɹ ˌɛ n z (fr)
 wood|(en) w ˈʊ d (fr)
 workman|(en) w ˈɜː k m ə n (fr)
+works| w ˈɜː k s 
 woronsow|(en) w ˈɔː ɹ ə n s ˌəʊ (fr)
 wouah|w w ˈa
 would|(en) w ˈʊ d (fr)
@@ -68585,7 +68587,7 @@ xiv|ɡ z ˈi v
 xive|ɡ z ˈi v
 xix|ɡ z ˈi k s
 xv|ˌi k s v ˈe
-xvasynth| ˈi k s v ˌe ˈa  s ˈɪ n θ 
+xvasynth|ˈi k s v ˌe ˈa  s ˈɪ n θ
 xvi|i k s v ˈi
 xvie|i k s v ˈi
 xvii|i k s v j ˈi

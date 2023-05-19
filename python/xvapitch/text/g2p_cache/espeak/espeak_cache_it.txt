@@ -4624,6 +4624,7 @@ baciò|b a tʃ ˈɔ
 back|b ˈa kː
 backbone|b a kː b ˈo n e
 backed|b ˈa kː e d
+backslash|b ˈa kː z l a ʃ
 baco|b ˈa k o
 bada|b ˈa d a
 badai|b a d ˈa j
@@ -18582,6 +18583,7 @@ ier|j ˈɛ  r
 ieri|j ˈɛ r ɪ
 iersera|j e  r s ˈɛ r a
 iettatura|j e tː a t ˈu r a
+if|ˈi f
 iga|ˈi ɡ a
 igh|ˈi ɡ
 igmund|ˈi ɡ m ʊ n d
@@ -22222,6 +22224,7 @@ landare|l a n d ˈa r e
 lande|l ˈa n d e
 lands|l ˈa n d s
 lane|l ˈa n e
+langenby|l a n dʒ ˈɛ n b ɪ
 languenti|l a ŋ ɡ w ˈɛ n t ɪ
 languida|l ˈa ŋ ɡ w i d a
 languidi|l ˈa ŋ ɡ w i d ɪ
@@ -30715,6 +30718,7 @@ promovesse|p  r o m o v ˈɛ ss e
 promozionale|p  r o m o ts i  o n ˈa l e
 promozione|p  r o m o ts i  ˈo n e
 promozioni|p  r o m o ts i  ˈo n ɪ
+prompt|p  r ˈo m p t
 promulgare|p  r o m ʊ l ɡ ˈa r e
 promuove|p  r o m ʊ ˈo v e
 promuovere|p  r o m ʊ ˈɔ v e r e
@@ -37110,6 +37114,7 @@ seduti|s e d ˈu t ɪ
 sedutina|s e d ʊ t ˈi n a
 seduto|s e d ˈu t o
 seduzione|s e d ʊ ts i  ˈo n e
+see|s ˈɛ e
 sega|s ˈe ɡ a
 segale|s e ɡ ˈa l e
 segatura|s e ɡ a t ˈu r a
@@ -37967,6 +37972,7 @@ shor|ʃ ˈɔ  r
 should|ʃ ˈo ʊ l d
 show|ʃ ˈo w
 show'|ʃ ˈo w
+shown|ʃ ˈɔ w n
 showpic|ʃ ˈo w p i k
 showroom|ʃ o w  r ˈɔ o m
 shriekwind|ʃ  r i  ˈe k w i n d
@@ -43896,6 +43902,7 @@ userà|ʊ z e ɾ ˈa
 userò|ʊ z e ɾ ˈɔ
 usi|ˈu z ɪ
 usiamo|ʊ z j ˈa m o
+using|ˈu z i ŋ ɡ
 usino|ˈu z i n o
 uso|ˈu z o
 uss|ˈu ss
@@ -45392,6 +45399,7 @@ wolff|w ˈɔ l f f
 wolfgang|w ˈo l f ɡ a ŋ ɡ
 wolstenholme|w o l s t e n ˈo l m e
 word|w ˈɔ  r d
+works|w ˈɔ  r k s
 workstation|w o  r k s t ˈa t j o n
 world|w ˈɔ  r l d
 world„|w ˈɔ  r l d
