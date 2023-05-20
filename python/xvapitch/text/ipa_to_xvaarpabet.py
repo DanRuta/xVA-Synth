@@ -3,6 +3,7 @@ import abc
 import sys
 import re
 import subprocess
+import platform
 from typing import Dict, List, Tuple
 # import phonecode_tables
 
@@ -278,7 +279,10 @@ def _espeak_exe(base_dir, args: List, sync=False) -> List[str]:
     # espeak_lib = f'F:/Speech/espeak/eSpeak/command_line/espeak.exe'
     # espeak_lib = f'C:/Program Files (x86)/eSpeak/command_line/espeak.exe'
     # espeak_lib = f'F:/Speech/espeak/eSpeak_NG/espeak-ng.exe'
-    espeak_lib = f'{base_dir}/eSpeak_NG/espeak-ng.exe'
+    if platform.system() == 'Linux':
+        espeak_lib = 'espeak-ng'
+    else:
+        espeak_lib = f'{base_dir}/eSpeak_NG/espeak-ng.exe'
     cmd = [
         espeak_lib,
         # f'--path="F:/Speech/espeak/eSpeak_NG"',
@@ -299,7 +303,7 @@ def _espeak_exe(base_dir, args: List, sync=False) -> List[str]:
 
     try:
         with subprocess.Popen(
-            " ".join(cmd),
+            cmd,
             # cmd,
             # f'F:/Speech/espeak/eSpeak_NG/espeak-ng.exe --path="F:/Speech/espeak/eSpeak_NG" -q -b 1 -v ro --ipa=1 "bună ziua. Ce mai faceți?"',
             # F:/Speech/espeak/eSpeak_NG/espeak-ng.exe --path="F:/Speech/espeak/eSpeak_NG" -q -b 1 -v ro --ipa=1 "bună ziua. Ce mai faceți?"
