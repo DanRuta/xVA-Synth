@@ -136,7 +136,7 @@ class xVAPitch(object):
                         self.arpabet_dict[word] = json_data["data"][word]["arpabet"]
 
 
-    def run_speech_to_speech (self, audiopath, audio_out_path, style_emb, models_manager, plugin_manager, useSR=False, useCleanup=False):
+    def run_speech_to_speech (self, audiopath, audio_out_path, style_emb, models_manager, plugin_manager, vc_strength=1, useSR=False, useCleanup=False):
 
         if ".wav" in style_emb:
             self.logger.info(f'Getting style emb from: {style_emb}')
@@ -151,6 +151,8 @@ class xVAPitch(object):
             return "TOO_SHORT"
         style_emb = F.normalize(style_emb.unsqueeze(0), dim=1).unsqueeze(-1).to(self.models_manager.device)
         content_emb = F.normalize(content_emb.unsqueeze(0), dim=1).unsqueeze(-1).to(self.models_manager.device)
+
+        content_emb = content_emb + (-(vc_strength-1) * (style_emb - content_emb))
 
         y, sr = librosa.load(audiopath, sr=22050)
         D = librosa.stft(
@@ -622,23 +624,21 @@ class xVAPitch(object):
             speaker_embs = torch.stack(speaker_embs, dim=0).to(self.models_manager.device)#.unsqueeze(-1)
             speaker_embs = speaker_embs.repeat(1,1,num_embs)
 
-            editorStyles = editor_data[-1]
             # Do interpolations of speaker style embeddings
-            if editorStyles is not None:
-                # normalizing_scales = np.array([float(1) for _ in range(num_embs)])
-                style_keys = list(editorStyles.keys())
-                for style_key in style_keys:
-                    emb = editorStyles[style_key]["embedding"]
-                    sliders_vals = editorStyles[style_key]["sliders"]
-                    # normalizing_scales += np.array(sliders_vals)
+            if editor_data is not None:
+                editorStyles = editor_data[-1]
+                if editorStyles is not None:
+                    style_keys = list(editorStyles.keys())
+                    for style_key in style_keys:
+                        emb = editorStyles[style_key]["embedding"]
+                        sliders_vals = editorStyles[style_key]["sliders"]
 
-                    style_embs = [torch.tensor(emb).unsqueeze(dim=0)[0].unsqueeze(-1)]
-                    style_embs = torch.stack(style_embs, dim=0).to(self.models_manager.device)#.unsqueeze(-1)
-                    style_embs = style_embs.repeat(1,1,num_embs)
-                    sliders_vals = torch.tensor(sliders_vals).to(self.models_manager.device)
-                    speaker_embs = speaker_embs*(1-sliders_vals) + sliders_vals*style_embs
+                        style_embs = [torch.tensor(emb).unsqueeze(dim=0)[0].unsqueeze(-1)]
+                        style_embs = torch.stack(style_embs, dim=0).to(self.models_manager.device)#.unsqueeze(-1)
+                        style_embs = style_embs.repeat(1,1,num_embs)
+                        sliders_vals = torch.tensor(sliders_vals).to(self.models_manager.device)
+                        speaker_embs = speaker_embs*(1-sliders_vals) + sliders_vals*style_embs
 
-                # speaker_embs = speaker_embs / torch.tensor(normalizing_scales).to(self.models_manager.device)
 
             speaker_embs = speaker_embs.float()
 

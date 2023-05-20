@@ -748,6 +748,7 @@ window.synthesizeSample = () => {
             waveglowPath: vocoder_select.value=="256_waveglow" ? window.userSettings.waveglow_path : window.userSettings.bigwaveglow_path
         })
     }).then(r=>r.text()).then(res => {
+        window.isGenerating = false
 
         if (res=="ENOENT" || res.startsWith("ERR:")) {
             console.log(res)
@@ -773,7 +774,6 @@ window.synthesizeSample = () => {
             dialogueInput.value = ""
         }
 
-        window.isGenerating = false
         res = res.split("\n")
         let pitchData = res[0]
         let durationsData = res[1]
@@ -1696,10 +1696,3 @@ document.querySelectorAll('a[href^="http"]').forEach(a => a.addEventListener("cl
     event.preventDefault()
     shell.openExternal(a.href)
 }))
-
-
-// TEMP - pre-alpha builds
-setInterval(() => {
-    dragBar.innerHTML = "xVASynth BETA v3.0.0b2 PREVIEW"
-    dragBar.style.backgroundColor = "red"
-}, 1000)

@@ -259,7 +259,7 @@ if __name__ == '__main__':
 
                     model = models_manager.models("xvapitch", instance_index=instance_index)
                     req_response = model.infer(plugin_manager, text, out_path, vocoder=None, \
-                        speaker_i=None, pitch_data=None, pace=None, old_sequence=None, \
+                        speaker_i=None, editor_data=None, pace=None, old_sequence=None, \
                         globalAmplitudeModifier=None, base_lang=base_lang, base_emb=base_emb, useSR=False, useCleanup=useCleanup)
 
                 if self.path == "/synthesize":
@@ -356,6 +356,7 @@ if __name__ == '__main__':
                     audio_out_path = post_data["audio_out_path"]
                     useSR = post_data["useSR"]
                     useCleanup = post_data["useCleanup"]
+                    vc_strength = post_data["vc_strength"]
 
                     removeNoise = post_data["removeNoise"]
                     removeNoiseStrength = post_data["removeNoiseStrength"]
@@ -366,7 +367,7 @@ if __name__ == '__main__':
                     models_manager.load_model("speaker_rep", f'{"./resources/app" if PROD else "."}/python/xvapitch/speaker_rep/speaker_rep.pt')
 
                     try:
-                        out = models_manager.models("xvapitch").run_speech_to_speech(final_path, audio_out_path.replace(".wav", "_tempS2S.wav"), style_emb, models_manager, plugin_manager, useSR=useSR, useCleanup=useCleanup)
+                        out = models_manager.models("xvapitch").run_speech_to_speech(final_path, audio_out_path.replace(".wav", "_tempS2S.wav"), style_emb, models_manager, plugin_manager, vc_strength=vc_strength, useSR=useSR, useCleanup=useCleanup)
                         if out=="TOO_SHORT":
                             req_response = "TOO_SHORT"
                         else:

@@ -107,6 +107,7 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_S2S_BGNOISE = "Remove background noise from microphone. You need to record a background noise clip first. (requires sox >= v14.4.2) "
     window.i18n.SETTINGS_S2S_RECNOISE = "Record noise"
     window.i18n.SETTINGS_S2S_BGNOISE_STRENGTH = "Noise removal strength (0.2-0.3 recommended)"
+    window.i18n.SETTINGS_VC_STRENGTH = "Voice Conversion strength (1-2 recommended)"
     window.i18n.SETTINGS_MODELS_PATH = "models path"
     window.i18n.SETTINGS_OUTPUT_PATH = "output path"
     window.i18n.SETTINGS_RESET_SETTINGS = "Reset Settings"
@@ -547,6 +548,7 @@ window.i18n.setEnglish = () => {
 
     window.i18n.DICTIONARIES = "Dictionaries"
     window.i18n.CANCEL = "Cancel"
+    window.i18n.START = "Start"
     window.i18n.SAVE = "Save"
     window.i18n.WORDS = "Words"
     window.i18n.WORD_IS = "Word:"
@@ -880,7 +882,8 @@ window.i18n.updateUI = () => {
     // i18n_setting_autogeneratevoice.innerHTML = window.i18n.SETTINGS_AUTOGENERATEVOICE
     i18n_setting_s2s_bgnoise.innerHTML = window.i18n.SETTINGS_S2S_BGNOISE
     s2s_settingsRecNoiseBtn.innerHTML = window.i18n.SETTINGS_S2S_RECNOISE
-    i18n_setting_s2s_bgnoise_strength.innerHTML = window.i18n.SETTINGS_S2S_BGNOISE_STRENGTH
+    // i18n_setting_s2s_bgnoise_strength.innerHTML = window.i18n.SETTINGS_S2S_BGNOISE_STRENGTH
+    i18n_vc_strength.innerHTML = window.i18n.SETTINGS_VC_STRENGTH
     reset_settings_btn.innerHTML = window.i18n.SETTINGS_RESET_SETTINGS
     reset_paths_btn.innerHTML = window.i18n.SETTINGS_RESET_PATHS
 
@@ -1024,7 +1027,7 @@ window.i18n.updateUI = () => {
     voiceWorkbenchAuthorInput.placeholder = window.i18n.YOUR_NAME_FOR_CREDITS
 
     i18n_vw_baselang.innerHTML = window.i18n.BASE_LANGUAGE
-    voiceWorkbenchStartButton.innerHTML = window.i18n.SAVE
+    voiceWorkbenchStartButton.innerHTML = window.i18n.START
     voiceWorkbenchCancelButton.innerHTML = window.i18n.CANCEL
     voiceWorkbenchDeleteButton.innerHTML = window.i18n.DELETE
     voiceWorkbenchSaveButton.innerHTML = window.i18n.SAVE

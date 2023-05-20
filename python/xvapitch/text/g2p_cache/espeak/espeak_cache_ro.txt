@@ -5903,6 +5903,7 @@ ieșit|j e ʃ ˈi t
 ieșite|j e ʃ ˈi t e
 ieșită|j e ʃ ˈi t ə
 ieșiți|j e ʃ ˈi tsʲʲ
+if|ˈi f
 ignatius|ˌi ɡ n a t j ˈu s
 ignatov|ˌi ɡ n a t ˈo v
 ignoranţa|ˌi ɡ n o ɾ ˈa n ts a
@@ -11324,6 +11325,7 @@ secțiile|s e k ts ˈiɪ l e
 secțiunea|s e k ts j ˈu n ea
 sediul|s e d ˈiʊ l
 seducă|s e d ˈu k ə
+see|s ˈe e
 selecţie|s e l ˈe k ts i  ˌe
 selecţiei|s e l ˈe k ts i  ˌeɪ
 semafor|s ˌe m a f ˈo r
@@ -13837,6 +13839,7 @@ weekend|w ˌe e k ˈe n d
 weekendurile|w ˌe e k e n d ˈu r i l e
 wish|w ˈi ʃ
 with|w ˈi t h
+works|w ˈo r k s
 x|ˈi k s
 xvasynth|ˈi k s v ˌe ˈa s ˈi n t h
 york|j ˈo r k

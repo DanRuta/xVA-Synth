@@ -1848,6 +1848,7 @@ aela's|ˈeɪ l ə z
 aelirenn|ˈeɪ l aɪɚ n
 aelwin|ˈeɪ l w ɪ n
 aen|ˈiː n
+aeone|ɐ ˈiː  ɑː n
 aep|ˈiː p
 aeramas|ɛ ɹ ˈɑː m ə z
 aeramas'|ɛ ɹ ˈɑː m ə z
@@ -2428,6 +2429,7 @@ anyway|ˈɛ n ɪ w ˌeɪ
 anywhere|ˈɛ n ɪ w ˌɛɹ
 anywheres|ˈɛ n ɪ w ˌɛɹ z
 anywise|ˈɛ n ɪ w ˌaɪ z
+aoone|ɐ ˈuː n
 apart|ɐ p ˈɑːɹ t
 apartment|ɐ p ˈɑːɹ t m ə n t
 apartments|ɐ p ˈɑːɹ t m ə n t s
@@ -2956,9 +2958,11 @@ authoritative|ɐ θ ˈɔ ɹ ᵻ t ˌeɪ ɾ ɪ v
 authorities'|ɐ θ ˈɔː ɹ ɪ ɾ i z
 authority|ɐ θ ˈɔː ɹ ɪ ɾ i
 autkendo|ɔː t k ˈɛ n d oʊ
+auto|ˈɔː ɾ oʊ
 autobiography|ˌɔː ɾ oʊ b aɪ  ˈɑː ɡ ɹ ə f i
 automaton's|ɔː t ˈɑː m ə t ə n z
 automatons|ɔː t ˈɑː m ə t ə n z
+autotranscriptions|ˌɔː ɾ oʊ t ɹ æ n s k ɹ ˈɪ p ʃ ə n z
 autumn|ˈɔː ɾ ʌ m
 autumnshade|ˈɔː ɾ ə m n ʃ ˌeɪ d
 auxiliaries|ɔː k s ˈɪ l iə ɹ i z
@@ -3041,6 +3045,7 @@ ayisha|aɪ ˈiː ʃ ə
 ayisha's|aɪ ˈiː ʃ ə z
 ayleid|ˈeɪ əl ˌɪ d
 ayleids|ˈeɪ əl ˌɪ d z
+ayone|ɐ j ˈoʊ n
 ayrag|ˈɛ ɹ æ ɡ
 azani|æ z ˈɑː n i
 aziam|ˈæ z iə m
@@ -5694,12 +5699,14 @@ cerulean|s ɚ ɹ ˈuː l iə n
 cerys|s ˈɜː ɹ i z
 cerys'|s ˈɜː ɹ i z
 cerys'll|s ˈɜː ɹ ɪ z əl
+cess|s ˈɛ s
 cesspit|s ˈɛ s p ɪ t
 cesspool|s ˈɛ s p uː l
 cette|s ˈɛ t
 cewe|s j ˈuː
 cewene|s j ˈuː iː n
 ceádmil|s ˈiː d m ɪ l
+ch|s ˌiː  ˈeɪ tʃ
 chaa|tʃ ˈɑː
 chaakaa|tʃ ˈɑː k ɑː
 chaamaa|tʃ ˈɑː m ɑː
@@ -8140,6 +8147,7 @@ deepaa|d ˈiː p ɑː
 deeply|d ˈiː p l i
 deepwallow|d ˈiː p w ɔ l ˌoʊ
 deepwood|d ˈiː p w ʊ d
+deetails|d ˈiː ɾ eɪ l z
 deetsan|d ˈiː t s ə n
 deeye|d ˈiː  aɪ
 deeyeli|d ˈiː j ɛ l i
@@ -8535,6 +8543,7 @@ dexterously|d ˈɛ k s t ɚ ɹ ə s l i
 dextros|d ˈɛ k s t ɹ oʊ z
 dez|d ˈɛ z
 dfgdfgdfgd|d ˌiː  ˌɛ f dʒ ˈiː d ˌiː  ˌɛ f dʒ ˈiː d ˌiː  ˌɛ f dʒ ˌiː d ˈiː
+dh|d ˌiː  ˈeɪ tʃ
 dh'oine|d ˈɔɪ n
 dhatri|d ˈæ t ɹ i
 diabolic|d ˌaɪ ə b ˈɑː l ɪ k
@@ -9652,6 +9661,7 @@ eighteenth|ˈeɪ t iː n θ
 eighth|ˈeɪ t θ
 eighths|ˈeɪ t θ s
 eighties|ˈeɪ ɾ i z
+eightkhz|ˈeɪ t k h z
 eightpence|ˈeɪ t p ə n s
 eightpences|ˈeɪ t p ə n s ᵻ z
 eighty|ˈeɪ ɾ i
@@ -10094,6 +10104,7 @@ erm|ˈɜː m
 ermine|ˈɜː m ɪ n
 ermion|ˈɜː m iə n
 ermion's|ˈɜː m iə n z
+erone|ˈiː ɹ ˈoʊ n
 eronor|ɪ ɹ ˈɑː n ɚ
 eronor's|ɪ ɹ ˈɑː n ɚ z
 erotics|ɪ ɹ ˈɑː ɾ ɪ k s
@@ -11105,6 +11116,7 @@ fineness|f ˈaɪ n n ə s
 finerat|f ˈaɪ n ɹ æ t
 finessing|f ɪ n ˈɛ s ɪ ŋ
 finette|f aɪ n ˈɛ t
+finetuned|f ˈaɪ n t uː n d
 finetuning|f ˈaɪ n t uː n ɪ ŋ
 finger|f ˈɪ ŋ ɡ ɚ
 finger's|f ˈɪ ŋ ɡ ɚ z
@@ -13991,9 +14003,11 @@ hester|h ˈɛ s t ɚ
 hester's|h ˈɛ s t ɚ z
 hestra|h ˈɛ s t ɹ ə
 het|h ˈɛ t
+hete|h ˈiː t
 hetemataacawe|h ˈɛ ɾ ɪ m ˌæ ɾ ɑː k ˌɔː
 hetemate|h ˈɛ ɾ ɪ m ˌeɪ t
 hetemato|h ˌɛ ɾ ɪ m ˈɑː ɾ oʊ
+heteronyms|h ˈɛ ɾ ɚ ɹ ˌoʊ n ɪ m z
 hetsaanaate|h ˈɛ t s ɑː n ˌɑː t
 hetsaanaatoce|h ˈɛ t s ɑː n ˌɑː ɾ oʊ s
 hetsaanaatu|h ˈɛ t s ɑː n ˌɑː ɾ uː
@@ -14713,6 +14727,7 @@ ignores|ɪ ɡ n ˈoːɹ z
 igor|ˈiː ɡ oːɹ
 igor's|ˈiː ɡ oːɹ z
 ihone|aɪ h ˈoʊ n
+ihzero|aɪ ˈeɪ tʃ z ˈiə ɹ oʊ
 ii|ɹ ˌoʊ m ə n  t ˈuː
 iii|ɹ ˌoʊ m ə n  θ ɹ ˈiː
 iiz|ˈɪ  ɪ z
@@ -15335,6 +15350,7 @@ internals|ɪ n t ˈɜː n əl z
 internationalists|ˌɪ n t ɚ n ˈæ ʃ ə n ə l ˌɪ s t s
 interpenetrated|ˌɪ n t ɚ p ˈɛ n ɪ t ɹ ˌeɪ ɾ ᵻ d
 interpenetrates|ˌɪ n t ɚ p ˈɛ n ɪ t ɹ ˌeɪ t s
+interpolating|ɪ n t ˈɜː p ə l ˌeɪ ɾ ɪ ŋ
 interposed|ˌɪ n t ɚ p ˈoʊ z d
 interposing|ˌɪ n t ɚ p ˈoʊ z ɪ ŋ
 interposition|ˌɪ n t ɚ p ə z ˈɪ ʃ ə n
@@ -15545,6 +15561,8 @@ iven's|ˈaɪ v ə n z
 ivonis|ˈaɪ v ə n ˌɪ s
 ivory|ˈaɪ v ɚ ɹ i
 ivy|ˈaɪ v i
+iyone|aɪ j ˈoʊ n
+iyzero|aɪ ɪ z ˈɪ ɹ oʊ
 i…|ˈaɪ
 j|dʒ ˈeɪ
 j'baana|dʒ ˈeɪ b ˈɑː n ə
@@ -16398,6 +16416,7 @@ killing|k ˈɪ l ɪ ŋ
 killing'll|k ˈɪ l ɪ ŋ əl
 killing's|k ˈɪ l ɪ ŋ z
 killshot|k ˈɪ l ʃ ɑː t
+kilohertz|k ˈɪ l ə h ˌɜː t s
 kilted|k ˈɪ l t ᵻ d
 kin|k ˈɪ n
 kinathebabaawi|k ˈɪ n ɐ θ ˌɛ b ɐ b ˌɑː w i
@@ -16667,6 +16686,7 @@ krif|k ɹ ˈɪ f
 krii|k ɹ ˈɪ  aɪ
 krilot|k ɹ ˈɪ l ɑː t
 krin|k ɹ ˈɪ n
+kriticheskoe|k ɹ ˈɪ ɾ ɪ tʃ ˌɛ s k oʊ
 krogan|k ɹ ˈoʊ ɡ ə n
 krogans|k ɹ ˈoʊ ɡ ə n z
 krongrah|k ɹ ˈɔ ŋ ɡ ɹ ə
@@ -16928,6 +16948,7 @@ lanedane|l ˈeɪ n d eɪ n
 lanee|l ˈæ n iː
 langeni|l ˈæ n dʒ ɛ n i
 langroaceasta|l ˈæ ŋ ɡ ɹ oʊ ɐ s ˈiː s t ə
+langropropoziie|l ˈæ ŋ ɡ ɹ ə p ɹ ˌɑː p oʊ z ˌɪ  i
 language|l ˈæ ŋ ɡ w ɪ dʒ
 languages|l ˈæ ŋ ɡ w ɪ dʒ ᵻ z
 languidly|l ˈæ ŋ ɡ w ɪ d l i
@@ -17431,6 +17452,7 @@ lines|l ˈaɪ n z
 line…|l ˈaɪ n
 lingeringly|l ˈɪ ŋ ɡ ɚ ɹ ɪ ŋ l i
 lingrah|l ˈɪ ŋ ɡ ɹ ə
+lingual|l ˈɪ ŋ ɡ w əl
 liniment|l ˈɪ n ɪ m ə n t
 linin'|l ˈɪ n ɪ n
 lining…|l ˈaɪ n ɪ ŋ
@@ -20994,6 +21016,7 @@ newsmonger|n ˈuː z m ɔ n dʒ ɚ
 newspaper|n ˈuː z p eɪ p ɚ
 newspapers|n ˈuː z p eɪ p ɚ z
 next|n ˈɛ k s t
+nexusmods|n ˈɛ k s ə s m ˌɑː d z
 neyd|n ˈeɪ d
 nezhaabe|n ˈɛ ʒ ɑː b
 nezibaaru|n ˌɛ z ɪ b ˈɑːɹ ɹ uː
@@ -21624,6 +21647,7 @@ oooooh|ˈuː uː ˌoʊ
 ooooohhhhhh|ˈuː uː ˌoʊ
 oped|ɑː p ˈɛ d
 open|ˈoʊ p ə n
+openai|ˈoʊ p ə n ˌeɪ ˈaɪ
 opened|ˈoʊ p ə n d
 opener|ˈoʊ p ə n ɚ
 openeth|oʊ p ə n ˈɛ θ
@@ -21720,6 +21744,7 @@ orthjolf|ˈɔːɹ θ dʒ ɑː l f
 orthodox|ˈɔːɹ θ ə d ˌɑː k s
 orthorn|ˈɔːɹ θ ɔːɹ n
 orthus|ˈɔːɹ θ ə s
+orudiia|oː ɹ ˌuː d ˈɪ  iə
 orums|ˈoː ɹ ə m z
 osbaldiston|ˈɑː s b ə l d ˌɪ s t ə n
 osborne|ˈɑː s b oːɹ n
@@ -21846,6 +21871,7 @@ overend|ˌoʊ v ɚ ɹ ˈɛ n d
 overexert|ˌoʊ v ɚ ɹ ɛ ɡ z ˈɜː t
 overfatigue|ˌoʊ v ɚ f ɐ t ˈiː ɡ
 overfilling|ˌoʊ v ɚ f ˈɪ l ɪ ŋ
+overfitting|ˌoʊ v ɚ f ˈɪ ɾ ɪ ŋ
 overfloweth|ˌoʊ v ɚ f l ˈoʊ ə θ
 overgloomed|ˌoʊ v ɚ ɡ l ˈuː m d
 overhand|ˌoʊ v ɚ h ˈæ n d
@@ -21908,9 +21934,11 @@ owners|ˈoʊ n ɚ z
 ownest|ˈoʊ n ɪ s t
 ownin'|ˈoʊ n ɪ n
 own…|ˈoʊ n
+owtwo|ˈoʊ d ˈʌ b əl j ˌuː t w ˈoʊ
 oww|ˈoʊ w ə
 owww|ˈoʊ ʊ w ə
 owyn|ˈɑː w ɪ n
+owzero|ˈoʊ d ˈʌ b əl j ˌuː z ˈiə ɹ oʊ
 ox|ˈɑː k s
 ox's|ˈɑː k s ᵻ z
 oxen|ˈɑː k s ə n
@@ -23077,6 +23105,7 @@ pools|p ˈuː l z
 pooooo|p ˈuː uː ˌoʊ
 poor|p ˈʊɹ
 pop|p ˈɑː p
+popadanie|p ˈɑː p ɐ d ə n i
 pope|p ˈoʊ p
 popes|p ˈoʊ p s
 popinjays|p ˈɑː p ɪ n dʒ ˌeɪ z
@@ -23144,6 +23173,7 @@ postillion|p oʊ s t ˈɪ l iə n
 postillions|p oʊ s t ˈɪ l iə n z
 postman's|p ˈoʊ s t m ə n z
 postponement|p oʊ s t p ˈoʊ n m ə n t
+postprocessing|p ˈoʊ s t p ɹ ə s ˌɛ s ɪ ŋ
 posts|p ˈoʊ s t s
 postscript|p ˈoʊ s t s k ɹ ɪ p t
 postulatum|p ˈɔ s tʃ ʊ l ˈɑː ɾ ə m
@@ -23177,6 +23207,7 @@ pounds|p ˈaʊ n d z
 poureth|p ˈoː ɹ ə θ
 poverty|p ˈɑː v ɚ ɾ i
 poviss|p ˈɑː v ɪ s
+povrezhdeny|p ˈɑː v ɹ ɪ ʒ d ˌɛ n aɪ
 powder|p ˈaʊ d ɚ
 power|p ˈaʊ ɚ
 powerful|p ˈaʊ ɚ f əl
@@ -23286,6 +23317,7 @@ prepossessed|p ɹ ɪ p ə z ˈɛ s t
 prepossessing|p ɹ ɪ p ə z ˈɛ s ɪ ŋ
 preposterousness|p ɹ ɪ p ˈɔ s t ɚ ɹ ə s n ə s
 preppin'|p ɹ ˈɛ p ɪ n
+preprocessing|p ɹ ɪ p ɹ ˈɑː s ɛ s ɪ ŋ
 presbytery|p ɹ ˈɛ z b ɪ ɾ ɚ ɹ i
 prescribes|p ɹ ɪ s k ɹ ˈaɪ b z
 prescription|p ɹ ɪ s k ɹ ˈɪ p ʃ ə n
@@ -25496,6 +25528,7 @@ ronaaledo|ɹ ˌɑː n ɑː l ˈiː d oʊ
 ronit|ɹ ˈɑː n ɪ t
 ronnie's|ɹ ˈɑː n i z
 ronthil|ɹ ˈɔ n θ ɪ l
+ronyms|ɹ ˈɑː n ɪ m z
 roo|ɹ ˈuː
 roof|ɹ ˈuː f
 roofed|ɹ ˈuː f t
@@ -27749,6 +27782,7 @@ slept|s l ˈɛ p t
 sleuth|s l ˈuː θ
 sleuthed|s l ˈuː θ t
 slice|s l ˈaɪ s
+sliders|s l ˈaɪ d ɚ z
 slides|s l ˈaɪ d z
 sliding|s l ˈaɪ d ɪ ŋ
 slight|s l ˈaɪ t
@@ -29055,8 +29089,11 @@ superlatively|s uː p ˈɜː l ə t ˌɪ v l i
 superman|s ˈuː p ɚ m ˌæ n
 supermen|s ˈuː p ɚ m ˌɛ n
 supermoral|s ˈuː p ɚ m ˌɔː ɹ əl
+supermutant|s ˈuː p ɚ m j ˌuː t ə n t
+supermutants|s ˈuː p ɚ m j ˌuː t ə n t s
 supernumerary|s ˌuː p ɚ n ˈuː m ɚ ɹ ˌɛ ɹ i
 superphysical|s ˌuː p ɚ f ˈɪ z ɪ k əl
+superresolution|s ˌuː p ɚ ɹ ˌɛ z ə l ˈuː ʃ ə n
 superscription|s ˌuː p ɚ s k ɹ ˈɪ p ʃ ə n
 superscriptions|s ˌuː p ɚ s k ɹ ˈɪ p ʃ ə n z
 superspection|s ˌuː p ɚ s p ˈɛ k ʃ ə n
@@ -31469,6 +31506,7 @@ transaction|t ɹ æ n s ˈæ k ʃ ə n
 transceiver|t ɹ æ n s ˈiː v ɚ
 transcendental|t ɹ æ n s ə n d ˈɛ n t əl
 transcriptase|t ɹ æ n s k ɹ ˈɪ p t eɪ s
+transcriptions|t ɹ æ n s k ɹ ˈɪ p ʃ ə n z
 transfiguration|t ɹ æ n s f ˌɪ ɡ j ɚ ɹ ˈeɪ ʃ ə n
 transfigured|t ɹ æ n s f ˈɪ ɡ ɚ d
 transfiguring|t ɹ æ n s f ˈɪ ɡ j ɚ ɹ ɪ ŋ
@@ -32784,6 +32822,7 @@ usefulness|j ˈuː s f əl n ə s
 useless|j ˈuː s l ə s
 uselessly|j ˈuː s l ə s l i
 uselessness|j ˈuː s l ə s n ə s
+user|j ˈuː z ɚ
 username|j ˈuː z ɚ n ˌeɪ m
 usest|j ˈuː s ɪ s t
 usheeja|ˈʌ ʃ iː dʒ ə
@@ -32829,6 +32868,7 @@ uuuuhhhnnnn|ˈuː uː h n
 uuuup|ˈuː uː p
 uve|j ˈuː v
 uvenim|j ˈuː v ɛ n ɪ m
+uwone|j ˈuː w ˈʌ n
 uzgash|ˈʌ z ɡ æ ʃ
 uznahgar|ˈʌ z n ɑː ɡ ɚ
 uzul|j uː z ˈuː l
@@ -33364,6 +33404,7 @@ voyage|v ˈɔɪ ɪ dʒ
 voyaging|v ˈɔɪ ɪ dʒ ɪ ŋ
 vrolik|v ɹ ˈɑː l ɪ k
 vthree|v ˈiː θ ɹ ˈiː
+vtwo|v ˈiː t w ˈoʊ
 vul|v ˈʌ l
 vulgar|v ˈʌ l ɡ ɚ
 vulgarest|v ˈʌ l ɡ ɛ ɹ ɪ s t
@@ -34649,6 +34690,7 @@ xone|z ˈoʊ n
 xpr|ˌɛ k s p ˌiː  ˈɑːɹ
 xsix|ˈɛ k s s ˈɪ k s
 xvasynth|ˈɛ k s v ˌiː  ˈeɪ s ˈɪ n θ
+xvatrainer|ˈɛ k s v ˌiː  ˈeɪ t ɹ ˈeɪ n ɚ
 xwaacawe|ˈɛ k s w ˈɑː k ɔː
 xwaalaa|ˈɛ k s w ˈɑː l ɑː
 xwaalaawe|ˈɛ k s w ˈɑː l ɑː w
