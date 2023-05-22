@@ -830,6 +830,8 @@ window.nexusUpdateModsUsedPanel = () => {
         const endorsementsElem = createElem("div", String(repo.endorsements))
         const downloadsElem = createElem("div", String(repo.downloads))
 
+        endorsementsElem.style.display = "none" // TEMP
+        downloadsElem.style.display = "none" // TEMP
 
         row.appendChild(enabledCkbxElem)
         row.appendChild(linkButtonElem)
