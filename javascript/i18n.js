@@ -1033,6 +1033,8 @@ window.i18n.updateUI = () => {
     voiceWorkbenchSaveButton.innerHTML = window.i18n.SAVE
 
 
+    splashNextButton1.innerHTML = window.i18n.NEXT
+
     i18n_variant.innerHTML = window.i18n.VARIANT_IS
     i18n_reset_what_prompt.innerHTML = window.i18n.RESET_WHAT_PROMPT
     i18n_reset_what_tip.innerHTML = window.i18n.RESET_WHAT_TIP

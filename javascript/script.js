@@ -1656,11 +1656,15 @@ voiceSearchInput.addEventListener("keyup", () => {
     }
 })
 
-// EULA
+// Splash/EULA
+splashNextButton1.addEventListener("click", () => {
+    splash_screen1.style.display = "none"
+    splash_screen2.style.display = "flex"
+})
 EULA_closeButon.addEventListener("click", () => {
     if (EULA_accept_ckbx.checked) {
         closeModal(EULAContainer)
-        window.userSettings.EULA_accepted = true
+        window.userSettings.EULA_accepted_2023 = true
         saveUserSettings()
 
         if (!window.totd_state.startupChecked) {
@@ -1676,7 +1680,7 @@ EULA_closeButon.addEventListener("click", () => {
         }
     }
 })
-if (!Object.keys(window.userSettings).includes("EULA_accepted") || !window.userSettings.EULA_accepted) {
+if (!Object.keys(window.userSettings).includes("EULA_accepted_2023") || !window.userSettings.EULA_accepted_2023) {
     EULAContainer.style.opacity = 0
     EULAContainer.style.display = "flex"
     requestAnimationFrame(() => requestAnimationFrame(() => EULAContainer.style.opacity = 1))

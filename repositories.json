@@ -125,6 +125,15 @@
             "author": "DanRuta",
             "url": "https://www.nexusmods.com/dragonageinquisition/mods/3545",
             "enabled": true
+        },
+        {
+            "downloads": 0,
+            "endorsements": 0,
+            "game_id": 1704,
+            "name": "xVATrainer",
+            "author": "DanRuta",
+            "url": "https://www.nexusmods.com/skyrimspecialedition/mods/65022",
+            "enabled": true
         }
     ]
 }
