@@ -184,7 +184,7 @@ window.i18n.setEnglish = () => {
 
     window.i18n.SUPPORT = "Support"
     window.i18n.SUPPORT_LINK = "You can support 'xVASynth' development on patreon"
-    window.i18n.SUPPORT_THANKS = "Special thanks to the xVASynth Patreon supporters:"
+    window.i18n.SUPPORT_THANKS = "Special thanks to all xVASynth supporters:"
 
     window.i18n.SUPPORT_GAMES = "Search games..."
 

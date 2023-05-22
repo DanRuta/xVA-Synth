@@ -1,4 +1,0 @@
-test_plugin3
-*test_plugin
-*test_plugin2
-test_plugin4

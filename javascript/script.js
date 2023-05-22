@@ -1386,21 +1386,9 @@ window.setupModal(infoIcon, infoContainer)
 // Patreon
 // =======
 window.setupModal(patreonIcon, patreonContainer, () => {
-    const data = fs.readFileSync(`${path}/patreon.txt`, "utf8")
-    const names = new Set()
-    data.split("\r\n").forEach(name => names.add(name))
-    names.add("minermanb")
-
-    let content = ``
-    creditsList.innerHTML = ""
-    names.forEach(name => content += `<br>${name}`)
-    creditsList.innerHTML = content
+    const data = fs.readFileSync(`${path}/patreon.txt`, "utf8") + ", minermanb"
+    creditsList.innerHTML = data
 })
-// Steam does not like patreon
-// patreonButton.addEventListener("click", () => {
-    // shell.openExternal("https://patreon.com")
-// })
-doFetch("http://danruta.co.uk/patreon.txt").then(r=>r.text()).then(data => fs.writeFileSync(`${path}/patreon.txt`, data, "utf8")).catch(e => {})
 
 
 // Updates
