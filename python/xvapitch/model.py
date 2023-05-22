@@ -4,6 +4,7 @@ import json
 import codecs
 import ffmpeg
 import argparse
+import platform
 
 import torch
 import torch.nn as nn
@@ -175,7 +176,7 @@ class xVAPitch(object):
 
         wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
         if useCleanup:
-            ffmpeg_path = f'{"./resources/app" if self.PROD else "."}/python/ffmpeg.exe'
+            ffmpeg_path = 'ffmpeg' if platform.system() == 'Linux' else f'{"./resources/app" if self.PROD else "."}/python/ffmpeg.exe'
 
             if useSR:
                 scipy.io.wavfile.write(audio_out_path.replace(".wav", "_preSR.wav"), 22050, wav_norm.astype(np.int16))
@@ -253,7 +254,7 @@ class xVAPitch(object):
                 wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
 
                 if useCleanup:
-                    ffmpeg_path = f'{"./resources/app" if self.PROD else "."}/python/ffmpeg.exe'
+                    ffmpeg_path = 'ffmpeg' if platform.system() == 'Linux' else f'{"./resources/app" if self.PROD else "."}/python/ffmpeg.exe'
 
                     if useSR:
                         scipy.io.wavfile.write(tts_input[ri][4].replace(".wav", "_preSR.wav"), 22050, wav_norm.astype(np.int16))
@@ -332,7 +333,7 @@ class xVAPitch(object):
                     wav = wav.squeeze().cpu().detach().numpy()
                     wav_norm = wav * (32767 / max(0.01, np.max(np.abs(wav))))
                     if useCleanup:
-                        ffmpeg_path = f'{"./resources/app" if self.PROD else "."}/python/ffmpeg.exe'
+                        ffmpeg_path = 'ffmpeg' if platform.system() == 'Linux' else f'{"./resources/app" if self.PROD else "."}/python/ffmpeg.exe'
 
                         if useSR:
                             scipy.io.wavfile.write(tts_input[i][4].replace(".wav", "_preSR.wav"), 22050, wav_norm.astype(np.int16))
@@ -662,7 +663,7 @@ class xVAPitch(object):
                 if wav_mult is not None:
                     wav_norm = wav_norm * wav_mult
                 if useCleanup:
-                    ffmpeg_path = f'{"./resources/app" if self.PROD else "."}/python/ffmpeg.exe'
+                    ffmpeg_path = 'ffmpeg' if platform.system() == 'Linux' else f'{"./resources/app" if self.PROD else "."}/python/ffmpeg.exe'
 
                     if useSR:
                         scipy.io.wavfile.write(out_path.replace(".wav", "_preSR.wav"), 22050, wav_norm.astype(np.int16))

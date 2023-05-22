@@ -279,7 +279,7 @@ window.stopRecord = (cancelled) => {
         window.clearVCMicSpinnerProgress(0.35)
         mic_progress_SVG.style.animation = "spin 1.5s linear infinite"
         mic_progress_SVG_circle.style.stroke = "white"
-        const fileName = `${__dirname.replace("\\javascript", "").replace(/\\/g,"/")}/output/recorded_file.wav`
+        const fileName = `${__dirname.replace("\\javascript", "").replace("/javascript", "").replace(/\\/g,"/")}/output/recorded_file.wav`
 
         window.sequenceEditor.clear()
 
@@ -320,7 +320,7 @@ mic_SVG.addEventListener("contextmenu", () => {
         window.stopRecord(true)
     } else {
         const audioPreview = createElem("audio", {autoplay: false}, createElem("source", {
-            src: `${__dirname.replace("\\javascript", "").replace(/\\/g,"/")}/output/recorded_file_post${window.userSettings.s2s_prePitchShift?"_praat":""}.wav`
+            src: `${__dirname.replace("\\javascript", "").replace("/javascript", "").replace(/\\/g,"/")}/output/recorded_file_post${window.userSettings.s2s_prePitchShift?"_praat":""}.wav`
         }))
         audioPreview.setSinkId(window.userSettings.base_speaker)
     }
@@ -358,7 +358,7 @@ window.uploadS2SFile = (eType, event) => {
             // mic_progress_SVG.style.animation = "spin 1.5s linear infinite"
             // mic_progress_SVG_circle.style.stroke = "white"
 
-            const fileName = `${__dirname.replace("\\javascript", "").replace(/\\/g,"/")}/output/recorded_file.wav`
+            const fileName = `${__dirname.replace("\\javascript", "").replace("/javascript", "").replace(/\\/g,"/")}/output/recorded_file.wav`
             fs.copyFileSync(file.path, fileName)
             window.sequenceEditor.clear()
             toggleSpinnerButtons()

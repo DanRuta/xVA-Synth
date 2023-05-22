@@ -6,6 +6,7 @@ import multiprocessing
 torch_dml_device = None
 
 if __name__ == '__main__':
+    server = None
     multiprocessing.freeze_support()
 
     PROD = 'xVASynth.exe' in os.listdir(".")
@@ -203,6 +204,7 @@ if __name__ == '__main__':
                 if self.path == "/stopServer":
                     logger.info("POST {}".format(self.path))
                     logger.info("STOPPING SERVER")
+                    server.shutdown()
                     sys.exit()
 
                 if self.path == "/normalizeAudio":

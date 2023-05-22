@@ -5,6 +5,7 @@ import traceback
 import subprocess
 from pydub import AudioSegment
 from lib.ffmpeg_normalize._ffmpeg_normalize import FFmpegNormalize
+import platform
 
 import multiprocessing as mp
 
@@ -33,7 +34,7 @@ def processingTask(data):
 
 def run_audio_post(PROD, logger, input, output, options=None):
 
-    ffmpeg_path = f'{"./resources/app" if PROD else "."}/python/ffmpeg.exe'
+    ffmpeg_path = 'ffmpeg' if platform.system() == 'Linux' else f'{"./resources/app" if PROD else "."}/python/ffmpeg.exe'
 
     try:
         stream = ffmpeg.input(input)
@@ -108,7 +109,7 @@ def run_audio_post(PROD, logger, input, output, options=None):
 
 def prepare (PROD, logger, inputPath, outputPath, removeNoise, removeNoiseStrength):
 
-    ffmpeg_path = f'{"./resources/app" if PROD else "."}/python/ffmpeg.exe'
+    ffmpeg_path = 'ffmpeg' if platform.system() == 'Linux' else f'{"./resources/app" if PROD else "."}/python/ffmpeg.exe'
 
     try:
         stream = ffmpeg.input(inputPath)
@@ -285,7 +286,7 @@ def move_recorded_file(PROD, logger, models_manager, root_folder, file_path):
         models_manager.models("deepfilternet2").cleanup_audio(f'{root_folder}/output/recorded_file.wav', f'{root_folder}/output/recorded_file_preCleanup.wav')
 
         # Do audio normalization also
-        ffmpeg_path = f'{"./resources/app" if PROD else "."}/python/ffmpeg.exe'
+        ffmpeg_path = 'ffmpeg' if platform.system() == 'Linux' else f'{"./resources/app" if PROD else "."}/python/ffmpeg.exe'
         ffmpeg_normalize = FFmpegNormalize(
                 normalization_type="ebu",
                 target_level=-23.0,
