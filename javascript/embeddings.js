@@ -347,7 +347,7 @@ window.initEmbeddingsScene = () => {
             const game = Object.keys(window.embeddingsState.gameShortIdToGameId).includes(voiceId.split("_")[0]) ? window.embeddingsState.gameShortIdToGameId[voiceId.split("_")[0]] : "other"
             let gender
             if (Object.keys(window.embeddingsState.voiceIdToModel).includes(voiceId)) {
-                gender = window.embeddingsState.voiceIdToModel[voiceId].gender
+                gender = window.embeddingsState.voiceIdToModel[voiceId].gender || window.embeddingsState.voiceIdToModel[voiceId].variants[0].gender
             } else {
                 gender = window.embeddingsState.allData[voiceId].voiceGender
             }
@@ -537,7 +537,7 @@ window.initEmbeddingsScene = () => {
                     if (Object.keys(window.embeddingsState.voiceIdToModel).includes(voiceId)) {
                         embeddingsVoiceGameDisplay.innerHTML = window.embeddingsState.gameTitles[window.embeddingsState.clickedObject.object.data.game]
                         embeddingsVoiceNameDisplay.innerHTML = window.embeddingsState.voiceIdToModel[voiceId].voiceName
-                        embeddingsVoiceGenderDisplay.innerHTML = window.embeddingsState.voiceIdToModel[voiceId].gender
+                        embeddingsVoiceGenderDisplay.innerHTML = window.embeddingsState.voiceIdToModel[voiceId].gender || window.embeddingsState.voiceIdToModel[voiceId].variants[0].gender
                     } else {
                         embeddingsVoiceGameDisplay.innerHTML = window.embeddingsState.gameTitles[window.embeddingsState.clickedObject.object.data.game]
                         embeddingsVoiceNameDisplay.innerHTML = window.embeddingsState.allData[voiceId].voiceName
