@@ -285,31 +285,84 @@ class xVAPitch(object):
         # ======= Handle TTS
         # ==================
         if len(tts_input):
+            lang_embs_sizes = []
             for ri,record in enumerate(tts_input):
-                # Language set-up
-                base_lang = record[-4]
-                if base_lang not in self.lang_tp.keys():
-                    self.lang_tp[base_lang] = get_text_preprocessor(base_lang, self.base_dir, logger=self.logger)
 
                 # Pre-process text
-                text = record[0]
-                sequence, cleaned_text = self.lang_tp[base_lang].text_to_sequence(text)
-                cleaned_text_sequences.append(cleaned_text)
-                text = torch.LongTensor(sequence)
+                text = record[0].replace("/lang", "\\lang")
+                base_lang = record[-4]
+
+                self.logger.info(f'[infer_batch] text: {text}')
+                sequenceSplitByLanguage = self.preprocess_prompt_language(text, base_lang)
+
+                # Make sure all languages' text processors are initialized
+                for subSequence in sequenceSplitByLanguage:
+                    langCode = list(subSequence.keys())[0]
+                    if langCode not in self.lang_tp.keys():
+                        self.lang_tp[langCode] = get_text_preprocessor(langCode, self.base_dir, logger=self.logger)
+
+                try:
+                    pad_symb = len(ALL_SYMBOLS)-2
+                    all_sequence = []
+                    all_cleaned_text = []
+                    all_text = []
+                    all_lang_ids = []
+
+                    # Collapse same-language words into phrases, so that heteronyms can still be detected
+                    sequenceSplitByLanguage_grouped = []
+                    last_lang_group = None
+                    group = ""
+                    for ssi, subSequence in enumerate(sequenceSplitByLanguage):
+                        if list(subSequence.keys())[0]!=last_lang_group:
+                            if last_lang_group is not None:
+                                sequenceSplitByLanguage_grouped.append({last_lang_group: group})
+                                group = ""
+                            last_lang_group = list(subSequence.keys())[0]
+                        group += subSequence[last_lang_group]
+                    if len(group):
+                        sequenceSplitByLanguage_grouped.append({last_lang_group: group})
+
+
+                    for ssi, subSequence in enumerate(sequenceSplitByLanguage_grouped):
+                        langCode = list(subSequence.keys())[0]
+                        subSeq = subSequence[langCode]
+                        sequence, cleaned_text = self.lang_tp[langCode].text_to_sequence(subSeq)
+
+                        if ssi<len(sequenceSplitByLanguage_grouped)-1:
+                            sequence = sequence + [pad_symb]
+
+                        all_sequence.append(sequence)
+                        all_cleaned_text += ("|"+cleaned_text) if len(all_cleaned_text) else cleaned_text
+                        if ssi<len(sequenceSplitByLanguage_grouped)-1:
+                            all_cleaned_text = all_cleaned_text + ["|<PAD>"]
+                        all_text.append(torch.LongTensor(sequence))
+
+                        language_id = self.language_id_mapping[langCode]
+                        all_lang_ids += [language_id for _ in range(len(sequence))]
+
+                except ValueError as e:
+                    self.logger.info("====")
+                    self.logger.info(str(e))
+                    self.logger.info("====--")
+                    if "not in list" in str(e):
+                        symbol_not_in_list = str(e).split("is not in list")[0].split("ValueError:")[-1].replace("'", "").strip()
+                        return f'ERR: ARPABET_NOT_IN_LIST: {symbol_not_in_list}'
+
+                all_cleaned_text = "".join(all_cleaned_text)
+                text = torch.cat(all_text, dim=0)
+
+
+                cleaned_text_sequences.append(all_cleaned_text)
+                text = torch.LongTensor(text)
                 text_sequences.append(text)
 
-                # Set the language ID per-symbol
-                # TODO, add per-symbol support
-                # lang_embs.append(torch.tensor([self.language_id_mapping[base_lang] for _ in range(text.shape[0])]))
-                lang_embs.append(torch.tensor(self.language_id_mapping[base_lang]))
+                lang_ids = torch.tensor(all_lang_ids).to(self.models_manager.device)
+                lang_embs.append(lang_ids)
+                lang_embs_sizes.append(lang_ids.shape[0])
 
-                # Set the speaker embedding per-symbol
-                # TODO, add per-symbol support
-                # speaker_embs.append(torch.stack([torch.tensor(tts_input[ri][-1]).unsqueeze(dim=0)[0].unsqueeze(-1) for _ in range(text.shape[0])], dim=0))
-                # speaker_embs.append(torch.stack([torch.tensor(tts_input[ri][-1]).unsqueeze(-1)], dim=0))
                 speaker_embs.append(torch.tensor(tts_input[ri][-3]).unsqueeze(-1))
 
-            lang_embs = torch.stack(lang_embs, dim=0).to(self.models_manager.device)
+            lang_embs = pad_sequence(lang_embs, batch_first=True).to(self.models_manager.device)
 
             text_sequences = pad_sequence(text_sequences, batch_first=True).to(self.models_manager.device)
             speaker_embs = pad_sequence(speaker_embs, batch_first=True).to(self.models_manager.device)
@@ -327,7 +380,7 @@ class xVAPitch(object):
             if isinstance(out, str):
                 return out
             else:
-                output_wav, dur_pred, pitch_pred, energy_pred, _, _, _ = out
+                output_wav, dur_pred, pitch_pred, energy_pred, _, _, _, _ = out
 
                 for i,wav in enumerate(output_wav):
                     wav = wav.squeeze().cpu().detach().numpy()

@@ -1552,8 +1552,8 @@ input[type=checkbox] {
 /*Actions*/
 #batchRecordsHeader>div:nth-child(3),
 #batchRecordsContainer>div>div:nth-child(3) {
-    min-width: 90px;
-    max-width: 90px;
+    min-width: 100px;
+    max-width: 100px;
 }
 
 /*Voice*/

@@ -283,7 +283,10 @@ class xVAPitch(nn.Module):
         # TODO, store a bank of trained 31 language embeds, to use for interpolating
         lang_emb = self.emb_l(lang_embs).unsqueeze(-1)
 
-        lang_emb_full = lang_emb.transpose(2, 1).squeeze(1).unsqueeze(0)
+        if len(lang_embs.shape)>1: # Batch mode
+            lang_emb_full = lang_emb.squeeze(1).squeeze(-1)
+        else: # Individual line from the UI
+            lang_emb_full = lang_emb.transpose(2, 1).squeeze(1).unsqueeze(0)
 
         x, x_emb, x_mask = self.text_encoder(input_symbols, x_lengths, lang_emb=None, stats=False, lang_emb_full=lang_emb_full)
         m_p, logs_p = self.text_encoder(x, x_lengths, lang_emb=None, lang_emb_full=lang_emb_full, stats=True, x_mask=x_mask)
