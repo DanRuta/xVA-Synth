@@ -849,8 +849,8 @@ window.synthesizeSample = () => {
             window.sequenceEditor.letters = cleanedSequence
             window.sequenceEditor.pitchNew = pitchData.map(p=>p)
             window.sequenceEditor.dursNew = durationsData.map(v=>v)
+            window.sequenceEditor.energyNew = energyData.map(v=>v)
             if (window.currentModel.modelType=="xVAPitch") {
-                window.sequenceEditor.energyNew = energyData.map(v=>v)
                 window.sequenceEditor.emAngryNew = em_angryData.map(v=>v)
                 window.sequenceEditor.emHappyNew = em_happyData.map(v=>v)
                 window.sequenceEditor.emSadNew = em_sadData.map(v=>v)
