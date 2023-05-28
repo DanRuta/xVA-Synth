@@ -1494,7 +1494,7 @@ window.adjustETA = () => {
 
 const openOutput = () => {
     // shell.showItemInFolder(window.userSettings.batchOutFolder+"/dummy.txt")
-    spawn(`explorer`, [window.userSettings.batchOutFolder], {stdio: "ignore"})
+    spawn(`explorer`, [window.userSettings.batchOutFolder.replace(/\//g, "\\")], {stdio: "ignore"})
 }
 
 
