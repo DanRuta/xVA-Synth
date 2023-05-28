@@ -209,7 +209,7 @@ class TextPreprocessor():
                 # text_graphites = text
 
                 # Don't run the ARPAbet replacement for every single word, as it would be too slow. Instead, do it only for words that are actually present in the prompt
-                words_in_prompt = (text_graphites+" ").replace("}","").replace("{","").replace(",","").replace("?","").replace("!","").replace(";","").replace("...",".").replace(". "," ").lower().split(" ")
+                words_in_prompt = (text_graphites+" ").replace("}","").replace("{","").replace(",","").replace("?","").replace("!","").replace(";","").replace(":","").replace("...",".").replace(". "," ").lower().split(" ")
                 # words_in_prompt = (text+" ").replace("}","").replace("{","").replace(",","").replace("?","").replace("!","").replace("...",".").replace(". "," ").lower().split(" ")
                 # print(f'words_in_prompt, {words_in_prompt}')
 
