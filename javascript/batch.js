@@ -225,9 +225,12 @@ window.readFile = (file) => {
                         const parts = CSVToArray(line, window.userSettings.batch_delimiter)[0]
                         parts.forEach((val, vi) => {
                             try {
-                                record[header[vi].replace(/^"/, "").replace(/"$/, "")] = (val||"").replace(/\\/g, "/")
+                                let header_val = header[vi].replace(/^"/, "").replace(/"$/, "")
+                                record[header_val.replace(/\s/g,"")] = (val||"").replace(/\\/g, "/")
                             } catch (e) {
                                 window.errorModal(`Error parsing line: ${val}`)
+                                console.log(e)
+                                window.appLogger.log(e)
                             }
                         })
                         dataLines.push(record)
