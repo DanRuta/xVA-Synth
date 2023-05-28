@@ -613,6 +613,7 @@ window.loadModel = () => {
             }
 
             window.populateLanguagesDropdownsFromModel(base_lang_select, window.currentModel)
+            base_lang_select.value = window.currentModel.lang
 
             if (window.userSettings.defaultToHiFi && window.currentModel.hifi) {
                 vocoder_select.value = Array.from(vocoder_select.children).find(opt => opt.innerHTML=="Bespoke HiFi GAN").value
