@@ -165,6 +165,7 @@ window.registerModel = (modelsPath, gameFolder, model, {gameId, voiceId, voiceNa
             gameId,
             modelsPath,
             voiceName,
+            lang_capabilities: model.lang_capabilities,
             embOverABaseModel: model.embOverABaseModel,
             variants: []
         }
@@ -610,6 +611,8 @@ window.loadModel = () => {
                 seq_edit_view_select.disabled = false
                 seq_edit_edit_select.disabled = false
             }
+
+            window.populateLanguagesDropdownsFromModel(base_lang_select, window.currentModel)
 
             if (window.userSettings.defaultToHiFi && window.currentModel.hifi) {
                 vocoder_select.value = Array.from(vocoder_select.children).find(opt => opt.innerHTML=="Bespoke HiFi GAN").value

@@ -1917,16 +1917,21 @@ window.supportedLanguages = {
     "yo": "Yoruba",
     "zh": "Chinese"
 }
-Object.keys(window.supportedLanguages).sort((a,b)=>window.supportedLanguages[a]<window.supportedLanguages[b]?-1:1).forEach(key => {
-    const opt = createElem("option", window.supportedLanguages[key])
-    opt.value = key
-    base_lang_select.appendChild(opt)
+window.populateLanguagesDropdownsFromModel = (dropdown, modelJson=undefined) => {
+    dropdown.innerHTML = ""
 
-    const opt2 = createElem("option", window.supportedLanguages[key])
-    opt2.value = key
-    voiceWorkbenchLanguageDropdown.appendChild(opt2)
-})
+    Object.keys(window.supportedLanguages).sort((a,b)=>window.supportedLanguages[a]<window.supportedLanguages[b]?-1:1).forEach(key => {
+        if (!modelJson || !modelJson.lang_capabilities || modelJson.lang_capabilities.includes(key)) {
+            const opt = createElem("option", window.supportedLanguages[key])
+            opt.value = key
+            dropdown.appendChild(opt)
+        }
+    })
+}
+window.populateLanguagesDropdownsFromModel(base_lang_select)
+window.populateLanguagesDropdownsFromModel(voiceWorkbenchLanguageDropdown)
 base_lang_select.value = "en"
+voiceWorkbenchLanguageDropdown.value = "en"
 
 
 

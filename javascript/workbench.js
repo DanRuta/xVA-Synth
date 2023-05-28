@@ -194,6 +194,24 @@ window.initDropdowns = () => {
     })
 }
 
+// Change the available languages when the model is changed
+voiceWorkbenchModelDropdown.addEventListener("change", () => {
+    let voiceId = voiceWorkbenchModelDropdown.value.split("/").at(-1)
+    if (voiceId.includes("base_v1.0")) {
+        window.populateLanguagesDropdownsFromModel(voiceWorkbenchLanguageDropdown)
+        voiceWorkbenchLanguageDropdown.value = "en"
+    } else {
+        const gameId = voiceWorkbenchModelDropdown.value.split("/")[0]
+        if (Object.keys(window.games).includes(gameId)) {
+            const baseModelData = window.games[gameId].models.filter(model => {
+                return model.variants[0].voiceId == voiceWorkbenchModelDropdown.value.split("/").at(-1)
+            })[0]
+            window.populateLanguagesDropdownsFromModel(voiceWorkbenchLanguageDropdown, baseModelData)
+            voiceWorkbenchLanguageDropdown.value = baseModelData.variants[0].lang
+        }
+    }
+})
+
 voiceWorkbenchStartButton.addEventListener("click", () => {
     window.voiceWorkbenchState.isStarted = true
 
@@ -204,7 +222,7 @@ voiceWorkbenchStartButton.addEventListener("click", () => {
 
     // Load the base model's embedding as a starting point, if it's not the built-in base model
     let voiceId = voiceWorkbenchModelDropdown.value.split("/").at(-1)
-    if (voiceId.includes("Base xVAPitch Model")) {
+    if (voiceId.includes("base_v1.0")) {
     } else {
         const gameId = voiceWorkbenchModelDropdown.value.split("/")[0]
         if (Object.keys(window.games).includes(gameId)) {
