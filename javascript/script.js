@@ -1188,8 +1188,7 @@ window.keepSampleFunction = shiftClick => {
                     if (existingFileConflict.length) {
                         // Remove the entry from the output files' preview
                         Array.from(voiceSamples.querySelectorAll("div.sample")).forEach(sampleElem => {
-                            const source = sampleElem.querySelector("source")
-                            let sourceSrc = source.src.split("%20").join(" ").replace("file:///", "")
+                            let sourceSrc = sampleElem.children[0].children[0].innerText
                             sourceSrc = sourceSrc.split("/").reverse()
                             const finalFileName = finalOutLocation.split("/").reverse()
 
