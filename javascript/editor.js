@@ -822,12 +822,14 @@ class Editor {
                 letterEmotionNumb.value = parseFloat(this.emSurpriseNew[this.letterFocus[0]])
                 letterEmotionNumb.disabled = false
             }
-            this.registeredStyleKeys.forEach(styleKey => {
-                if (seq_edit_view_select.value.startsWith("style_") && seq_edit_view_select.value.includes(styleKey)) {
-                    letterStyleNumb.value = parseFloat(this.styleValuesNew[styleKey][this.letterFocus[0]])
-                    letterStyleNumb.disabled = false
-                }
-            })
+            if (this.registeredStyleKeys) {
+                this.registeredStyleKeys.forEach(styleKey => {
+                    if (seq_edit_view_select.value.startsWith("style_") && seq_edit_view_select.value.includes(styleKey)) {
+                        letterStyleNumb.value = parseFloat(this.styleValuesNew[styleKey][this.letterFocus[0]])
+                        letterStyleNumb.disabled = false
+                    }
+                })
+            }
             letterPitchNumb.value = parseInt(this.pitchNew[this.letterFocus[0]]*100)/100
             letterLengthNumb.value = parseInt(parseFloat(this.dursNew[this.letterFocus[0]])*100)/100
 

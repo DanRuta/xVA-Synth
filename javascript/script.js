@@ -714,12 +714,14 @@ window.synthesizeSample = () => {
             emSad = window.sequenceEditor.emSadNew ? window.sequenceEditor.emSadNew.map(v => v==undefined?0:v).filter(v => !isNaN(v)) : []
             emSurprise = window.sequenceEditor.emSurpriseNew ? window.sequenceEditor.emSurpriseNew.map(v => v==undefined?0:v).filter(v => !isNaN(v)) : []
 
-            window.sequenceEditor.registeredStyleKeys.forEach(styleKey => {
-                editorStyles[styleKey] = {
-                    embedding: window.appState.currentModelEmbeddings[styleKey][1],
-                    sliders: window.sequenceEditor.styleValuesNew[styleKey].map(v => v==undefined?0:v).filter(v => !isNaN(v))// : []
-                }
-            })
+            if (window.sequenceEditor.registeredStyleKeys) {
+                window.sequenceEditor.registeredStyleKeys.forEach(styleKey => {
+                    editorStyles[styleKey] = {
+                        embedding: window.appState.currentModelEmbeddings[styleKey][1],
+                        sliders: window.sequenceEditor.styleValuesNew[styleKey].map(v => v==undefined?0:v).filter(v => !isNaN(v))// : []
+                    }
+                })
+            }
         }
         isFreshRegen = false
     }
