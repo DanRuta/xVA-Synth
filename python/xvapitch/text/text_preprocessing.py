@@ -189,69 +189,37 @@ class TextPreprocessor():
 
         return pron_dict
 
-    # def punctuation_to_whitespace (self, text):
-    #     return re.sub(self.punct_to_whitespace_reg, ' ', text)
-
 
     def dict_replace (self, text, customDicts):
-
-        # # Don't run the ARPAbet replacement for every single word, as it would be too slow. Instead, do it only for words that are actually present in the prompt
-        # words_in_prompt = (text+" ").replace("}","").replace("{","").replace(",","").replace("?","").replace("!","").replace("...",".").replace(". "," ").lower().split(" ")
-        # print(f'words_in_prompt, {words_in_prompt}')
 
         for di, pron_dict in enumerate(self.dicts):
 
             if (customDicts and self.dict_is_custom[di]) or (not customDicts and not self.dict_is_custom[di]):
 
                 dict_words = self.dict_words[di]
-
                 text_graphites = re.sub("{([^}]*)}", "", text, flags=re.IGNORECASE)
-                # text_graphites = text
 
                 # Don't run the ARPAbet replacement for every single word, as it would be too slow. Instead, do it only for words that are actually present in the prompt
                 words_in_prompt = (text_graphites+" ").replace("}","").replace("{","").replace(",","").replace("?","").replace("!","").replace(";","").replace(":","").replace("...",".").replace(". "," ").lower().split(" ")
-                # words_in_prompt = (text+" ").replace("}","").replace("{","").replace(",","").replace("?","").replace("!","").replace("...",".").replace(". "," ").lower().split(" ")
-                # print(f'words_in_prompt, {words_in_prompt}')
 
 
                 words_in_prompt = [word.strip() for word in words_in_prompt if len(word.strip()) and word.lower() in dict_words]
-                # print(f'words_in_prompt, {words_in_prompt}')
 
                 if len(words_in_prompt):
                     # Pad out punctuation, to make sure they don't get used in the word look-ups
-
-                    # start_padded_text = text.startswith(" ")
-                    # end_padded_text = text.endswith(" ")
                     text = " "+text.replace(",", " ,").replace(".", " .").replace("!", " !").replace("?", " ?")+" "
-
 
                     for di, dict_word in enumerate(words_in_prompt):
 
-                        # dict_word_with_spaces = "{"+pron_dict[dict_word]+"}"+f' _ '
                         dict_word_with_spaces = "{"+pron_dict[dict_word]+"}"
-                        # if (di!=0 or words_in_prompt[0]!=dict_word) or start_padded_text:
-                        #     # dict_word_with_spaces = f' _ '+ dict_word_with_spaces
-                        #     dict_word_with_spaces = f' '+ dict_word_with_spaces
-                        # # if (di<len(words_in_prompt)-1 or words_in_prompt[-1]!=dict_word) or end_padded_text:
-                        # if (not text.lower().endswith(dict_word) or words_in_prompt[-1]!=dict_word) or end_padded_text:
-                        #     # dict_word_with_spaces = dict_word_with_spaces + f' _ '
-                        #     dict_word_with_spaces = dict_word_with_spaces + f' '
-
-
                         dict_word_replace = dict_word.strip().replace(".", "\.").replace("(", "\(").replace(")", "\)")
 
-                        # print(re.match("(?<!\{)\s"+dict_word_replace+"\s(?![\w\s\(\)]*[\}])"), text)
 
-                        # text = re.sub("(?<!\{)\s"+dict_word.strip().replace(".", "\.").replace("(", "\(").replace(")", "\)")+"\s(?![\w\s\(\)]*[\}])", " {"++"} ", text, flags=re.IGNORECASE)
-                            # Do it twice, because re will not re-use spaces, so if you have two neighbouring words to be replaced,
-                            # and they share a space character, one of them won't get changed
-
+                        # Do it twice, because re will not re-use spaces, so if you have two neighbouring words to be replaced,
+                        # and they share a space character, one of them won't get changed
                         for _ in range(2):
                             text = re.sub(r'(?<!\{)\b'+dict_word_replace+r'\b(?![\w\s\(\)]*[\}])', dict_word_with_spaces, text, flags=re.IGNORECASE)
-                        # print(f'word: {dict_word_replace} - {text}')
 
-                        # text = re.sub("(?<!\{)\s"+dict_word.strip().replace(".", "\.").replace("(", "\(").replace(")", "\)")+"\s(?![\w\s\(\)]*[\}])", " {"+pron_dict[dict_word]+"} ", text, flags=re.IGNORECASE)
-                        # text = re.sub("(?<!\{)\b"+dict_word_replace+"\b(?![\w\s\(\)]*[\}])", dict_word_with_spaces, text, flags=re.IGNORECASE)
 
                     # Undo the punctuation padding, to retain the original sentence structure
                     text = text.replace(" ,", ",").replace(" .", ".").replace(" !", "!").replace(" ?", "?")
