@@ -806,19 +806,19 @@ class Editor {
                 letterEnergyNumb.value = parseFloat(this.energyNew[this.letterFocus[0]])
                 letterEnergyNumb.disabled = false
             }
-            if (this.emAngryNew.length) {
+            if (this.emAngryNew && this.emAngryNew.length) {
                 letterEmotionNumb.value = parseFloat(this.emAngryNew[this.letterFocus[0]])
                 letterEmotionNumb.disabled = false
             }
-            if (this.emHappyNew.length) {
+            if (this.emHappyNew && this.emHappyNew.length) {
                 letterEmotionNumb.value = parseFloat(this.emHappyNew[this.letterFocus[0]])
                 letterEmotionNumb.disabled = false
             }
-            if (this.emSadNew.length) {
+            if (this.emSadNew && this.emSadNew.length) {
                 letterEmotionNumb.value = parseFloat(this.emSadNew[this.letterFocus[0]])
                 letterEmotionNumb.disabled = false
             }
-            if (this.emSurpriseNew.length) {
+            if (this.emSurpriseNew && this.emSurpriseNew.length) {
                 letterEmotionNumb.value = parseFloat(this.emSurpriseNew[this.letterFocus[0]])
                 letterEmotionNumb.disabled = false
             }
