@@ -712,12 +712,17 @@ window.startBatch = () => {
     // Output directory
     if (!fs.existsSync(window.userSettings.batchOutFolder)) {
         window.userSettings.batchOutFolder.split("/")
-         .reduce((prevPath, folder) => {
-           const currentPath = path.join(prevPath, folder, path.sep);
-           if (!fs.existsSync(currentPath)){
-             fs.mkdirSync(currentPath);
-           }
-           return currentPath;
+        .reduce((prevPath, folder) => {
+            const currentPath = path.join(prevPath, folder, path.sep);
+            if (!fs.existsSync(currentPath)){
+                try {
+                    fs.mkdirSync(currentPath);
+                } catch (e) {
+                    window.errorModal(`${window.i18n.SOMETHING_WENT_WRONG}:<br><br>`+e.message)
+                    throw ""
+                }
+            }
+            return currentPath;
          }, '');
     }
     if (batch_clearDirFirstCkbx.checked) {
