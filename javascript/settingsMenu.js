@@ -27,7 +27,7 @@ window.userSettings = localStorage.getItem("userSettings") ||
         useGPU: false,
         customWindowSize:`${window.innerHeight},${window.innerWidth}`,
         base_speaker: "default",
-        autoplay: false,
+        autoplay: true,
         autoPlayGen: false,
         audio: {
             format: "wav"
