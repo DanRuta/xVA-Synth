@@ -1735,7 +1735,7 @@ increase_btn.addEventListener("click", () => {
             if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
                 return e
             }
-            return e-0.04
+            return window.currentModel.modelType=="xVAPitch" ? e+0.04 : e-0.04
         })
         window.sequenceEditor.energyGrabbers.forEach((slider, l) => {
             slider.setValueFromValue(window.sequenceEditor.energyNew[l])
@@ -1751,7 +1751,7 @@ increase_btn.addEventListener("click", () => {
             if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
                 return e
             }
-            return e-0.04
+            return e+0.04
         })
         grabbers.forEach((slider, l) => {
             slider.setValueFromValue(data[l])
@@ -1768,7 +1768,7 @@ increase_btn.addEventListener("click", () => {
             if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
                 return e
             }
-            return e-0.04
+            return e+0.04
         })
         grabbers.forEach((slider, l) => {
             slider.setValueFromValue(data[l])
@@ -1799,7 +1799,7 @@ decrease_btn.addEventListener("click", () => {
             if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
                 return e
             }
-            return e+0.04
+            return window.currentModel.modelType=="xVAPitch" ? e-0.04 : e+0.04
         })
         window.sequenceEditor.energyGrabbers.forEach((slider, l) => {
             slider.setValueFromValue(window.sequenceEditor.energyNew[l])
@@ -1815,7 +1815,7 @@ decrease_btn.addEventListener("click", () => {
             if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
                 return e
             }
-            return e+0.04
+            return e-0.04
         })
         grabbers.forEach((slider, l) => {
             slider.setValueFromValue(data[l])
@@ -1832,7 +1832,7 @@ decrease_btn.addEventListener("click", () => {
             if (window.sequenceEditor.letterFocus.length>1 && window.sequenceEditor.letterFocus.indexOf(ei)==-1) {
                 return e
             }
-            return e+0.04
+            return e-0.04
         })
         grabbers.forEach((slider, l) => {
             slider.setValueFromValue(data[l])
