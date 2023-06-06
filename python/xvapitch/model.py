@@ -421,13 +421,15 @@ class xVAPitch(object):
 
                         with open(output_fname, "w+") as f:
                             data = {}
+                            data["modelType"] = "xVAPitch"
                             data["inputSequence"] = str(tts_input[ri][0])
                             data["pacing"] = float(tts_input[ri][3])
                             data["letters"] = [char.replace("{", "").replace("}", "") for char in list(cleaned_text_sequences[ri].split("|"))]
                             data["currentVoice"] = self.ckpt_path.split("/")[-1].replace(".pt", "")
-                            data["resetEnergy"] = [float(val) for val in list(energy_pred[ri].cpu().detach().numpy())]
+                            # data["resetEnergy"] = [float(val) for val in list(energy_pred[ri].cpu().detach().numpy())]
+                            data["resetEnergy"] = [float(1) for val in list(pitch_pred[ri][0].cpu().detach().numpy())]
                             data["resetPitch"] = [float(val) for val in list(pitch_pred[ri][0].cpu().detach().numpy())]
-                            data["resetDurs"] = [float(val) for val in list(dur_pred[ri].cpu().detach().numpy())]
+                            data["resetDurs"] = [float(val) for val in list(dur_pred[ri][0].cpu().detach().numpy())]
                             data["ampFlatCounter"] = 0
                             data["pitchNew"] = data["resetPitch"]
                             data["energyNew"] = data["resetEnergy"]
