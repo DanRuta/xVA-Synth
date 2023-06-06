@@ -1037,6 +1037,9 @@ window.saveFile = (from, to, skipUIRecord=false) => {
     window.pluginsManager.runPlugins(window.pluginsManager.pluginsModules["keep-sample"]["pre"], event="pre keep-sample", pluginData)
 
     const jsonDataOut = {
+        modelType: window.currentModel.modelType,
+        modelVersion: window.currentModel.modelVersion,
+        version: window.currentModel.version,
         inputSequence: dialogueInput.value.trim(),
         pacing: parseFloat(pace_slid.value),
         letters: window.sequenceEditor.letters,
