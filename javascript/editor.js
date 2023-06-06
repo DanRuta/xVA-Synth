@@ -574,14 +574,14 @@ class Editor {
 
 
 
-    update (modelType=undefined) {
+    update (modelType=undefined, sliderRange=undefined) {
 
         self.modelType = modelType
 
         // Make model-specific adjustments
         if (modelType=="xVAPitch") {
             this.default_pitchSliderRange = 6
-            this.pitchSliderRange = 6
+            this.pitchSliderRange = sliderRange || 6
             this.duration_visual_size_multiplier = 1
             this.MAX_LETTER_LENGTH = 200
             this.default_MIN_ENERGY = 0
@@ -596,7 +596,7 @@ class Editor {
 
         } else {
             this.default_pitchSliderRange = 4
-            this.pitchSliderRange = 4
+            this.pitchSliderRange = sliderRange || 4
             this.duration_visual_size_multiplier = 1
             this.MAX_LETTER_LENGTH = 100
         }

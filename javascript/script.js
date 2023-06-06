@@ -858,7 +858,7 @@ window.synthesizeSample = () => {
                 window.sequenceEditor.loadStylesData(editorStyles)
             }
             window.sequenceEditor.init()
-            window.sequenceEditor.update(window.currentModel.modelType)
+            window.sequenceEditor.update(window.currentModel.modelType, window.sequenceEditor.pitchSliderRange)
 
             window.sequenceEditor.sliderBoxes.forEach((box, i) => {box.setValueFromValue(window.sequenceEditor.dursNew[i])})
             window.sequenceEditor.autoInferTimer = null
