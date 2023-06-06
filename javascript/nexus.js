@@ -220,6 +220,10 @@ window.installDownloadedModel = ([game, zipName]) => {
             const unzipper = require('unzipper')
             const zipPath = `${window.path}/downloads/${zipName}.zip`
 
+            if (!fs.existsSync(modelsFolder)) {
+                fs.mkdirSync(modelsFolder)
+            }
+
             if (!fs.existsSync(`${window.path}/downloads`)) {
                 fs.mkdirSync(`${window.path}/downloads`)
             }
