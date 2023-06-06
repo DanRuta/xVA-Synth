@@ -4,6 +4,7 @@ import re
 import sys
 import json
 import codecs
+import glob
 from unidecode import unidecode
 # from g2pc import G2pC
 
@@ -1543,7 +1544,7 @@ def get_text_preprocessor(code, base_dir, logger=None, override_useAnyG2P=None):
             "name": "English",
             "tp": EnglishTextPreprocessor,
             "dicts": [f'{base_dir}/dicts/cmudict.txt'],
-            "custom_dicts": [],
+            "custom_dicts": glob.glob(f'{base_dir}/../../../arpabet/*.json'),
             "g2p_cache": [f'{base_dir}/g2p_cache/espeak/espeak_cache_en.txt']
         },
 
