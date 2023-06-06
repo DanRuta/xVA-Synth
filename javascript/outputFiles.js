@@ -113,6 +113,8 @@ window.makeSample = (src, newSample) => {
 
         // Electron suddenly isn't working anymore, to open folders, since updating from v2 to v19
         // Couldn't figure it out, so I'm just gonna do it myself, manually. It doesn't show the file, but at least it opens the folder
+
+        er.shell.showItemInFolder(src)
         spawn(`explorer`, [containingFolder], {stdio: "ignore"})
     })
 

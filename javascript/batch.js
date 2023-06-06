@@ -179,6 +179,7 @@ batch_generateSample.addEventListener("click", () => {
     }
     fs.writeFileSync(`${out_directory}/sample.csv`, csv.join("\n"))
     // shell.showItemInFolder(`${out_directory}/sample.csv`)
+    er.shell.showItemInFolder(`${out_directory}/sample.csv`)
     spawn(`explorer`, [out_directory], {stdio: "ignore"})
 })
 
@@ -1498,7 +1499,7 @@ window.adjustETA = () => {
 
 
 const openOutput = () => {
-    // shell.showItemInFolder(window.userSettings.batchOutFolder+"/dummy.txt")
+    er.shell.showItemInFolder(window.userSettings.batchOutFolder+"/dummy.txt")
     spawn(`explorer`, [window.userSettings.batchOutFolder.replace(/\//g, "\\")], {stdio: "ignore"})
 }
 

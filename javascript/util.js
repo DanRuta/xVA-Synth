@@ -686,6 +686,7 @@ if (missingAssetFiles.length) {
     noAssetFilesFoundMessage.style.display = "block"
     assetDirLink.addEventListener("click", () => {
         // shell.showItemInFolder((require("path")).resolve(`${window.path}/assets/other.jpg`))
+        er.shell.showItemInFolder((require("path")).resolve(`${window.path}/assets/other.jpg`))
         spawn(`explorer`, [(require("path")).resolve(`${window.path}/assets`)], {stdio: "ignore"})
     })
 }
