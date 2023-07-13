@@ -44,7 +44,7 @@ class Editor {
 
     clear () {
         this.sliderBoxes = []
-        this.grabbers = []
+        this.grabbers = [] // Pitch (original single grabber)
         this.energyGrabbers = []
         this.emAngryGrabbers = []
         this.emHappyGrabbers = []
@@ -157,6 +157,25 @@ class Editor {
                 this.canvas.style.cursor = "row-resize"
                 return
             }
+
+            // one grabber type
+            if (seq_edit_view_select.value !== "pitch_energy")
+            {
+                this.sliderBoxes.forEach((sbox, sboxi) => {
+                    if (!this.enabled_disabled_items[sboxi]) return;
+
+                    // is outside slider box => return
+                    if (!(
+                        mouseX>sbox.getXLeft()
+                        && mouseX<sbox.getXLeft() + sbox.width
+                    )) {
+                        return;
+                    }
+
+                    this.canvas.style.cursor = "row-resize"
+                })
+            }
+
             // Check emotion grabber hover
             const isHoveringOverEmotionGrabber = emotionGrabbers => {
                 return emotionGrabbers.find((eGrabber, egi) => {
@@ -231,12 +250,29 @@ class Editor {
             mouseDownStart.x = mouseX
             mouseDownStart.y = mouseY
 
+            // Check sideways dragging first
+            const isBetweenBoxes = this.sliderBoxes.find((box, bi) => {
+                if (!this.enabled_disabled_items[bi]) return
+                const boxX = box.getXLeft()
+                return (mouseY>box.topY && mouseY<box.topY+box.height) && (mouseX>(boxX+box.width-10) && mouseX<(boxX+box.width+10)+5)
+            })
+            if (isBetweenBoxes) {
+                this.multiLetterStartDursVals = this.sliderBoxes.map(box => box.width)
+
+                isBetweenBoxes.dragStart.width = isBetweenBoxes.width
+                elemDragged = isBetweenBoxes
+                return
+            }
+
             // Check up-down emotion dragging
             const findGrabber = emotionGrabbers => {
                 return emotionGrabbers.find((eGrabber, egi) => {
                     if (!this.enabled_disabled_items[egi]) return
-                    const grabberX = eGrabber.getXLeft()+eGrabber.sliderBox.width/2-this.EMOTION_STYLE_GRABBER_RADIUS
-                    return (mouseX>grabberX && mouseX<grabberX+this.EMOTION_STYLE_GRABBER_RADIUS*2+4) && (mouseY>eGrabber.topLeftY-this.EMOTION_STYLE_GRABBER_RADIUS-2 && mouseY<eGrabber.topLeftY+this.EMOTION_STYLE_GRABBER_RADIUS+2)
+                    const boxX = eGrabber.sliderBox.getXLeft()
+                    return (
+                        (mouseX > boxX)
+                        && (mouseX < (boxX + eGrabber.sliderBox.width))
+                    )
                 })
             }
             const handleEmGrabber = (emGrabber, grabbersList) => {
@@ -327,19 +363,6 @@ class Editor {
                 elemDragged = isOnGrabber
                 return
             }
-            // Check sideways dragging
-            const isBetweenBoxes = this.sliderBoxes.find((box, bi) => {
-                if (!this.enabled_disabled_items[bi]) return
-                const boxX = box.getXLeft()
-                return (mouseY>box.topY && mouseY<box.topY+box.height) && (mouseX>(boxX+box.width-10) && mouseX<(boxX+box.width+10)+5)
-            })
-            if (isBetweenBoxes) {
-                this.multiLetterStartDursVals = this.sliderBoxes.map(box => box.width)
-
-                isBetweenBoxes.dragStart.width = isBetweenBoxes.width
-                elemDragged = isBetweenBoxes
-                return
-            }
 
             // Check clicking on the top letters
             const isOnLetter = this.letterClasses.find((letter, l) => {
@@ -348,6 +371,59 @@ class Editor {
             })
             if (isOnLetter) {
                 this.setLetterFocus(this.letterClasses.indexOf(isOnLetter), event.ctrlKey, event.shiftKey, event.altKey)
+            }
+            else
+            {
+                // drag grabber when only single type of grabber
+                if (seq_edit_view_select.value !== "pitch_energy")
+                {
+                    // fetch any grabber within letter column
+                    const isOnGrabberCol = seq_edit_view_select.value=="pitch" && findGrabber(this.grabbers)
+                    if (isOnGrabberCol) {
+                        const slider = isOnGrabberCol
+                        // TODO handle grabber E & P
+                        if (this.letterFocus.length <= 1 || (!this.letterFocus.includes(slider.index))) {
+                            this.setLetterFocus(this.grabbers.indexOf(slider), event.ctrlKey, event.shiftKey, event.altKey)
+                        }
+                        this.multiLetterPitchDelta = slider.topLeftY
+                        this.multiLetterStartPitchVals = this.grabbers.map(slider => slider.topLeftY)
+
+                        elemDragged = isOnGrabberCol
+                        return
+                    }
+                    const isOnEGrabberCol = seq_edit_view_select.value=="energy" && findGrabber(this.energyGrabbers)
+                    if (isOnEGrabberCol) {
+                        // TODO handle grabber E & P
+                        if (this.letterFocus.length <= 1 || (!this.letterFocus.includes(isOnEGrabberCol.index))) {
+                            this.setLetterFocus(this.energyGrabbers.indexOf(isOnEGrabberCol), event.ctrlKey, event.shiftKey, event.altKey)
+                        }
+                        this.multiLetterEnergyDelta = isOnEGrabberCol.topLeftY
+                        this.multiLetterStartEnergyVals = this.energyGrabbers.map(isOnEGrabberCol => isOnEGrabberCol.topLeftY)
+
+                        elemDragged = isOnEGrabberCol
+                        return
+                    }
+                    const isOnEmAngryGrabber = seq_edit_view_select.value=="emAngry" && findGrabber(this.emAngryGrabbers)
+                    if (isOnEmAngryGrabber) {
+                        elemDragged = handleEmGrabber(isOnEmAngryGrabber, this.emAngryGrabbers)
+                        return
+                    }
+                    const isOnEmHappyGrabber = seq_edit_view_select.value=="emHappy" && findGrabber(this.emHappyGrabbers)
+                    if (isOnEmHappyGrabber) {
+                        elemDragged = handleEmGrabber(isOnEmHappyGrabber, this.emHappyGrabbers)
+                        return
+                    }
+                    const isOnEmSadGrabber = seq_edit_view_select.value=="emSad" && findGrabber(this.emSadGrabbers)
+                    if (isOnEmSadGrabber) {
+                        elemDragged = handleEmGrabber(isOnEmSadGrabber, this.emSadGrabbers)
+                        return
+                    }
+                    const isOnEmSurpriseGrabber = seq_edit_view_select.value=="emSurprise" && findGrabber(this.emSurpriseGrabbers)
+                    if (isOnEmSurpriseGrabber) {
+                        elemDragged = handleEmGrabber(isOnEmSurpriseGrabber, this.emSurpriseGrabbers)
+                        return
+                    }
+                }
             }
 
 
