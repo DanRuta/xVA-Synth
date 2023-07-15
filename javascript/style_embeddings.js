@@ -237,6 +237,11 @@ window.loadStyleEmbsForVoice = (currentModel) => {
 
     // Add every option to the embeddings selection dropdown
     style_emb_select.innerHTML = ""
+    Array.from(seq_edit_edit_select.children).forEach(option => {
+        if (option.value.startsWith("style_")) {
+            seq_edit_edit_select.removeChild(option)
+        }
+    })
     // Add Default first
     const opt = createElem("option", embeddings["default"][0])
     opt.value = embeddings["default"][1].join(",")

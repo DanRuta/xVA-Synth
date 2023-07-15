@@ -1215,8 +1215,7 @@ const kickOffAutoInferTimer = () => {
 
 // Un-select letters when clicking anywhere else
 right.addEventListener("click", event => {
-    console.log(event.target, event.target.id)
-    if (event.target.nodeName=="BUTTON" || event.target.nodeName=="INPUT" || event.target.nodeName=="SVG" || event.target.nodeName=="IMG" || event.target.nodeName=="path" || event.target == window.sequenceEditor.canvas || event.target.id=="dialogueInput" || event.target.classList.includes("autocomplete_option")) {
+    if (event.target.nodeName=="BUTTON" || event.target.nodeName=="INPUT" || event.target.nodeName=="SVG" || event.target.nodeName=="IMG" || event.target.nodeName=="path" || event.target == window.sequenceEditor.canvas || event.target.id=="dialogueInput" || (event.target.classList && event.target.classList.contains("autocomplete_option"))) {
         return
     }
     window.sequenceEditor.letterFocus.forEach(li => {
