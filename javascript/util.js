@@ -306,6 +306,12 @@ dialogueInput.addEventListener("keydown", event => {
     }
 })
 
+window.addEventListener("click", event => {
+    if (event.target.id!="dialogueInput") {
+        window.hideAutocomplete()
+    }
+})
+
 window.addEventListener("keydown", event => {
 
     if (event.ctrlKey) {

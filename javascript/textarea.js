@@ -159,7 +159,7 @@ const preprocess = (caretStart) => {
     return caretInARPAbet
 }
 
-const hideAutocomplete = () => {
+window.hideAutocomplete = () => {
     textEditorTooltip.style.display = "none"
     textEditorTooltip.innerHTML = ""
     autocomplete_callback = undefined
