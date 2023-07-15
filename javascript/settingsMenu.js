@@ -120,6 +120,12 @@ if (!Object.keys(window.userSettings).includes("do_model_version_highlight")) { 
 if (!Object.keys(window.userSettings).includes("model_version_highlight")) { // For backwards compatibility
     window.userSettings.model_version_highlight = 3.0
 }
+if (!Object.keys(window.userSettings).includes("do_pitchrangeoverride")) { // For backwards compatibility
+    window.userSettings.do_pitchrangeoverride = false
+}
+if (!Object.keys(window.userSettings).includes("pitchrangeoverride")) { // For backwards compatibility
+    window.userSettings.pitchrangeoverride = 6.0
+}
 
 if (!Object.keys(window.userSettings).includes("keepPaceOnNew")) { // For backwards compatibility
     window.userSettings.keepPaceOnNew = true
@@ -308,6 +314,8 @@ const updateUIWithSettings = () => {
     setting_clear_text_after_synth.checked = window.userSettings.clear_text_after_synth
     setting_do_model_version_highlight.checked = window.userSettings.do_model_version_highlight
     setting_model_version_highlight.value = window.userSettings.model_version_highlight
+    setting_pitchrangeoverrideEnabledCkbx.checked = window.userSettings.do_pitchrangeoverride
+    setting_pitchrangeoverride.value = window.userSettings.pitchrangeoverride
 
     const [height, width] = window.userSettings.customWindowSize.split(",").map(v => parseInt(v))
     ipcRenderer.send("resize", {height, width})
@@ -639,6 +647,25 @@ initMenuSetting(setting_max_filename_chars, "max_filename_chars", "number", unde
 initMenuSetting(setting_clear_text_after_synth, "clear_text_after_synth", "checkbox")
 initMenuSetting(setting_do_model_version_highlight, "do_model_version_highlight", "checkbox", ()=>window.changeGame(window.currentGame))
 initMenuSetting(setting_model_version_highlight, "model_version_highlight", "number", ()=>window.changeGame(window.currentGame), parseFloat)
+const updateSequenceEditorRange = () => {
+    if (window.sequenceEditor.isCreated && window.currentModel) {
+        const pitchRange = window.userSettings.pitchrangeoverride ? window.userSettings.pitchrangeoverride : window.sequenceEditor.pitchSliderRange
+
+        // Make sure to cap the existing values if upding the range to be smaller than the current values
+        if (window.userSettings.pitchrangeoverride) {
+            window.sequenceEditor.pitchNew.forEach((val,vi) => {
+                if (Math.abs(val)>window.userSettings.pitchrangeoverride) {
+                   val = Math.max(-window.userSettings.pitchrangeoverride, Math.min(window.userSettings.pitchrangeoverride, val))
+                   window.sequenceEditor.pitchNew[vi] = val
+                }
+            })
+        }
+
+        window.sequenceEditor.update(window.currentModel.modelType, pitchRange)
+    }
+}
+initMenuSetting(setting_pitchrangeoverrideEnabledCkbx, "do_pitchrangeoverride", "checkbox", updateSequenceEditorRange)
+initMenuSetting(setting_pitchrangeoverride, "pitchrangeoverride", "number", updateSequenceEditorRange, parseFloat)
 
 
 setPromptTheme()
@@ -798,6 +825,8 @@ reset_settings_btn.addEventListener("click", () => {
             window.userSettings.clear_text_after_synth = false
             window.userSettings.do_model_version_highlight = false
             window.userSettings.model_version_highlight = 3.0
+            window.userSettings.do_pitchrangeoverride = false
+            window.userSettings.pitchrangeoverride = 6.0
             window.userSettings.keepPaceOnNew = true
             window.userSettings.arpabet_paginationSize = 200
             window.userSettings.output_files_pagination_size = 25

@@ -77,6 +77,7 @@ window.i18n.setEnglish = () => {
     window.i18n.SETTINGS_BG_FADE = "Background image fade opacity"
     window.i18n.SETTINGS_AUTORELOADVOICES = "Auto-reload voices on files changes"
     window.i18n.SETTINGS_KEEPEDITORSTATE = "Keep editor state on voice change"
+    window.i18n.SETTINGS_PITCHRANGEOVERRIDE = "Pitch range over-ride"
     window.i18n.SETTINGS_OUTPUTJSON = "Output .json (needed for editing)"
     window.i18n.SETTINGS_SEQNUMBERING = "Use sequential numbering for file names"
     window.i18n.SETTINGS_SPACEPADDING = "Automatically pad text sequence with spaces (better quality, usually)"
@@ -855,6 +856,7 @@ window.i18n.updateUI = () => {
     i18n_setting_bg_fade.innerHTML = window.i18n.SETTINGS_BG_FADE
     i18n_setting_autoreloadvoices.innerHTML = window.i18n.SETTINGS_AUTORELOADVOICES
     i18n_setting_keepeditorstate.innerHTML = window.i18n.SETTINGS_KEEPEDITORSTATE
+    i18n_setting_pitchrangeoverride.innerHTML = window.i18n.SETTINGS_PITCHRANGEOVERRIDE
     i18n_setting_outputjson.innerHTML = window.i18n.SETTINGS_OUTPUTJSON
     i18n_setting_seqnumbering.innerHTML = window.i18n.SETTINGS_SEQNUMBERING
     i18n_setting_spacepadding.innerHTML = window.i18n.SETTINGS_SPACEPADDING

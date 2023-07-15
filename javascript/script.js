@@ -858,7 +858,8 @@ window.synthesizeSample = () => {
                 window.sequenceEditor.loadStylesData(editorStyles)
             }
             window.sequenceEditor.init()
-            window.sequenceEditor.update(window.currentModel.modelType, window.sequenceEditor.pitchSliderRange)
+            const pitchRange = window.userSettings.pitchrangeoverride ? window.userSettings.pitchrangeoverride : window.sequenceEditor.pitchSliderRange
+            window.sequenceEditor.update(window.currentModel.modelType, pitchRange)
 
             window.sequenceEditor.sliderBoxes.forEach((box, i) => {box.setValueFromValue(window.sequenceEditor.dursNew[i])})
             window.sequenceEditor.autoInferTimer = null

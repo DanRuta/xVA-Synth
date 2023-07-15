@@ -163,9 +163,8 @@ class Editor {
                 return
             }
 
-            // one grabber type
-            if (seq_edit_view_select.value !== "pitch_energy")
-            {
+            // One grabber type
+            if (seq_edit_view_select.value !== "pitch_energy") {
                 this.sliderBoxes.forEach((sbox, sboxi) => {
                     if (!this.enabled_disabled_items[sboxi]) return;
 
@@ -376,13 +375,11 @@ class Editor {
             })
             if (isOnLetter) {
                 this.setLetterFocus(this.letterClasses.indexOf(isOnLetter), event.ctrlKey, event.shiftKey, event.altKey)
-            }
-            else
-            {
-                // drag grabber when only single type of grabber
+            } else {
+                // Drag grabber when only single type of grabber
                 if (seq_edit_view_select.value !== "pitch_energy")
                 {
-                    // fetch any grabber within letter column
+                    // Fetch any grabber within letter column
                     const isOnGrabberCol = seq_edit_view_select.value=="pitch" && findGrabber(this.grabbers)
                     if (isOnGrabberCol) {
                         const slider = isOnGrabberCol
