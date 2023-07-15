@@ -39,6 +39,7 @@ class Editor {
 
         this.clear() // And thus init
 
+        this.registeredStyleKeys = []
         this.historyState = [] // TODO, add support for undo/redo across all editor functions
     }
 
@@ -116,21 +117,25 @@ class Editor {
             delete this.context
         }
 
+        let canvasWidth = 0
+        if (this.sliderBoxes.length) {
+            canvasWidth = this.sliderBoxes.at(-1).getX() + this.SPACE_BETWEEN_LETTERS * 2 + 100
+        } else {
+            canvasWidth = this.LEFT_RIGHT_SEQ_PADDING*2 // Padding
+            this.dursNew.forEach((dur,di) => {
+                if (di) {
+                    canvasWidth += this.SPACE_BETWEEN_LETTERS
+                }
 
-        let canvasWidth = this.LEFT_RIGHT_SEQ_PADDING*2 // Padding
-        this.dursNew.forEach((dur,di) => {
-            if (di) {
-                canvasWidth += this.SPACE_BETWEEN_LETTERS
-            }
-
-            let value = dur
-            value = value * this.pacing
-            value = Math.max(0.1, value)
-            value = Math.min(value, 20)
-            const percentAcross = value/20
-            const width = percentAcross * (this.MAX_LETTER_LENGTH-this.MIN_LETTER_LENGTH) + this.MIN_LETTER_LENGTH
-            canvasWidth += width
-        })
+                let value = dur
+                value = value * this.pacing
+                value = Math.max(0.1, value)
+                value = Math.min(value, 20)
+                const percentAcross = value/20
+                const width = percentAcross * (this.MAX_LETTER_LENGTH-this.MIN_LETTER_LENGTH) + this.MIN_LETTER_LENGTH
+                canvasWidth += width
+            })
+        }
 
         this.canvas = document.createElement("canvas")
         this.context = this.canvas.getContext("2d")
@@ -732,6 +737,8 @@ class Editor {
             xCounter += width + 5
 
         })
+
+        this.canvas.width = this.sliderBoxes.at(-1).getX() + this.SPACE_BETWEEN_LETTERS * 2 + 100
     }
 
     setLetterFocus (l, ctrlKey, shiftKey, altKey) {
