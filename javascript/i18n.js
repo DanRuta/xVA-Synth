@@ -180,6 +180,8 @@ window.i18n.setEnglish = () => {
     window.i18n.KEYBOARD_CTRL_UD_DO = "Pitch increase/decrease buttons"
     window.i18n.KEYBOARD_CTRLSHIFTUD = "Ctrl+Shift+Up/Down arrows"
     window.i18n.KEYBOARD_CTRLSHIFTUD_DO = "Pitch amplify/flatten buttons"
+    window.i18n.KEYBOARD_CTRLENTER = "Ctrl+Enter"
+    window.i18n.KEYBOARD_CTRLENTER_DO = "Manually re-generate a line"
     window.i18n.KEYBOARD_CTRLA = "Ctrl+A"
     window.i18n.KEYBOARD_CTRLA_DO = "Select all editor sequence letters"
 
@@ -416,6 +418,7 @@ window.i18n.setEnglish = () => {
     window.i18n.TOTD_29 = "The v3 models don't pre-generate pitch or energy values. Instead, the values in the editor are multipliers rather than absolute values. So initially, tney are set to 1, and you can CHANGE what they are rather than setting values like for v1 and v2 models."
     window.i18n.TOTD_30 = "To get the absolute highest quality from an audio file, you should enable the 'Use SR' option, to run super-resolution from the default 22050Hz into 48000Hz. It's best to use the GPU mode for this, else it can be quite slow. You also need to make sure that you didn't set the ffmpeg Hz post-processing value to something low like 22050, else you won't hear the benefits."
     window.i18n.TOTD_31 = "With v3 models, you can right click the sliders editor to open the context menu, where you can select to copy the final symbol sequence to clipboard."
+    window.i18n.TOTD_32 = "You can use the Ctrl+Enter shortcut to manually kick offf re-generating a line."
 
     window.i18n.TOTD_NO_UNSEEN = "There are no unseen tips left to show. Untick the 'Only show unseen tips' setting to show all tips."
 
@@ -948,6 +951,8 @@ window.i18n.updateUI = () => {
     i18n_keyboard_ctrl_ud_do.innerHTML = window.i18n.KEYBOARD_CTRL_UD_DO
     i18n_keyboard_ctrlshiftud.innerHTML = window.i18n.KEYBOARD_CTRLSHIFTUD
     i18n_keyboard_ctrlshiftud_do.innerHTML = window.i18n.KEYBOARD_CTRLSHIFTUD_DO
+    i18n_keyboard_ctrlenter.innerHTML = window.i18n.KEYBOARD_CTRLENTER
+    i18n_keyboard_ctrlenter_do.innerHTML = window.i18n.KEYBOARD_CTRLENTER_DO
 
     i18n_support.innerHTML = window.i18n.SUPPORT
     // i18n_support_link.innerHTML = window.i18n.SUPPORT_LINK

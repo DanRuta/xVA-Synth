@@ -329,6 +329,10 @@ window.addEventListener("keydown", event => {
         window.ctrlKeyIsPressed = true
     }
 
+    // Re-gen the line if the user presses CTRL-ENTER, evne outside the prompt box
+    if (event.key=="Enter" && window.ctrlKeyIsPressed) {
+        generateVoiceButton.click()
+    }
     // The Enter key to submit text input prompts in modals
     if (event.key=="Enter" && modalContainer.style.display!="none" && event.target.tagName=="INPUT") {
         activeModal.querySelector("button").click()
