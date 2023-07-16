@@ -346,7 +346,7 @@ class xVAPitch(nn.Module):
 
         # Splice/replace pitch/duration values from the old input if simulating only a partial re-generation
         if start_index is not None or end_index is not None:
-            dur_pred_np = list(dur_pred.cpu().detach().numpy())[0]
+            dur_pred_np = list(dur_pred.cpu().detach().numpy())[0][0]
             pitch_pred_np = list(pitch_pred.cpu().detach().numpy())[0][0]
             emAngry_pred_np = list(emAngry_pred.cpu().detach().numpy())[0][0]
             emHappy_pred_np = list(emHappy_pred.cpu().detach().numpy())[0][0]

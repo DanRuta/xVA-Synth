@@ -636,6 +636,36 @@ window.loadModel = () => {
     })
 }
 
+// Return true/false for if the prompt is the same - BUT: allow phoneme swaps
+window.checkIfPromptIsTheSame = (sequence) => {
+
+    // False if there was no previous prompt
+    if (!window.sequenceEditor.historyState.length) {
+        return false
+    }
+
+    const lastPrompt = window.sequenceEditor.historyState.at(-1)
+
+    // False if they're different lengths
+    if (sequence.length != lastPrompt.length) {
+        return false
+    }
+
+    // Split into words (and phonemes)
+    const currentParts = sequence.split(" ")
+    const lastParts = lastPrompt.split(" ")
+
+    for (let si=0; si<currentParts.length; si++) {
+        // False if a word is different, but not if it's an ARPAbet symbol
+        const cleaned = currentParts[si].replace(/[^a-zA-Z]/g, "")
+        if (currentParts[si]!=lastParts[si] && !window.ARPAbetSymbols.includes(cleaned)) {
+            return false
+        }
+    }
+
+    return true
+}
+
 window.synthesizeSample = () => {
 
     const game = window.currentGame.gameId
@@ -701,7 +731,7 @@ window.synthesizeSample = () => {
 
     // Check if editing an existing line (otherwise it's a fresh new line)
     const languageHasChanged = window.sequenceEditor.base_lang && window.sequenceEditor.base_lang != base_lang_select.value
-    const promptHasChanged = !window.sequenceEditor.historyState.length || window.sequenceEditor.historyState.at(-1)!=sequence
+    const promptHasChanged = !window.checkIfPromptIsTheSame(sequence)
     if (!promptHasChanged && !languageHasChanged && !window.arpabetMenuState.hasChangedARPAbet && !window.styleEmbsMenuState.hasChangedEmb &&
         (speech2speechState.s2s_autogenerate || (editorContainer.innerHTML && editorContainer.innerHTML.length && (window.userSettings.keepEditorOnVoiceChange || generateVoiceButton.dataset.modelIDLoaded==window.sequenceEditor.currentVoice)))) {
 
