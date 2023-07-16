@@ -12,18 +12,31 @@ window.arpabetMenuState = {
     hasChangedARPAbet: false
 }
 
-// window.ARPAbetSymbols = ["AA", "AE", "AH", "AO", "AW", "AX", "AXR", "AY", "B", "CH", "D", "DH", "EH", "EL", "EM", "EN", "ER", "EY", "F", "G", "HH", "IH", "IX", "IY", "JH", "K", "L", "M", "N", "NG", "OW", "P", "R", "S", "SH", "T", "TH", "UH", "UW", "UX", "V", "W", "WH", "Y", "Z", "ZH"]
-// window.ARPAbetSymbols = ["AA", "AE", "AH", "AO", "AW", "AY", "B", "CH", "D", "DH", "EH", "ER", "EY", "F", "G", "HH", "IH", "IY", "JH", "K", "L", "M", "N", "NG", "OY", "P", "R", "S", "SH", "T", "TH", "UH", "UW", "V", "W", "Y", "Z", "ZH"]
-window.ARPAbetSymbols = [
-  'AA', 'AA0', 'AA1', 'AA2', 'AE', 'AE0', 'AE1', 'AE2', 'AH', 'AH0', 'AH1', 'AH2',
-  'AO', 'AO0', 'AO1', 'AO2', 'AW', 'AW0', 'AW1', 'AW2', 'AY', 'AY0', 'AY1', 'AY2',
-  'B', 'CH', 'D', 'DH', 'EH', 'EH0', 'EH1', 'EH2', 'ER', 'ER0', 'ER1', 'ER2', 'EY',
-  'EY0', 'EY1', 'EY2', 'F', 'G', 'HH', 'IH', 'IH0', 'IH1', 'IH2', 'IY', 'IY0', 'IY1',
-  'IY2', 'JH', 'K', 'L', 'M', 'N', 'NG', 'OW', 'OW0', 'OW1', 'OW2', 'OY', 'OY0',
-  'OY1', 'OY2', 'P', 'R', 'S', 'SH', 'T', 'TH', 'UH', 'UH0', 'UH1', 'UH2', 'UW',
-  'UW0', 'UW1', 'UW2', 'V', 'W', 'Y', 'Z', 'ZH'
-  ,"}","{", "_"
-]
+window.ARPAbetSymbols = ['AA0', 'AA1', 'AA2', 'AA', 'AE0', 'AE1', 'AE2', 'AE', 'AH0', 'AH1', 'AH2', 'AH',
+  'AO0', 'AO1', 'AO2', 'AO', 'AW0', 'AW1', 'AW2', 'AW', 'AY0', 'AY1', 'AY2', 'AY',
+  'B', 'CH', 'D', 'DH', 'EH0', 'EH1', 'EH2', 'EH', 'ER0', 'ER1', 'ER2', 'ER',
+  'EY0', 'EY1', 'EY2', 'EY', 'F', 'G', 'HH', 'IH0', 'IH1', 'IH2', 'IH', 'IY0', 'IY1',
+  'IY2', 'IY', 'JH', 'K', 'L', 'M', 'N', 'NG', 'OW0', 'OW1', 'OW2', 'OW', 'OY0',
+  'OY1', 'OY2', 'OY', 'P', 'R', 'S', 'SH', 'T', 'TH', 'UH0', 'UH1', 'UH2', 'UH',
+  'UW0', 'UW1', 'UW2', 'UW', 'V', 'W', 'Y', 'Z', 'ZH', ,"}","{", "_",
+  "AX", "AXR", "IX", "UX", "DX", "EL", "EM", "EN0", "EN1", "EN2", "EN", "NX", "Q", "WH",
+  "RRR", "HR", "OE", "RH", "TS", "RR", "UU", "OO", "KH", "SJ", "HJ", "BR",
+
+  "A1", "A2", "A3", "A4", "A5", "AI1", "AI2", "AI3", "AI4", "AI5", "AIR2", "AIR3", "AIR4", "AN1", "AN2", "AN3", "AN4", "AN5", "ANG1", "ANG2", "ANG3", "ANG4", "ANG5", "ANGR2", "ANGR3", "ANGR4", "ANR1", "ANR3", "ANR4", "AO1", "AO2", "AO3", "AO4", "AO5", "AOR1", "AOR2", "AOR3", "AOR4", "AOR5", "AR2", "AR3", "AR4", "AR5", "E1", "E2", "E3", "E4", "E5", "EI1", "EI2", "EI3", "EI4", "EI5", "EIR4", "EN1", "EN2", "EN3", "EN4", "EN5", "ENG1", "ENG2", "ENG3", "ENG4", "ENG5", "ENGR1", "ENGR4", "ENR1", "ENR2", "ENR3", "ENR4", "ENR5", "ER1", "ER2", "ER3", "ER4", "ER5", "I1", "I2", "I3", "I4", "I5", "IA1", "IA2", "IA3", "IA4", "IA5", "IAN1", "IAN2", "IAN3", "IAN4", "IAN5", "IANG1", "IANG2", "IANG3", "IANG4", "IANG5", "IANGR2", "IANR1", "IANR2", "IANR3", "IANR4", "IANR5", "IAO1", "IAO2", "IAO3", "IAO4", "IAO5", "IAOR1", "IAOR2", "IAOR3", "IAOR4", "IAR1", "IAR4", "IE1", "IE2", "IE3", "IE4", "IE5", "IN1", "IN2", "IN3", "IN4", "IN5", "ING1", "ING2", "ING3", "ING4", "ING5", "INGR2", "INGR4", "INR1", "INR4", "IONG1", "IONG2", "IONG3", "IONG4", "IONG5", "IR1", "IR3", "IR4", "IU1", "IU2", "IU3", "IU4", "IU5", "IUR1", "IUR2", "O1", "O2", "O3", "O4", "O5", "ONG1", "ONG2", "ONG3", "ONG4", "ONG5", "OR1", "OR2", "OU1", "OU2", "OU3", "OU4", "OU5", "OUR2", "OUR3", "OUR4", "OUR5", "U1", "U2", "U3", "U4", "U5", "UA1", "UA2", "UA3", "UA4", "UA5", "UAI1", "UAI2", "UAI3", "UAI4", "UAIR4", "UAIR5", "UAN1", "UAN2", "UAN3", "UAN4", "UAN5", "UANG1", "UANG2", "UANG3", "UANG4", "UANG5", "UANR1", "UANR2", "UANR3", "UANR4", "UAR1", "UAR2", "UAR4", "UE1", "UE2", "UE3", "UE4", "UE5", "UER2", "UER3", "UI1", "UI2", "UI3", "UI4", "UI5", "UIR1", "UIR2", "UIR3", "UIR4", "UN1", "UN2", "UN3", "UN4", "UN5", "UNR1", "UNR2", "UNR3", "UNR4", "UO1", "UO2", "UO3", "UO4", "UO5", "UOR1", "UOR2", "UOR3", "UOR5", "UR1", "UR2", "UR4", "UR5", "V2", "V3", "V4", "V5", "VE4", "VR3", "WA1", "WA2", "WA3", "WA4", "WA5", "WAI1", "WAI2", "WAI3", "WAI4", "WAN1", "WAN2", "WAN3", "WAN4", "WAN5", "WANG1", "WANG2", "WANG3", "WANG4", "WANG5", "WANGR2", "WANGR4", "WANR2", "WANR4", "WANR5", "WEI1", "WEI2", "WEI3", "WEI4", "WEI5", "WEIR1", "WEIR2", "WEIR3", "WEIR4", "WEIR5", "WEN1", "WEN2", "WEN3", "WEN4", "WEN5", "WENG1", "WENG2", "WENG3", "WENG4", "WENR2", "WO1", "WO2", "WO3", "WO4", "WO5", "WU1", "WU2", "WU3", "WU4", "WU5", "WUR3", "YA1", "YA2", "YA3", "YA4", "YA5", "YAN1", "YAN2", "YAN3", "YAN4", "YANG1", "YANG2", "YANG3", "YANG4", "YANG5", "YANGR4", "YANR3", "YAO1", "YAO2", "YAO3", "YAO4", "YAO5", "YE1", "YE2", "YE3", "YE4", "YE5", "YER4", "YI1", "YI2", "YI3", "YI4", "YI5", "YIN1", "YIN2", "YIN3", "YIN4", "YIN5", "YING1", "YING2", "YING3", "YING4", "YING5", "YINGR1", "YINGR2", "YINGR3", "YIR4", "YO1", "YO3", "YONG1", "YONG2", "YONG3", "YONG4", "YONG5", "YONGR3", "YOU1", "YOU2", "YOU3", "YOU4", "YOU5", "YOUR2", "YOUR3", "YOUR4", "YU1", "YU2", "YU3", "YU4", "YU5", "YUAN1", "YUAN2", "YUAN3", "YUAN4", "YUAN5", "YUANR2", "YUANR4", "YUE1", "YUE2", "YUE4", "YUE5", "YUER4", "YUN1", "YUN2", "YUN3", "YUN4",
+
+  "@BREATHE_IN", "@BREATHE_OUT", "@LAUGH", "@GIGGLE", "@SIGH", "@COUGH", "@AHEM", "@SNEEZE", "@WHISTLE", "@UGH", "@HMM", "@GASP", "@AAH", "@GRUNT", "@YAWN", "@SNIFF"
+
+  ]
+// window.ARPAbetSymbols = [
+//   'AA', 'AA0', 'AA1', 'AA2', 'AE', 'AE0', 'AE1', 'AE2', 'AH', 'AH0', 'AH1', 'AH2',
+//   'AO', 'AO0', 'AO1', 'AO2', 'AW', 'AW0', 'AW1', 'AW2', 'AY', 'AY0', 'AY1', 'AY2',
+//   'B', 'CH', 'D', 'DH', 'EH', 'EH0', 'EH1', 'EH2', 'ER', 'ER0', 'ER1', 'ER2', 'EY',
+//   'EY0', 'EY1', 'EY2', 'F', 'G', 'HH', 'IH', 'IH0', 'IH1', 'IH2', 'IY', 'IY0', 'IY1',
+//   'IY2', 'JH', 'K', 'L', 'M', 'N', 'NG', 'OW', 'OW0', 'OW1', 'OW2', 'OY', 'OY0',
+//   'OY1', 'OY2', 'P', 'R', 'S', 'SH', 'T', 'TH', 'UH', 'UH0', 'UH1', 'UH2', 'UW',
+//   'UW0', 'UW1', 'UW2', 'V', 'W', 'Y', 'Z', 'ZH'
+//   ,"}","{", "_"
+// ]
 
 window.refreshDictionariesList = () => {
 
