@@ -108,6 +108,7 @@ class TextPreprocessor():
                 self.epitran = epitran.Epitran(self.lang_code2)
 
             elif self.use_g2p:
+                base_dir = os.path.dirname(os.path.realpath(__file__))
                 self.espeak = ESpeak(base_dir, language=self.lang_code2, keep_puncs=True)
 
         self.h2p = None

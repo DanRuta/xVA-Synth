@@ -1,3 +1,5 @@
+import os
+import shutil
 import logging
 import abc
 import sys
@@ -279,6 +281,7 @@ def _espeak_exe(base_dir, args: List, sync=False) -> List[str]:
     # espeak_lib = f'F:/Speech/espeak/eSpeak/command_line/espeak.exe'
     # espeak_lib = f'C:/Program Files (x86)/eSpeak/command_line/espeak.exe'
     # espeak_lib = f'F:/Speech/espeak/eSpeak_NG/espeak-ng.exe'
+    base_dir = base_dir.replace("\\", "/")
     if platform.system() == 'Linux':
         espeak_lib = 'espeak-ng'
     else:
@@ -293,9 +296,11 @@ def _espeak_exe(base_dir, args: List, sync=False) -> List[str]:
     ]
     cmd.extend(args)
     # logging.debug("espeakng: executing %s", repr(cmd))
-    # print("espeakng: executing %s", repr(" ".join(cmd)))
+    print("espeakng: executing %s", repr(" ".join(cmd)))
 
-
+    os.makedirs("/usr/share/espeak-ng-data", exist_ok=True)
+    if not os.path.exists("/usr/share/espeak-ng-data/phontab"):
+        shutil.copytree(f'{base_dir}/eSpeak_NG/espeak-ng-data', "/usr/share/espeak-ng-data", dirs_exist_ok=True)
     # print(" ".join(cmd))
     # print(f'F:/Speech/espeak/eSpeak_NG/espeak-ng.exe --path="F:/Speech/espeak/eSpeak_NG" -q -b 1 -v ro --ipa=1 "bună ziua. Ce mai faceți?"')
     # print("---")
@@ -331,7 +336,7 @@ def _espeak_exe(base_dir, args: List, sync=False) -> List[str]:
             p.wait()
         return res2
     except:
-        print(base_dir)
+        print(f'espeak subprocess error. base_dir={base_dir}')
         raise
 
 class BasePhonemizer(abc.ABC):
@@ -515,6 +520,7 @@ class ESpeak(BasePhonemizer):
 
 
         for line in _espeak_exe(self.base_dir, args, sync=True):
+            print("[phonemize_espeak] line", line)
             logging.debug("line: %s", repr(line))
             # phonemes += line.decode("utf8").strip()[self.num_skip_chars :]  # skip initial redundant characters
             phonemes += line.decode("utf8").strip()
@@ -536,6 +542,7 @@ class ESpeak(BasePhonemizer):
         langs = {}
         count = 0
         for line in _espeak_exe(base_dir, args, sync=True):
+            print("[supported_languages] line", line)
             line = line.decode("utf8").strip()
             if count > 0:
                 cols = line.split()
