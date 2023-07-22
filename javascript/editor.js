@@ -41,6 +41,7 @@ class Editor {
 
         this.registeredStyleKeys = []
         this.historyState = [] // TODO, add support for undo/redo across all editor functions
+        this.isEditingFromFile = false
     }
 
     clear () {

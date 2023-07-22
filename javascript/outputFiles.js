@@ -129,6 +129,8 @@ window.makeSample = (src, newSample) => {
 
                 generateVoiceButton.dataset.modelIDLoaded = editData.pitchEditor ? editData.pitchEditor.currentVoice : editData.currentVoice
 
+                window.sequenceEditor.historyState.push(editData.inputSequence.trim())
+                window.sequenceEditor.isEditingFromFile = true
                 window.sequenceEditor.inputSequence = editData.inputSequence
                 window.sequenceEditor.pacing = editData.pacing
                 window.sequenceEditor.letters = editData.pitchEditor ? editData.pitchEditor.letters : editData.letters

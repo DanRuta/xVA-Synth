@@ -678,9 +678,10 @@ window.synthesizeSample = () => {
     }
 
     let sequence = dialogueInput.value.replace("…", "...").replace("’", "'")
-    if (window.userSettings.spacePadding) { // Pad start and end of the input sequence with spaces
+    if (window.userSettings.spacePadding && !window.sequenceEditor.isEditingFromFile) { // Pad start and end of the input sequence with spaces
         sequence = " "+sequence.trim()+" "
     }
+    window.sequenceEditor.isEditingFromFile = false
 
     if (sequence.length==0) {
         return
