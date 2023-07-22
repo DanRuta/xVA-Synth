@@ -1209,7 +1209,7 @@ class ChineseTextPreprocessor(TextPreprocessor):
                             sp = sp.replace("\"", "").replace(")", "").replace("(", "").replace("]", "").replace("[", "").strip()
 
                             if len(sp):
-                                if sp.lower() in self.g2p_cache.keys() and len(self.g2p_cache[sp.lower()].trim()):
+                                if sp.lower() in self.g2p_cache.keys() and len(self.g2p_cache[sp.lower()].strip()):
                                     g2p_out = self.g2p_cache[sp.lower()]
                                     g2p_out = self.post_process_pinyin_symbs(g2p_out)
                                     sub_part_phonemes.append(g2p_out)
