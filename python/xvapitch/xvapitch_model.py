@@ -304,7 +304,7 @@ class xVAPitch(nn.Module):
 
             w = torch.exp(logw) * x_mask * self.length_scale
             # w = w * 1.3 # The model seems to generate quite fast speech, so I'm gonna just globally adjust that
-            w = w * (pace.unsqueeze(2) if torch.is_tensor(pace) else 1)
+            w = w * (pace.unsqueeze(2) if torch.is_tensor(pace) else pace)
             w_ceil = w
             w_ceil = torch.ceil(w)
             dur_pred = w_ceil
