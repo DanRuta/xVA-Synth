@@ -23,6 +23,7 @@ window.loadStyleEmbsFromDisk = () => {
 
 
     // Read all the embedding files
+    fs.mkdirSync(window.styleEmbsMenuState.embeddingsDir, {recursive: true})
     const embFiles = fs.readdirSync(window.styleEmbsMenuState.embeddingsDir)
     embFiles.forEach(jsonFName => {
         const jsonData = JSON.parse(fs.readFileSync(`${window.styleEmbsMenuState.embeddingsDir}/${jsonFName}`))
