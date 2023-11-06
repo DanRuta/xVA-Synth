@@ -23,17 +23,17 @@ try:
     from resources.app.python.xvapitch.text.ipa_to_xvaarpabet import ESpeak, ipa2xvaarpabet, PUNCTUATION, ALL_SYMBOLS, PIN_YIN_ENDS, pinyin_to_arpabet_mappings, text_pinyin_to_pinyin_symbs, manual_phone_replacements
     from resources.app.python.xvapitch.text.en_numbers import normalize_numbers as en_normalize_numbers
     from resources.app.python.xvapitch.text.ro_numbers import generateWords as ro_generateWords
-except:
+except ModuleNotFoundError:
     try:
         from python.xvapitch.text.ipa_to_xvaarpabet import ESpeak, ipa2xvaarpabet, PUNCTUATION, ALL_SYMBOLS, PIN_YIN_ENDS, pinyin_to_arpabet_mappings, text_pinyin_to_pinyin_symbs, manual_phone_replacements
         from python.xvapitch.text.en_numbers import normalize_numbers as en_normalize_numbers
         from python.xvapitch.text.ro_numbers import generateWords as ro_generateWords
-    except:
+    except ModuleNotFoundError:
         try:
             from text.ipa_to_xvaarpabet import ESpeak, ipa2xvaarpabet, PUNCTUATION, ALL_SYMBOLS, PIN_YIN_ENDS, pinyin_to_arpabet_mappings, text_pinyin_to_pinyin_symbs, manual_phone_replacements
             from text.en_numbers import normalize_numbers as en_normalize_numbers
             from text.ro_numbers import generateWords as ro_generateWords
-        except:
+        except ModuleNotFoundError:
             from ipa_to_xvaarpabet import ESpeak, ipa2xvaarpabet, PUNCTUATION, ALL_SYMBOLS, PIN_YIN_ENDS, pinyin_to_arpabet_mappings, text_pinyin_to_pinyin_symbs, manual_phone_replacements
             from en_numbers import normalize_numbers as en_normalize_numbers
             from ro_numbers import generateWords as ro_generateWords

@@ -22,15 +22,15 @@ try:
     sys.path.append(".")
     from resources.app.python.xvapitch.text import ALL_SYMBOLS, get_text_preprocessor, lang_names
     from resources.app.python.xvapitch.xvapitch_model import xVAPitch as xVAPitchModel
-except:
+except ModuleNotFoundError:
     try:
         from python.xvapitch.text import ALL_SYMBOLS, get_text_preprocessor, lang_names
         from python.xvapitch.xvapitch_model import xVAPitch as xVAPitchModel
-    except:
+    except ModuleNotFoundError:
         try:
             from xvapitch.text import ALL_SYMBOLS, get_text_preprocessor, lang_names
             from xvapitch.xvapitch_model import xVAPitch as xVAPitchModel
-        except:
+        except ModuleNotFoundError:
             from text import ALL_SYMBOLS, get_text_preprocessor, lang_names
             from xvapitch_model import xVAPitch as xVAPitchModel
 

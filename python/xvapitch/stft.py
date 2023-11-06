@@ -41,10 +41,10 @@ from librosa.util import pad_center, tiny
 # try:
 #     sys.path.append(".")
 #     from resources.app.python.fastpitch1_1.common.audio_processing import window_sumsquare
-# except:
+# except ModuleNotFoundError:
 #     try:
 #         from python.fastpitch1_1.common.audio_processing import window_sumsquare
-#     except:
+#     except ModuleNotFoundError:
 #         from common.audio_processing import window_sumsquare
 from util import window_sumsquare
 
