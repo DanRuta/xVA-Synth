@@ -53,16 +53,6 @@ if __name__ == '__main__':
             f.write(traceback.format_exc())
     # ================
     CPU_ONLY = not torch.cuda.is_available()
-    if CPU_ONLY:
-        try:
-            import torch_directml
-            torch_dml_device = torch_directml.device()
-        except:
-            # I've implemented support for DirectML, but at the time of writing (08/04/2023, v0.1.13.1.dev230301), it's hella broken...
-            # Not a single model can successfully .forward() when switching to DirectML device from cpu. I'm leaving in the code however,
-            # as I'd still like to add support for it once things are more stable. This try/catch should run ok when it's installed
-            torch_dml_device = torch.device("cpu")
-            pass
 
     try:
         logger = logging.getLogger('serverLog')
@@ -102,6 +92,18 @@ if __name__ == '__main__':
             logger.info(traceback.format_exc())
         except:
             pass
+
+    if CPU_ONLY:
+        try:
+            import torch_directml
+            torch_dml_device = torch_directml.device()
+            logger.info("Successfully got the torch DirectML device")
+        except Exception as e:
+            # I've implemented support for DirectML, but at the time of writing (08/04/2023, v0.1.13.1.dev230301), it's hella broken...
+            # Not a single model can successfully .forward() when switching to DirectML device from cpu. I'm leaving in the code however,
+            # as I'd still like to add support for it once things are more stable. This try/catch should run ok when it's installed
+            torch_dml_device = torch.device("cpu")
+            logger.exception("Failed to get torch DirectML; falling back to cpu device")
     # ========================
 
 
@@ -219,7 +221,15 @@ if __name__ == '__main__':
                 if self.path == "/setDevice":
                     logger.info("POST {}".format(self.path))
                     logger.info(post_data)
-                    device = torch.device("cpu") if post_data["device"]=="cpu" else (torch_dml_device if CPU_ONLY else torch.device("cuda:0"))
+                    if post_data["device"] == "cpu":
+                        logger.info("Setting torch device to CPU")
+                        device = torch.device("cpu")
+                    elif CPU_ONLY:
+                        logger.info("Setting torch device to DirectML")
+                        device = torch_dml_device
+                    else:
+                        logger.info("Setting torch device to CUDA")
+                        device = torch.device("cuda:0")
                     models_manager.set_device(device)
 
                 if self.path == "/loadModel":
