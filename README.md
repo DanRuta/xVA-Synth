@@ -51,7 +51,11 @@ If the required CUDA dependencies are installed on your system, you can enable G
 
 ## Development
 
-`npm install` dependencies, and run with `npm start`. Use virtualenv, and `pip install -r requirements.txt` using Python 3.6.
+1. Install Node modules with `npm install`.
+2. Create a Python 3.9 virtual environment with `python -m venv .venv`.
+3. Activate the virtual environment.
+4. Install Python dependencies from one of the `requirements_*.txt` files. For example, `pip install -r requirements_cpu.txt`.
+5. Run the application with `npm start`.
 
 The app uses both JavaScript (Electron, UI) and Python code (FastPitch Model). As the python script needs to remain running alongside the app, and receive input, communication is done via an HTTP server, with the JavaScript code sending localhost requests, at port 8008. During development, the python source is used. In production, the compiled python is used.
 
