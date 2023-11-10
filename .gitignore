@@ -36,3 +36,4 @@ python/wav2vec2/pytorch_model.bin
 python/ffmpeg.exe
 python/xvapitch/base_v1.0.pt
 env*
+embeddings.txt

@@ -12,7 +12,7 @@ const doFetch = require("node-fetch")
 const {xVAAppLogger} = require("./javascript/appLogger.js")
 window.appLogger = new xVAAppLogger(`./app.log`, window.appVersion)
 process.on(`uncaughtException`, (data, origin) => {window.appLogger.log(`uncaughtException: ${data}`);window.appLogger.log(`uncaughtException: ${origin}`)})
-window.onerror = (err, url, lineNum) => {window.appLogger.log(`onerror: ${err.stack}`)}
+window.onerror = (event, source, lineno, colno, error) => {window.appLogger.log(`onerror: ${error.stack}`)}
 require("./javascript/i18n.js")
 require("./javascript/util.js")
 require("./javascript/nexus.js")

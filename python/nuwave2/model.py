@@ -15,13 +15,13 @@ try:
     import sys
     sys.path.append(".")
     from resources.app.python.nuwave2.nuwave2_model import NuWave2 as model
-except:
+except ModuleNotFoundError:
     try:
         from python.nuwave2.nuwave2_model import NuWave2 as model
-    except:
+    except ModuleNotFoundError:
         try:
             from nuwave2.nuwave2_model import NuWave2 as model
-        except:
+        except ModuleNotFoundError:
             from nuwave2_model import NuWave2 as model
 class Diffusion(nn.Module):
     def __init__(self, hparams):

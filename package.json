@@ -12,7 +12,8 @@
   "repository": "https://github.com/DanRuta/xVA-Synth",
   "author": "DanRuta",
   "devDependencies": {
-    "electron": "19.0.0"
+    "electron": "19.0.0",
+    "electron-packager": "^17.1.2"
   },
   "dependencies": {
     "@electron/remote": "^2.0.9",
