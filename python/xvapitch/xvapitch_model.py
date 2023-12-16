@@ -214,7 +214,7 @@ class xVAPitch(nn.Module):
             except:
                 print(traceback.format_exc())
                 logger.info(traceback.format_exc())
-                # return traceback.format_exc()
+
                 return self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace, None, None, None, None, None, None, pitch_amp=pitch_amp)
 
         else:
@@ -401,19 +401,24 @@ class xVAPitch(nn.Module):
                 "emHappy": emHappy_pred.reshape((emHappy_pred.shape[0],emHappy_pred.shape[2])),
                 "emSad": emSad_pred.reshape((emSad_pred.shape[0],emSad_pred.shape[2])),
                 "emSurprise": emSurprise_pred.reshape((emSurprise_pred.shape[0],emSurprise_pred.shape[2])),
-                "text": [val.split("|") for val in cleaned_text],
+                "sequence": sequence,
                 "is_fresh_synth": pitch_pred_existing is None and dur_pred_existing is None,
 
                 "pluginsContext": plugin_manager.context
             }
             plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["mid"], event="mid synth-line", data=plugin_data)
 
-            dur_pred = torch.tensor(plugin_data["duration"]).to(self.device)
-            pitch_pred = torch.tensor(plugin_data["pitch"]).unsqueeze(1).to(self.device)
-            emAngry_pred = torch.tensor(plugin_data["emAngry"]).unsqueeze(1).to(self.device)
-            emHappy_pred = torch.tensor(plugin_data["emHappy"]).unsqueeze(1).to(self.device)
-            emSad_pred = torch.tensor(plugin_data["emSad"]).unsqueeze(1).to(self.device)
-            emSurprise_pred = torch.tensor(plugin_data["emSurprise"]).unsqueeze(1).to(self.device)
+            editor_data = [
+                plugin_data["pitch"][0],
+                plugin_data["duration"][0][0],
+                [1.0 for _ in range(pitch_pred.shape[-1])],
+                plugin_data["emAngry"][0],
+                plugin_data["emHappy"][0],
+                plugin_data["emSad"][0],
+                plugin_data["emSurprise"][0],
+                None
+            ]
+            return self.infer_advanced (logger, None, cleaned_text, sequence, lang_embs, speaker_embs, pace=1.0, editor_data=editor_data, old_sequence=None, pitch_amp=None)
 
         # TODO, incorporate some sort of control for this
         # self.inference_noise_scale = 0
