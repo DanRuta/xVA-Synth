@@ -200,6 +200,7 @@ class xVAPitch(nn.Module):
                 speaker_embs = speaker_embs + em_surprise_delta.float()
 
             try:
+                logger.info("editor data infer_using_vals")
                 wav, dur_pred, pitch_pred_out, energy_pred, em_pred_out, start_index, end_index, wav_mult = self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, \
                     speaker_embs, pace, dur_pred_existing=dur_pred, pitch_pred_existing=pitch_pred, energy_pred_existing=energy_pred, em_pred_existing=[em_angry_pred, em_happy_pred, em_sad_pred, em_surprise_pred], old_sequence=old_sequence, new_sequence=text, pitch_amp=pitch_amp)
 
@@ -214,10 +215,13 @@ class xVAPitch(nn.Module):
             except:
                 print(traceback.format_exc())
                 logger.info(traceback.format_exc())
+                # return traceback.format_exc()
 
+                logger.info("editor data corrupt; fallback to infer_using_vals")
                 return self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace, None, None, None, None, None, None, pitch_amp=pitch_amp)
 
         else:
+            logger.info("no editor infer_using_vals")
             return self.infer_using_vals(logger, plugin_manager, cleaned_text, text, lang_embs, speaker_embs, pace, None, None, None, None, None, None, pitch_amp=pitch_amp)
 
 
@@ -227,7 +231,6 @@ class xVAPitch(nn.Module):
 
         start_index = None
         end_index = None
-
         [em_angry_pred_existing, em_happy_pred_existing, em_sad_pred_existing, em_surprise_pred_existing] = em_pred_existing if em_pred_existing is not None else [None, None, None, None]
 
         # Calculate text splicing bounds, if needed
@@ -358,7 +361,7 @@ class xVAPitch(nn.Module):
             emAngry_pred_existing_np = list(em_angry_pred_existing.cpu().detach().numpy())[0]
             emHappy_pred_existing_np = list(em_happy_pred_existing.cpu().detach().numpy())[0]
             emSad_pred_existing_np = list(em_sad_pred_existing.cpu().detach().numpy())[0]
-            emSurprise_pred_existing_np = list(em_sad_pred_existing.cpu().detach().numpy())[0]
+            emSurprise_pred_existing_np = list(em_surprise_pred_existing.cpu().detach().numpy())[0]
 
             if start_index is not None: # Replace starting values
 
@@ -387,10 +390,8 @@ class xVAPitch(nn.Module):
             emSad_pred = torch.tensor(emSad_pred_np).to(self.device).unsqueeze(0).unsqueeze(0)
             emSurprise_pred = torch.tensor(emSurprise_pred_np).to(self.device).unsqueeze(0).unsqueeze(0)
 
-
         if pitch_amp is not None:
             pitch_pred = pitch_pred * pitch_amp.unsqueeze(dim=-1)
-
 
         if plugin_manager is not None and len(plugin_manager.plugins["synth-line"]["mid"]):
             pitch_pred = pitch_pred.cpu().detach().numpy()
@@ -418,7 +419,7 @@ class xVAPitch(nn.Module):
                 plugin_data["emSurprise"][0],
                 None
             ]
-            return self.infer_advanced (logger, None, cleaned_text, sequence, lang_embs, speaker_embs, pace=1.0, editor_data=editor_data, old_sequence=None, pitch_amp=None)
+            return self.infer_advanced (logger, None, cleaned_text, sequence, lang_embs, speaker_embs, pace=1.0, editor_data=editor_data, old_sequence=sequence, pitch_amp=None)
 
         # TODO, incorporate some sort of control for this
         # self.inference_noise_scale = 0
@@ -457,6 +458,7 @@ class xVAPitch(nn.Module):
 
         # energy_pred = energy_pred.squeeze()
         em_pred_out = [emAngry_pred, emHappy_pred, emSad_pred, emSurprise_pred]
+
         return wav, dur_pred, pitch_pred, energy_pred, em_pred_out, start_index, end_index, stretched_energy_mult
 
 
