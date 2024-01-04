@@ -169,13 +169,13 @@ class xVAPitch(nn.Module):
             energy_pred = torch.tensor(energy_pred)
             energy_pred = energy_pred.view((1, energy_pred.shape[0])).float().to(self.device)
 
-            em_angry_pred = torch.tensor(em_angry_pred)
+            em_angry_pred = em_angry_pred.clone().detach() if (type(em_angry_pred) == 'torch.Tensor') else torch.tensor(em_angry_pred)
             em_angry_pred = em_angry_pred.view((1, em_angry_pred.shape[0])).float().to(self.device)
-            em_happy_pred = torch.tensor(em_happy_pred)
+            em_happy_pred = em_happy_pred.clone().detach() if (type(em_happy_pred) == 'torch.Tensor') else torch.tensor(em_happy_pred)
             em_happy_pred = em_happy_pred.view((1, em_happy_pred.shape[0])).float().to(self.device)
-            em_sad_pred = torch.tensor(em_sad_pred)
+            em_sad_pred = em_sad_pred.clone().detach() if (type(em_sad_pred) == 'torch.Tensor') else torch.tensor(em_sad_pred)
             em_sad_pred = em_sad_pred.view((1, em_sad_pred.shape[0])).float().to(self.device)
-            em_surprise_pred = torch.tensor(em_surprise_pred)
+            em_surprise_pred = em_surprise_pred.clone().detach() if (type(em_surprise_pred) == 'torch.Tensor') else torch.tensor(em_surprise_pred)
             em_surprise_pred = em_surprise_pred.view((1, em_surprise_pred.shape[0])).float().to(self.device)
 
             # Pitch speaker embedding deltas
