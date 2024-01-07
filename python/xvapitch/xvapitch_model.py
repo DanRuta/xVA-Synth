@@ -419,7 +419,7 @@ class xVAPitch(nn.Module):
                 plugin_data["emSurprise"][0],
                 None
             ]
-            return self.infer_advanced (logger, None, cleaned_text, sequence, lang_embs, speaker_embs, pace=1.0, editor_data=editor_data, old_sequence=sequence, pitch_amp=None)
+            return self.infer_advanced (logger, None, cleaned_text, sequence, lang_embs, speaker_embs, pace=pace, editor_data=editor_data, old_sequence=sequence, pitch_amp=None)
 
         # TODO, incorporate some sort of control for this
         # self.inference_noise_scale = 0
