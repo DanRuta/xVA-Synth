@@ -394,10 +394,11 @@ class xVAPitch(nn.Module):
             pitch_pred = pitch_pred * pitch_amp.unsqueeze(dim=-1)
 
         if plugin_manager is not None and len(plugin_manager.plugins["synth-line"]["mid"]):
-            pitch_pred = pitch_pred.cpu().detach().numpy()
+            pitch_pred_numpy = pitch_pred.cpu().detach().numpy()
             plugin_data = {
+                "pace": pace,
                 "duration": dur_pred.cpu().detach().numpy(),
-                "pitch": pitch_pred.reshape((pitch_pred.shape[0],pitch_pred.shape[2])),
+                "pitch": pitch_pred_numpy.reshape((pitch_pred_numpy.shape[0],pitch_pred_numpy.shape[2])),
                 "emAngry": emAngry_pred.reshape((emAngry_pred.shape[0],emAngry_pred.shape[2])),
                 "emHappy": emHappy_pred.reshape((emHappy_pred.shape[0],emHappy_pred.shape[2])),
                 "emSad": emSad_pred.reshape((emSad_pred.shape[0],emSad_pred.shape[2])),
@@ -405,21 +406,33 @@ class xVAPitch(nn.Module):
                 "sequence": sequence,
                 "is_fresh_synth": pitch_pred_existing is None and dur_pred_existing is None,
 
-                "pluginsContext": plugin_manager.context
+                "pluginsContext": plugin_manager.context,
+                "hasDataChanged": False
             }
             plugin_manager.run_plugins(plist=plugin_manager.plugins["synth-line"]["mid"], event="mid synth-line", data=plugin_data)
 
-            editor_data = [
-                plugin_data["pitch"][0],
-                plugin_data["duration"][0][0],
-                [1.0 for _ in range(pitch_pred.shape[-1])],
-                plugin_data["emAngry"][0],
-                plugin_data["emHappy"][0],
-                plugin_data["emSad"][0],
-                plugin_data["emSurprise"][0],
-                None
-            ]
-            return self.infer_advanced (logger, None, cleaned_text, sequence, lang_embs, speaker_embs, pace=pace, editor_data=editor_data, old_sequence=sequence, pitch_amp=None)
+            if (
+                pace != plugin_data["pace"]
+                or plugin_data["hasDataChanged"]
+            ):
+                logger.info("Inference data has been changed by plugins, rerunning infer_advanced")
+                pace = plugin_data["pace"]
+                editor_data = [
+                    plugin_data["pitch"][0],
+                    plugin_data["duration"][0][0],
+                    [1.0 for _ in range(pitch_pred_numpy.shape[-1])],
+                    plugin_data["emAngry"][0],
+                    plugin_data["emHappy"][0],
+                    plugin_data["emSad"][0],
+                    plugin_data["emSurprise"][0],
+                    None
+                ]
+                # rerun infer_advanced so that emValues take effect
+                # second argument ensures no loop
+                return self.infer_advanced (logger, None, cleaned_text, sequence, lang_embs, speaker_embs, pace=pace, editor_data=editor_data, old_sequence=sequence, pitch_amp=None)
+            else:
+                # skip rerunning infer_advanced
+                logger.info("Inference data unchanged by plugins")
 
         # TODO, incorporate some sort of control for this
         # self.inference_noise_scale = 0
