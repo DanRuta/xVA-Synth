@@ -588,7 +588,7 @@ class EnglishTextPreprocessor(TextPreprocessor):
                         finishes_with_spelled_out_numeral = True
                         break
 
-                if len(words_out) and words_out[-1][-1] in numerals or finishes_with_spelled_out_numeral:
+                if len(words_out) and words_out[-1] != '' and words_out[-1][-1] in numerals or finishes_with_spelled_out_numeral:
                     word = "{EY0 IH0} {EH0 M}"+word[2:]
             words_out.append(word)
 
