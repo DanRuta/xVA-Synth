@@ -248,8 +248,11 @@ if __name__ == '__main__':
                     models_manager.load_model(modelType, ckpt+".pt", instance_index=instance_index, n_speakers=n_speakers, base_lang=base_lang)
                     plugin_manager.run_plugins(plist=plugin_manager.plugins["load-model"]["post"], event="post load-model", data=post_data)
 
-                    if modelType=="fastpitch1_1":
-                        models_manager.models_bank["fastpitch1_1"][instance_index].init_arpabet_dicts()
+                    if (
+                        modelType=="fastpitch1_1"
+                        or modelType=="xvapitch"
+                    ):
+                        models_manager.models_bank[modelType][instance_index].init_arpabet_dicts()
 
                 if self.path == "/getG2P":
                     text = post_data["text"]
@@ -487,6 +490,9 @@ if __name__ == '__main__':
                 if self.path == "/updateARPABet":
                     if "fastpitch1_1" in list(models_manager.models_bank.keys()):
                         models_manager.models_bank["fastpitch1_1"].refresh_arpabet_dicts()
+
+                    if "xvapitch" in list(models_manager.models_bank.keys()):
+                        models_manager.models_bank["xvapitch"].refresh_arpabet_dicts()
 
                 if self.path == "/start_microphone_recording":
                     start_microphone_recording(logger, models_manager, f'{"./resources/app" if PROD else "."}')
