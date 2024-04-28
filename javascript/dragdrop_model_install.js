@@ -77,9 +77,13 @@ window.dragDropModelInstallation = (eType, event) => {
                             const voiceId = jsonData.games[0].voiceId
                             const modelsFolder = window.userSettings[`modelspath_${game}`]
 
+                            if (!fs.existsSync(modelsFolder)) {
+                                fs.mkdirSync(modelsFolder)
+                            }
+
                             const allFilesForThisModel = allFiles.filter(fname => fname.includes(voiceId))
                             allFilesForThisModel.forEach(fname => {
-                                fs.copyFileSync(`${window.path}/downloads/${fname}`, `${modelsFolder}/${fname}`)
+                                fs.renameSync(`${window.path}/downloads/${fname}`, `${modelsFolder}/${fname}`)
                             })
 
                             installedOk = true
@@ -100,21 +104,21 @@ window.dragDropModelInstallation = (eType, event) => {
                 try {
                     const jsonFile = files.find(fname => fname.endsWith(".json"))
                     const parentFolder = jsonFile.replaceAll("\\", "/").split("/").reverse().slice(1, 100000).reverse().join("/")
-                    // const jsonData = JSON.parse(fs.readFileSync(`${parentFolder}/${jsonFile}`))
                     const jsonData = JSON.parse(fs.readFileSync(`${jsonFile}`))
 
                     const game = jsonData.games[0].gameId
                     const voiceId = jsonData.games[0].voiceId
                     const modelsFolder = window.userSettings[`modelspath_${game}`]
 
+                    if (!fs.existsSync(modelsFolder)) {
+                        fs.mkdirSync(modelsFolder)
+                    }
+
                     const allFilesForThisModel = fs.readdirSync(parentFolder).filter(fname => fname.includes(voiceId))
                     allFilesForThisModel.forEach(fname => {
-                        fs.copyFileSync(`${parentFolder}/${fname}`, `${modelsFolder}/${fname}`)
-                        // fs.copyFileSync(`${fname}`, `${modelsFolder}/${fname}`)
+                        fs.renameSync(`${parentFolder}/${fname}`, `${modelsFolder}/${fname}`)
                     })
 
-                    // lastGameInstalledOkFor = game
-                    // modelsInstalledSuccessfully.push(key)
                     resolve([game, key, true])
                 } catch (e) {
                     resolve([game, key, false])
