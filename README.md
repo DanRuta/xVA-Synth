@@ -1,9 +1,10 @@
 # xVA Synth
 
-xVASynth 2.0 is a machine learning based speech synthesis app, using voices from characters/voice sets from video games.
+xVASynth is a machine learning based speech synthesis app, using voices from characters/voice sets from video games.
 
-Patreon: https://www.patreon.com/xvasynth
 Steam: https://store.steampowered.com/app/1765720/xVASynth_v2
+
+HuggingFace 🤗 Space online demo: https://huggingface.co/spaces/Pendrokar/xVASynth
 
 ## New: xVATrainer, for training your own custom voices: https://github.com/DanRuta/xva-trainer
 
