@@ -65,9 +65,12 @@ window.nexusDownload = (url, dest) => {
         const request = https.get(url.replace("http:", "https:"), (response) => {
             // check if response is success
             if (response.statusCode !== 200) {
-                console.log("url", url)
-                console.log("Response status was " + response.statusCode, response)
-                resolve()
+                const statusCode = response.statusCode
+                response.resume()
+                if (fs.existsSync(dest)) {
+                    fs.unlinkSync(dest)
+                }
+                reject(new Error(`${window.i18n.NEXUS_DOWNLOAD_REQUEST_FAILED} (HTTP ${statusCode})`))
                 return
             }
 
@@ -81,15 +84,64 @@ window.nexusDownload = (url, dest) => {
 
         // check for request error too
         request.on("error", (err) => {
-            fs.unlink(dest)
-            return reject(err.message)
+            if (fs.existsSync(dest)) {
+                fs.unlinkSync(dest)
+            }
+            return reject(err)
         })
 
         file.on("error", (err) => { // Handle errors
-            fs.unlink(dest) // Delete the file async. (But we don't check the result)
-            return reject(err.message)
+            if (fs.existsSync(dest)) {
+                fs.unlinkSync(dest)
+            }
+            return reject(err)
         })
     })
+}
+
+const getNexusDownloadErrorDetails = (downloadLinkResponse) => {
+    const fallbackMessage = window.i18n.NEXUS_DOWNLOAD_LINK_UNAVAILABLE
+    if (!downloadLinkResponse) {
+        return {
+            title: window.i18n.FAILED_DOWNLOAD,
+            message: `${fallbackMessage} ${window.i18n.NEXUS_NO_RESPONSE}`
+        }
+    }
+
+    const statusCode = downloadLinkResponse.code || downloadLinkResponse.statusCode || downloadLinkResponse.status
+    const rawMessage = downloadLinkResponse.message || downloadLinkResponse.error || window.i18n.NEXUS_UNKNOWN_API_ERROR
+    const normalizedMessage = String(rawMessage)
+
+    if (statusCode==403 || /premium/i.test(normalizedMessage)) {
+        return {
+            title: window.i18n.FAILED_DOWNLOAD,
+            message: `${window.i18n.NEXUS_PREMIUM} (${normalizedMessage})`
+        }
+    }
+    if (statusCode==401 || /api key|unauthorized|forbidden/i.test(normalizedMessage)) {
+        return {
+            title: window.i18n.FAILED_DOWNLOAD,
+            message: `${window.i18n.NEXUS_AUTH_FAILED} (${normalizedMessage})`
+        }
+    }
+    if (statusCode==404 || /not\s*found/i.test(normalizedMessage)) {
+        return {
+            title: window.i18n.FAILED_DOWNLOAD,
+            message: `${window.i18n.NEXUS_FILE_NOT_FOUND} (${normalizedMessage})`
+        }
+    }
+    if (statusCode==429 || /rate\s*limit|too\s*many\s*requests/i.test(normalizedMessage)) {
+        return {
+            title: window.i18n.FAILED_DOWNLOAD,
+            message: `${window.i18n.NEXUS_RATE_LIMIT} (${normalizedMessage})`
+        }
+    }
+
+    const statusText = statusCode ? ` (HTTP ${statusCode})` : ""
+    return {
+        title: window.i18n.FAILED_DOWNLOAD,
+        message: `${fallbackMessage}${statusText} ${normalizedMessage}`
+    }
 }
 
 window.initNexus = () => {
@@ -186,46 +238,77 @@ window.downloadFile = ([nexusGameId, nexusRepoId, outputFileName, fileId]) => {
             fs.mkdirSync(`${window.path}/downloads`)
         }
 
-        const downloadLink = await getData(`${nexusGameId}/mods/${nexusRepoId}/files/${fileId}/download_link.json`)
-        if (!downloadLink.length && downloadLink.code==403) {
+        try {
+            const downloadLink = await getData(`${nexusGameId}/mods/${nexusRepoId}/files/${fileId}/download_link.json`)
+            if (!Array.isArray(downloadLink) || !downloadLink.length || !downloadLink[0] || !downloadLink[0].URI) {
+                const errorDetails = getNexusDownloadErrorDetails(downloadLink)
+                const errorMessage = `${errorDetails.title}: ${errorDetails.message}`
+                window.errorModal(errorMessage)
+                nexusDownloadLog.appendChild(createElem("div", `${window.i18n.FAILED_DOWNLOAD}: ${outputFileName} (${errorDetails.message})`))
+                reject(new Error(errorMessage))
+                return
+            }
 
-            window.errorModal(`${window.i18n.NEXUS_PREMIUM}<br><br>${window.i18n.NEXUS_ORIG_ERR}:<br>${downloadLink.message}`).then(() => {
-                const queueIndex = window.nexusState.downloadQueue.findIndex(it => it[1]==fileId)
-                window.nexusState.downloadQueue.splice(queueIndex, 1)
-                nexusDownloadingCount.innerHTML = window.nexusState.downloadQueue.length
-
-                nexusDownloadLog.appendChild(createElem("div", `${window.i18n.FAILED_DOWNLOAD}: ${outputFileName}`))
-
-                reject()
-            })
-
-        } else {
             await window.nexusDownload(downloadLink[0].URI.replace("https", "http"), `${window.path}/downloads/${outputFileName}.zip`)
 
             const queueIndex = window.nexusState.downloadQueue.findIndex(it => it[1]==fileId)
-            window.nexusState.downloadQueue.splice(queueIndex, 1)
+            if (queueIndex>-1) {
+                window.nexusState.downloadQueue.splice(queueIndex, 1)
+            }
             nexusDownloadingCount.innerHTML = window.nexusState.downloadQueue.length
 
             resolve()
+        } catch (e) {
+            const queueIndex = window.nexusState.downloadQueue.findIndex(it => it[1]==fileId)
+            if (queueIndex>-1) {
+                window.nexusState.downloadQueue.splice(queueIndex, 1)
+            }
+            nexusDownloadingCount.innerHTML = window.nexusState.downloadQueue.length
+
+            const detailedError = e && e.message ? e.message : String(e)
+            window.appLogger.log(detailedError)
+            if (!/Failed to download/i.test(detailedError)) {
+                window.errorModal(`${window.i18n.FAILED_DOWNLOAD}: ${outputFileName}<br><br>${detailedError}`)
+            }
+            nexusDownloadLog.appendChild(createElem("div", `${window.i18n.FAILED_DOWNLOAD}: ${outputFileName} (${detailedError})`))
+            reject(new Error(detailedError))
         }
     })
 
 }
 window.installDownloadedModel = ([game, zipName]) => {
     nexusDownloadLog.appendChild(createElem("div", `${window.i18n.INSTALLING} ${zipName}`))
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
+        const removeFromInstallQueue = () => {
+            const queueIndex = window.nexusState.installQueue.findIndex(it => it[1]==zipName)
+            if (queueIndex>-1) {
+                window.nexusState.installQueue.splice(queueIndex, 1)
+            }
+            nexusInstallingCount.innerHTML = window.nexusState.installQueue.length
+        }
+
         try {
             const modelsFolder = window.userSettings[`modelspath_${game}`]
 
             const unzipper = require('unzipper')
             const zipPath = `${window.path}/downloads/${zipName}.zip`
 
+            if (!modelsFolder || !String(modelsFolder).trim().length) {
+                throw new Error(`No model install path configured for game: ${game}`)
+            }
+
             if (!fs.existsSync(modelsFolder)) {
-                fs.mkdirSync(modelsFolder)
+                fs.mkdirSync(modelsFolder, {recursive: true})
+            }
+            if (!fs.existsSync(modelsFolder)) {
+                throw new Error(`Failed to create model directory: ${modelsFolder}`)
             }
 
             if (!fs.existsSync(`${window.path}/downloads`)) {
-                fs.mkdirSync(`${window.path}/downloads`)
+                fs.mkdirSync(`${window.path}/downloads`, {recursive: true})
+            }
+            if (!fs.existsSync(zipPath)) {
+                throw new Error(`Downloaded zip was not found: ${zipPath}`)
             }
 
             fs.createReadStream(zipPath).pipe(unzipper.Parse()).on("entry", entry => {
@@ -245,52 +328,76 @@ window.installDownloadedModel = ([game, zipName]) => {
             .then(() => {
                 window.appLogger.log(`${window.i18n.DONE_INSTALLING} ${zipName}`)
 
-                const queueIndex = window.nexusState.installQueue.findIndex(it => it[1]==zipName)
-                window.nexusState.installQueue.splice(queueIndex, 1)
-                nexusInstallingCount.innerHTML = window.nexusState.installQueue.length
+                removeFromInstallQueue()
 
                 nexusDownloadLog.appendChild(createElem("div", `${window.i18n.FINISHED} ${zipName}`))
                 resolve()
             }, e => {
                 console.log(e)
                 window.appLogger.log(e)
-                window.errorModal(e.message)
+                removeFromInstallQueue()
+                const detailedError = e && e.message ? e.message : String(e)
+                window.errorModal(detailedError)
+                nexusDownloadLog.appendChild(createElem("div", `${window.i18n.FAILED_DOWNLOAD}: ${zipName} (${detailedError})`))
+                reject(new Error(detailedError))
             })
         } catch (e) {
             console.log(e)
             window.appLogger.log(e)
-            window.errorModal(e.message)
-            resolve()
+            removeFromInstallQueue()
+            const detailedError = e && e.message ? e.message : String(e)
+            window.errorModal(detailedError)
+            nexusDownloadLog.appendChild(createElem("div", `${window.i18n.FAILED_DOWNLOAD}: ${zipName} (${detailedError})`))
+            reject(new Error(detailedError))
         }
     })
 }
 
 nexusDownloadAllBtn.addEventListener("click", async () => {
 
-    for (let mi=0; mi<window.nexusState.filteredDownloadableModels.length; mi++) {
-        const modelMeta = window.nexusState.filteredDownloadableModels[mi]
+    const modelsToDownload = [...window.nexusState.filteredDownloadableModels]
+
+    for (let mi=0; mi<modelsToDownload.length; mi++) {
+        const modelMeta = modelsToDownload[mi]
         window.nexusState.downloadQueue.push([modelMeta.voiceId, modelMeta.nexus_file_id])
         nexusDownloadingCount.innerHTML = window.nexusState.downloadQueue.length
     }
 
-    for (let mi=0; mi<window.nexusState.filteredDownloadableModels.length; mi++) {
+    let modelIndex = 0
+    while (modelIndex<modelsToDownload.length) {
 
-        const modelMeta = window.nexusState.filteredDownloadableModels[mi]
-        await window.downloadFile([modelMeta.nexusGameId, modelMeta.nexusRepoId, modelMeta.voiceId, modelMeta.nexus_file_id])
+        const modelMeta = modelsToDownload[modelIndex]
+        try {
+            await window.downloadFile([modelMeta.nexusGameId, modelMeta.nexusRepoId, modelMeta.voiceId, modelMeta.nexus_file_id])
 
-        // Install the downloaded voice
-        window.nexusState.installQueue.push([modelMeta.game, modelMeta.voiceId])
-        nexusInstallingCount.innerHTML = window.nexusState.installQueue.length
-        await window.installDownloadedModel([modelMeta.game, modelMeta.voiceId])
+            // Install the downloaded voice
+            window.nexusState.installQueue.push([modelMeta.game, modelMeta.voiceId])
+            nexusInstallingCount.innerHTML = window.nexusState.installQueue.length
+            await window.installDownloadedModel([modelMeta.game, modelMeta.voiceId])
 
-        fs.unlinkSync(`${window.path}/downloads/${modelMeta.voiceId}.zip`)
+            const downloadedZipPath = `${window.path}/downloads/${modelMeta.voiceId}.zip`
+            if (fs.existsSync(downloadedZipPath)) {
+                fs.unlinkSync(downloadedZipPath)
+            }
 
-        window.nexusState.finished += 1
-        nexusFinishedCount.innerHTML = window.nexusState.finished
+            window.nexusState.finished += 1
+            nexusFinishedCount.innerHTML = window.nexusState.finished
+
+            modelsToDownload.splice(modelIndex, 1)
+            const filteredIndex = window.nexusState.filteredDownloadableModels.findIndex(item => item.voiceId==modelMeta.voiceId)
+            if (filteredIndex>-1) {
+                window.nexusState.filteredDownloadableModels.splice(filteredIndex, 1)
+            }
+        } catch (e) {
+            modelIndex += 1
+            const failureReason = e && e.message ? e.message : String(e)
+            window.appLogger.log(failureReason)
+            nexusDownloadLog.appendChild(createElem("div", `${window.i18n.FAILED_DOWNLOAD}: ${modelMeta.voiceId} (${failureReason})`))
+        }
+
         window.displayAllModels(true)
-        window.loadAllModels(true).then(() => {
-            changeGame(window.currentGame)
-        })
+        await window.loadAllModels(true)
+        changeGame(window.currentGame)
     }
 })
 

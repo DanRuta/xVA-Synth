@@ -60,6 +60,18 @@ If the required CUDA dependencies are installed on your system, you can enable G
 
 The app uses both JavaScript (Electron, UI) and Python code (FastPitch Model). As the python script needs to remain running alongside the app, and receive input, communication is done via an HTTP server, with the JavaScript code sending localhost requests, at port 8008. During development, the python source is used. In production, the compiled python is used.
 
+## Localization notes
+
+UI strings are defined in `javascript/i18n.js`. If you maintain an external language pack, make sure it includes these Nexus download error keys:
+
+- `NEXUS_DOWNLOAD_LINK_UNAVAILABLE`
+- `NEXUS_NO_RESPONSE`
+- `NEXUS_AUTH_FAILED`
+- `NEXUS_FILE_NOT_FOUND`
+- `NEXUS_RATE_LIMIT`
+- `NEXUS_UNKNOWN_API_ERROR`
+- `NEXUS_DOWNLOAD_REQUEST_FAILED`
+
 ## Packaging
 
 First, run the scripts in `package.json` to create the electron distributables.
